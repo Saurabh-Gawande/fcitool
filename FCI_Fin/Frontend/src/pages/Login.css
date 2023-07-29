@@ -1,0 +1,25 @@
+/* BackgroundSlider.css */
+
+.background-container {
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px; /* Set the desired height for the slider container */
+  }
+  
+  .content {
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .slider-controls {
+    margin-top: 20px;
+  }
+  
+  .slider-controls button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    font-size: 16px;
+  }
+  
