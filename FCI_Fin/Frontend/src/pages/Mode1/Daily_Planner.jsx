@@ -24,7 +24,7 @@ function Daily_Planner() {
       const formData = new FormData();
       formData.append("uploadFile", files[0]);
 
-      const response = await fetch(ProjectIp+"/uploadConfigFile", {
+      const response = await fetch(ProjectIp+"/uploadDailyFile", {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -428,6 +428,7 @@ function Daily_Planner() {
                           <input
                             type="file"
                             className="form-control"
+                            onChange={handleFileChange}
                             id="uploadFile"
                             name="uploadFile"
                             defaultValue=""
