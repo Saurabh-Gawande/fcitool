@@ -626,16 +626,21 @@ def Daily_Planner():
             relevant_r_rice = pd.read_excel(relevant_data, sheet_name="r_rice", index_col=0)
             relevant_Dict_wheat = {}
             relevant_Dict_rice = {}
+            Rice_cost = []
+            Wheat_cost = []
             
+            # x_ij_wheat[(i,j)]*rail_cost.loc[i][j]
             for i in range(len(relevant_r_wheat.index)):
                 for j in range(len(relevant_r_wheat.columns)):
                     if relevant_r_wheat.iat[i, j] > 0:
                         relevant_Dict_wheat[relevant_r_wheat.index[i], relevant_r_wheat.columns[j]] = relevant_r_wheat.iloc[i][relevant_r_wheat.columns[j]]
+                        Wheat_cost.append(x_ij_wheat[(relevant_r_wheat.index[i],relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]])
             
             for i in range(len(relevant_r_rice.index)):
                 for j in range(len(relevant_r_rice.columns)):
                     if relevant_r_rice.iat[i, j] > 0:
                         relevant_Dict_rice[relevant_r_rice.index[i], relevant_r_rice.columns[j]] = relevant_r_rice.iloc[i][relevant_r_rice.columns[j]]
+                        Rice_cost.append(x_ij_wheat[(relevant_r_rice.index[i],relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]])
             
             L1 = list(relevant_Dict_wheat.keys())
             L2 = list(relevant_Dict_wheat.values())
@@ -675,6 +680,7 @@ def Daily_Planner():
             df_wheat.insert(1,"From_state",From_state)
             df_wheat.insert(3,"To_state",To_state)
             df_wheat.insert(4,"Commodity",Commodity)
+            df_wheat["Cost"] = Wheat_cost
             
             
             
@@ -718,7 +724,7 @@ def Daily_Planner():
             df_rice.insert(1,"From_state",From_state_rice)
             df_rice.insert(3,"To_state",To_state_rice)
             df_rice.insert(4,"Commodity",Commodity_rice)
-            
+            df_rice["Cost"] = Rice_cost
             
             
             with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
