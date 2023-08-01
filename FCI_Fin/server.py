@@ -621,53 +621,109 @@ def Daily_Planner():
                 r_rice.to_excel(writer,sheet_name="r_rice",float_format="%0.3f")
 
 
-            data=pd.ExcelFile("Output\\Results_DPT.xlsx")
-            rr=pd.read_excel(data,sheet_name="rr",index_col=0)
-            Dict={}
-
-            for i in range(len(rr.index)):
-                for j in range(len(rr.columns)):
-                    if rr.iat[i,j]>0:
-                        Dict[rr.index[i],rr.columns[j]]=rr.iloc[i][rr.columns[j]]
-
-            dfr=pd.DataFrame.from_dict(Dict,orient="index")
-
-            with pd.ExcelWriter("Output\\List_DPT.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-                dfr.to_excel(writer,sheet_name="rr")
-
-            org_data=pd.ExcelFile("Output\\List_DPT.xlsx")
-            org_rr=pd.read_excel(org_data,sheet_name="rr",index_col=0)
-
-            Dict_org={}
-
-            for i in range(len(org_rr.index)):
-                for j in range(len(org_rr.columns)):
-                    if org_rr.iat[i,j]>0:
-                        Dict_org[org_rr.index[i],org_rr.columns[j]]=org_rr.iloc[i][org_rr.columns[j]]
-
-            L1=list(Dict_org.keys())
-            L2=list(Dict_org.values())
-
-
-            df_org=pd.DataFrame()
-
-            A=[]
-            B=[]
-            C=[]
-
+            relevant_data = pd.ExcelFile("Output//Results_DPT.xlsx")
+            relevant_r_wheat = pd.read_excel(relevant_data, sheet_name="r_wheat", index_col=0)
+            relevant_r_rice = pd.read_excel(relevant_data, sheet_name="r_rice", index_col=0)
+            relevant_Dict_wheat = {}
+            relevant_Dict_rice = {}
+            
+            for i in range(len(relevant_r_wheat.index)):
+                for j in range(len(relevant_r_wheat.columns)):
+                    if relevant_r_wheat.iat[i, j] > 0:
+                        relevant_Dict_wheat[relevant_r_wheat.index[i], relevant_r_wheat.columns[j]] = relevant_r_wheat.iloc[i][relevant_r_wheat.columns[j]]
+            
+            for i in range(len(relevant_r_rice.index)):
+                for j in range(len(relevant_r_rice.columns)):
+                    if relevant_r_rice.iat[i, j] > 0:
+                        relevant_Dict_rice[relevant_r_rice.index[i], relevant_r_rice.columns[j]] = relevant_r_rice.iloc[i][relevant_r_rice.columns[j]]
+            
+            L1 = list(relevant_Dict_wheat.keys())
+            L2 = list(relevant_Dict_wheat.values())
+            A = []
+            B = []
+            C = []
+            
+            df_wheat = pd.DataFrame()
+            
             for i in range(len(L1)):
-                my_tuple = ast.literal_eval(L1[i][0])
-                A.append(my_tuple[0])
-                B.append(my_tuple[1])
+                A.append(L1[i][0])
+                B.append(L1[i][1])
                 C.append(L2[i])
-
-            df_org["From"]=A
-            df_org["To"]=B
-            df_org["Values"]=C
-
-
-            with pd.ExcelWriter("Output\\Org_rr.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-                df_org.to_excel(writer,sheet_name="rr") 
+            
+            df_wheat["From"] = A
+            df_wheat["To"] = B
+            df_wheat["Values"] = C
+            
+            From_state = []
+            To_state = []
+            Commodity = []
+            
+            for i in range(len(L1)):
+                for j in surplus_wheat.index:
+                    if L1[i][0]==j:
+                        From_state.append(surplus_wheat.loc[j]["State"])
+                                    
+            for i in range(len(L1)):
+                for j in surplus_wheat.index:
+                    if L1[i][1]==j:
+                        To_state.append(surplus_wheat.loc[j]["State"])
+            
+            
+            for i in range(len(L1)):
+                Commodity.append("Wheat")
+            
+            df_wheat.insert(1,"From_state",From_state)
+            df_wheat.insert(3,"To_state",To_state)
+            df_wheat.insert(4,"Commodity",Commodity)
+            
+            
+            
+            L3 = list(relevant_Dict_rice.keys())
+            L4 = list(relevant_Dict_rice.values())
+            
+            D = []
+            E = []
+            F = []
+            
+            df_rice = pd.DataFrame()
+            
+            for i in range(len(L3)):
+                D.append(L3[i][0])
+                E.append(L3[i][1])
+                F.append(L4[i])
+            
+            df_rice["From"] = D
+            df_rice["To"] = E
+            df_rice["Values"] = F
+            
+            From_state_rice = []
+            To_state_rice = []
+            Commodity_rice = []
+            
+            for i in range(len(L3)):
+                for j in surplus_wheat.index:
+                    if L3[i][0]==j:
+                        From_state_rice.append(surplus_wheat.loc[j]["State"])
+                                    
+            for i in range(len(L3)):
+                for j in surplus_wheat.index:
+                    if L3[i][1]==j:
+                        To_state_rice.append(surplus_wheat.loc[j]["State"])
+            
+            
+            
+            for i in range(len(L3)):
+                Commodity_rice.append("Rice")
+            
+            df_rice.insert(1,"From_state",From_state_rice)
+            df_rice.insert(3,"To_state",To_state_rice)
+            df_rice.insert(4,"Commodity",Commodity_rice)
+            
+            
+            
+            with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                df_wheat.to_excel(writer, sheet_name="wheat")
+                df_rice.to_excel(writer, sheet_name="rice")
 
         
 
