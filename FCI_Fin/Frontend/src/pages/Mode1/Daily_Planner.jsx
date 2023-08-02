@@ -48,6 +48,41 @@ function Daily_Planner() {
     }
   };
 
+  const handleUploadConfig1 = async () => {
+    if (!fileSelected) {
+      alert("Please Select The File First");
+      return;
+    }
+
+    try {
+      const files = document.getElementById("uploadFile").files;
+      const formData = new FormData();
+      formData.append("uploadFile", files[0]);
+
+      const response = await fetch(ProjectIp+"/uploadDailyFile1", {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const jsonResponse = await response.json();
+
+      if (jsonResponse.status === 1) {
+        alert("File Uploaded");
+      } else {
+        console.log(jsonResponse);
+        alert("Error uploading file");
+      }
+    } catch (error) {
+      console.error("Error during file upload:", error);
+      alert("An error occurred during file upload. Please try again later.");
+    }
+  };
+
   const [block_data, setBlockdata] = useState([]);
   // const [r_s, setr_s] = useState("");
   // const [r_d, setr_d] = useState("");
@@ -60,15 +95,22 @@ function Daily_Planner() {
   // const [org_rhcode, set_org_rhcode] = useState(null);
   // const [dest_rhcode, set_dest_rhcode] = useState(null);
   const [TEFD, set_TEFD] = useState("");
+  const [Scenerio, set_Scenerio] = useState("");
   const buttonRef = useRef(null);
   // const buttonRef1 = useRef(null);
   const [solutionSolved, setSolutionSolved] = useState(false);
+  const [scn, setscn] = useState(false);
+  const [uploadst, setuploadst] = useState(false);
 
   const handleSolve = async () => {
     document.getElementById('toggle').checked=true;
     alert("This action will take time, click OK to continue.");
     // buttonRef.current.innerText = "Solving..";
     // console.log(document.getElementById('toggle').value);
+    if (Scenerio == "Scenerio 2"){
+      setscn(true);
+      setuploadst(true);
+    }
 
     const payload = {
       // r_s: r_s,
@@ -81,6 +123,7 @@ function Daily_Planner() {
       destination_state: selectedOption2,
       dest_rhcode: subOption2,
       block_data: block_data,
+      Scenerio: Scenerio,
     };
     try {
       const response = await fetch(ProjectIp+"/Daily_Planner", {
@@ -129,7 +172,7 @@ function Daily_Planner() {
   // };
 
   // const [cost, setCost] = useState(null);
-  // const [Total_result, set_Total_Result] = useState(null);
+  const [Total_result, set_Total_Result] = useState(null);
   const [Relevant_result, set_Relevant_Result] = useState(null);
   // const [Daily_Scheduler_result, set_Daily_Scheduler_Result] = useState(null);
 
@@ -169,22 +212,22 @@ function Daily_Planner() {
   //       console.error("Error:", error);
   //     });
   // };
-  // const fetchReservationId_Total_result = () => {
-  //   var form = new FormData();
-  //   fetch(ProjectIp + "/read_Total_Result", {
-  //     method: "POST",
-  //     credentials: "include",
-  //     body: form,
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       const fetched_Total_Result = data;
-  //       set_Total_Result(fetched_Total_Result);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-  // };
+  const fetchReservationId_Total_result = () => {
+    var form = new FormData();
+    fetch(ProjectIp + "/read_Daily_Planner1", {
+      method: "POST",
+      credentials: "include",
+      body: form,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const fetched_Total_Result = data;
+        set_Total_Result(fetched_Total_Result);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
   const fetchReservationId_Revelant_result = () => {
     var form = new FormData();
     fetch(ProjectIp + "/read_Daily_Planner", {
@@ -317,27 +360,27 @@ function Daily_Planner() {
     }
   };
 
-  // const exportToExcel1 = () => {
-  //   fetchReservationId_Total_result();
-  //   if (Total_result == null) {
-  //     window.alert("Fetching Result, Please Wait");
-  //   } else {
-  //     const workbook = XLSX.utils.book_new();
-  //     Object.entries(Total_result).forEach(([column, data]) => {
-  //       const parsedData = JSON.parse(data);
-  //       const worksheet = XLSX.utils.json_to_sheet(parsedData);
-  //       XLSX.utils.book_append_sheet(workbook, worksheet, column);
-  //     });
-  //     const excelBuffer = XLSX.write(workbook, {
-  //       type: "array",
-  //       bookType: "xlsx",
-  //     });
-  //     const excelBlob = new Blob([excelBuffer], {
-  //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  //     });
-  //     saveAs(excelBlob, "All_results.xlsx");
-  //   }
-  // };
+  const exportToExcel1 = () => {
+    fetchReservationId_Total_result();
+    if (Total_result == null) {
+      window.alert("Fetching Result, Please Wait");
+    } else {
+      const workbook = XLSX.utils.book_new();
+      Object.entries(Total_result).forEach(([column, data]) => {
+        const parsedData = JSON.parse(data);
+        const worksheet = XLSX.utils.json_to_sheet(parsedData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, column);
+      });
+      const excelBuffer = XLSX.write(workbook, {
+        type: "array",
+        bookType: "xlsx",
+      });
+      const excelBlob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(excelBlob, "Daily_Movement_Scenerio1.xlsx");
+    }
+  };
 
   const exportToExcel2 = () => {
     fetchReservationId_Revelant_result();
@@ -357,7 +400,7 @@ function Daily_Planner() {
       const excelBlob = new Blob([excelBuffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-      saveAs(excelBlob, "Daily_Movement_results.xlsx");
+      saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
     }
   };
   // fetchReservationId_cost();
@@ -425,6 +468,7 @@ function Daily_Planner() {
                           >
                             <span className="fa fa-info" />
                           </span>
+                          
                           <input
                             type="file"
                             className="form-control"
@@ -434,6 +478,8 @@ function Daily_Planner() {
                             defaultValue=""
                             required=""
                           />
+                          
+                          
                         </div>
                         <span className="help-block" style={{ color: "black" }}>
                           Choose Data Template
@@ -442,6 +488,8 @@ function Daily_Planner() {
                     </div>
                   </div>
                   <div className="col-md-3">
+                  {setuploadst && (
+                        <div>
                     <img
                       className="upload_class"
                       src={background1}
@@ -449,6 +497,19 @@ function Daily_Planner() {
                       onClick={handleUploadConfig}
                       disabled={!fileSelected}
                     />
+                    </div>
+                          )}
+                          {!setuploadst && (
+                        <div>
+                    <img
+                      className="upload_class"
+                      src={background1}
+                      id="uploadConfig"
+                      onClick={handleUploadConfig1}
+                      disabled={!fileSelected}
+                    />
+                    </div>
+                          )}
                     <div style={{ marginTop: "-25px" }}>Click here</div>
                     {/* <input
                       style={{ marginLeft: "60px" }}
@@ -478,6 +539,19 @@ function Daily_Planner() {
                     >
                       <option value="NON-TEFD">Non-TEFD</option>
                       <option value="TEFD">TEFD</option>
+                    </select>
+                  </label>
+                  <label>
+                    <strong style={{ fontSize: "20px", marginLeft: "15px" ,color: "#9d0921",}}>
+                      Select Scenerio
+                    </strong>
+                    <select
+                      value={Scenerio}
+                      onChange={(e) => set_Scenerio(e.target.value)}
+                      style={{ marginLeft: "600px" }}
+                    >
+                      <option value="Scenerio 1">Scenerio 1</option>
+                      <option value="Scenerio 2">Scenerio 2</option>
                     </select>
                   </label>
                   <br />
@@ -820,6 +894,8 @@ function Daily_Planner() {
                 <br />
                 {solutionSolved && (
                   <div>
+                  {scn && (
+                  <div>
                 <button
                   style={{ color: "white", marginLeft: "15px" }}
                   className="btn btn-danger dropdown-toggle"
@@ -828,6 +904,18 @@ function Daily_Planner() {
                   <i className="fa fa-bars"></i> Download Railhead-Railhead
                   Detailed Plan
                 </button>
+                </div>)}
+                {!scn && (
+                  <div>
+                <button
+                  style={{ color: "white", marginLeft: "15px" }}
+                  className="btn btn-danger dropdown-toggle"
+                  onClick={() => exportToExcel1()}
+                >
+                  <i className="fa fa-bars"></i> Download Railhead-Railhead
+                  Detailed Plan
+                </button>
+                </div>)}
                 </div>
                 )}
                 <br />

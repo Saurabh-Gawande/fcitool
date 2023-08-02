@@ -73,6 +73,21 @@ def uploadDailyFile():
     data = {}
     try:
         file = request.files['uploadFile']
+        file.save("Input//Temp_balanced_DPT_scen2.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
+    
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
+
+    return(json.dumps(json_object, indent = 1))
+
+@app.route("/uploadDailyFile1",methods = ["POST"])
+def uploadDailyFile1():
+    data = {}
+    try:
+        file = request.files['uploadFile']
         file.save("Input//Temp_balanced_DPT_scen1.xlsx")
         data['status'] = 1
     except:
@@ -88,8 +103,8 @@ def uploadDailyFile():
 def read_Total_Result():
     if request.method == "POST":        
         try: 
-            df1 = pd.read_excel('Output\\State_To_State_Table.xlsx', sheet_name="Wheat")
-            df2 = pd.read_excel('Output\\State_To_State_Table.xlsx', sheet_name="Rice")    
+            df1 = pd.read_excel('Output\\Monthly_State_To_State_Table.xlsx', sheet_name="Wheat")
+            df2 = pd.read_excel('Output\\Monthly_State_To_State_Tablee.xlsx', sheet_name="Rice")    
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
             json_data = {"Wheat": json_data1, "Rice": json_data2}
@@ -166,11 +181,11 @@ def read_Result_M02():
 def read_Daily_Planner():
     if request.method == "POST":        
         try: 
-            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="r_rice") 
-            df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="r_wheat") 
+            df1 = pd.read_excel('Output\\List_DPT2.xlsx', sheet_name="rice") 
+            df2 = pd.read_excel('Output\\List_DPT2.xlsx', sheet_name="wheat") 
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
-            json_data = {"r_rice": json_data1, "r_wheat": json_data2}
+            json_data = {"rice": json_data1, "wheat": json_data2}
         except:
             json_data = json.dumps({"Status": 0}, indent=1)
 
@@ -179,15 +194,15 @@ def read_Daily_Planner():
     else:
         return ("error")
 
-@app.route("/read_Daily_Planner2",methods = ["POST","GET"])
-def read_Daily_Planner2():
+@app.route("/read_Daily_Planner1",methods = ["POST","GET"])
+def read_Daily_Planner1():
     if request.method == "POST":        
         try: 
-            df1 = pd.read_excel('Output\\Org_rr.xlsx', sheet_name="r_rice") 
-            df2 = pd.read_excel('Output\\Org_rr.xlsx', sheet_name="r_wheat") 
+            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rice") 
+            df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
-            json_data = {"r_rice": json_data1, "r_wheat": json_data2}
+            json_data = {"rice": json_data1, "wheat": json_data2}
         except:
             json_data = json.dumps({"Status": 0}, indent=1)
 
@@ -520,21 +535,11 @@ def Daily_Planner():
             dest_rhcode = []
             org_state = []
             dest_state = []
-            data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
-            # blocking_data = pd.ExcelFile("Input\\Route_blocker_DPT.xlsx")
-
-            surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
-            deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
-            surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
-            deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
-            rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
-            states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
-            states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
-            # states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
-            # Route_block=pd.read_excel(blocking_data,sheet_name="Sheet1",index_col=0)
+           
             fetched_data = request.get_json()
             # print(org_rhcode_fetched)
             blocked_data = fetched_data['block_data']
+            Scenerio = fetched_data["Scenerio"]
             # org_rhcode = list(Route_block["Origin_Railhead"])
             # dest_rhcode = list(Route_block["Destination_Railhead"])
             for i in range(len(blocked_data)):
@@ -542,196 +547,449 @@ def Daily_Planner():
                 dest_rhcode.append(blocked_data[i]["destination_railhead"])
                 org_state.append(blocked_data[i]["origin_state"])
                 dest_state.append(blocked_data[i]["destination_state"])
+            
+            if Scenerio == "Scenerio 2":
+                data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen2.xlsx")
+                # blocking_data = pd.ExcelFile("Input\\Route_blocker_DPT.xlsx")
 
-            prob = LpProblem("Output\\FCI_monthly_model_allocation_rr5",LpMinimize)
+                surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
+                deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
+                surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
+                deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
+                rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
+                states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
+                states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
 
-            x_ij_wheat=LpVariable.dicts("x_wheat",[(i,j) for i in surplus_wheat.index for j in deficit_wheat.index],0)
-            x_ij_rice=LpVariable.dicts("x_rice",[(i,j) for i in surplus_rice.index for j in deficit_rice.index],0)
+                prob = LpProblem("Output\\FCI_monthly_model_allocation_rr5",LpMinimize)
 
-            for i in range(len(org_rhcode)):
-                if org_state[i] != 'default':
-                    prob += x_ij_rice[(org_rhcode[i], dest_rhcode[i])] == 0
-                    prob += x_ij_wheat[(org_rhcode[i], dest_rhcode[i])] == 0
-                else:
-                    prob += x_ij_rice[(org_rhcode[i], dest_rhcode[i])] == 0
-                    prob += x_ij_wheat[(org_rhcode[i], dest_rhcode[i])] == 0
+                x_ij_wheat=LpVariable.dicts("x_wheat",[(i,j) for i in surplus_wheat.index for j in deficit_wheat.index],0)
+                x_ij_rice=LpVariable.dicts("x_rice",[(i,j) for i in surplus_rice.index for j in deficit_rice.index],0)
+
+                for i in range(len(org_rhcode)):
+                    if org_state[i] != 'default':
+                        prob += x_ij_rice[(org_rhcode[i], dest_rhcode[i])] == 0
+                        prob += x_ij_wheat[(org_rhcode[i], dest_rhcode[i])] == 0
+                    else:
+                        prob += x_ij_rice[(org_rhcode[i], dest_rhcode[i])] == 0
+                        prob += x_ij_wheat[(org_rhcode[i], dest_rhcode[i])] == 0
 
 
-            prob+=lpSum(x_ij_wheat[(i,j)]*rail_cost.loc[i][j] for i in surplus_wheat.index for j in deficit_wheat.index)+lpSum(x_ij_rice[(i,j)]*rail_cost.loc[i][j] for i in surplus_rice.index for j in deficit_rice.index)
+                prob+=lpSum(x_ij_wheat[(i,j)]*rail_cost.loc[i][j] for i in surplus_wheat.index for j in deficit_wheat.index)+lpSum(x_ij_rice[(i,j)]*rail_cost.loc[i][j] for i in surplus_rice.index for j in deficit_rice.index)
 
-            for i in surplus_wheat.index:
+                for i in surplus_wheat.index:
+                    for j in deficit_wheat.index:
+                        if i==j:
+                            prob+=x_ij_wheat[(i,j)]==0
+                            # print(x_ij_wheat[(i,j)]==0)
+                            
+                for i in surplus_rice.index:
+                    for j in deficit_rice.index:
+                        if i==j:
+                            prob+=x_ij_rice[(i,j)]==0
+                            # print(x_ij_rice[(i,j)]==0)
+
+                for i in surplus_wheat.index:
+                    prob+=lpSum(x_ij_wheat[(i,j)] for j in deficit_wheat.index)<=surplus_wheat["Supply"][i]
+                    
+                for i in surplus_rice.index:
+                    prob+=lpSum(x_ij_rice[(i,j)] for j in deficit_rice.index)<=surplus_rice["Supply"][i]
+
                 for j in deficit_wheat.index:
-                    if i==j:
-                        prob+=x_ij_wheat[(i,j)]==0
-                        # print(x_ij_wheat[(i,j)]==0)
+                    prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index)+lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index)<=1
+                for j in deficit_wheat.index:
+                    prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index)+lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index)<=deficit_wheat["Capacity"][j]
+
+                for a in states_alloc.index:
+                    prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index for j in deficit_wheat.index if deficit_wheat.loc[j]["State"]==a)>=states_alloc.loc[a]["Alloc_wheat"]
+                    prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index for j in deficit_wheat.index if deficit_wheat.loc[j]["State"]==a)<=states_alloc.loc[a]["Alloc_wheat"]
+                    
+                for a in states_alloc.index:
+                    prob+=lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index for j in deficit_rice.index if deficit_rice.loc[j]["State"]==a)>=states_alloc.loc[a]["Alloc_rice"]
+                    prob+=lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index for j in deficit_rice.index if deficit_rice.loc[j]["State"]==a)<=states_alloc.loc[a]["Alloc_rice"]
+
+
+
+
+                prob.writeLP("Output\\FCI_monthly_model_allocation_rr5.lp")
+                prob.solve()
+                print("Status:", LpStatus[prob.status])
+                print("Minimum Cost of Transportation = Rs.", value(prob.objective),"Lakh")
+                print("Total Number of Variables:",len(prob.variables()))
+                print("Total Number of Constraints:",len(prob.constraints))
+
+
+                r_wheat={}
+                r_wheat=pd.DataFrame([],index=surplus_wheat.index,columns=deficit_wheat.index)
+                    
+                for r in surplus_wheat.index:
+                    for j in deficit_wheat.index:
+                        r_wheat.loc[r][j]=x_ij_wheat[(r,j)].value()
                         
-            for i in surplus_rice.index:
-                for j in deficit_rice.index:
-                    if i==j:
-                        prob+=x_ij_rice[(i,j)]==0
-                        # print(x_ij_rice[(i,j)]==0)
-
-            for i in surplus_wheat.index:
-                prob+=lpSum(x_ij_wheat[(i,j)] for j in deficit_wheat.index)<=surplus_wheat["Supply"][i]
-                
-            for i in surplus_rice.index:
-                prob+=lpSum(x_ij_rice[(i,j)] for j in deficit_rice.index)<=surplus_rice["Supply"][i]
-
-            for j in deficit_wheat.index:
-                prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index)+lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index)<=1
-            for j in deficit_wheat.index:
-                prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index)+lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index)<=deficit_wheat["Capacity"][j]
-
-            for a in states_alloc.index:
-                prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index for j in deficit_wheat.index if deficit_wheat.loc[j]["State"]==a)>=states_alloc.loc[a]["Alloc_wheat"]
-                prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index for j in deficit_wheat.index if deficit_wheat.loc[j]["State"]==a)<=states_alloc.loc[a]["Alloc_wheat"]
-                
-            for a in states_alloc.index:
-                prob+=lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index for j in deficit_rice.index if deficit_rice.loc[j]["State"]==a)>=states_alloc.loc[a]["Alloc_rice"]
-                prob+=lpSum(x_ij_rice[(i,j)] for i in surplus_rice.index for j in deficit_rice.index if deficit_rice.loc[j]["State"]==a)<=states_alloc.loc[a]["Alloc_rice"]
-
-
-            
-
-
-            prob.writeLP("Output\\FCI_monthly_model_allocation_rr5.lp")
-            prob.solve()
-            print("Status:", LpStatus[prob.status])
-            print("Minimum Cost of Transportation = Rs.", value(prob.objective),"Lakh")
-            print("Total Number of Variables:",len(prob.variables()))
-            print("Total Number of Constraints:",len(prob.constraints))
-
-
-            r_wheat={}
-            r_wheat=pd.DataFrame([],index=surplus_wheat.index,columns=deficit_wheat.index)
-                
-            for r in surplus_wheat.index:
-                for j in deficit_wheat.index:
-                    r_wheat.loc[r][j]=x_ij_wheat[(r,j)].value()
+                r_rice={}
+                r_rice=pd.DataFrame([],index=surplus_rice.index,columns=deficit_rice.index)
                     
-            r_rice={}
-            r_rice=pd.DataFrame([],index=surplus_rice.index,columns=deficit_rice.index)
-                
-            for r in surplus_rice.index:
-                for j in deficit_rice.index:
-                    r_rice.loc[r][j]=x_ij_rice[(r,j)].value()
+                for r in surplus_rice.index:
+                    for j in deficit_rice.index:
+                        r_rice.loc[r][j]=x_ij_rice[(r,j)].value()
+                        
+                with pd.ExcelWriter("Output\\Results_DPT2.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+                    r_wheat.to_excel(writer,sheet_name="r_wheat",float_format="%0.3f")
+                    r_rice.to_excel(writer,sheet_name="r_rice",float_format="%0.3f")
+
+
+                relevant_data = pd.ExcelFile("Output//Results_DPT2.xlsx")
+                relevant_r_wheat = pd.read_excel(relevant_data, sheet_name="r_wheat", index_col=0)
+                relevant_r_rice = pd.read_excel(relevant_data, sheet_name="r_rice", index_col=0)
+                relevant_Dict_wheat = {}
+                relevant_Dict_rice = {}
+                Rice_cost = []
+                Wheat_cost = []
+
+                # x_ij_wheat[(i,j)]*rail_cost.loc[i][j]
+                for i in range(len(relevant_r_wheat.index)):
+                    for j in range(len(relevant_r_wheat.columns)):
+                        if relevant_r_wheat.iat[i, j] > 0:
+                            relevant_Dict_wheat[relevant_r_wheat.index[i], relevant_r_wheat.columns[j]] = relevant_r_wheat.iloc[i][relevant_r_wheat.columns[j]]
+                            Wheat_cost.append((x_ij_wheat[(relevant_r_wheat.index[i],relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]]))
+
+                for i in range(len(relevant_r_rice.index)):
+                    for j in range(len(relevant_r_rice.columns)):
+                        if relevant_r_rice.iat[i, j] > 0:
+                            relevant_Dict_rice[relevant_r_rice.index[i], relevant_r_rice.columns[j]] = relevant_r_rice.iloc[i][relevant_r_rice.columns[j]]
+                            Rice_cost.append((x_ij_wheat[(relevant_r_rice.index[i],relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]]))
+
+
+
+                L1 = list(relevant_Dict_wheat.keys())
+                L2 = list(relevant_Dict_wheat.values())
+                A = []
+                B = []
+                C = []
+
+                df_wheat = pd.DataFrame()
+
+                for i in range(len(L1)):
+                    A.append(L1[i][0])
+                    B.append(L1[i][1])
+                    C.append(L2[i])
+
+                df_wheat["From"] = A
+                df_wheat["To"] = B
+                df_wheat["Values"] = C
+
+                From_state = []
+                To_state = []
+                Commodity = []
+
+                for i in range(len(L1)):
+                    for j in surplus_wheat.index:
+                        if L1[i][0]==j:
+                            From_state.append(surplus_wheat.loc[j]["State"])
+                                            
+                for i in range(len(L1)):
+                    for j in surplus_wheat.index:
+                        if L1[i][1]==j:
+                            To_state.append(surplus_wheat.loc[j]["State"])
+
+
+                for i in range(len(L1)):
+                    Commodity.append("Wheat")
+
+                df_wheat.insert(1,"From_state",From_state)
+                df_wheat.insert(3,"To_state",To_state)
+                df_wheat.insert(4,"Commodity",Commodity)
+                df_wheat["Cost"] = Wheat_cost
+
+
+
+                L3 = list(relevant_Dict_rice.keys())
+                L4 = list(relevant_Dict_rice.values())
+
+                D = []
+                E = []
+                F = []
+
+                df_rice = pd.DataFrame()
+
+                for i in range(len(L3)):
+                    D.append(L3[i][0])
+                    E.append(L3[i][1])
+                    F.append(L4[i])
+
+                df_rice["From"] = D
+                df_rice["To"] = E
+                df_rice["Values"] = F
+
+                From_state_rice = []
+                To_state_rice = []
+                Commodity_rice = []
+
+                for i in range(len(L3)):
+                    for j in surplus_wheat.index:
+                        if L3[i][0]==j:
+                            From_state_rice.append(surplus_wheat.loc[j]["State"])
+                                            
+                for i in range(len(L3)):
+                    for j in surplus_wheat.index:
+                        if L3[i][1]==j:
+                            To_state_rice.append(surplus_wheat.loc[j]["State"])
+
+
+
+                for i in range(len(L3)):
+                    Commodity_rice.append("Rice")
+
+                df_rice.insert(1,"From_state",From_state_rice)
+                df_rice.insert(3,"To_state",To_state_rice)
+                df_rice.insert(4,"Commodity",Commodity_rice)
+                df_rice["Cost"] = Rice_cost
+
+
+                with pd.ExcelWriter("Output//List_DPT2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df_wheat.to_excel(writer, sheet_name="wheat")
+                    df_rice.to_excel(writer, sheet_name="rice")
+
+                List_data = pd.ExcelFile("Output//List_DPT2.xlsx")
+                List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
+                List_wheat = pd.read_excel(List_data, sheet_name="wheat", index_col=0)
+
+                def extract_value_before_asterisk(data):
+                    return float(data.split('*')[0])
+
+
+                List_wheat["Cost"] = List_wheat["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+                List_rice["Cost"] = List_rice["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+
+                # Write the updated DataFrame back to the Excel file
+                with pd.ExcelWriter("Output//List_DPT2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    List_rice.to_excel(writer, sheet_name="rice")
+                    List_wheat.to_excel(writer, sheet_name="wheat")
+            
+            else:
+
+                data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
+
+                surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
+                deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
+                surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
+                deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
+                rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
+                states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
+                states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
+
+                prob = LpProblem("Output\\FCI_monthly_model_allocation_rr5",LpMinimize)
+
+                x_ij_wheat=LpVariable.dicts("x_wheat",[(i,j) for i in surplus_wheat.index for j in deficit_wheat.index],0)
+                x_ij_rice=LpVariable.dicts("x_rice",[(i,j) for i in surplus_rice.index for j in deficit_rice.index],0)
+
+
+                # In[7]:
+
+
+                prob+=lpSum(x_ij_wheat[(i,j)]*rail_cost.loc[i][j] for i in surplus_wheat.index for j in deficit_wheat.index)+lpSum(x_ij_rice[(i,j)]*rail_cost.loc[i][j] for i in surplus_rice.index for j in deficit_rice.index)
+
+
+                # In[8]:
+
+
+                for i in surplus_wheat.index:
+                    for j in deficit_wheat.index:
+                        if i==j:
+                            prob+=x_ij_wheat[(i,j)]==0
+                            # print(x_ij_wheat[(i,j)]==0)
+                            
+                for i in surplus_rice.index:
+                    for j in deficit_rice.index:
+                        if i==j:
+                            prob+=x_ij_rice[(i,j)]==0
+                            # print(x_ij_rice[(i,j)]==0)
+
+
+                # In[9]:
+
+
+                # Railhead wise supply
+
+                for i in surplus_wheat.index:
+                    prob+=lpSum(x_ij_wheat[(i,j)] for j in deficit_wheat.index)<=surplus_wheat["Supply"][i]
                     
-            with pd.ExcelWriter("Output\\Results_DPT.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-                r_wheat.to_excel(writer,sheet_name="r_wheat",float_format="%0.3f")
-                r_rice.to_excel(writer,sheet_name="r_rice",float_format="%0.3f")
+                for i in surplus_rice.index:
+                    prob+=lpSum(x_ij_rice[(i,j)] for j in deficit_rice.index)<=surplus_rice["Supply"][i]
 
 
-            relevant_data = pd.ExcelFile("Output//Results_DPT.xlsx")
-            relevant_r_wheat = pd.read_excel(relevant_data, sheet_name="r_wheat", index_col=0)
-            relevant_r_rice = pd.read_excel(relevant_data, sheet_name="r_rice", index_col=0)
-            relevant_Dict_wheat = {}
-            relevant_Dict_rice = {}
-            Rice_cost = []
-            Wheat_cost = []
-            
-            # x_ij_wheat[(i,j)]*rail_cost.loc[i][j]
-            for i in range(len(relevant_r_wheat.index)):
-                for j in range(len(relevant_r_wheat.columns)):
-                    if relevant_r_wheat.iat[i, j] > 0:
-                        relevant_Dict_wheat[relevant_r_wheat.index[i], relevant_r_wheat.columns[j]] = relevant_r_wheat.iloc[i][relevant_r_wheat.columns[j]]
-                        Wheat_cost.append(x_ij_wheat[(relevant_r_wheat.index[i],relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]])
-            
-            for i in range(len(relevant_r_rice.index)):
-                for j in range(len(relevant_r_rice.columns)):
-                    if relevant_r_rice.iat[i, j] > 0:
-                        relevant_Dict_rice[relevant_r_rice.index[i], relevant_r_rice.columns[j]] = relevant_r_rice.iloc[i][relevant_r_rice.columns[j]]
-                        Rice_cost.append(x_ij_wheat[(relevant_r_rice.index[i],relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]])
-            
-            L1 = list(relevant_Dict_wheat.keys())
-            L2 = list(relevant_Dict_wheat.values())
-            A = []
-            B = []
-            C = []
-            
-            df_wheat = pd.DataFrame()
-            
-            for i in range(len(L1)):
-                A.append(L1[i][0])
-                B.append(L1[i][1])
-                C.append(L2[i])
-            
-            df_wheat["From"] = A
-            df_wheat["To"] = B
-            df_wheat["Values"] = C
-            
-            From_state = []
-            To_state = []
-            Commodity = []
-            
-            for i in range(len(L1)):
-                for j in surplus_wheat.index:
-                    if L1[i][0]==j:
-                        From_state.append(surplus_wheat.loc[j]["State"])
-                                    
-            for i in range(len(L1)):
-                for j in surplus_wheat.index:
-                    if L1[i][1]==j:
-                        To_state.append(surplus_wheat.loc[j]["State"])
-            
-            
-            for i in range(len(L1)):
-                Commodity.append("Wheat")
-            
-            df_wheat.insert(1,"From_state",From_state)
-            df_wheat.insert(3,"To_state",To_state)
-            df_wheat.insert(4,"Commodity",Commodity)
-            df_wheat["Cost"] = Wheat_cost
-            
-            
-            
-            L3 = list(relevant_Dict_rice.keys())
-            L4 = list(relevant_Dict_rice.values())
-            
-            D = []
-            E = []
-            F = []
-            
-            df_rice = pd.DataFrame()
-            
-            for i in range(len(L3)):
-                D.append(L3[i][0])
-                E.append(L3[i][1])
-                F.append(L4[i])
-            
-            df_rice["From"] = D
-            df_rice["To"] = E
-            df_rice["Values"] = F
-            
-            From_state_rice = []
-            To_state_rice = []
-            Commodity_rice = []
-            
-            for i in range(len(L3)):
-                for j in surplus_wheat.index:
-                    if L3[i][0]==j:
-                        From_state_rice.append(surplus_wheat.loc[j]["State"])
-                                    
-            for i in range(len(L3)):
-                for j in surplus_wheat.index:
-                    if L3[i][1]==j:
-                        To_state_rice.append(surplus_wheat.loc[j]["State"])
-            
-            
-            
-            for i in range(len(L3)):
-                Commodity_rice.append("Rice")
-            
-            df_rice.insert(1,"From_state",From_state_rice)
-            df_rice.insert(3,"To_state",To_state_rice)
-            df_rice.insert(4,"Commodity",Commodity_rice)
-            df_rice["Cost"] = Rice_cost
-            
-            
-            with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                df_wheat.to_excel(writer, sheet_name="wheat")
-                df_rice.to_excel(writer, sheet_name="rice")
+                # In[10]:
 
-        
+
+                # Railhead wise Demand
+
+                for i in deficit_wheat.index:
+                    prob+=lpSum(x_ij_wheat[(j,i)] for j in surplus_wheat.index)>=deficit_wheat["Demand"][i]
+                    prob+=lpSum(x_ij_wheat[(j,i)] for j in surplus_wheat.index)<=deficit_wheat["Demand"][i]
+                    
+                for i in deficit_rice.index:
+                    prob+=lpSum(x_ij_rice[(j,i)] for j in surplus_rice.index)>=deficit_rice["Demand"][i]
+                    prob+=lpSum(x_ij_rice[(j,i)] for j in surplus_rice.index)<=deficit_rice["Demand"][i]
+
+
+                # In[11]:
+
+
+                prob.writeLP("FCI_monthly_model_allocation_rr.lp")
+                prob.solve()
+                print("Status:", LpStatus[prob.status])
+                print("Minimum Cost of Transportation = Rs.", value(prob.objective),"Lakh")
+                print("Total Number of Variables:",len(prob.variables()))
+                print("Total Number of Constraints:",len(prob.constraints))
+
+
+                r_wheat={}
+                r_wheat=pd.DataFrame([],index=surplus_wheat.index,columns=deficit_wheat.index)
+                    
+                for r in surplus_wheat.index:
+                    for j in deficit_wheat.index:
+                        r_wheat.loc[r][j]=x_ij_wheat[(r,j)].value()
+                        
+                r_rice={}
+                r_rice=pd.DataFrame([],index=surplus_rice.index,columns=deficit_rice.index)
+                    
+                for r in surplus_rice.index:
+                    for j in deficit_rice.index:
+                        r_rice.loc[r][j]=x_ij_rice[(r,j)].value()
+                        
+                with pd.ExcelWriter("Output\\Results_DPT.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+                    r_wheat.to_excel(writer,sheet_name="r_wheat",float_format="%0.3f")
+                    r_rice.to_excel(writer,sheet_name="r_rice",float_format="%0.3f")
+
+
+                relevant_data = pd.ExcelFile("Output//Results_DPT.xlsx")
+                relevant_r_wheat = pd.read_excel(relevant_data, sheet_name="r_wheat", index_col=0)
+                relevant_r_rice = pd.read_excel(relevant_data, sheet_name="r_rice", index_col=0)
+                relevant_Dict_wheat = {}
+                relevant_Dict_rice = {}
+                Rice_cost = []
+                Wheat_cost = []
+
+                # x_ij_wheat[(i,j)]*rail_cost.loc[i][j]
+                for i in range(len(relevant_r_wheat.index)):
+                    for j in range(len(relevant_r_wheat.columns)):
+                        if relevant_r_wheat.iat[i, j] > 0:
+                            relevant_Dict_wheat[relevant_r_wheat.index[i], relevant_r_wheat.columns[j]] = relevant_r_wheat.iloc[i][relevant_r_wheat.columns[j]]
+                            Wheat_cost.append((x_ij_wheat[(relevant_r_wheat.index[i],relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]]))
+
+                for i in range(len(relevant_r_rice.index)):
+                    for j in range(len(relevant_r_rice.columns)):
+                        if relevant_r_rice.iat[i, j] > 0:
+                            relevant_Dict_rice[relevant_r_rice.index[i], relevant_r_rice.columns[j]] = relevant_r_rice.iloc[i][relevant_r_rice.columns[j]]
+                            Rice_cost.append((x_ij_wheat[(relevant_r_rice.index[i],relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]]))
+
+
+
+                L1 = list(relevant_Dict_wheat.keys())
+                L2 = list(relevant_Dict_wheat.values())
+                A = []
+                B = []
+                C = []
+
+                df_wheat = pd.DataFrame()
+
+                for i in range(len(L1)):
+                    A.append(L1[i][0])
+                    B.append(L1[i][1])
+                    C.append(L2[i])
+
+                df_wheat["From"] = A
+                df_wheat["To"] = B
+                df_wheat["Values"] = C
+
+                From_state = []
+                To_state = []
+                Commodity = []
+
+                for i in range(len(L1)):
+                    for j in surplus_wheat.index:
+                        if L1[i][0]==j:
+                            From_state.append(surplus_wheat.loc[j]["State"])
+                                            
+                for i in range(len(L1)):
+                    for j in surplus_wheat.index:
+                        if L1[i][1]==j:
+                            To_state.append(surplus_wheat.loc[j]["State"])
+
+
+                for i in range(len(L1)):
+                    Commodity.append("Wheat")
+
+                df_wheat.insert(1,"From_state",From_state)
+                df_wheat.insert(3,"To_state",To_state)
+                df_wheat.insert(4,"Commodity",Commodity)
+                df_wheat["Cost"] = Wheat_cost
+
+
+
+                L3 = list(relevant_Dict_rice.keys())
+                L4 = list(relevant_Dict_rice.values())
+
+                D = []
+                E = []
+                F = []
+
+                df_rice = pd.DataFrame()
+
+                for i in range(len(L3)):
+                    D.append(L3[i][0])
+                    E.append(L3[i][1])
+                    F.append(L4[i])
+
+                df_rice["From"] = D
+                df_rice["To"] = E
+                df_rice["Values"] = F
+
+                From_state_rice = []
+                To_state_rice = []
+                Commodity_rice = []
+
+                for i in range(len(L3)):
+                    for j in surplus_wheat.index:
+                        if L3[i][0]==j:
+                            From_state_rice.append(surplus_wheat.loc[j]["State"])
+                                            
+                for i in range(len(L3)):
+                    for j in surplus_wheat.index:
+                        if L3[i][1]==j:
+                            To_state_rice.append(surplus_wheat.loc[j]["State"])
+
+
+
+                for i in range(len(L3)):
+                    Commodity_rice.append("Rice")
+
+                df_rice.insert(1,"From_state",From_state_rice)
+                df_rice.insert(3,"To_state",To_state_rice)
+                df_rice.insert(4,"Commodity",Commodity_rice)
+                df_rice["Cost"] = Rice_cost
+
+
+                with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df_wheat.to_excel(writer, sheet_name="wheat")
+                    df_rice.to_excel(writer, sheet_name="rice")
+
+                List_data = pd.ExcelFile("Output//List_DPT.xlsx")
+                List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
+                List_wheat = pd.read_excel(List_data, sheet_name="wheat", index_col=0)
+
+                def extract_value_before_asterisk(data):
+                    return float(data.split('*')[0])
+
+
+                List_wheat["Cost"] = List_wheat["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+                List_rice["Cost"] = List_rice["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+
+                # Write the updated DataFrame back to the Excel file
+                with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    List_rice.to_excel(writer, sheet_name="rice")
+                    List_wheat.to_excel(writer, sheet_name="wheat")
+
+                    
 
                
             data1["status"] = 1
