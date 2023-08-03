@@ -49,6 +49,8 @@ function Daily_Planner() {
   };
 
   const handleUploadConfig1 = async () => {
+    if (Scenerio == "Scenerio 2"){
+    }
     if (!fileSelected) {
       alert("Please Select The File First");
       return;
@@ -102,6 +104,23 @@ function Daily_Planner() {
   const [scn, setscn] = useState(false);
   const [uploadst, setuploadst] = useState(false);
 
+  const handleSelectChange = (e) => {
+    const selectedScenerio = e.target.value;
+
+    // Update Scenerio state
+    set_Scenerio(selectedScenerio);
+  
+
+    // Set the value of setupload based on the selectedScenerio
+    if (selectedScenerio === "Scenerio 1") {
+      setuploadst(false);
+      setscn(false);
+    } else if (selectedScenerio === "Scenerio 2") {
+      setuploadst(true);
+      setscn(true);
+    }
+  };
+
   const handleSolve = async () => {
     document.getElementById('toggle').checked=true;
     alert("This action will take time, click OK to continue.");
@@ -109,7 +128,6 @@ function Daily_Planner() {
     // console.log(document.getElementById('toggle').value);
     if (Scenerio == "Scenerio 2"){
       setscn(true);
-      setuploadst(true);
     }
 
     const payload = {
@@ -443,10 +461,26 @@ function Daily_Planner() {
           </li>
           <li className="active">Daily plan</li>
         </ul>
-
         <div className="page-content-wrap">
           <div className="row">
+          <br/>
+        
+          <label>
+      <strong style={{ fontSize: "20px", marginLeft: "90px", color: "#9d0921" }}>
+        Select Scenario
+      </strong>
+      <select
+        value={Scenerio}
+        onChange={handleSelectChange}
+        style={{ marginLeft: "600px" }}
+      >
+        <option value="Scenerio 1">Scenario 1</option>
+        <option value="Scenerio 2">Scenario 2</option>
+      </select>
+    </label>
+                  <br/>
             <div className="col-md-12">
+              
               <br />
               <div className="row" style={{ marginLeft: "15px" }}>
                 <div style={{fontSize:'20px', fontWeight:'700'}}><i className="fa fa-file-excel-o" aria-hidden="true"></i> Template</div>
@@ -488,7 +522,7 @@ function Daily_Planner() {
                     </div>
                   </div>
                   <div className="col-md-3">
-                  {setuploadst && (
+                  {uploadst && (
                         <div>
                     <img
                       className="upload_class"
@@ -499,12 +533,12 @@ function Daily_Planner() {
                     />
                     </div>
                           )}
-                          {!setuploadst && (
+                          {!uploadst && (
                         <div>
                     <img
                       className="upload_class"
                       src={background1}
-                      id="uploadConfig"
+                      id="uploadConfig1"
                       onClick={handleUploadConfig1}
                       disabled={!fileSelected}
                     />
@@ -541,21 +575,7 @@ function Daily_Planner() {
                       <option value="TEFD">TEFD</option>
                     </select>
                   </label>
-                  <label>
-                    <strong style={{ fontSize: "20px", marginLeft: "15px" ,color: "#9d0921",}}>
-                      Select Scenerio
-                    </strong>
-                    <select
-                      value={Scenerio}
-                      onChange={(e) => set_Scenerio(e.target.value)}
-                      style={{ marginLeft: "600px" }}
-                    >
-                      <option value="Scenerio 1">Scenerio 1</option>
-                      <option value="Scenerio 2">Scenerio 2</option>
-                    </select>
-                  </label>
-                  <br />
-                  <br />
+                
                   {/* <p style={{ margin: 0, padding: 0 }}>
                     <strong
                       style={{
