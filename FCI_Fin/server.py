@@ -268,12 +268,13 @@ def Monthly_Solution():
 
 
             data=pd.ExcelFile("Input\\Input_Template.xlsx")
+            matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
             # blocking_data = pd.ExcelFile("Input\\Route_blocker_DPT.xlsx")
             surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
             deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
             surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
             deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
-            rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
+            rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix",index_col=0)
             states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
             # states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
             # Route_block=pd.read_excel(blocking_data,sheet_name="Sheet1",index_col=0)
@@ -550,13 +551,14 @@ def Daily_Planner():
             
             if Scenerio == "Scenerio 2":
                 data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen2.xlsx")
+                matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
                 # blocking_data = pd.ExcelFile("Input\\Route_blocker_DPT.xlsx")
 
                 surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
                 deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
                 surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
                 deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
-                rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
+                rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
                 states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
                 states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
 
@@ -768,12 +770,13 @@ def Daily_Planner():
             else:
 
                 data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
+                matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
 
                 surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
                 deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
                 surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
                 deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
-                rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
+                rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
                 states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
                 states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
 
@@ -1021,8 +1024,9 @@ def Alternate_Railhead_Solve():
     if request.method == "POST":
         try:
             file = pd.ExcelFile("Input\\Input_Template.xlsx")
+            matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
             surplus_wheat=pd.read_excel(file,sheet_name="Surplus_wheat",index_col=1)
-            rail_cost=pd.read_excel(file,sheet_name="Railhead_cost_matrix",index_col=0)
+            rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix",index_col=0)
             south_zone=["Andhra Pradesh","Kerala","Karnataka","Tamil Nadu","Telangana"]
             north_zone=["Rajasthan","Punjab","Haryana","Uttarakhand","UP"]
             east_zone=["Odisha","Jharkhand","Bihar","West Bengal"]
