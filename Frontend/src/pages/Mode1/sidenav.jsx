@@ -44,12 +44,12 @@ function Sidenav() {
         <br />
         <br />
         <br />
-        {/* <li>
-          <a href="/Alternate_Railhead">
+        <li>
+          <a href="/Template">
             <span className="fa fa-train"></span>{" "}
-            <span className="xn-text">Alternate Railheads</span>
+            <span className="xn-text">Templates</span>
           </a>
-        </li> */}
+        </li>
         <li>
           <a href="/logout">
             <span className="fa fa-sign-out"></span>{" "}

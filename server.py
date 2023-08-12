@@ -35,7 +35,7 @@ def login():
     return (json.dumps(json_object, indent = 1))
 
 @app.route("/upload_Monthly_File_M01",methods = ["POST"])
-def uploadConfigFile():
+def upload_Monthly_File_M01():
     data = {}
     try:
         file = request.files['uploadFile']
@@ -50,7 +50,7 @@ def uploadConfigFile():
     return(json.dumps(json_object, indent = 1))
 
 @app.route("/upload_Monthly_File_M02",methods = ["POST"])
-def uploadConfigFile_M02():
+def upload_Monthly_File_M02():
     data = {}
     try:
         file = request.files['uploadFile_M02']
@@ -65,7 +65,7 @@ def uploadConfigFile_M02():
     return(json.dumps(json_object, indent = 1))
 
 @app.route("/uploadDailyFile_S2",methods = ["POST"])
-def uploadDailyFile():
+def uploadDailyFile_S2():
     data = {}
     try:
         file = request.files['uploadFile']
@@ -80,7 +80,7 @@ def uploadDailyFile():
     return(json.dumps(json_object, indent = 1))
 
 @app.route("/uploadDailyFile_S1",methods = ["POST"])
-def uploadDailyFile1():
+def uploadDailyFile_S1():
     data = {}
     try:
         file = request.files['uploadFile']
@@ -96,7 +96,7 @@ def uploadDailyFile1():
     
 
 @app.route("/read_Monthly_state_table",methods = ["POST","GET"])
-def read_Total_Result():
+def read_Monthly_state_table():
     if request.method == "POST":        
         try: 
             df1 = pd.read_excel('Output\\Monthly_State_To_State_Table.xlsx', sheet_name="Wheat")
@@ -160,7 +160,7 @@ def read_Relevant_Result():
 #         return ("error")
     
 @app.route("/read_Daily_Planner_S2",methods = ["POST","GET"])
-def read_Daily_Planner():
+def read_Daily_Planner_S2():
     if request.method == "POST":        
         try: 
             df1 = pd.read_excel('Output\\List_DPT2.xlsx', sheet_name="rice") 
@@ -177,7 +177,7 @@ def read_Daily_Planner():
         return ("error")
 
 @app.route("/read_Daily_Planner_S1",methods = ["POST","GET"])
-def read_Daily_Planner1():
+def read_Daily_Planner_S1():
     if request.method == "POST":        
         try: 
             df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rice") 
@@ -193,8 +193,131 @@ def read_Daily_Planner1():
     else:
         return ("error")
     
+@app.route("/read_Monthly_Template_M1",methods = ["POST","GET"])
+def read_Monthly_Template_M1():
+    if request.method == "POST":        
+        try: 
+            df1 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_wheat") 
+            df2 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_wheat")
+            df3 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_rice")
+            df4 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_rice")
+            df5 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_supply")
+            df6 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_allocation")
+            df7 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Rail_cost_chart")
+            json_data1 = df1.to_json(orient='records', indent=1)
+            json_data2 = df2.to_json(orient='records', indent=1)
+            json_data3 = df3.to_json(orient='records', indent=1)
+            json_data4 = df4.to_json(orient='records', indent=1)
+            json_data5 = df5.to_json(orient='records', indent=1)
+            json_data6 = df6.to_json(orient='records', indent=1)
+            json_data7 = df7.to_json(orient='records', indent=1)
+            json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
+        except:
+            json_data = json.dumps({"Status": 0}, indent=1)
+
+        json_object = json.dumps(json_data)
+        return json_object
+    else:
+        return ("error")
+    
+@app.route("/read_Daily_Template_S1",methods = ["POST","GET"])
+def read_Daily_Template_S1():
+    if request.method == "POST":        
+        try: 
+            df1 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_wheat") 
+            df2 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_wheat")
+            df3 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_rice")
+            df4 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_rice")
+            df5 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_supply")
+            df6 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_allocation")
+            df7 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Rail_cost_chart")
+            json_data1 = df1.to_json(orient='records', indent=1)
+            json_data2 = df2.to_json(orient='records', indent=1)
+            json_data3 = df3.to_json(orient='records', indent=1)
+            json_data4 = df4.to_json(orient='records', indent=1)
+            json_data5 = df5.to_json(orient='records', indent=1)
+            json_data6 = df6.to_json(orient='records', indent=1)
+            json_data7 = df7.to_json(orient='records', indent=1)
+            json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
+        except:
+            json_data = json.dumps({"Status": 0}, indent=1)
+
+        json_object = json.dumps(json_data)
+        return json_object
+    else:
+        return ("error")
+    
+@app.route("/read_Daily_Template_S2",methods = ["POST","GET"])
+def read_Daily_Template_S2():
+    if request.method == "POST":        
+        try: 
+            df1 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_wheat") 
+            df2 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_wheat")
+            df3 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_rice")
+            df4 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_rice")
+            df5 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_supply")
+            df6 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_allocation")
+            df7 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Rail_cost_chart")
+            json_data1 = df1.to_json(orient='records', indent=1)
+            json_data2 = df2.to_json(orient='records', indent=1)
+            json_data3 = df3.to_json(orient='records', indent=1)
+            json_data4 = df4.to_json(orient='records', indent=1)
+            json_data5 = df5.to_json(orient='records', indent=1)
+            json_data6 = df6.to_json(orient='records', indent=1)
+            json_data7 = df7.to_json(orient='records', indent=1)
+            json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
+        except:
+            json_data = json.dumps({"Status": 0}, indent=1)
+
+        json_object = json.dumps(json_data)
+        return json_object
+    else:
+        return ("error")
+    
+@app.route("/Download_Template_to_add", methods=["POST", "GET"])
+def Download_Template_to_add():
+    if request.method == "POST":
+        try:
+            df1 = pd.read_excel('Input\\Matrices.xlsx', sheet_name="Railhead_cost_matrix_1rake") 
+            df2 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_wheat") 
+
+            prev_col = df1.columns
+            present_col = df2["Railhead"]
+
+            prev_st = set(prev_col)
+            add_rh = []
+            for rh in present_col:
+                if rh not in prev_st:
+                    add_rh.append(rh)
+
+            # Create a dictionary with "Railhead" as the first column
+            data = {"": add_rh}
+
+            # Add other columns
+            for col in present_col:
+                data[col] = [""] * len(add_rh)
+
+            Excel_data = pd.DataFrame(data)
+
+            json_data1 = Excel_data.to_json(orient='records', indent=1)
+
+            json_data = {
+                "Railhead_cost_matrix_1rake": json_data1,
+                "Railhead_cost_matrix": json_data1,
+                "Railhead_dist_matrix": json_data1
+            }
+        except Exception as e:
+            json_data = {"Status": 0, "Error": str(e)}
+        json_object = json.dumps(json_data, indent=1)
+        return json_object
+    else:
+        return "error"
+
+
+
+    
 @app.route("/Monthly_readPickle",methods = ["POST","GET"])
-def readPickle():
+def Monthly_readPickle():
     try:
         dbfile = open('Output\\OutputPickle.pkl', 'rb')     
         db = pickle.load(dbfile)
@@ -203,6 +326,53 @@ def readPickle():
         db = {}
         db["status"] = 0
     return(json.dumps(db, indent = 1))
+
+
+@app.route("/Update_matrices",methods = ["POST"])
+def Update_matrices():
+    data = {}
+    try:
+        file = request.files['uploadFile']
+        file.save("Input//Update_matrices.xlsx")
+        Railhead_cost_matrix_1rake_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
+        Railhead_cost_matrix_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
+        Railhead_dist_matrix_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
+        Railhead_cost_matrix_1rake_M_data = pd.read_excel("Input/Matrices.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
+        Railhead_cost_matrix_M_data = pd.read_excel("Input/Matrices.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
+        Railhead_dist_matrix_M_data = pd.read_excel("Input/Matrices.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
+
+        for row in Railhead_cost_matrix_1rake_U_data.index:
+            for col in Railhead_cost_matrix_1rake_U_data.columns:
+                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
+                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
+                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
+
+        for row in Railhead_cost_matrix_U_data.index:
+            for col in Railhead_cost_matrix_U_data.columns:
+                value = Railhead_cost_matrix_U_data.loc[row, col]
+                Railhead_cost_matrix_M_data.at[row, col] = value
+                Railhead_cost_matrix_M_data.at[col, row] = value
+
+        for row in Railhead_dist_matrix_U_data.index:
+            for col in Railhead_dist_matrix_U_data.columns:
+                value = Railhead_dist_matrix_U_data.loc[row, col]
+                Railhead_dist_matrix_M_data.at[row, col] = value
+                Railhead_dist_matrix_M_data.at[col, row] = value
+
+        with pd.ExcelWriter("Input/Matrices.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake")
+            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix")
+            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix")
+
+        data['status'] = 1
+    except:
+        data['status'] = 0
+    
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
+
+    return(json.dumps(json_object, indent = 1))
+
 
 @app.route("/Alternate_Railhead_readPickle",methods = ["POST","GET"])
 def Alternate_Railhead_readPickle():
@@ -217,6 +387,125 @@ def Alternate_Railhead_readPickle():
         db = {}
         db["status"] = 0
     return jsonify(db)
+
+
+@app.route("/Add_Railhead", methods=["POST", "GET"])
+def Add_Railhead():
+    try:
+        Railhead_name = []  
+        Railhead_State = [] 
+        fetched_data = request.get_json()
+        Railhead_name.append(fetched_data["railhead"].upper())
+        Railhead_State.append(fetched_data['state']) 
+        Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
+        Daily_Template_S1 = 'Input\\Daily_Template_Scene1.xlsx'
+        Daily_Template_S2 = 'Input\\Daily_Template_Scene2.xlsx'
+
+        # Sheets
+        Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
+        Daily_Sheets_S1 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
+        Daily_Sheets_S2 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
+
+        # Initialize lists for DataFrames
+        Monthly_df = []
+        Daily_S1_df = []
+        Daily_S2_df = []
+
+        # Read data from Excel files and store in lists
+        for sheets in Monthly_Sheets:
+            x = pd.read_excel(Monthly_Template_M1, sheet_name=sheets)
+            Monthly_df.append(x)
+
+        for sheets in Daily_Sheets_S1:
+            x = pd.read_excel(Daily_Template_S1, sheet_name=sheets)
+            Daily_S1_df.append(x)
+
+        for sheets in Daily_Sheets_S2:
+            x = pd.read_excel(Daily_Template_S2, sheet_name=sheets)
+            Daily_S2_df.append(x)
+
+        # Append data to the DataFrames
+        for i in range(len(Monthly_Sheets)):
+            for j in range(len(Railhead_name)):
+                Monthly_df[i] = pd.concat([Monthly_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
+
+        for i in range(len(Daily_Sheets_S1)):
+            for j in range(len(Railhead_name)):
+                Daily_S1_df[i] = pd.concat([Daily_S1_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
+
+        for i in range(len(Daily_Sheets_S2)):
+            for j in range(len(Railhead_name)):
+                Daily_S2_df[i] = pd.concat([Daily_S2_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
+
+        # Write modified DataFrames back to Excel files
+        with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            for i in range(len(Monthly_Sheets)):
+                Monthly_df[i].to_excel(writer, sheet_name=Monthly_Sheets[i])
+
+        with pd.ExcelWriter("Input\\Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            for i in range(len(Daily_Sheets_S1)):
+                Daily_S1_df[i].to_excel(writer, sheet_name=Daily_Sheets_S1[i])
+
+        with pd.ExcelWriter("Input\\Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            for i in range(len(Daily_Sheets_S2)):
+                Daily_S2_df[i].to_excel(writer, sheet_name=Daily_Sheets_S2[i])
+
+        db = {"status": 1, "message": "Railhead names and states added successfully"}
+    except Exception as e:
+        db = {"status": 0, "message": str(e)}
+
+    return json.dumps(db, indent=1)
+
+@app.route("/Remove_Railhead", methods=["POST", "GET"])
+def Remove_Railhead():
+    try:
+        Railhead_name = []  
+        Railhead_State = [] 
+        fetched_data = request.get_json()
+        Railhead_name.append(fetched_data["railhead"].upper())
+        Railhead_State.append(fetched_data['state']) 
+        Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
+        Daily_Template_S1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
+        Daily_Template_S2 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
+        Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
+        Daily_Sheets_S1 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
+        Daily_Sheets_S2 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
+        Monthly_df = []
+        Daily_S1_df = []
+        Daily_S2_df = []
+        for sheets in Monthly_Sheets:
+            x = pd.read_excel(Monthly_Template_M1, sheet_name=sheets)
+            Monthly_df.append(x)
+        for sheets in Daily_Sheets_S1:
+            x = pd.read_excel(Daily_Template_S1, sheet_name=sheets)
+            Daily_S1_df.append(x)
+        for sheets in Daily_Sheets_S2:
+            x = pd.read_excel(Daily_Template_S2, sheet_name=sheets)
+            Daily_S2_df.append(x)
+
+        for i in range(len(Monthly_Sheets)):
+            for j in range(len(Railhead_name)):
+                for df in [Monthly_df[i], Daily_S1_df[i], Daily_S2_df[i]]:
+                    if "Railhead" in df.columns:
+                        df.drop(df[df["Railhead"] == Railhead_name[j]].index, inplace=True)
+
+        with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+            for i in range(len(Monthly_Sheets)):
+                Monthly_df[i].to_excel(writer, sheet_name = Monthly_Sheets[i], index=False)
+        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen1.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+            for i in range(len(Daily_Sheets_S1)):
+                Daily_S1_df[i].to_excel(writer, sheet_name = Daily_Sheets_S1[i], index=False)
+        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen2.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+            for i in range(len(Daily_Sheets_S2)):
+                Daily_S2_df[i].to_excel(writer, sheet_name = Daily_Sheets_S2[i], index=False)
+
+        db = {"status": 1, "message": "Railhead names and states added successfully"}
+    except Exception as e:
+        db = {"status": 0, "message": str(e)}
+
+    return json.dumps(db, indent=1)
+
+
 
 @app.route("/Monthly_Solution",methods = ["POST","GET"])
 def Monthly_Solution():

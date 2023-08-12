@@ -6,7 +6,7 @@ import Home from './pages/home';
 import Logout from './pages/logout';
 import Monthly_Solution from './pages/Mode1/Monthly_Solution';
 import Alternate_Railhead from './pages/Mode1/Alternate_Railhead';
-import Daily_Scheduler from './pages/Mode1/Daily_Scheduler';
+import Template from './pages/Mode1/Template';
 import Monthly_Solution_M02 from './pages/Mode2/Monthly_Solution_M02';
 import Alternate_Railhead_M02 from './pages/Mode2/Alternate_Railhead_M02';
 import Daily_Scheduler_M02 from './pages/Mode2/Daily_Scheduler_M02';
@@ -23,7 +23,7 @@ function App() {
     <Route path='/logout' element={<Logout />} />
 		<Route path='/Monthly_Solution' element={<Monthly_Solution />} />
     <Route path='/Alternate_Railhead' element={<Alternate_Railhead />} />
-    <Route path='/Daily_Scheduler' element={<Daily_Scheduler />} />
+    <Route path='/Template' element={<Template />} />
     <Route path='/Monthly_Solution_M02' element={<Monthly_Solution_M02 />} />
     <Route path='/Alternate_Railhead_M02' element={<Alternate_Railhead_M02 />} />
     <Route path='/Daily_Scheduler_M02' element={<Daily_Scheduler_M02 />} />
