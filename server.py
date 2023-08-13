@@ -394,9 +394,9 @@ def Add_Railhead():
     try:
         Railhead_name = []
         Railhead_State = []
-        # fetched_data = request.get_json()
-        # Railhead_name.append(fetched_data["railhead"].upper())
-        # Railhead_State.append(fetched_data['state'])
+        fetched_data = request.get_json()
+        Railhead_name.append(fetched_data["railhead"].upper())
+        Railhead_State.append(fetched_data['state'])
         Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
         Daily_Template_S1 = 'Input\\Daily_Template_Scene1.xlsx'
         Daily_Template_S2 = 'Input\\Daily_Template_Scene2.xlsx'
@@ -474,8 +474,8 @@ def Remove_Railhead():
         Railhead_name.append(fetched_data["railhead"].upper())
         Railhead_State.append(fetched_data['state'])
         Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
-        Daily_Template_S1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
-        Daily_Template_S2 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
+        Daily_Template_S1 = 'Input\\Daily_Template_Scene1.xlsx'
+        Daily_Template_S2 = 'Input\\Daily_Template_Scene1.xlsx'
         Data_sheet = 'Frontend\\public\\data\\Updated_railhead_list.xlsx'
 
         Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
@@ -501,6 +501,7 @@ def Remove_Railhead():
             for j in range(len(Railhead_name)):
                 for df in [Monthly_df[i], Daily_S1_df[i], Daily_S2_df[i]]:
                         df.drop(df[df["Railhead"] == Railhead_name[j]].index, inplace=True)
+                        
         for i in range(len(Railhead_name)):
             Data_sheets.drop(Data_sheets[Data_sheets["RH_code"] == Railhead_name[i]].index, inplace=True)
 
