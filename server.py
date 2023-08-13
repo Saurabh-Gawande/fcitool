@@ -360,9 +360,9 @@ def Update_matrices():
                 Railhead_dist_matrix_M_data.at[col, row] = value
 
         with pd.ExcelWriter("Input/Matrices.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake")
-            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix")
-            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix")
+            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=False)
+            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=False)
+            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=False)
 
         data['status'] = 1
     except:
@@ -392,14 +392,17 @@ def Alternate_Railhead_readPickle():
 @app.route("/Add_Railhead", methods=["POST", "GET"])
 def Add_Railhead():
     try:
-        Railhead_name = []  
-        Railhead_State = [] 
-        fetched_data = request.get_json()
-        Railhead_name.append(fetched_data["railhead"].upper())
-        Railhead_State.append(fetched_data['state']) 
+        Railhead_name = []
+        Railhead_State = []
+        # fetched_data = request.get_json()
+        # Railhead_name.append(fetched_data["railhead"].upper())
+        # Railhead_State.append(fetched_data['state'])
         Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
         Daily_Template_S1 = 'Input\\Daily_Template_Scene1.xlsx'
         Daily_Template_S2 = 'Input\\Daily_Template_Scene2.xlsx'
+        Data_sheet = 'Frontend/public/data/Updated_railhead_list.xlsx'
+
+
 
         # Sheets
         Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
@@ -410,6 +413,7 @@ def Add_Railhead():
         Monthly_df = []
         Daily_S1_df = []
         Daily_S2_df = []
+        Data_sheets = pd.read_excel(Data_sheet, sheet_name="RH_Sheet")
 
         # Read data from Excel files and store in lists
         for sheets in Monthly_Sheets:
@@ -424,6 +428,8 @@ def Add_Railhead():
             x = pd.read_excel(Daily_Template_S2, sheet_name=sheets)
             Daily_S2_df.append(x)
 
+        for i in range(len(Railhead_name)):
+                Data_sheets = pd.concat([Data_sheets, pd.DataFrame({"RH_code": [Railhead_name[i]], "State": [Railhead_State[i]]})])
         # Append data to the DataFrames
         for i in range(len(Monthly_Sheets)):
             for j in range(len(Railhead_name)):
@@ -440,15 +446,18 @@ def Add_Railhead():
         # Write modified DataFrames back to Excel files
         with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Monthly_Sheets)):
-                Monthly_df[i].to_excel(writer, sheet_name=Monthly_Sheets[i])
+                Monthly_df[i].to_excel(writer, sheet_name=Monthly_Sheets[i], index=False)
 
         with pd.ExcelWriter("Input\\Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Daily_Sheets_S1)):
-                Daily_S1_df[i].to_excel(writer, sheet_name=Daily_Sheets_S1[i])
+                Daily_S1_df[i].to_excel(writer, sheet_name=Daily_Sheets_S1[i], index=False)
 
         with pd.ExcelWriter("Input\\Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Daily_Sheets_S2)):
-                Daily_S2_df[i].to_excel(writer, sheet_name=Daily_Sheets_S2[i])
+                Daily_S2_df[i].to_excel(writer, sheet_name=Daily_Sheets_S2[i], index=False)
+
+        with pd.ExcelWriter("Frontend\\public\\data\\Updated_railhead_list.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            Data_sheets.to_excel(writer, sheet_name="RH_Sheet", index=False)
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
     except Exception as e:
@@ -459,20 +468,25 @@ def Add_Railhead():
 @app.route("/Remove_Railhead", methods=["POST", "GET"])
 def Remove_Railhead():
     try:
-        Railhead_name = []  
-        Railhead_State = [] 
+        Railhead_name = []
+        Railhead_State = []
         fetched_data = request.get_json()
         Railhead_name.append(fetched_data["railhead"].upper())
-        Railhead_State.append(fetched_data['state']) 
+        Railhead_State.append(fetched_data['state'])
         Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
         Daily_Template_S1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
         Daily_Template_S2 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
+        Data_sheet = 'Frontend\\public\\data\\Updated_railhead_list.xlsx'
+
         Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
         Daily_Sheets_S1 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
         Daily_Sheets_S2 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
+
         Monthly_df = []
         Daily_S1_df = []
         Daily_S2_df = []
+        Data_sheets = pd.read_excel(Data_sheet, sheet_name="RH_Sheet")
+
         for sheets in Monthly_Sheets:
             x = pd.read_excel(Monthly_Template_M1, sheet_name=sheets)
             Monthly_df.append(x)
@@ -486,18 +500,22 @@ def Remove_Railhead():
         for i in range(len(Monthly_Sheets)):
             for j in range(len(Railhead_name)):
                 for df in [Monthly_df[i], Daily_S1_df[i], Daily_S2_df[i]]:
-                    if "Railhead" in df.columns:
                         df.drop(df[df["Railhead"] == Railhead_name[j]].index, inplace=True)
+        for i in range(len(Railhead_name)):
+            Data_sheets.drop(Data_sheets[Data_sheets["RH_code"] == Railhead_name[i]].index, inplace=True)
 
-        with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+        with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Monthly_Sheets)):
-                Monthly_df[i].to_excel(writer, sheet_name = Monthly_Sheets[i], index=False)
-        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen1.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+                Monthly_df[i].to_excel(writer, sheet_name=Monthly_Sheets[i], index=False)
+        with pd.ExcelWriter("Input\\Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Daily_Sheets_S1)):
-                Daily_S1_df[i].to_excel(writer, sheet_name = Daily_Sheets_S1[i], index=False)
-        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen2.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+                Daily_S1_df[i].to_excel(writer, sheet_name=Daily_Sheets_S1[i], index=False)
+        with pd.ExcelWriter("Input\\Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Daily_Sheets_S2)):
-                Daily_S2_df[i].to_excel(writer, sheet_name = Daily_Sheets_S2[i], index=False)
+                Daily_S2_df[i].to_excel(writer, sheet_name=Daily_Sheets_S2[i], index=False)
+        with pd.ExcelWriter("Frontend\\public\\data\\Updated_railhead_list.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            Data_sheets.to_excel(writer, sheet_name="RH_Sheet", index=False)
+
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
     except Exception as e:
