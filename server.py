@@ -360,9 +360,9 @@ def Update_matrices():
                 Railhead_dist_matrix_M_data.at[col, row] = value
 
         with pd.ExcelWriter("Input/Matrices.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=False)
-            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=False)
-            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=False)
+            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
+            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
+            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
 
         data['status'] = 1
     except:
