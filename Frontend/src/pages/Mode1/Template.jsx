@@ -257,7 +257,7 @@ function Template() {
       });
       // Handle the response here, such as checking status or processing the result
       if (response.ok) {
-        alert("Railhead Added")
+        alert("Railhead Added");
         const data = await response.json();
         console.log("Response data:", data);
         // Perform additional actions based on the response data
@@ -285,7 +285,7 @@ function Template() {
       });
       // Handle the response here, such as checking status or processing the result
       if (response.ok) {
-        alert("Railhead Removed")
+        alert("Railhead Removed");
         const data = await response.json();
         console.log("Response data:", data);
         // Perform additional actions based on the response data
@@ -296,14 +296,9 @@ function Template() {
       console.error("An error occurred:", error);
     }
   };
-  
-  
 
   return (
-    <div
-      className="page-container"
-      style={{ backgroundColor: "#ebab44b0", height: "100vh" }}
-    >
+    <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
       <Sidenav />
       <div
         className="page-content"
@@ -339,117 +334,47 @@ function Template() {
         </ul>
         <div className="page-content-wrap">
           <p style={{ marginLeft: "30px", fontWeight: "bold" }}>
-            To update the matrix, first download the template & then upload the
-            updated matrix
+            <h3>
+              <strong>Download Updated Template</strong>
+            </h3>
           </p>
           <div className="row">
-            <div className="col-md-12" style={{display:'flex'}}>
+            <div className="col-md-12">
               <div className="col-md-4">
-              <div>
-                <button
-                  style={{ color: "white", marginLeft: "15px" }}
-                  className="btn btn-danger dropdown-toggle"
-                  onClick={() => exportToExcel4()}
-                >
-                  <i className="fa fa-bars"></i>
-                  Download Matrix to update data
-                </button>
+                <div style={{ display: "flex" }}>
+                  <button
+                    style={{ color: "white", marginLeft: "15px" }}
+                    className="btn btn-danger dropdown-toggle"
+                    onClick={() => exportToExcel1()}
+                  >
+                    <i className="fa fa-bars"></i>
+                    Download Monthly Template
+                  </button>
+                  <button
+                    style={{ color: "white", marginLeft: "100px" }}
+                    className="btn btn-danger dropdown-toggle"
+                    onClick={() => exportToExcel2()}
+                  >
+                    <i className="fa fa-bars"></i>
+                    Download Daily Template of Scenario 1
+                  </button>
+                  <button
+                    style={{ color: "white", marginLeft: "100px" }}
+                    className="btn btn-danger dropdown-toggle"
+                    onClick={() => exportToExcel3()}
+                  >
+                    <i className="fa fa-bars"></i>
+                    Download Daily Template of Scenario 2
+                  </button>
+                </div>
               </div>
-              
-              <br />
-              <div>
-                <button
-                  style={{ color: "white", marginLeft: "15px" }}
-                  className="btn btn-danger dropdown-toggle"
-                  onClick={() => exportToExcel1()}
-                >
-                  <i className="fa fa-bars"></i>
-                  Download Monthly Template
-                </button>
-              </div>
-              
-              </div>
-              <br />
-              <div className="col-md-5">
-              <div>
-                <button
-                  style={{ color: "white", marginLeft: "15px" }}
-                  className="btn btn-danger dropdown-toggle"
-                  onClick={() => exportToExcel2()}
-                >
-                  <i className="fa fa-bars"></i>
-                  Download Daily Template of Scenario 1
-                </button>
-              </div>
-              
-              <br />
-              <div>
-                <button
-                  style={{ color: "white", marginLeft: "15px" }}
-                  className="btn btn-danger dropdown-toggle"
-                  onClick={() => exportToExcel3()}
-                >
-                  <i className="fa fa-bars"></i>
-                  Download Daily Template of Scenario 2
-                </button>
-              </div>
-              </div>
-              <br />
             </div>
-            <form
-                  action=""
-                  encType="multipart/form-data"
-                  id="uploadForm"
-                  className="form-horizontal"
-                  style={{marginTop:'100px'}}
-                >
-                  <div className="col-md-6" style={{ marginTop: "15px" , marginLeft:'50px'}}>
-                    <div className="form-group">
-                      <div className="col-md-9">
-                        <div className="input-group">
-                          <span
-                            className="input-group-addon"
-                            style={{
-                              backgroundColor: "rgba(235, 171, 68, 0.69)",
-                            }}
-                          >
-                            <span className="fa fa-info" />
-                          </span>
-                          
-                          <input
-                            type="file"
-                            className="form-control"
-                            onChange={handleFileChange}
-                            id="uploadFile"
-                            name="uploadFile"
-                            defaultValue=""
-                            required=""
-                          />
-                          
-                          
-                        </div>
-                        <span className="help-block" style={{ color: "black" }}>
-                          Choose updated matrix
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <img
-                      className="upload_class"
-                      src={background1}
-                      id="uploadConfig"
-                      onClick={handleUploadConfig}
-                      disabled={!fileSelected}
-                      style={{cursor:'pointer'}}
-                    />
-                    <div style={{ marginTop: "-25px" }}>Click here</div>
-                  </div>
-                </form>
+            <br />
+            <br />
+            <br />
+
             <div>
-              <h3 style={{ marginLeft: "80px", marginTop: "200px" }}>
-                Add a new Railhead
-              </h3>
+              <h3 style={{ marginLeft: "80px" }}>Add a new Railhead</h3>
               <label style={{ width: "100vw", marginLeft: "100px" }}>
                 <strong
                   style={{
@@ -523,7 +448,7 @@ function Template() {
                 />
               </label>
             </div>
-            <br />
+
             <div
               style={{
                 padding: "3px",
@@ -638,6 +563,78 @@ function Template() {
             >
               <p style={{ textAlign: "center", marginTop: "10px" }}>Remove</p>
             </div>
+            <br />
+            <br />
+
+            <div>
+              <p style={{ marginLeft: "30px", fontWeight: "bold" }}>
+                <h3>
+                  <strong>Update Cost, Distance Matrices</strong>
+                </h3>
+              </p>
+              <button
+                style={{ color: "white", marginLeft: "30px" }}
+                className="btn btn-danger dropdown-toggle"
+                onClick={() => exportToExcel4()}
+              >
+                <i className="fa fa-bars"></i>
+                Download Matrix to update data
+              </button>
+            </div>
+
+            <form
+              action=""
+              encType="multipart/form-data"
+              id="uploadForm"
+              className="form-horizontal"
+            >
+              <div
+                className="col-md-6"
+                style={{ marginTop: "15px", marginLeft: "30px" }}
+              >
+                <div className="form-group">
+                  <div className="col-md-9">
+                    <div className="input-group">
+                      <span
+                        className="input-group-addon"
+                        style={{
+                          backgroundColor: "rgba(235, 171, 68, 0.69)",
+                        }}
+                      >
+                        <span className="fa fa-info" />
+                      </span>
+
+                      <input
+                        type="file"
+                        className="form-control"
+                        onChange={handleFileChange}
+                        id="uploadFile"
+                        name="uploadFile"
+                        defaultValue=""
+                        required=""
+                      />
+                    </div>
+                    <span className="help-block" style={{ color: "black" }}>
+                      Choose updated matrix
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <img
+                  className="upload_class"
+                  src={background1}
+                  id="uploadConfig"
+                  onClick={handleUploadConfig}
+                  disabled={!fileSelected}
+                  style={{ cursor: "pointer" }}
+                />
+                <div style={{ marginTop: "-25px" }}>Update</div>
+                <br />
+                <br />
+                <br />
+              </div>
+            </form>
           </div>
         </div>
       </div>
