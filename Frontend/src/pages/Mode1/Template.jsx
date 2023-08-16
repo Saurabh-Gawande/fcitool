@@ -2,7 +2,7 @@ import React, {  useState } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import background1 from "./../../assets/upload1_.png";
+import background1 from "./../../assets/update1.png";
 
 function Template() {
   const ProjectIp = "http://localhost:5000";
@@ -629,7 +629,7 @@ function Template() {
                   disabled={!fileSelected}
                   style={{ cursor: "pointer" }}
                 />
-                <div style={{ marginTop: "-25px" }}>Update</div>
+                <div style={{ marginTop: "0px", marginLeft: "8px" }}>Update</div>
                 <br />
                 <br />
                 <br />
