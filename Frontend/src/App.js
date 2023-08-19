@@ -12,7 +12,6 @@ import Alternate_Railhead_M02 from './pages/Mode2/Alternate_Railhead_M02';
 import Daily_Scheduler_M02 from './pages/Mode2/Daily_Scheduler_M02';
 import Daily_Planner from './pages/Mode1/Daily_Planner';
 
-
 function App() {
   return (
   <BrowserRouter>
@@ -30,7 +29,6 @@ function App() {
     <Route path='/Daily_Planner' element={<Daily_Planner />} />
     </Routes>
   </BrowserRouter>
-    
   );
 }
 

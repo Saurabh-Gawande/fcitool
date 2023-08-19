@@ -701,3 +701,24 @@ body {
     transform: rotate(1turn);
   }
 }
+
+
+/* In your custom styles */
+.ag-center-cols-viewport .ag-row {
+  height: 50px; /* Adjust as needed */
+}
+
+/* In your custom styles */
+.ag-cell {
+  padding: 8px; /* Adjust as needed */
+}
+
+/* In your custom styles */
+.ag-cell {
+  white-space: normal;
+}
+
+/* In your custom styles */
+.ag-header-cell {
+  padding: 8px; /* Adjust as needed */
+}

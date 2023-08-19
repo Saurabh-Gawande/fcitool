@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -15,9 +15,35 @@ function Monthly_Solution() {
   const [cost, setCost] = useState(null);
   const [Total_result, set_Total_Result] = useState(null);
   const [Relevant_result, set_Relevant_Result] = useState(null);
+  const [excelData, setExcelData] = useState({});
+  const [activeSheetName, setActiveSheetName] = useState(null);
+  const [sheet, setSheet] = useState(null);
+  const [updateExcel, setUpdateExcel] = useState(false);
+  const [modifiedExcel, setModifiedExcel] = useState({});
+  
 
   const handleFileChange = (event) => {
     setFileSelected(event.target.files.length > 0);
+    const files = document.getElementById("uploadFile").files;
+      const reader = new FileReader();
+      const file = files[0];
+      reader.onload = async (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        console.log(workbook);
+        const sheetsData = {};
+        workbook.SheetNames.forEach((sheetName) => {
+          const worksheet = workbook.Sheets[sheetName];
+          sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+          });
+        });
+
+        setExcelData(sheetsData);
+        setActiveSheetName(workbook.SheetNames[0]);
+      };
+
+      reader.readAsArrayBuffer(file);
   };
 
   const handleUploadConfig = async () => {
@@ -53,6 +79,12 @@ function Monthly_Solution() {
       console.error("Error during file upload:", error);
       alert("An error occurred during file upload. Please try again later.");
     }
+  };
+
+  const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
+    const updatedData = { ...excelData };
+    updatedData[sheetName][rowIndex][columnIndex] = newValue;
+    setExcelData(updatedData);
   };
 
   const handleSolve = async () => {
@@ -155,6 +187,21 @@ function Monthly_Solution() {
       });
       saveAs(excelBlob, "All_results.xlsx");
     }
+  };
+
+  const update_excel = () => {
+    setUpdateExcel(true);
+  };
+
+  const save_excel = () => {
+    const newWorkbook = XLSX.utils.book_new();
+    Object.keys(excelData).forEach((sheetName) => {
+      const worksheet = XLSX.utils.json_to_sheet(excelData[sheetName]);
+      XLSX.utils.book_append_sheet(newWorkbook, worksheet, sheetName);
+    });
+    setModifiedExcel(newWorkbook);
+    // console.log(modifiedExcel);
+    setUpdateExcel(false);
   };
 
   const exportToExcel2 = () => {
@@ -279,6 +326,67 @@ function Monthly_Solution() {
               </div>
               <br />
               <br />
+              <div style={{ display: "flex", marginLeft: "300px" }}>
+                {fileSelected && (
+                  <div style={{ marginTop: "-20px" }}>
+                    <button
+                      style={{ padding: "5px" }}
+                      onClick={() => update_excel()}
+                    >
+                      Update Template
+                    </button>
+                  </div>
+                )}
+                {updateExcel && (
+                  <div style={{ marginLeft: "80px", marginTop: "-20px" }}>
+                    <button
+                      style={{ padding: "5px" }}
+                      onClick={() => save_excel()}
+                    >
+                      Save changes
+                    </button>
+                  </div>
+                )}
+              </div>
+              {activeSheetName && updateExcel && excelData[activeSheetName] && (
+                <div style={{marginLeft:'20%'}}>
+                  <select
+                    onChange={(e) => setActiveSheetName(e.target.value)}
+                    value={activeSheetName}
+                    style={{margin:'10px', padding:'3px', marginLeft:'20%'}}
+                  >
+                    {Object.keys(excelData).map((sheetName) => (
+                      <option key={sheetName} value={sheetName}>
+                        {sheetName}
+                      </option>
+                    ))}
+                  </select>
+                  <table>
+                    <tbody>
+                      {excelData[activeSheetName].map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                          {row.map((cellValue, columnIndex) => (
+                            <td key={columnIndex}>
+                              <input
+                                type="text"
+                                value={cellValue}
+                                onChange={(e) =>
+                                  handleCellChange(
+                                    activeSheetName,
+                                    rowIndex,
+                                    columnIndex,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
               <div style={{ marginLeft: "15px" }}>
                 <div style={{ fontSize: "20px", fontWeight: "700" }}>
                   <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
