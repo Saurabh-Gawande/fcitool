@@ -511,6 +511,16 @@ function Daily_Planner() {
     }
   };
 
+  const buttonStyle = {
+    border: updateExcel ? '4px solid rgba(235, 171, 68)' : '2px solid black',
+    padding: '5px'
+  };
+
+  const buttonStyle2 = {
+    border: updateExcel2 ? '4px solid rgba(235, 171, 68)' : '2px solid black',
+    padding: '5px'
+  };
+
   return (
     <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
       <Sidenav />
@@ -630,7 +640,7 @@ function Daily_Planner() {
                 {/* {fileSelected && ( */}
                 <div style={{ marginTop: "-20px" }}>
                     <button
-                      style={{ padding: "5px" }}
+                      style={buttonStyle}
                       onClick={() => update_excel()}
                     >
                       Update Template for Scenario 1
@@ -640,7 +650,7 @@ function Daily_Planner() {
                 {/* {updateExcel && ( */}
                   <div style={{ marginLeft: "150px", marginTop: "-20px" }}>
                   <button
-                      style={{ padding: "5px" }}
+                      style={buttonStyle2}
                       onClick={() => update_excel2()}
                     >
                       Update Template for Scenario 2
