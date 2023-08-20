@@ -2,7 +2,7 @@ import pandas as pd
 from pulp import *
 from array import *
 import json
-from flask import Flask, request, session, jsonify
+from flask import Flask, request, session, jsonify, send_file
 import pickle
 from flask_cors import CORS
 import ast
@@ -465,6 +465,23 @@ def Add_Railhead():
 
     return json.dumps(db, indent=1)
 
+@app.route('/getMonthlyExcelData')
+def get_monthly_excel_data():
+    Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
+    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
+    return send_file(excel_path, as_attachment=True)
+
+@app.route('/getDaily1ExcelData')
+def get_daily_scen1_excel_data():
+    Monthly_Template_M1 = 'Input\\Daily_Template_Scene1.xlsx'
+    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
+    return send_file(excel_path, as_attachment=True)
+
+@app.route('/getDaily2ExcelData')
+def get_daily_scen2_excel_data():
+    Monthly_Template_M1 = 'Input\\Daily_Template_Scene2.xlsx'
+    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
+    return send_file(excel_path, as_attachment=True)
 
 @app.route("/Modify_Monthly_Template_M01", methods=["POST", "GET"])
 def Modify_Monthly_Template_M01():
@@ -587,7 +604,7 @@ def Modify_Daily_Template_S01():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Surplus_wheat", index=False)
 
             elif sht == 'Deficit_wheat':
@@ -598,7 +615,7 @@ def Modify_Daily_Template_S01():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 Demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': Demand})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Deficit_wheat", index=False)
 
             elif sht == 'Surplus_rice':
@@ -609,7 +626,7 @@ def Modify_Daily_Template_S01():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Surplus_rice", index=False)
 
             elif sht == 'Deficit_rice':
@@ -620,7 +637,7 @@ def Modify_Daily_Template_S01():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': demand})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Deficit_rice", index=False)
 
             elif sht == 'States_supply':
@@ -631,7 +648,7 @@ def Modify_Daily_Template_S01():
                 Supply_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 Supply_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'State': State, 'Supply_wheat': Supply_wheat, 'Supply_rice': Supply_rice})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_supply", index=False)
 
             elif sht == 'States_allocation':
@@ -642,7 +659,7 @@ def Modify_Daily_Template_S01():
                 Alloc_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 Alloc_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'States': States, 'Alloc_wheat': Alloc_wheat, 'Alloc_rice': Alloc_rice})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_allocation", index=False)
 
             elif sht == 'Rail_cost_chart':
@@ -653,7 +670,7 @@ def Modify_Daily_Template_S01():
                 To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
                 Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
@@ -684,7 +701,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Surplus_wheat", index=False)
 
             elif sht == 'Deficit_wheat':
@@ -695,7 +712,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 Demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': Demand})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Deficit_wheat", index=False)
 
             elif sht == 'Surplus_rice':
@@ -706,7 +723,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Surplus_rice", index=False)
 
             elif sht == 'Deficit_rice':
@@ -717,7 +734,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': demand})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Deficit_rice", index=False)
 
             elif sht == 'States_supply':
@@ -728,7 +745,7 @@ def Modify_Daily_Template_S02():
                 Supply_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 Supply_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'State': State, 'Supply_wheat': Supply_wheat, 'Supply_rice': Supply_rice})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_supply", index=False)
 
             elif sht == 'States_allocation':
@@ -739,7 +756,7 @@ def Modify_Daily_Template_S02():
                 Alloc_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 Alloc_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'States': States, 'Alloc_wheat': Alloc_wheat, 'Alloc_rice': Alloc_rice})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_allocation", index=False)
 
             elif sht == 'Rail_cost_chart':
@@ -750,7 +767,7 @@ def Modify_Daily_Template_S02():
                 To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
                 Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}

@@ -34,6 +34,7 @@ function Daily_Planner() {
   const [activeSheetName, setActiveSheetName] = useState(null);
   const [sheet, setSheet] = useState(null);
   const [updateExcel, setUpdateExcel] = useState(false);
+  const [updateExcel2, setUpdateExcel2] = useState(false);
   const [modifiedExcel, setModifiedExcel] = useState({});
 
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
@@ -66,19 +67,78 @@ function Daily_Planner() {
       reader.readAsArrayBuffer(file);
   };
 
-  const update_excel = () => {
+  const update_excel = async() => {
+    setUpdateExcel2(false);
+    const response = await fetch(ProjectIp+'/getDaily1ExcelData');
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    console.log(workbook);
+    const sheetsData = {};
+    workbook.SheetNames.forEach((sheetName) => {
+      const worksheet = workbook.Sheets[sheetName];
+      sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+      });
+    });
+
+    setExcelData(sheetsData);
+    setActiveSheetName(workbook.SheetNames[0]);
     setUpdateExcel(true);
   };
 
-  const save_excel = () => {
+  const update_excel2 = async() => {
+    setUpdateExcel(false);
+    const response = await fetch(ProjectIp+'/getDaily2ExcelData');
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    console.log(workbook);
+    const sheetsData = {};
+    workbook.SheetNames.forEach((sheetName) => {
+      const worksheet = workbook.Sheets[sheetName];
+      sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+      });
+    });
+
+    setExcelData(sheetsData);
+    setActiveSheetName(workbook.SheetNames[0]);
+    setUpdateExcel2(true);
+  };
+
+  const save_excel = async() => {
     const newWorkbook = XLSX.utils.book_new();
     Object.keys(excelData).forEach((sheetName) => {
       const worksheet = XLSX.utils.json_to_sheet(excelData[sheetName]);
       XLSX.utils.book_append_sheet(newWorkbook, worksheet, sheetName);
     });
-    setModifiedExcel(newWorkbook);
-    // console.log(modifiedExcel);
+  
+    try {
+      var scenario;
+      if(updateExcel==true){
+        scenario='/Modify_Daily_Template_S01';
+      }
+      else{
+        scenario='/Modify_Daily_Template_S02';
+      }
+      const response = await fetch(ProjectIp + scenario, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newWorkbook),
+      });
+      if (response.ok) {
+        console.log('Data sent to backend successfully');
+      } else {
+        console.error('Failed to send data to backend');
+      }
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
     setUpdateExcel(false);
+    setUpdateExcel2(false);
   };
 
   const handleUploadConfig = async () => {
@@ -499,7 +559,7 @@ function Daily_Planner() {
                   <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
                   Template
                 </div>
-                <form
+                {/* <form
                   action=""
                   encType="multipart/form-data"
                   id="uploadForm"
@@ -562,33 +622,42 @@ function Daily_Planner() {
                     )}
                     <div style={{ marginTop: "-25px" }}>Click here</div>
                   </div>
-                </form>
+                </form> */}
               </div>
               <br />
               <br />
-              <div style={{ display: "flex", marginLeft: "300px" }}>
-                {fileSelected && (
-                  <div style={{ marginTop: "-20px" }}>
+              <div style={{ display: "flex", marginLeft: "245px" }}>
+                {/* {fileSelected && ( */}
+                <div style={{ marginTop: "-20px" }}>
                     <button
                       style={{ padding: "5px" }}
                       onClick={() => update_excel()}
                     >
-                      Update Template
+                      Update Template for Scenario 1
                     </button>
                   </div>
-                )}
-                {updateExcel && (
-                  <div style={{ marginLeft: "80px", marginTop: "-20px" }}>
-                    <button
+                {/* )} */}
+                {/* {updateExcel && ( */}
+                  <div style={{ marginLeft: "150px", marginTop: "-20px" }}>
+                  <button
+                      style={{ padding: "5px" }}
+                      onClick={() => update_excel2()}
+                    >
+                      Update Template for Scenario 2
+                    </button>
+                  </div>
+                {/* )} */}
+              </div>
+              {(updateExcel || updateExcel2) && (<div style={{marginLeft:"480px"}}>
+              <br/>
+              <button
                       style={{ padding: "5px" }}
                       onClick={() => save_excel()}
                     >
                       Save changes
                     </button>
-                  </div>
-                )}
-              </div>
-              {activeSheetName && updateExcel && excelData[activeSheetName] && (
+              </div>)}
+              {activeSheetName && (updateExcel || updateExcel2) && excelData[activeSheetName] && (
                 <div style={{marginLeft:'20%'}}>
                   <select
                     onChange={(e) => setActiveSheetName(e.target.value)}

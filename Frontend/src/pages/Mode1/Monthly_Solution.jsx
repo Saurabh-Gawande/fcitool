@@ -189,7 +189,22 @@ function Monthly_Solution() {
     }
   };
 
-  const update_excel = () => {
+  const update_excel = async() => {
+    const response = await fetch(ProjectIp+'/getMonthlyExcelData');
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    console.log(workbook);
+    const sheetsData = {};
+    workbook.SheetNames.forEach((sheetName) => {
+      const worksheet = workbook.Sheets[sheetName];
+      sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+      });
+    });
+
+    setExcelData(sheetsData);
+    setActiveSheetName(workbook.SheetNames[0]);
     setUpdateExcel(true);
   };
 
@@ -318,7 +333,7 @@ function Monthly_Solution() {
                   <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
                   Template
                 </div>
-                <form
+                {/* <form
                   action=""
                   encType="multipart/form-data"
                   id="uploadForm"
@@ -365,12 +380,12 @@ function Monthly_Solution() {
                     />
                     <div style={{ marginTop: "-25px" }}>Click here</div>
                   </div>
-                </form>
+                </form> */}
               </div>
               <br />
               <br />
               <div style={{ display: "flex", marginLeft: "300px" }}>
-                {fileSelected && (
+                {/* {fileSelected && ( */}
                   <div style={{ marginTop: "-20px" }}>
                     <button
                       style={{ padding: "5px" }}
@@ -379,9 +394,9 @@ function Monthly_Solution() {
                       Update Template
                     </button>
                   </div>
-                )}
+                {/* )} */}
                 {updateExcel && (
-                  <div style={{ marginLeft: "80px", marginTop: "-20px" }}>
+                  <div style={{ marginLeft: "220px", marginTop: "-20px" }}>
                     <button
                       style={{ padding: "5px" }}
                       onClick={() => save_excel()}
