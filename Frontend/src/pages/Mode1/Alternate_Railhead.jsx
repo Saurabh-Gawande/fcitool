@@ -120,7 +120,7 @@ function Alternate_Railhead() {
                   </label>
                   <br />
                   <br />
-                  <label>
+                  {/* <label>
                     <strong style={{ fontSize: "16px", marginLeft: "15px" }}>
                       Alternate railhead option for destination tagging:
                     </strong>
@@ -136,7 +136,7 @@ function Alternate_Railhead() {
                       <option value="west">West Zone</option>
                       <option value="northeast">Northeast Zone</option>
                     </select>
-                  </label>
+                  </label> */}
 
                   {/* <label>
                     <strong style={{ fontSize: "16px", marginLeft: "15px" }}>

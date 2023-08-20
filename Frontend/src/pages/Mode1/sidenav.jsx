@@ -38,6 +38,12 @@ function Sidenav() {
             <span className="xn-text">Daily Planner</span>
           </a>
         </li>
+        <li>
+          <a href="/Alternate_Railhead">
+            <span className="fa fa-desktop"></span>{" "}
+            <span className="xn-text">Alternate Railhead</span>
+          </a>
+        </li>
         <br />
         <br />
         <br />

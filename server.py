@@ -34,65 +34,65 @@ def login():
     response.headers.add('Access-Control-Allow-Credentials', 'true') 
     return (json.dumps(json_object, indent = 1))
 
-@app.route("/upload_Monthly_File_M01",methods = ["POST"])
-def upload_Monthly_File_M01():
-    data = {}
-    try:
-        file = request.files['uploadFile']
-        file.save("Input//Input_Template.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+# @app.route("/upload_Monthly_File_M01",methods = ["POST"])
+# def upload_Monthly_File_M01():
+#     data = {}
+#     try:
+#         file = request.files['uploadFile']
+#         file.save("Input//Input_Template.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
 
-@app.route("/upload_Monthly_File_M02",methods = ["POST"])
-def upload_Monthly_File_M02():
-    data = {}
-    try:
-        file = request.files['uploadFile_M02']
-        file.save("Input//Input_Template_M02.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+# @app.route("/upload_Monthly_File_M02",methods = ["POST"])
+# def upload_Monthly_File_M02():
+#     data = {}
+#     try:
+#         file = request.files['uploadFile_M02']
+#         file.save("Input//Input_Template_M02.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
 
-@app.route("/uploadDailyFile_S2",methods = ["POST"])
-def uploadDailyFile_S2():
-    data = {}
-    try:
-        file = request.files['uploadFile']
-        file.save("Input//Temp_balanced_DPT_scen2.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+# @app.route("/uploadDailyFile_S2",methods = ["POST"])
+# def uploadDailyFile_S2():
+#     data = {}
+#     try:
+#         file = request.files['uploadFile']
+#         file.save("Input//Temp_balanced_DPT_scen2.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
 
-@app.route("/uploadDailyFile_S1",methods = ["POST"])
-def uploadDailyFile_S1():
-    data = {}
-    try:
-        file = request.files['uploadFile']
-        file.save("Input//Temp_balanced_DPT_scen1.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+# @app.route("/uploadDailyFile_S1",methods = ["POST"])
+# def uploadDailyFile_S1():
+#     data = {}
+#     try:
+#         file = request.files['uploadFile']
+#         file.save("Input//Temp_balanced_DPT_scen1.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
     
 
 @app.route("/read_Monthly_state_table",methods = ["POST","GET"])
@@ -465,6 +465,303 @@ def Add_Railhead():
 
     return json.dumps(db, indent=1)
 
+
+@app.route("/Modify_Monthly_Template_M01", methods=["POST", "GET"])
+def Modify_Monthly_Template_M01():
+    try:
+        def try_float(value):
+            try:
+                return float(value)
+            except (ValueError, TypeError):
+                return value
+        fetched_data = request.get_json()
+        sheets = fetched_data['SheetNames']
+        # print(type(fetched_data['Sheets']['Surplus_wheat'][f'C{3}']['v']))
+        # print(fetched_data)
+
+        for sht in sheets:
+            if sht == 'Surplus_wheat':
+                columns = ['Railhead', 'State', 'Supply']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Surplus_wheat", index=False)
+
+            elif sht == 'Deficit_wheat':
+                columns = ['Railhead', 'State', 'Demand', 'Capacity']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                Demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Capacity = [try_float(sht_data[f'D{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': Demand, 'Capacity': Capacity})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Deficit_wheat", index=False)
+
+            elif sht == 'Surplus_rice':
+                columns = ['Railhead', 'State', 'Supply']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Surplus_rice", index=False)
+
+            elif sht == 'Deficit_rice':
+                columns = ['Railhead', 'State', 'Demand']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': demand})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Deficit_rice", index=False)
+
+            elif sht == 'States_supply':
+                columns = ['State', 'Supply_wheat', 'Supply_rice']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                State = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                Supply_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Supply_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'State': State, 'Supply_wheat': Supply_wheat, 'Supply_rice': Supply_rice})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="States_supply", index=False)
+
+            elif sht == 'States_allocation':
+                columns = ['States', 'Alloc_wheat', 'Alloc_rice', 'Capacity']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                States = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                Alloc_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Alloc_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Capacity = [try_float(sht_data[f'D{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'States': States, 'Alloc_wheat': Alloc_wheat, 'Alloc_rice': Alloc_rice, 'Capacity': Capacity})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="States_allocation", index=False)
+
+            elif sht == 'Rail_cost_chart':
+                columns = ['From', 'To', 'Rate per Ton']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
+                To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
+                Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
+
+        db = {"status": 1, "message": "Railhead names and states added successfully"}
+    except Exception as e:
+        db = {"status": 0, "message": str(e)}
+
+    return json.dumps(db, indent=1)
+
+@app.route("/Modify_Daily_Template_S01", methods=["POST", "GET"])
+def Modify_Daily_Template_S01():
+    try:
+        def try_float(value):
+            try:
+                return float(value)
+            except (ValueError, TypeError):
+                return value
+        fetched_data = request.get_json()
+        sheets = fetched_data['SheetNames']
+        # print(type(fetched_data['Sheets']['Surplus_wheat'][f'C{3}']['v']))
+        # print(fetched_data)
+
+        for sht in sheets:
+            if sht == 'Surplus_wheat':
+                columns = ['Railhead', 'State', 'Supply']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Surplus_wheat", index=False)
+
+            elif sht == 'Deficit_wheat':
+                columns = ['Railhead', 'State', 'Demand']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                Demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': Demand})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Deficit_wheat", index=False)
+
+            elif sht == 'Surplus_rice':
+                columns = ['Railhead', 'State', 'Supply']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Surplus_rice", index=False)
+
+            elif sht == 'Deficit_rice':
+                columns = ['Railhead', 'State', 'Demand']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': demand})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Deficit_rice", index=False)
+
+            elif sht == 'States_supply':
+                columns = ['State', 'Supply_wheat', 'Supply_rice']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                State = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                Supply_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Supply_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'State': State, 'Supply_wheat': Supply_wheat, 'Supply_rice': Supply_rice})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="States_supply", index=False)
+
+            elif sht == 'States_allocation':
+                columns = ['States', 'Alloc_wheat', 'Alloc_rice']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                States = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                Alloc_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Alloc_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'States': States, 'Alloc_wheat': Alloc_wheat, 'Alloc_rice': Alloc_rice})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="States_allocation", index=False)
+
+            elif sht == 'Rail_cost_chart':
+                columns = ['From', 'To', 'Rate per Ton']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
+                To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
+                Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
+
+        db = {"status": 1, "message": "Railhead names and states added successfully"}
+    except Exception as e:
+        db = {"status": 0, "message": str(e)}
+
+    return json.dumps(db, indent=1)
+
+@app.route("/Modify_Daily_Template_S02", methods=["POST", "GET"])
+def Modify_Daily_Template_S02():
+    try:
+        def try_float(value):
+            try:
+                return float(value)
+            except (ValueError, TypeError):
+                return value
+        fetched_data = request.get_json()
+        sheets = fetched_data['SheetNames']
+        # print(type(fetched_data['Sheets']['Surplus_wheat'][f'C{3}']['v']))
+        # print(fetched_data)
+
+        for sht in sheets:
+            if sht == 'Surplus_wheat':
+                columns = ['Railhead', 'State', 'Supply']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Surplus_wheat", index=False)
+
+            elif sht == 'Deficit_wheat':
+                columns = ['Railhead', 'State', 'Demand']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                Demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': Demand})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Deficit_wheat", index=False)
+
+            elif sht == 'Surplus_rice':
+                columns = ['Railhead', 'State', 'Supply']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Surplus_rice", index=False)
+
+            elif sht == 'Deficit_rice':
+                columns = ['Railhead', 'State', 'Demand']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
+                demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': demand})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Deficit_rice", index=False)
+
+            elif sht == 'States_supply':
+                columns = ['State', 'Supply_wheat', 'Supply_rice']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                State = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                Supply_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Supply_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'State': State, 'Supply_wheat': Supply_wheat, 'Supply_rice': Supply_rice})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="States_supply", index=False)
+
+            elif sht == 'States_allocation':
+                columns = ['States', 'Alloc_wheat', 'Alloc_rice']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                States = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
+                Alloc_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                Alloc_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'States': States, 'Alloc_wheat': Alloc_wheat, 'Alloc_rice': Alloc_rice})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="States_allocation", index=False)
+
+            elif sht == 'Rail_cost_chart':
+                columns = ['From', 'To', 'Rate per Ton']
+                sht_data = fetched_data['Sheets'][sht]
+                length = len(sht_data) // len(columns)
+                From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
+                To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
+                Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+                df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
+                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                    df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
+
+        db = {"status": 1, "message": "Railhead names and states added successfully"}
+    except Exception as e:
+        db = {"status": 0, "message": str(e)}
+
+    return json.dumps(db, indent=1)
+
+
+
+
 @app.route("/Remove_Railhead", methods=["POST", "GET"])
 def Remove_Railhead():
     try:
@@ -545,14 +842,23 @@ def Monthly_Solution():
                 r_d = int(r_d_fetched)
 
 
-            data=pd.ExcelFile("Input\\Input_Template.xlsx")
-            matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
+            data=pd.ExcelFile("Input\\Monthly_Template_M1.xlsx")
             surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
             deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
             surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
             deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
-            rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix",index_col=0)
             states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
+            rail_cost = None
+            if TEFD_fetched == 'NON-TEFD':
+                rail_cost=pd.read_excel("Input\\Non-TEFD.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+            elif TEFD_fetched == 'TEFD':
+                rail_cost=pd.read_excel("Input\\TEFD.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+            elif TEFD_fetched == 'Non-TEFD+TC':
+                rail_cost=pd.read_excel("Input\\Non_TEFD_TC.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+            else:
+                rail_cost=pd.read_excel("Input\\TEFD_TC.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+            
+
 
             prob = LpProblem("Output\\FCI_monthly_model_allocation_rr",LpMinimize)
             x_ij_wheat=LpVariable.dicts("x_wheat",[(i,j) for i in surplus_wheat.index for j in deficit_wheat.index],0)
@@ -815,6 +1121,7 @@ def Daily_Planner():
             blocked_data = fetched_data['block_data']
             confirmed_data = fetched_data['confirmed_data']
             Scenerio = fetched_data["Scenerio"]
+            TEFD_fetched = fetched_data['TEFD']
 
             for i in range(len(blocked_data)):
                 blocked_org_rhcode.append(blocked_data[i]["origin_railhead"])
@@ -839,9 +1146,16 @@ def Daily_Planner():
                 deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
                 surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
                 deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
-                rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
                 states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
-                states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
+                rail_cost = None
+                if TEFD_fetched == 'NON-TEFD':
+                    rail_cost=pd.read_excel("Input\\Non-TEFD.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+                elif TEFD_fetched == 'TEFD':
+                    rail_cost=pd.read_excel("Input\\TEFD.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+                elif TEFD_fetched == 'Non-TEFD+TC':
+                    rail_cost=pd.read_excel("Input\\Non_TEFD_TC.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+                else:
+                    rail_cost=pd.read_excel("Input\\TEFD_TC.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
 
                 prob = LpProblem("Output\\FCI_monthly_model_allocation_rr5",LpMinimize)
 
@@ -1060,9 +1374,16 @@ def Daily_Planner():
                 deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
                 surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
                 deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
-                rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
                 states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
-                states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
+                rail_cost = None
+                if TEFD_fetched == 'NON-TEFD':
+                    rail_cost=pd.read_excel("Input\\Non-TEFD.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+                elif TEFD_fetched == 'TEFD':
+                    rail_cost=pd.read_excel("Input\\TEFD.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+                elif TEFD_fetched == 'Non-TEFD+TC':
+                    rail_cost=pd.read_excel("Input\\Non_TEFD_TC.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
+                else:
+                    rail_cost=pd.read_excel("Input\\TEFD_TC.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
 
                 prob = LpProblem("Output\\FCI_monthly_model_allocation_rr5",LpMinimize)
 
@@ -1288,77 +1609,48 @@ def Alternate_Railhead_Solve():
     data = request.get_json()
     rh_source = data['rh_source']
     rh_dest = data['rh_dest']
-    zone = data['zone']
-    n = data['n']
+    # zone = data['zone']
+    # n = data['n']
     Alternate_Railhead_source = rh_source.upper()
     Alternate_Railhead_Destination = rh_dest.upper()
-    Alternate_Railhead_zone = zone
-    Alternate_Railhead_increment = 0.8
+    # Alternate_Railhead_zone = zone
+    # Alternate_Railhead_increment = 0.8
     data1 = {}
     if request.method == "POST":
         try:
-            file = pd.ExcelFile("Input\\Input_Template.xlsx")
-            matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
-            surplus_wheat=pd.read_excel(file,sheet_name="Surplus_wheat",index_col=1)
-            rail_cost=pd.read_excel(matrices_data,sheet_name="Railhead_cost_matrix",index_col=0)
-            south_zone=["Andhra Pradesh","Kerala","Karnataka","Tamil Nadu","Telangana"]
-            north_zone=["Rajasthan","Punjab","Haryana","Uttarakhand","UP"]
-            east_zone=["Odisha","Jharkhand","Bihar","West Bengal"]
-            west_zone=["Maharashtra","Chattisgarh","MP","Gujarat","Goa"]
-            northeast_zone=["Assam","Arunachal Pradesh","Manipur","NEF"]
-            alt_rh = []
+            file = pd.ExcelFile("Input\\Daily_Template_Scene1.xlsx")
+            matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
+            surplus_wheat = pd.read_excel(file, sheet_name="Surplus_wheat", index_col=0)
+            rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
+            alt_rh_state = surplus_wheat.loc[Alternate_Railhead_Destination]["State"]
 
-            if ((Alternate_Railhead_zone=="")):
-                alt_rh = []
-            else:
-                north=[]
-                south=[]
-                east=[]
-                west=[]
-                northeast=[]
-                for i in surplus_wheat.index:
-                    for a in south_zone:
-                        if surplus_wheat.loc[i]["State"]==a:
-                            south.append(i)
-                                        
-                for i in surplus_wheat.index:
-                    for a in north_zone:
-                        if surplus_wheat.loc[i]["State"]==a:
-                            north.append(i)
-                                        
-                for i in surplus_wheat.index:
-                    for a in east_zone:
-                        if surplus_wheat.loc[i]["State"]==a:
-                            east.append(i)
-                                        
-                for i in surplus_wheat.index:
-                    for a in west_zone:
-                        if surplus_wheat.loc[i]["State"]==a:
-                            west.append(i)
-                                        
-                for i in surplus_wheat.index:
-                    for a in northeast_zone:
-                        if surplus_wheat.loc[i]["State"]==a:
-                            northeast.append(i)
-                exist_costrate=rail_cost.loc[Alternate_Railhead_source,Alternate_Railhead_Destination]
-                z = []
-                if Alternate_Railhead_zone=="west":
-                    z=west
-                elif Alternate_Railhead_zone=="north":
-                    z=north
-                elif Alternate_Railhead_zone=="south":
-                    z=south
-                elif Alternate_Railhead_zone=="east":
-                    z=east
-                elif Alternate_Railhead_zone=="northeast":
-                    z=northeast
+            lst1 = []
 
-                for j in z:
-                    if rail_cost.loc[Alternate_Railhead_source,j]<(1+Alternate_Railhead_increment)*exist_costrate:
-                        alt_rh.append(j)
+            for index, row in surplus_wheat.iterrows():
+                if row["State"] == alt_rh_state:
+                    lst1.append(index)
+
+            lst2 = []
+
+            for j in lst1:
+                lst2.append(rail_cost.loc[Alternate_Railhead_source, j])
+
+            keys = lst1
+            values = lst2
+
+            dict_altrh = dict(zip(keys, values))
+
+            threshold = rail_cost.loc[Alternate_Railhead_source, Alternate_Railhead_Destination]
+            filt_dict_altrh = {k: v for k, v in dict_altrh.items() if k != Alternate_Railhead_Destination and v >= threshold}
+            sort_dict_altrh = dict(sorted(filt_dict_altrh.items(), key=lambda item: item[1]))
+            top_3_elements = list(sort_dict_altrh.items())[:3]
+            result_altrh = []
+
+            for i in range(len(top_3_elements)):
+                result_altrh.append(top_3_elements[i][0])
 
             with open('Output\\Alternate_Railhead.pkl', 'wb') as f:
-                pickle.dump(alt_rh, f)
+                pickle.dump(result_altrh, f)
                         
             data1["status"] = 1
                   

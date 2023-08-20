@@ -193,16 +193,59 @@ function Monthly_Solution() {
     setUpdateExcel(true);
   };
 
-  const save_excel = () => {
+  const save_excel = async () => {
     const newWorkbook = XLSX.utils.book_new();
     Object.keys(excelData).forEach((sheetName) => {
       const worksheet = XLSX.utils.json_to_sheet(excelData[sheetName]);
       XLSX.utils.book_append_sheet(newWorkbook, worksheet, sheetName);
     });
-    setModifiedExcel(newWorkbook);
-    // console.log(modifiedExcel);
+  
+    try {
+      const response = await fetch(ProjectIp + '/Modify_Monthly_Template_M01', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newWorkbook),
+      });
+      console.log(newWorkbook)
+      if (response.ok) {
+        console.log('Data sent to backend successfully');
+      } else {
+        console.error('Failed to send data to backend');
+      }
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
+  
     setUpdateExcel(false);
   };
+  
+
+
+// Function to send JSON data to the backend
+// const send_excel = async () => {
+//   save_excel();
+//   try {
+//     const response = await fetch(ProjectIp + '/Modify_Monthly_Template_M01', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(modifiedExcel),
+//     });
+//     // console.log(modifiedExcel)
+
+//     if (response.ok) {
+//       console.log('Data sent to backend successfully');
+//     } else {
+//       console.error('Failed to send data to backend');
+//     }
+//   } catch (error) {
+//     console.error('Error sending data:', error);
+//   }
+// };
+
 
   const exportToExcel2 = () => {
     fetchReservationId_Revelant_result();
@@ -225,7 +268,7 @@ function Monthly_Solution() {
       saveAs(excelBlob, "Monthly_Movement_results.xlsx");
     }
   };
-  fetchReservationId_cost();
+  // fetchReservationId_cost();
 
   return (
     <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
