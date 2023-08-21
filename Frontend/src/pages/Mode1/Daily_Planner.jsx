@@ -261,10 +261,10 @@ function Daily_Planner() {
       confirmed_data: fixed_data,
       rice_origin: block_data3,
       rice_destination: rice_destination,
-      rice_inline:block_data2,
+      rice_inline: block_data2,
       wheat_origin: block_dataWheat3,
       wheat_destination: wheat_destination,
-      wheat_inline: block_dataWheat2
+      wheat_inline: block_dataWheat2,
     };
     try {
       const response = await fetch(ProjectIp + "/Daily_Planner", {
@@ -740,14 +740,16 @@ function Daily_Planner() {
 
   const handleDeleteRow_Wheat__dest = (e) => {
     console.log(e);
-    let wheat_destination_ = wheat_destination.filter((item) => item["id"] !== e);
+    let wheat_destination_ = wheat_destination.filter(
+      (item) => item["id"] !== e
+    );
     setWheatDestination(wheat_destination_);
   };
 
   const addConstraint = () => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption && subOption1 && selectedOption2 && subOption2) {
-      setBlockdata3((data) => [
+      setBlockdata((data) => [
         ...data,
         {
           origin_state: selectedOption,
@@ -766,7 +768,7 @@ function Daily_Planner() {
   };
 
   const addConstraint2 = () => {
-    fetch(ProjectIp+ "")
+    fetch(ProjectIp + "");
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       setBlockdata2((data) => [
@@ -789,7 +791,12 @@ function Daily_Planner() {
 
   const addConstraintWheat2 = () => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
-    if (selectedOptionWheat5 && subOptionWheat5 && selectedOptionWheat6 && subOptionWheat6) {
+    if (
+      selectedOptionWheat5 &&
+      subOptionWheat5 &&
+      selectedOptionWheat6 &&
+      subOptionWheat6
+    ) {
       setBlockdataWheat2((data) => [
         ...data,
         {
@@ -1163,6 +1170,7 @@ function Daily_Planner() {
                       onChange={(e) => set_TEFD(e.target.value)}
                       style={{ marginLeft: "547px" }}
                     >
+                      <option value="">Select Matrix System</option>
                       <option value="NON-TEFD">Non-TEFD</option>
                       <option value="TEFD">TEFD</option>
                       <option value="Non-TEFD+TC">Non-TEFD + TC</option>
@@ -1184,6 +1192,7 @@ function Daily_Planner() {
                       onChange={(e) => set_Scenerio(e.target.value)}
                       style={{ marginLeft: "600px" }}
                     >
+                      <option value="">Select Scenario</option>
                       <option value="Scenerio 1">Scenerio 1</option>
                       <option value="Scenerio 2">Scenerio 2</option>
                     </select>
@@ -1263,7 +1272,7 @@ function Daily_Planner() {
                         style={{
                           padding: "2px",
                           margin: "2px",
-                          marginLeft: "30px",
+                          marginLeft: "500px",
                           width: "70px",
                           background: "orange",
                           cursor: "pointer",
@@ -1388,7 +1397,7 @@ function Daily_Planner() {
                         style={{
                           padding: "2px",
                           margin: "2px",
-                          marginLeft: "30px",
+                          marginLeft: "440px",
                           width: "70px",
                           background: "orange",
                           cursor: "pointer",
@@ -1402,6 +1411,7 @@ function Daily_Planner() {
                         </p>
                       </div>
                     </div>
+                    <br />
                     <div>
                       {rice_destination.length != 0 && (
                         <div>
@@ -1738,7 +1748,7 @@ function Daily_Planner() {
                         style={{
                           padding: "2px",
                           margin: "2px",
-                          marginLeft: "30px",
+                          marginLeft: "500px",
                           width: "70px",
                           background: "orange",
                           cursor: "pointer",
@@ -1863,7 +1873,7 @@ function Daily_Planner() {
                         style={{
                           padding: "2px",
                           margin: "2px",
-                          marginLeft: "30px",
+                          marginLeft: "440px",
                           width: "70px",
                           background: "orange",
                           cursor: "pointer",
@@ -1877,6 +1887,7 @@ function Daily_Planner() {
                         </p>
                       </div>
                     </div>
+                    <br />
                     <div>
                       {wheat_destination.length != 0 && (
                         <div>
@@ -2267,6 +2278,72 @@ function Daily_Planner() {
                     </div>
                   </div>
                   <br />
+                  {!solutionSolved && block_data.length != 0 && (
+                    <div>
+                      <table>
+                        <thead>
+                          <tr style={{ margin: "auto" }}>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Origin State
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Origin Railhead
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Destination State
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Destination Railhead
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Delete
+                            </th>
+                          </tr>
+                          {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
+                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
+                        </thead>
+                        <tbody>
+                          {/* <tr style={{ margin: "auto" }}>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Origin State
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Origin Railhead
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Destination State
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Destination Railhead
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
+                    </tr> */}
+                          {block_data.map((item) => (
+                            <tr>
+                              <td>{item.origin_state}</td>
+                              <td>{item.origin_railhead}</td>
+                              <td>{item.destination_state}</td>
+                              <td>{item.destination_railhead}</td>
+                              <td>
+                                <span
+                                  style={{
+                                    cursor: "pointer",
+                                    color: "#ff0000",
+                                    fontSize: "1.2rem",
+                                  }}
+                                  onClick={() => handleDeleteRow(item.id)}
+                                  title="Delete"
+                                >
+                                  &times;
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                  <br />
                   <br />
                   <p style={{ margin: 0, padding: 0 }}>
                     <strong
@@ -2448,6 +2525,78 @@ function Daily_Planner() {
                     </div>
                   </div>
                   <br />
+                  {!solutionSolved && fixed_data.length != 0 && (
+                    <div>
+                      <table>
+                        <thead>
+                          <tr style={{ margin: "auto" }}>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Origin State
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Origin Railhead
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Destination State
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Destination Railhead
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Commodity
+                            </th>
+                            <th style={{ padding: "10px", width: "15%" }}></th>
+                            <th style={{ padding: "10px", width: "15%" }}>
+                              Delete
+                            </th>
+                          </tr>
+                          {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
+                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
+                        </thead>
+                        <tbody>
+                          {/* <tr style={{ margin: "auto" }}>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Origin State
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Origin Railhead
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Destination State
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Destination Railhead
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
+                    </tr> */}
+                          {fixed_data.map((item) => (
+                            <tr>
+                              <td>{item.origin_state}</td>
+                              <td>{item.origin_railhead}</td>
+                              <td>{item.destination_state}</td>
+                              <td>{item.destination_railhead}</td>
+                              <td>{item.commodity}</td>
+                              <td>{item.value}</td>
+                              <td>
+                                <span
+                                  style={{
+                                    cursor: "pointer",
+                                    color: "#ff0000",
+                                    fontSize: "1.2rem",
+                                  }}
+                                  onClick={() => handleDeleteRow_fixed(item.id)}
+                                  title="Delete"
+                                >
+                                  &times;
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                  <br />
                   <br />
                 </form>
 
@@ -2516,164 +2665,6 @@ function Daily_Planner() {
                   </div>
                 )}
                 <br />
-                <br />
-                {!solutionSolved && (
-                  <div>
-                    <div
-                      style={{
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                    >
-                      Route Block
-                    </div>
-                    <table>
-                      <thead>
-                        <tr style={{ margin: "auto" }}>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Origin State
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Origin Railhead
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Destination State
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Destination Railhead
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Delete
-                          </th>
-                        </tr>
-                        {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
-                      </thead>
-                      <tbody>
-                        {/* <tr style={{ margin: "auto" }}>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
-                    </tr> */}
-                        {block_data.map((item) => (
-                          <tr>
-                            <td>{item.origin_state}</td>
-                            <td>{item.origin_railhead}</td>
-                            <td>{item.destination_state}</td>
-                            <td>{item.destination_railhead}</td>
-                            <td>
-                              <span
-                                style={{
-                                  cursor: "pointer",
-                                  color: "#ff0000",
-                                  fontSize: "1.2rem",
-                                }}
-                                onClick={() => handleDeleteRow(item.id)}
-                                title="Delete"
-                              >
-                                &times;
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                <br />
-                <br />
-                {!solutionSolved && (
-                  <div>
-                    <div
-                      style={{
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                    >
-                      Fixed Routes
-                    </div>
-                    <table>
-                      <thead>
-                        <tr style={{ margin: "auto" }}>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Origin State
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Origin Railhead
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Destination State
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Destination Railhead
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Commodity
-                          </th>
-                          <th style={{ padding: "10px", width: "15%" }}></th>
-                          <th style={{ padding: "10px", width: "15%" }}>
-                            Delete
-                          </th>
-                        </tr>
-                        {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
-                      </thead>
-                      <tbody>
-                        {/* <tr style={{ margin: "auto" }}>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
-                    </tr> */}
-                        {fixed_data.map((item) => (
-                          <tr>
-                            <td>{item.origin_state}</td>
-                            <td>{item.origin_railhead}</td>
-                            <td>{item.destination_state}</td>
-                            <td>{item.destination_railhead}</td>
-                            <td>{item.commodity}</td>
-                            <td>{item.value}</td>
-                            <td>
-                              <span
-                                style={{
-                                  cursor: "pointer",
-                                  color: "#ff0000",
-                                  fontSize: "1.2rem",
-                                }}
-                                onClick={() => handleDeleteRow_fixed(item.id)}
-                                title="Delete"
-                              >
-                                &times;
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -2688,22 +2679,6 @@ function Daily_Planner() {
             </div>
           )} */}
 
-          <br />
-          <div className="panel-heading">
-            <h3 className="panel-title"></h3>
-            <div className="btn-group pull-left">
-              <br />
-              <br />
-            </div>
-          </div>
-          <br />
-          <br />
-          {/* </div> */}
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
           <br />
         </div>
       </div>

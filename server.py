@@ -1169,7 +1169,7 @@ def Daily_Planner():
             
            
             fetched_data = request.get_json()
-            # print(fetched_data)
+            print(fetched_data)
             blocked_data = fetched_data['block_data']
             confirmed_data = fetched_data['confirmed_data']
             Scenerio = fetched_data["Scenerio"]
