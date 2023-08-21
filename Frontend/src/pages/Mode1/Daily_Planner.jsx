@@ -259,6 +259,12 @@ function Daily_Planner() {
       block_data: block_data,
       Scenerio: Scenerio,
       confirmed_data: fixed_data,
+      rice_origin: block_data3,
+      rice_destination: rice_destination,
+      rice_inline:block_data2,
+      wheat_origin: block_dataWheat3,
+      wheat_destination: wheat_destination,
+      wheat_inline: block_dataWheat2
     };
     try {
       const response = await fetch(ProjectIp + "/Daily_Planner", {
