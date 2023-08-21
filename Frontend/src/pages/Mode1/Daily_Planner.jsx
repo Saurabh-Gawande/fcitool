@@ -766,6 +766,7 @@ function Daily_Planner() {
   };
 
   const addConstraint2 = () => {
+    fetch(ProjectIp+ "")
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       setBlockdata2((data) => [

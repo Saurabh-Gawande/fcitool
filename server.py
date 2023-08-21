@@ -278,7 +278,7 @@ def read_Daily_Template_S2():
 def Download_Template_to_add():
     if request.method == "POST":
         try:
-            df1 = pd.read_excel('Input\\Matrices.xlsx', sheet_name="Railhead_cost_matrix_1rake") 
+            df1 = pd.read_excel('Input\\Non-TEFD.xlsx', sheet_name="Railhead_cost_matrix_1rake") 
             df2 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_wheat") 
 
             prev_col = df1.columns
@@ -337,9 +337,9 @@ def Update_matrices():
         Railhead_cost_matrix_1rake_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
         Railhead_cost_matrix_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
         Railhead_dist_matrix_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
-        Railhead_cost_matrix_1rake_M_data = pd.read_excel("Input/Matrices.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
-        Railhead_cost_matrix_M_data = pd.read_excel("Input/Matrices.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
-        Railhead_dist_matrix_M_data = pd.read_excel("Input/Matrices.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
+        Railhead_cost_matrix_1rake_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
+        Railhead_cost_matrix_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
+        Railhead_dist_matrix_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
 
         for row in Railhead_cost_matrix_1rake_U_data.index:
             for col in Railhead_cost_matrix_1rake_U_data.columns:
@@ -359,7 +359,7 @@ def Update_matrices():
                 Railhead_dist_matrix_M_data.at[row, col] = value
                 Railhead_dist_matrix_M_data.at[col, row] = value
 
-        with pd.ExcelWriter("Input/Matrices.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+        with pd.ExcelWriter("Input/Non-TEFD.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
             Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
             Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
             Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
@@ -1114,7 +1114,32 @@ def Monthly_Solution():
     else:
         return ("error")
 
-    
+@app.route("/Daily_Planner_Check", methods = ["POST","GET"]) 
+def Daily_Planner_Check():
+    data = {}
+    if request.method == "POST":
+        try:
+            matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
+            distance_rh=pd.read_excel(matrices_data,sheet_name="Railhead_dist_matrix",index_col=0)
+            inline_source = ""
+            inline_dest = ""
+            Inline_dist = 0
+            if distance_rh.loc[inline_source, inline_dest]<=Inline_dist:
+                data["status"] = "YES"
+            else:
+                data["status"] = "NO"
+        except Exception as e:
+            print(e)
+            data["status"] = 0
+        json_data = json.dumps(data)
+        json_object = json.loads(json_data)
+
+        return(json.dumps(json_object, indent = 1))
+    else:
+        return ("error")
+
+
+
 
 @app.route("/Daily_Planner",methods = ["POST","GET"])
 def Daily_Planner():
@@ -1132,13 +1157,45 @@ def Daily_Planner():
             confirmed_dest_state = []
             confirmed_railhead_value = []
             confirmed_railhead_commodities = []
+
+            source_wheat=[]
+            source_rice=[]
+            dest_wheat=[]
+            dest_rice=[]
+            dest_wheat_inline = {}
+            dest_rice_inline = {}
+            L1=list(dest_wheat_inline.keys())
+            L2=list(dest_rice_inline.keys())
             
            
             fetched_data = request.get_json()
+            # print(fetched_data)
             blocked_data = fetched_data['block_data']
             confirmed_data = fetched_data['confirmed_data']
             Scenerio = fetched_data["Scenerio"]
             TEFD_fetched = fetched_data['TEFD']
+            rice_origin = fetched_data["rice_origin"]
+            rice_dest = fetched_data["rice_destination"]
+            rice_inline = fetched_data["rice_inline"]
+
+            wheat_origin = fetched_data["wheat_origin"]
+            wheat_dest = fetched_data["wheat_destination"]
+            wheat_inline = fetched_data["wheat_inline"]
+
+            for i in range(len(rice_origin)):
+                source_rice.append(rice_origin[i]["origin_railhead"])
+            for i in range(len(rice_dest)):
+                dest_rice.append(rice_dest[i]["origin_railhead"])
+            for i in range(len(rice_inline)):
+                dest_rice_inline[rice_inline[i]["origin_railhead"]] = rice_inline[i]["destination_railhead"]
+
+            for i in range(len(wheat_origin)):
+                source_wheat.append(wheat_origin[i]["origin_railhead"])
+            for i in range(len(wheat_dest)):
+                dest_wheat.append(wheat_dest[i]["origin_railhead"])
+            for i in range(len(wheat_inline)):
+                dest_wheat_inline[wheat_inline[i]["origin_railhead"]] = wheat_inline[i]["destination_railhead"]
+
 
             for i in range(len(blocked_data)):
                 blocked_org_rhcode.append(blocked_data[i]["origin_railhead"])
@@ -1156,8 +1213,7 @@ def Daily_Planner():
             
             if Scenerio == "Scenerio 2":
                 data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen2.xlsx")
-                matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
-                # blocking_data = pd.ExcelFile("Input\\Route_blocker_DPT.xlsx")
+                matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
 
                 surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
                 deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
@@ -1385,13 +1441,14 @@ def Daily_Planner():
             else:
 
                 data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
-                matrices_data = pd.ExcelFile("Input\\Matrices.xlsx")
+                matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
 
                 surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
                 deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
                 surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
                 deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
                 states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
+                distance_rh=pd.read_excel(matrices_data,sheet_name="Railhead_dist_matrix",index_col=0)
                 rail_cost = None
                 if TEFD_fetched == 'NON-TEFD':
                     rail_cost=pd.read_excel("Input\\Non-TEFD.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
@@ -1402,12 +1459,55 @@ def Daily_Planner():
                 else:
                     rail_cost=pd.read_excel("Input\\TEFD_TC.xlsx",sheet_name="Railhead_cost_matrix",index_col=0)
 
-                prob = LpProblem("Output\\FCI_monthly_model_allocation_rr5",LpMinimize)
+                prob = LpProblem("Output\\FCI_monthly_model_allocation_rr",LpMinimize)
 
-                x_ij_wheat=LpVariable.dicts("x_wheat",[(i,j) for i in surplus_wheat.index for j in deficit_wheat.index],0)
-                x_ij_rice=LpVariable.dicts("x_rice",[(i,j) for i in surplus_rice.index for j in deficit_rice.index],0)
+                for i in L1:
+                    Value={}
+                    List_A=[]
+                    List_B=[]
+                    for j in source_wheat:
+                        List_A.append(i)
+                        List_A.append(dest_wheat_inline[i])
+                        List_B.append(distance_rh[i][j])
+                        List_B.append(distance_rh[dest_wheat_inline[i]][j])
+                
+                    for i in range(len(List_A)):
+                        Value[List_B[i]]=List_A[i]
+                    print(Value[max(List_B)])
+                    dest_wheat.append(Value[max(List_B)])
+                
+                for i in L2:
+                    Value={}
+                    List_A=[]
+                    List_B=[]
+                    for j in source_rice:
+                        List_A.append(i)
+                        List_A.append(dest_rice_inline[i])
+                        List_B.append(distance_rh[i][j])
+                        List_B.append(distance_rh[dest_rice_inline[i]][j])
+                
+                    for i in range(len(List_A)):
+                        Value[List_B[i]]=List_A[i]
+                    print(Value[max(List_B)])
+                    dest_rice.append(Value[max(List_B)])
 
-                prob+=lpSum(x_ij_wheat[(i,j)]*rail_cost.loc[i][j] for i in surplus_wheat.index for j in deficit_wheat.index)+lpSum(x_ij_rice[(i,j)]*rail_cost.loc[i][j] for i in surplus_rice.index for j in deficit_rice.index)
+                x_ij_wheat=LpVariable.dicts("x_wheat",[(i,j) for i in source_wheat for j in dest_wheat],0)
+                x_ij_rice=LpVariable.dicts("x_rice",[(i,j) for i in source_rice for j in dest_rice],0)
+
+                prob+=lpSum(x_ij_wheat[(i,j)]*rail_cost.loc[i][j] for i in source_wheat for j in dest_wheat)+lpSum(x_ij_rice[(i,j)]*rail_cost.loc[i][j] for i in source_rice for j in dest_rice)
+                
+                for i in source_wheat:
+                    prob+=lpSum(x_ij_wheat[(i,j)] for j in dest_wheat)<=1
+                    
+                for i in source_rice:
+                    prob+=lpSum(x_ij_rice[(i,j)] for j in dest_rice)<=1
+                    
+                for i in dest_wheat:
+                    prob+=lpSum(x_ij_wheat[(j,i)] for j in source_wheat)>=1
+                    
+                for i in dest_rice:
+                    prob+=lpSum(x_ij_rice[(j,i)] for j in source_rice)>=1
+                
 
                 for i in range(len(blocked_org_rhcode)):
                     prob += x_ij_rice[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
@@ -1418,42 +1518,11 @@ def Daily_Planner():
                         prob += x_ij_rice[(confirmed_org_rhcode[i], confirmed_dest_rhcode[i])] == int(confirmed_railhead_value[i])
                     else:
                         prob += x_ij_wheat[(confirmed_org_rhcode[i], confirmed_dest_rhcode[i])] == int(confirmed_railhead_value[i])
-
-                for i in surplus_wheat.index:
-                    for j in deficit_wheat.index:
-                        if i==j:
-                            prob+=x_ij_wheat[(i,j)]==0
-                            # print(x_ij_wheat[(i,j)]==0)
-                            
-                for i in surplus_rice.index:
-                    for j in deficit_rice.index:
-                        if i==j:
-                            prob+=x_ij_rice[(i,j)]==0
-                            # print(x_ij_rice[(i,j)]==0)
-
-                for i in surplus_wheat.index:
-                    prob+=lpSum(x_ij_wheat[(i,j)] for j in deficit_wheat.index)<=surplus_wheat["Supply"][i]
-                    
-                for i in surplus_rice.index:
-                    prob+=lpSum(x_ij_rice[(i,j)] for j in deficit_rice.index)<=surplus_rice["Supply"][i]
-
-
-
-                for i in deficit_wheat.index:
-                    prob+=lpSum(x_ij_wheat[(j,i)] for j in surplus_wheat.index)>=deficit_wheat["Demand"][i]
-                    prob+=lpSum(x_ij_wheat[(j,i)] for j in surplus_wheat.index)<=deficit_wheat["Demand"][i]
-                    
-                for i in deficit_rice.index:
-                    prob+=lpSum(x_ij_rice[(j,i)] for j in surplus_rice.index)>=deficit_rice["Demand"][i]
-                    prob+=lpSum(x_ij_rice[(j,i)] for j in surplus_rice.index)<=deficit_rice["Demand"][i]
-
-
-
-
+                
                 prob.writeLP("FCI_monthly_model_allocation_rr.lp")
                 prob.solve()
                 print("Status:", LpStatus[prob.status])
-                print("Minimum Cost of Transportation = Rs.", value(prob.objective),"Lakh")
+                print("Minimum Cost of Transportation = Rs.",prob.objective.value(),"Lakh")
                 print("Total Number of Variables:",len(prob.variables()))
                 print("Total Number of Constraints:",len(prob.constraints))
 
