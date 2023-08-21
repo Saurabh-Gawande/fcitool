@@ -8,13 +8,17 @@ function Daily_Planner() {
   const ProjectIp = "http://localhost:5000";
   const [fileSelected, setFileSelected] = useState(false);
   const [block_data, setBlockdata] = useState([]);
+  const [block_data3, setBlockdata3] = useState([]);
   const [fixed_data, setFixeddata] = useState([]);
   const [selectedOption, setSelectedOption] = useState("default");
   const [subOptions, setSubOptions] = useState([]);
   const [selectedOption2, setSelectedOption2] = useState("default");
   const [subOptions2, setSubOptions2] = useState([]);
+  const [selectedOption3, setSelectedOption3] = useState("default");
+  const [subOptions3, setSubOptions3] = useState([]);
   const [subOption1, setSubOption1] = useState("");
   const [subOption2, setSubOption2] = useState("");
+  const [subOption3, setSubOption3] = useState("");
   const [selectedOption_fixed, setSelectedOption_fixed] = useState("default");
   const [subOptions_fixed, setSubOptions_fixed] = useState([]);
   const [selectedOption2_fixed, setSelectedOption2_fixed] = useState("default");
@@ -339,12 +343,44 @@ function Daily_Planner() {
     setSubOptions2(dropdownOptions);
   };
 
+  const handleDropdownChange3 = async (e) => {
+    const selectedValue = e.target.value;
+    setSelectedOption3(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [{ value: "", label: "Please select Railhead" }];
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedValue) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+    setSubOptions3(dropdownOptions);
+    console.log(jsonData[1][1], dropdownOptions, selectedValue);
+    setSubOptions3(dropdownOptions);
+  };
+
+
   const handleSubDropdownChange1 = (e) => {
     setSubOption1(e.target.value);
   };
 
   const handleSubDropdownChange2 = (e) => {
     setSubOption2(e.target.value);
+  };
+  const handleSubDropdownChange3 = (e) => {
+    setSubOption3(e.target.value);
   };
 
   const handleDropdownChange_fixed = async (e) => {
@@ -416,7 +452,16 @@ function Daily_Planner() {
     let block_data_ = block_data.filter((item) => item["id"] !== e);
     setBlockdata(block_data_);
   };
-
+  const handleDeleteRow_fixed = (e) => {
+    console.log(e);
+    let fixed_data_ = fixed_data.filter((item) => item["id"] !== e);
+    setBlockdata(fixed_data_);
+  };
+  const handleDeleteRow_Rice_s = (e) => {
+    console.log(e);
+    let block_data3_ = block_data3.filter((item) => item["id"] !== e);
+    setBlockdata(block_data3_);
+  };
   const addConstraint = () => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption && subOption1 && selectedOption2 && subOption2) {
@@ -435,6 +480,23 @@ function Daily_Planner() {
       setSelectedOption2("default");
       setSubOptions([]);
       setSubOptions2([]);
+    }
+  };
+
+  const addConstraint3 = () => {
+    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+    if (selectedOption3 && subOption3) {
+      setBlockdata3((data) => [
+        ...data,
+        {
+          origin_state: selectedOption3,
+          origin_railhead: subOption3,
+          id: Date.now(),
+        },
+      ]);
+      console.log(block_data);
+      setSelectedOption3("default");
+      setSubOptions3([]);
     }
   };
 
@@ -730,6 +792,8 @@ function Daily_Planner() {
                     >
                       <option value="NON-TEFD">Non-TEFD</option>
                       <option value="TEFD">TEFD</option>
+                      <option value="Non-TEFD+TC">Non-TEFD + TC</option>
+                      <option value="TEFD+TC">TEFD + TC</option>
                     </select>
                   </label>
                   <label>
@@ -753,6 +817,136 @@ function Daily_Planner() {
                   </label>
                   <br />
                   <br />
+
+                  <p style={{ margin: 0, padding: 0 }}>
+                    <strong
+                      style={{
+                        color: "#9d0921",
+                        fontSize: "20px",
+                        marginLeft: "15px",
+                      }}
+                    >
+                      For Rice:
+                    </strong>
+                  </p>
+                  <br />
+                  <div style={{ display: "flex", marginLeft: "20px" }}>
+                    {/* <label htmlFor="origin_state"> */}
+                    <div>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Select Origin States:
+                      </strong>
+                      <select
+                        style={{ width: "200px", padding: "5px" }}
+                        id="origin_state"
+                        onChange={handleDropdownChange3}
+                        value={selectedOption3}
+                      >
+                        <option value="default">Select Origin State</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chattisgarh">Chattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="MP">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="NE">North East</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="UP">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Select Origin Railhead
+                      </strong>
+                      <select
+                        id="origin_railhead"
+                        style={{ width: "200px", padding: "5px" }}
+                        onChange={handleSubDropdownChange3}
+                        value={subOption3}
+                      >
+                        {subOptions3.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div
+                      style={{
+                        padding: "5px",
+                        margin: "2px",
+                        float: "right",
+                        width: "100px",
+                        background: "orange",
+                        padding: "auto",
+                        cursor: "pointer",
+                      }}
+                      onClick={addConstraint3}
+                    >
+                      <p style={{ textAlign: "center", marginTop: "20px" }}>
+                        Add
+                      </p>
+                    </div>
+                  </div>
+                 
+                  
+
+                  <div>
+                    
+                    <table>
+                      <thead>
+                        <tr style={{ margin: "auto" }}>
+                          <th style={{ padding: "10px", width: "15%" }}>
+                            Origin State
+                          </th>
+                          <th style={{ padding: "10px", width: "15%" }}>
+                            Origin Railhead
+                          </th>
+                          <th style={{ padding: "10px", width: "15%" }}>
+                            Delete
+                          </th>
+                        </tr>
+                  
+                      </thead>
+                      <tbody>
+                        
+                        {block_data.map((item) => (
+                          <tr>
+                            <td>{item.origin_state}</td>
+                            <td>{item.origin_railhead}</td>
+                            
+                            <td>
+                              <span
+                                style={{
+                                  cursor: "pointer",
+                                  color: "#ff0000",
+                                  fontSize: "1.2rem",
+                                }}
+                                onClick={() => handleDeleteRow_Rice_s(item.id)}
+                                title="Delete"
+                              >
+                                &times;
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                
 
                   <p style={{ margin: 0, padding: 0 }}>
                     <strong
@@ -1295,7 +1489,7 @@ function Daily_Planner() {
                                   color: "#ff0000",
                                   fontSize: "1.2rem",
                                 }}
-                                onClick={() => handleDeleteRow(item.id)}
+                                onClick={() => handleDeleteRow_fixed(item.id)}
                                 title="Delete"
                               >
                                 &times;

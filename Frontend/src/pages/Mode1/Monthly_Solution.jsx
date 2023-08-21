@@ -469,6 +469,8 @@ function Monthly_Solution() {
                     >
                       <option value="NON-TEFD">Non-TEFD</option>
                       <option value="TEFD">TEFD</option>
+                      <option value="Non-TEFD+TC">Non-TEFD + TC</option>
+                      <option value="TEFD+TC">TEFD + TC</option>
                     </select>
                   </label>
                   <br />
