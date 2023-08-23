@@ -1,7 +1,7 @@
 \* Output\FCI_monthly_model_allocation_rr *\
 Minimize
-OBJ: __dummy
+OBJ: 1556.6 x_rice_('BSPR',_'FCGV')
 Subject To
-Bounds
- __dummy = 0
+_C1: x_rice_('BSPR',_'FCGV') <= 1
+_C2: x_rice_('BSPR',_'FCGV') >= 1
 End
