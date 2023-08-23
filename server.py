@@ -408,7 +408,7 @@ def Add_Railhead():
         Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
         Daily_Sheets_S1 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
         Daily_Sheets_S2 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-
+# Here i Have to change
         # Initialize lists for DataFrames
         Monthly_df = []
         Daily_S1_df = []
@@ -1121,6 +1121,8 @@ def Daily_Planner_Check():
         try:
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             distance_rh=pd.read_excel(matrices_data,sheet_name="Railhead_dist_matrix",index_col=0)
+            fetched_data = request.get_json()
+            print(fetched_data)
             inline_source = ""
             inline_dest = ""
             Inline_dist = 0

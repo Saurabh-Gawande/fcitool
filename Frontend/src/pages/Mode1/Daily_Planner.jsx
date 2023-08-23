@@ -241,6 +241,31 @@ function Daily_Planner() {
       alert("An error occurred during file upload. Please try again later.");
     }
   };
+  const handle_check = async () => {
+    document.getElementById("toggle").checked = true;
+
+    const payload = {
+      rice_inline: block_data2,
+      wheat_inline: block_dataWheat2,
+    };
+    try {
+      const response = await fetch(ProjectIp + "/Daily_Planner_Check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response["status"] == 0) {
+        alert("Distance are not within range, Please check again");
+      } 
+    } catch (error) {
+      console.error("Error sending inputs:", error);
+    }
+    document.getElementById("toggle").checked = false;
+  };
+
 
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
@@ -768,6 +793,7 @@ function Daily_Planner() {
   };
 
   const addConstraint2 = () => {
+    handle_check();
     fetch(ProjectIp + "");
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
