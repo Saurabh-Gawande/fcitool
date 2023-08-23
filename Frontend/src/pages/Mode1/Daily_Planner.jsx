@@ -7,6 +7,8 @@ import background1 from "./../../assets/upload1_.png";
 function Daily_Planner() {
   const ProjectIp = "http://localhost:5000";
   const [fileSelected, setFileSelected] = useState(false);
+  const [inline_value_rice, setInlineValueRice] = useState("");
+  const [inline_value_wheat, setInlineValueWheat] = useState("");
   const [block_data, setBlockdata] = useState([]);
   const [block_data2, setBlockdata2] = useState([]);
   const [block_dataWheat2, setBlockdataWheat2] = useState([]);
@@ -287,9 +289,11 @@ function Daily_Planner() {
       rice_origin: block_data3,
       rice_destination: rice_destination,
       rice_inline: block_data2,
+      rice_inline_value: inline_value_rice,
       wheat_origin: block_dataWheat3,
       wheat_destination: wheat_destination,
       wheat_inline: block_dataWheat2,
+      wheat_inline_value: inline_value_wheat,
     };
     try {
       const response = await fetch(ProjectIp + "/Daily_Planner", {
@@ -659,6 +663,13 @@ function Daily_Planner() {
   };
   const handleSubDropdownChangeWheat6 = (e) => {
     setSubOptionWheat6(e.target.value);
+  };
+
+  const handleInlineValueWheat = (e) => {
+    setInlineValueWheat(e.target.value);
+  };
+  const handleInlineValueRice = (e) => {
+    setInlineValueRice(e.target.value);
   };
 
   const handleDropdownChange_fixed = async (e) => {
@@ -1506,18 +1517,18 @@ function Daily_Planner() {
                             <option value="Chattisgarh">Chattisgarh</option>
                             <option value="Goa">Goa</option>
                             <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
+                            {/* <option value="Haryana">Haryana</option> */}
                             <option value="Jammu & Kashmir">
                               Jammu & Kashmir
                             </option>
                             <option value="Jharkhand">Jharkhand</option>
                             <option value="Karnataka">Karnataka</option>
                             <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
+                            {/* <option value="MP">Madhya Pradesh</option> */}
                             <option value="Maharashtra">Maharashtra</option>
                             <option value="NE">North East</option>
                             <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
+                            {/* <option value="Punjab">Punjab</option> */}
                             <option value="Rajasthan">Rajasthan</option>
                             <option value="Tamil Nadu">Tamil Nadu</option>
                             <option value="Telangana">Telangana</option>
@@ -1564,18 +1575,18 @@ function Daily_Planner() {
                             <option value="Chattisgarh">Chattisgarh</option>
                             <option value="Goa">Goa</option>
                             <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
+                            {/* <option value="Haryana">Haryana</option> */}
                             <option value="Jammu & Kashmir">
                               Jammu & Kashmir
                             </option>
                             <option value="Jharkhand">Jharkhand</option>
                             <option value="Karnataka">Karnataka</option>
                             <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
+                            {/* <option value="MP">Madhya Pradesh</option> */}
                             <option value="Maharashtra">Maharashtra</option>
                             <option value="NE">North East</option>
                             <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
+                            {/* <option value="Punjab">Punjab</option> */}
                             <option value="Rajasthan">Rajasthan</option>
                             <option value="Tamil Nadu">Tamil Nadu</option>
                             <option value="Telangana">Telangana</option>
@@ -1621,6 +1632,22 @@ function Daily_Planner() {
                           </p>
                         </div>
                       </div>
+                    </div>
+                    <br/>
+                    <div style={{ marginLeft: "15px" }}>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Enter Inline Value
+                      </strong>
+                      <input
+                        type="number"
+                        value={inline_value_rice}
+                        onChange={(e) => setInlineValueRice(e.target.value)}
+                        style={{
+                          marginLeft: "40px",
+                          width: "200px",
+                          padding: "5px",
+                        }}
+                      />
                     </div>
                     <br />
                     {block_data2.length != 0 && (
@@ -1982,18 +2009,18 @@ function Daily_Planner() {
                             <option value="Chattisgarh">Chattisgarh</option>
                             <option value="Goa">Goa</option>
                             <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
+                            {/* <option value="Haryana">Haryana</option> */}
                             <option value="Jammu & Kashmir">
                               Jammu & Kashmir
                             </option>
                             <option value="Jharkhand">Jharkhand</option>
                             <option value="Karnataka">Karnataka</option>
                             <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
+                            {/* <option value="MP">Madhya Pradesh</option> */}
                             <option value="Maharashtra">Maharashtra</option>
                             <option value="NE">North East</option>
                             <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
+                            {/* <option value="Punjab">Punjab</option> */}
                             <option value="Rajasthan">Rajasthan</option>
                             <option value="Tamil Nadu">Tamil Nadu</option>
                             <option value="Telangana">Telangana</option>
@@ -2040,18 +2067,18 @@ function Daily_Planner() {
                             <option value="Chattisgarh">Chattisgarh</option>
                             <option value="Goa">Goa</option>
                             <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
+                            {/* <option value="Haryana">Haryana</option> */}
                             <option value="Jammu & Kashmir">
                               Jammu & Kashmir
                             </option>
                             <option value="Jharkhand">Jharkhand</option>
                             <option value="Karnataka">Karnataka</option>
                             <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
+                            {/* <option value="MP">Madhya Pradesh</option> */}
                             <option value="Maharashtra">Maharashtra</option>
                             <option value="NE">North East</option>
                             <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
+                            {/* <option value="Punjab">Punjab</option> */}
                             <option value="Rajasthan">Rajasthan</option>
                             <option value="Tamil Nadu">Tamil Nadu</option>
                             <option value="Telangana">Telangana</option>
@@ -2099,6 +2126,22 @@ function Daily_Planner() {
                       </div>
                     </div>
                     <br />
+                    <br/>
+                    <div style={{ marginLeft: "15px" }}>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Enter Inline Value
+                      </strong>
+                      <input
+                        type="number"
+                        value={inline_value_wheat}
+                        onChange={(e) => setInlineValueWheat(e.target.value)}
+                        style={{
+                          marginLeft: "40px",
+                          width: "200px",
+                          padding: "5px",
+                        }}
+                      />
+                    </div>
                     {block_dataWheat2.length != 0 && (
                       <div>
                         {/* <div
