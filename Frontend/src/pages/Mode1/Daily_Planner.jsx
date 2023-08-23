@@ -53,7 +53,7 @@ function Daily_Planner() {
   const [subOptions2_fixed, setSubOptions2_fixed] = useState([]);
   const [subOption1_fixed, setSubOption1_fixed] = useState("");
   const [subOption2_fixed, setSubOption2_fixed] = useState("");
-  const [commodity_fixed, setCommodity_fixed] = useState("");
+  const [commodity_fixed, setCommodity_fixed] = useState("RICE");
   const [value_fixed, setValue_fixed] = useState("");
   const [TEFD, set_TEFD] = useState("");
   const [Scenerio, set_Scenerio] = useState("");
@@ -172,6 +172,8 @@ function Daily_Planner() {
     }
     setUpdateExcel(false);
     setUpdateExcel2(false);
+    document.getElementById('console_').style.display='block';
+    document.getElementById('console_').innerHTML+="Template has been updated"+'<br/>';
   };
 
   const handleUploadConfig = async () => {
@@ -272,6 +274,8 @@ function Daily_Planner() {
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
     alert("This action will take time, click OK to continue.");
+    document.getElementById("console_").style.display="block"; 
+    document.getElementById("console_").innerHTML+="Processing..."+'<br/>';
     if (Scenerio == "Scenerio 2") {
       setscn(true);
       setuploadst(true);
@@ -312,7 +316,8 @@ function Daily_Planner() {
       }
     } catch (error) {
       console.error("Error sending inputs:", error);
-    }
+    }    
+    document.getElementById("console_").innerHTML+="Solution has been done"+'<br/>';
     document.getElementById("toggle").checked = false;
   };
 
@@ -800,12 +805,14 @@ function Daily_Planner() {
       setSelectedOption2("default");
       setSubOptions([]);
       setSubOptions2([]);
+      document.getElementById("console_").style.display="block"; 
+      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML+="Route from "+subOption1+" to " + subOption2 +" has been blocked"+'<br/>';
     }
   };
 
   const addConstraint2 = () => {
-    handle_check();
-    fetch(ProjectIp + "");
+    // handle_check();
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       setBlockdata2((data) => [
@@ -818,12 +825,15 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      console.log(block_data2);
       setSelectedOption5("default");
       setSelectedOption6("default");
       setSubOptions5([]);
       setSubOptions6([]);
+      console.log(block_data2);
     }
+    document.getElementById("console_").style.display="block"; 
+    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+    document.getElementById("console_").innerHTML+="New Inline details has been added for rice"+'<br/>';
   };
 
   const addConstraintWheat2 = () => {
@@ -850,6 +860,9 @@ function Daily_Planner() {
       setSubOptions5([]);
       setSubOptions6([]);
     }
+    document.getElementById("console_").style.display="block"; 
+    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+    document.getElementById("console_").innerHTML+="New Inline details has been added for wheat"+'<br/>';
   };
 
   const addConstraint3 = () => {
@@ -865,6 +878,9 @@ function Daily_Planner() {
       ]);
       setSelectedOption3("default");
       setSubOptions3([]);
+      document.getElementById("console_").style.display="block"; 
+      // document.getElementById("console_").innerHTML+="Origin railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML+="New origin railhead has been added for rice"+'<br/>';
     }
   };
 
@@ -881,6 +897,9 @@ function Daily_Planner() {
       ]);
       setSelectedOptionWheat3("default");
       setSubOptionsWheat3([]);
+      document.getElementById("console_").style.display="block"; 
+      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML+="New origin railhead has been added for wheat"+'<br/>';
     }
   };
 
@@ -897,6 +916,9 @@ function Daily_Planner() {
       ]);
       setSelectedOption4("default");
       setSubOptions4([]);
+      document.getElementById("console_").style.display="block"; 
+      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML+="New destination railhead has been added for rice"+'<br/>';
     }
   };
   const addConstraintWheat4 = () => {
@@ -912,6 +934,9 @@ function Daily_Planner() {
       ]);
       setSelectedOptionWheat4("default");
       setSubOptionsWheat4([]);
+      document.getElementById("console_").style.display="block"; 
+      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML+="New destination railhead has been added for wheat"+'<br/>';
     }
   };
 
@@ -941,6 +966,9 @@ function Daily_Planner() {
       setSelectedOption2_fixed("default");
       setSubOptions_fixed([]);
       setSubOptions2_fixed([]);
+      document.getElementById("console_").style.display="block"; 
+      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML+="Route from "+subOption1_fixed+" to " + subOption2_fixed +" has been fixed for "+commodity_fixed+" with value "+ value_fixed+'<br/>';
     }
   };
 
@@ -1185,6 +1213,9 @@ function Daily_Planner() {
                     </table>
                   </div>
                 )}
+              <div style={{ margin:'10px', marginLeft:'20%',width:'60%', border:'2px dashed black', padding:'10px', display:'none'}} id="console_">
+                
+              </div>
               <div style={{ marginLeft: "15px" }}>
                 <div style={{ fontSize: "20px", fontWeight: "700" }}>
                   <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -1204,7 +1235,7 @@ function Daily_Planner() {
                     </strong>
                     <select
                       value={TEFD}
-                      onChange={(e) => set_TEFD(e.target.value)}
+                      onChange={(e) => {set_TEFD(e.target.value); document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the matrix system as "+e.target.value+'<br/>';}}
                       style={{ marginLeft: "547px" }}
                     >
                       <option value="">Select Matrix System</option>
@@ -1226,7 +1257,7 @@ function Daily_Planner() {
                     </strong>
                     <select
                       value={Scenerio}
-                      onChange={(e) => set_Scenerio(e.target.value)}
+                      onChange={(e) => {set_Scenerio(e.target.value);  document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the scenario as "+e.target.value+'<br/>';}}
                       style={{ marginLeft: "600px" }}
                     >
                       <option value="">Select Scenario</option>
@@ -1257,7 +1288,7 @@ function Daily_Planner() {
                         </strong>
                         <select
                           style={{ width: "200px", padding: "5px" }}
-                          id="origin_state"
+                          
                           onChange={handleDropdownChange3}
                           value={selectedOption3}
                         >
@@ -1293,7 +1324,7 @@ function Daily_Planner() {
                           Select Origin Railhead
                         </strong>
                         <select
-                          id="origin_railhead"
+                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChange3}
                           value={subOption3}
@@ -1344,7 +1375,7 @@ function Daily_Planner() {
                           </thead>
                           <tbody>
                             {block_data3.map((item) => (
-                              <tr>
+                              <tr key={item.id}>
                                 <td>{item.origin_state}</td>
                                 <td>{item.origin_railhead}</td>
 
@@ -1418,7 +1449,7 @@ function Daily_Planner() {
                           Select Destination Railhead
                         </strong>
                         <select
-                          id="origin_railhead"
+                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChange4}
                           value={subOption4}
@@ -1468,7 +1499,7 @@ function Daily_Planner() {
                             </thead>
                             <tbody>
                               {rice_destination.map((item) => (
-                                <tr>
+                                <tr key={item.id}>
                                   <td>{item.origin_state}</td>
                                   <td>{item.origin_railhead}</td>
 
@@ -1505,7 +1536,7 @@ function Daily_Planner() {
                           </strong>
                           <select
                             style={{ width: "200px", padding: "5px" }}
-                            id="origin_state"
+                            
                             onChange={handleDropdownChange5}
                             value={selectedOption5}
                           >
@@ -1543,7 +1574,6 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            id="origin_railhead"
                             style={{ width: "200px", padding: "5px" }}
                             onChange={handleSubDropdownChange5}
                             value={subOption5}
@@ -1563,7 +1593,7 @@ function Daily_Planner() {
                           </strong>
                           <select
                             style={{ width: "200px", padding: "5px" }}
-                            id="deficit_state"
+                            
                             onChange={handleDropdownChange6}
                             value={selectedOption6}
                           >
@@ -1602,7 +1632,7 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            id="deficit_railhead"
+                            
                             style={{ width: "200px", padding: "5px" }}
                             onChange={handleSubDropdownChange6}
                             value={subOption6}
@@ -1700,7 +1730,7 @@ function Daily_Planner() {
                       <th style={{ padding: "10px", width: "15%" }}>Delete</th>
                     </tr> */}
                             {block_data2.map((item) => (
-                              <tr>
+                              <tr key={item.id}>
                                 <td>{item.origin_state}</td>
                                 <td>{item.origin_railhead}</td>
                                 <td>{item.destination_state}</td>
@@ -1749,7 +1779,7 @@ function Daily_Planner() {
                         </strong>
                         <select
                           style={{ width: "200px", padding: "5px" }}
-                          id="origin_state"
+                          
                           onChange={handleDropdownChangeWheat3}
                           value={selectedOptionWheat3}
                         >
@@ -1785,7 +1815,7 @@ function Daily_Planner() {
                           Select Origin Railhead
                         </strong>
                         <select
-                          id="origin_railhead"
+                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChangeWheat3}
                           value={subOptionWheat3}
@@ -1836,7 +1866,7 @@ function Daily_Planner() {
                           </thead>
                           <tbody>
                             {block_dataWheat3.map((item) => (
-                              <tr>
+                              <tr key={item.id}>
                                 <td>{item.origin_state}</td>
                                 <td>{item.origin_railhead}</td>
 
@@ -1910,7 +1940,7 @@ function Daily_Planner() {
                           Select Destination Railhead
                         </strong>
                         <select
-                          id="origin_railhead"
+                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChangeWheat4}
                           value={subOptionWheat4}
@@ -1960,7 +1990,7 @@ function Daily_Planner() {
                             </thead>
                             <tbody>
                               {wheat_destination.map((item) => (
-                                <tr>
+                                <tr key={item.id}>
                                   <td>{item.origin_state}</td>
                                   <td>{item.origin_railhead}</td>
 
@@ -1997,7 +2027,6 @@ function Daily_Planner() {
                           </strong>
                           <select
                             style={{ width: "200px", padding: "5px" }}
-                            id="origin_state"
                             onChange={handleDropdownChangeWheat5}
                             value={selectedOptionWheat5}
                           >
@@ -2035,7 +2064,7 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            id="origin_railhead"
+                            
                             style={{ width: "200px", padding: "5px" }}
                             onChange={handleSubDropdownChangeWheat5}
                             value={subOptionWheat5}
@@ -2055,7 +2084,7 @@ function Daily_Planner() {
                           </strong>
                           <select
                             style={{ width: "200px", padding: "5px" }}
-                            id="deficit_state"
+                            
                             onChange={handleDropdownChangeWheat6}
                             value={selectedOptionWheat6}
                           >
@@ -2094,7 +2123,7 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            id="deficit_railhead"
+                            
                             style={{ width: "200px", padding: "5px" }}
                             onChange={handleSubDropdownChangeWheat6}
                             value={subOptionWheat6}
@@ -2177,7 +2206,7 @@ function Daily_Planner() {
                           </thead>
                           <tbody>
                             {block_dataWheat2.map((item) => (
-                              <tr>
+                              <tr key={item.id}>
                                 <td>{item.origin_state}</td>
                                 <td>{item.origin_railhead}</td>
                                 <td>{item.destination_state}</td>
@@ -2225,7 +2254,6 @@ function Daily_Planner() {
                       </strong>
                       <select
                         style={{ width: "200px", padding: "5px" }}
-                        id="origin_state"
                         onChange={handleDropdownChange}
                         value={selectedOption}
                       >
@@ -2259,7 +2287,6 @@ function Daily_Planner() {
                         Select Origin Railhead
                       </strong>
                       <select
-                        id="origin_railhead"
                         style={{ width: "200px", padding: "5px" }}
                         onChange={handleSubDropdownChange1}
                         value={subOption1}
@@ -2279,7 +2306,6 @@ function Daily_Planner() {
                       </strong>
                       <select
                         style={{ width: "200px", padding: "5px" }}
-                        id="deficit_state"
                         onChange={handleDropdownChange2}
                         value={selectedOption2}
                       >
@@ -2316,7 +2342,6 @@ function Daily_Planner() {
                         Select Destination Railhead
                       </strong>
                       <select
-                        id="deficit_railhead"
                         style={{ width: "200px", padding: "5px" }}
                         onChange={handleSubDropdownChange2}
                         value={subOption2}
@@ -2388,7 +2413,7 @@ function Daily_Planner() {
                       <th style={{ padding: "10px", width: "15%" }}>Delete</th>
                     </tr> */}
                           {block_data.map((item) => (
-                            <tr>
+                            <tr key={item.id}>
                               <td>{item.origin_state}</td>
                               <td>{item.origin_railhead}</td>
                               <td>{item.destination_state}</td>
@@ -2434,7 +2459,7 @@ function Daily_Planner() {
                       </strong>
                       <select
                         style={{ width: "200px", padding: "5px" }}
-                        id="origin_state"
+                        
                         onChange={handleDropdownChange_fixed}
                         value={selectedOption_fixed}
                       >
@@ -2469,7 +2494,7 @@ function Daily_Planner() {
                         Select Origin Railhead
                       </strong>
                       <select
-                        id="origin_railhead"
+                        
                         style={{ width: "200px", padding: "5px" }}
                         onChange={handleSubDropdownChange1_fixed}
                         value={subOption1_fixed}
@@ -2489,7 +2514,7 @@ function Daily_Planner() {
                       </strong>
                       <select
                         style={{ width: "200px", padding: "5px" }}
-                        id="deficit_state"
+                        
                         onChange={handleDropdownChange2_fixed}
                         value={selectedOption2_fixed}
                       >
@@ -2526,7 +2551,6 @@ function Daily_Planner() {
                         Select Destination Railhead
                       </strong>
                       <select
-                        id="deficit_railhead"
                         style={{ width: "200px", padding: "5px" }}
                         onChange={handleSubDropdownChange2_fixed}
                         value={subOption2_fixed}
@@ -2639,7 +2663,7 @@ function Daily_Planner() {
                       <th style={{ padding: "10px", width: "15%" }}>Delete</th>
                     </tr> */}
                           {fixed_data.map((item) => (
-                            <tr>
+                            <tr key={item.id}>
                               <td>{item.origin_state}</td>
                               <td>{item.origin_railhead}</td>
                               <td>{item.destination_state}</td>

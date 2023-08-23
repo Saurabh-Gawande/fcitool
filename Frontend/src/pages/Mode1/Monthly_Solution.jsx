@@ -90,6 +90,8 @@ function Monthly_Solution() {
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
     alert("This action will take time, click OK to continue.");
+    document.getElementById("console_").style.display="block"; 
+    document.getElementById("console_").innerHTML+="Processing..."+'<br/>';
     const payload = {
       r_s: r_s,
       r_d: r_d,
@@ -113,6 +115,7 @@ function Monthly_Solution() {
     } catch (error) {
       console.error("Error sending inputs:", error);
     }
+    document.getElementById("console_").innerHTML+="Solution has been done"+'<br/>';
     document.getElementById("toggle").checked = false;
   };
 
@@ -206,6 +209,8 @@ function Monthly_Solution() {
     setExcelData(sheetsData);
     setActiveSheetName(workbook.SheetNames[0]);
     setUpdateExcel(true);
+    document.getElementById('console_').style.display='block';
+    document.getElementById('console_').innerHTML+="Template has been updated"+'<br/>';
   };
 
   const save_excel = async () => {
@@ -445,6 +450,9 @@ function Monthly_Solution() {
                   </table>
                 </div>
               )}
+              <div style={{ margin:'10px', marginLeft:'20%',width:'60%', border:'2px dashed black', padding:'10px', display:'none'}} id="console_">
+                
+              </div>
               <div style={{ marginLeft: "15px" }}>
                 <div style={{ fontSize: "20px", fontWeight: "700" }}>
                   <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -464,7 +472,7 @@ function Monthly_Solution() {
                     </strong>
                     <select
                       value={TEFD}
-                      onChange={(e) => set_TEFD(e.target.value)}
+                      onChange={(e) => {set_TEFD(e.target.value); document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the matrix system as "+e.target.value+'<br/>';}}
                       style={{ marginLeft: "547px" }}
                     >
                       <option value="NON-TEFD">Non-TEFD</option>
