@@ -1123,6 +1123,7 @@ def Daily_Planner_Check():
             distance_rh=pd.read_excel(matrices_data,sheet_name="Railhead_dist_matrix",index_col=0)
             fetched_data = request.get_json()
             print(fetched_data)
+            inline_s = fetched_data["rice_inline"] + fetched_data["wheat_inline"]
             inline_source = ""
             inline_dest = ""
             Inline_dist = 0

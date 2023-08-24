@@ -245,30 +245,38 @@ function Daily_Planner() {
       alert("An error occurred during file upload. Please try again later.");
     }
   };
-  const handle_check = async () => {
-    document.getElementById("toggle").checked = true;
 
-    const payload = {
-      rice_inline: block_data2,
-      wheat_inline: block_dataWheat2,
-    };
-    try {
-      const response = await fetch(ProjectIp + "/Daily_Planner_Check", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
 
-      if (response["status"] == 0) {
-        alert("Distance are not within range, Please check again");
+ const handle_check = async () => {
+     try {
+        const payload1 = {
+          rice_inline: block_data2,
+          rice_inline_value: inline_value_rice,
+          wheat_inline: block_dataWheat2,
+          wheat_inline_value: inline_value_wheat,
+        };
+    
+        console.log(block_data2, inline_value_rice, inline_value_wheat, block_dataWheat2);
+    
+        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload1),
+        });
+    
+        const responseData1 = await response2.json(); // Parse response JSON
+        console.log(responseData1); // Log the response data
+    
+        if (responseData1.status === 0) {
+          alert("Distance is not within range. Please check again.");
+        }
+      } catch (error) {
+        console.error("Error sending inputs:", error);
       } 
-    } catch (error) {
-      console.error("Error sending inputs:", error);
-    }
-    document.getElementById("toggle").checked = false;
-  };
+ }
+  
 
 
   const handleSolve = async () => {
@@ -811,8 +819,12 @@ function Daily_Planner() {
     }
   };
 
+<<<<<<< Updated upstream
   const addConstraint2 = () => {
     // handle_check();
+=======
+  const addConstraint2 = async () => {
+>>>>>>> Stashed changes
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       setBlockdata2((data) => [
@@ -825,11 +837,56 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
+<<<<<<< Updated upstream
+=======
+      var data = block_data2;
+      var data1 = block_dataWheat2;
+      data.push({
+        origin_state: selectedOption5,
+          origin_railhead: subOption5,
+          destination_state: selectedOption6,
+          destination_railhead: subOption6,
+          id: Date.now()
+      })
+      console.log(data);
+>>>>>>> Stashed changes
       setSelectedOption5("default");
       setSelectedOption6("default");
       setSubOptions5([]);
       setSubOptions6([]);
+<<<<<<< Updated upstream
       console.log(block_data2);
+=======
+
+      // await handle_check();
+      try {
+        const payload1 = {
+          rice_inline: data,
+          rice_inline_value: inline_value_rice,
+          wheat_inline: data1,
+          wheat_inline_value: inline_value_wheat,
+        };
+    
+        console.log(block_data2, inline_value_rice, inline_value_wheat, block_dataWheat2);
+    
+        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload1),
+        });
+    
+        const responseData1 = await response2.json(); // Parse response JSON
+        console.log(responseData1); // Log the response data
+    
+        if (responseData1.status === 0) {
+          alert("Distance is not within range. Please check again.");
+        }
+      } catch (error) {
+        console.error("Error sending inputs:", error);
+      } 
+>>>>>>> Stashed changes
     }
     document.getElementById("console_").style.display="block"; 
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
@@ -2598,6 +2655,7 @@ function Daily_Planner() {
                         padding: "5px",
                       }}
                     >
+                      <option value="">Select Commodity</option>
                       <option value="RICE">Rice</option>
                       <option value="WHEAT">Wheat</option>
                     </select>

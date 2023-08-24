@@ -475,6 +475,7 @@ function Monthly_Solution() {
                       onChange={(e) => {set_TEFD(e.target.value); document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the matrix system as "+e.target.value+'<br/>';}}
                       style={{ marginLeft: "547px" }}
                     >
+                      <option value="">Select Matrix System</option>
                       <option value="NON-TEFD">Non-TEFD</option>
                       <option value="TEFD">TEFD</option>
                       <option value="Non-TEFD+TC">Non-TEFD + TC</option>
