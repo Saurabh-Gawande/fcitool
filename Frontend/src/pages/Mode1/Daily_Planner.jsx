@@ -819,12 +819,11 @@ function Daily_Planner() {
     }
   };
 
-<<<<<<< Updated upstream
+
   const addConstraint2 = () => {
     // handle_check();
-=======
+
   const addConstraint2 = async () => {
->>>>>>> Stashed changes
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       setBlockdata2((data) => [
@@ -837,8 +836,8 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-<<<<<<< Updated upstream
-=======
+
+
       var data = block_data2;
       var data1 = block_dataWheat2;
       data.push({
@@ -849,14 +848,14 @@ function Daily_Planner() {
           id: Date.now()
       })
       console.log(data);
->>>>>>> Stashed changes
+
       setSelectedOption5("default");
       setSelectedOption6("default");
       setSubOptions5([]);
       setSubOptions6([]);
-<<<<<<< Updated upstream
+
       console.log(block_data2);
-=======
+
 
       // await handle_check();
       try {
@@ -886,7 +885,6 @@ function Daily_Planner() {
       } catch (error) {
         console.error("Error sending inputs:", error);
       } 
->>>>>>> Stashed changes
     }
     document.getElementById("console_").style.display="block"; 
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
@@ -2835,6 +2833,6 @@ function Daily_Planner() {
       </div>
     </div>
   );
-}
+}}
 
 export default Daily_Planner;
