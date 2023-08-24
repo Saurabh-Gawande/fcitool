@@ -338,7 +338,7 @@ function Monthly_Solution() {
                   <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
                   Template
                 </div>
-                {/* <form
+                <form
                   action=""
                   encType="multipart/form-data"
                   id="uploadForm"
@@ -385,7 +385,7 @@ function Monthly_Solution() {
                     />
                     <div style={{ marginTop: "-25px" }}>Click here</div>
                   </div>
-                </form> */}
+                </form>
               </div>
               <br />
               <br />
@@ -502,7 +502,7 @@ function Monthly_Solution() {
                       surplus states (Default Value is 25)
                     </strong>
                     <input
-                      type="text"
+                      type="number"
                       value={r_s}
                       onChange={(e) => setr_s(e.target.value)}
                       style={{ marginLeft: "40px" }}
@@ -515,7 +515,7 @@ function Monthly_Solution() {
                       deficit states (Default Value is 25)
                     </strong>
                     <input
-                      type="text"
+                      type="number"
                       value={r_d}
                       onChange={(e) => setr_d(e.target.value)}
                       style={{ marginLeft: "53px" }}
@@ -595,6 +595,9 @@ function Monthly_Solution() {
                 )}
                 <br />
                 <br />
+                <br/>
+                <br/>
+                <br/>
               </div>
             </div>
           </div>

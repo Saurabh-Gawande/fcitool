@@ -172,8 +172,9 @@ function Daily_Planner() {
     }
     setUpdateExcel(false);
     setUpdateExcel2(false);
-    document.getElementById('console_').style.display='block';
-    document.getElementById('console_').innerHTML+="Template has been updated"+'<br/>';
+    document.getElementById("console_").style.display = "block";
+    document.getElementById("console_").innerHTML +=
+      "Template has been updated" + "<br/>";
   };
 
   const handleUploadConfig = async () => {
@@ -246,44 +247,46 @@ function Daily_Planner() {
     }
   };
 
+  const handle_check = async () => {
+    try {
+      const payload1 = {
+        rice_inline: block_data2,
+        rice_inline_value: inline_value_rice,
+        wheat_inline: block_dataWheat2,
+        wheat_inline_value: inline_value_wheat,
+      };
 
- const handle_check = async () => {
-     try {
-        const payload1 = {
-          rice_inline: block_data2,
-          rice_inline_value: inline_value_rice,
-          wheat_inline: block_dataWheat2,
-          wheat_inline_value: inline_value_wheat,
-        };
-    
-        console.log(block_data2, inline_value_rice, inline_value_wheat, block_dataWheat2);
-    
-        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload1),
-        });
-    
-        const responseData1 = await response2.json(); // Parse response JSON
-        console.log(responseData1); // Log the response data
-    
-        if (responseData1.status === 0) {
-          alert("Distance is not within range. Please check again.");
-        }
-      } catch (error) {
-        console.error("Error sending inputs:", error);
-      } 
- }
-  
+      console.log(
+        block_data2,
+        inline_value_rice,
+        inline_value_wheat,
+        block_dataWheat2
+      );
 
+      const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload1),
+      });
+
+      const responseData1 = await response2.json(); // Parse response JSON
+      console.log(responseData1); // Log the response data
+
+      if (responseData1.status === 0) {
+        alert("Distance is not within range. Please check again.");
+      }
+    } catch (error) {
+      console.error("Error sending inputs:", error);
+    }
+  };
 
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
     alert("This action will take time, click OK to continue.");
-    document.getElementById("console_").style.display="block"; 
-    document.getElementById("console_").innerHTML+="Processing..."+'<br/>';
+    document.getElementById("console_").style.display = "block";
+    document.getElementById("console_").innerHTML += "Processing..." + "<br/>";
     if (Scenerio == "Scenerio 2") {
       setscn(true);
       setuploadst(true);
@@ -324,8 +327,9 @@ function Daily_Planner() {
       }
     } catch (error) {
       console.error("Error sending inputs:", error);
-    }    
-    document.getElementById("console_").innerHTML+="Solution has been done"+'<br/>';
+    }
+    document.getElementById("console_").innerHTML +=
+      "Solution has been done" + "<br/>";
     document.getElementById("toggle").checked = false;
   };
 
@@ -813,15 +817,18 @@ function Daily_Planner() {
       setSelectedOption2("default");
       setSubOptions([]);
       setSubOptions2([]);
-      document.getElementById("console_").style.display="block"; 
+      document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML+="Route from "+subOption1+" to " + subOption2 +" has been blocked"+'<br/>';
+      document.getElementById("console_").innerHTML +=
+        "Route from " +
+        subOption1 +
+        " to " +
+        subOption2 +
+        " has been blocked" +
+        "<br/>";
     }
   };
-
-
-  const addConstraint2 = () => {
-    // handle_check();
+  // handle_check();
 
   const addConstraint2 = async () => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
@@ -837,16 +844,15 @@ function Daily_Planner() {
         },
       ]);
 
-
       var data = block_data2;
       var data1 = block_dataWheat2;
       data.push({
         origin_state: selectedOption5,
-          origin_railhead: subOption5,
-          destination_state: selectedOption6,
-          destination_railhead: subOption6,
-          id: Date.now()
-      })
+        origin_railhead: subOption5,
+        destination_state: selectedOption6,
+        destination_railhead: subOption6,
+        id: Date.now(),
+      });
       console.log(data);
 
       setSelectedOption5("default");
@@ -856,8 +862,6 @@ function Daily_Planner() {
 
       console.log(block_data2);
 
-
-      // await handle_check();
       try {
         const payload1 = {
           rice_inline: data,
@@ -865,9 +869,14 @@ function Daily_Planner() {
           wheat_inline: data1,
           wheat_inline_value: inline_value_wheat,
         };
-    
-        console.log(block_data2, inline_value_rice, inline_value_wheat, block_dataWheat2);
-    
+
+        console.log(
+          block_data2,
+          inline_value_rice,
+          inline_value_wheat,
+          block_dataWheat2
+        );
+
         const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
           method: "POST",
           headers: {
@@ -875,23 +884,24 @@ function Daily_Planner() {
           },
           body: JSON.stringify(payload1),
         });
-    
+
         const responseData1 = await response2.json(); // Parse response JSON
         console.log(responseData1); // Log the response data
-    
-        if (responseData1.status === 0) {
+
+        if (responseData1.status === "YES") {
           alert("Distance is not within range. Please check again.");
         }
       } catch (error) {
         console.error("Error sending inputs:", error);
-      } 
+      }
     }
-    document.getElementById("console_").style.display="block"; 
+    document.getElementById("console_").style.display = "block";
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-    document.getElementById("console_").innerHTML+="New Inline details has been added for rice"+'<br/>';
+    document.getElementById("console_").innerHTML +=
+      "New Inline details has been added for rice" + "<br/>";
   };
 
-  const addConstraintWheat2 = () => {
+  const addConstraintWheat2 = async () => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (
       selectedOptionWheat5 &&
@@ -909,15 +919,58 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
+      var data = block_data2;
+      var data1 = block_dataWheat2;
+      data1.push({
+        origin_state: selectedOptionWheat5,
+        origin_railhead: subOptionWheat5,
+        destination_state: selectedOptionWheat6,
+        destination_railhead: subOptionWheat6,
+        id: Date.now(),
+      });
       console.log(block_dataWheat2);
       setSelectedOption5("default");
       setSelectedOption6("default");
       setSubOptions5([]);
       setSubOptions6([]);
+
+      try {
+        const payload1 = {
+          rice_inline: data,
+          rice_inline_value: inline_value_rice,
+          wheat_inline: data1,
+          wheat_inline_value: inline_value_wheat,
+        };
+
+        console.log(
+          block_data2,
+          inline_value_rice,
+          inline_value_wheat,
+          block_dataWheat2
+        );
+
+        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload1),
+        });
+
+        const responseData1 = await response2.json(); // Parse response JSON
+        console.log(responseData1); // Log the response data
+
+        if (responseData1.status === "YES") {
+          alert("Distance is not within range. Please check again.");
+        }
+      } catch (error) {
+        console.error("Error sending inputs:", error);
+      }
     }
-    document.getElementById("console_").style.display="block"; 
+    document.getElementById("console_").style.display = "block";
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-    document.getElementById("console_").innerHTML+="New Inline details has been added for wheat"+'<br/>';
+    document.getElementById("console_").innerHTML +=
+      "New Inline details has been added for wheat" + "<br/>";
   };
 
   const addConstraint3 = () => {
@@ -933,9 +986,10 @@ function Daily_Planner() {
       ]);
       setSelectedOption3("default");
       setSubOptions3([]);
-      document.getElementById("console_").style.display="block"; 
+      document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Origin railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML+="New origin railhead has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML +=
+        "New origin railhead has been added for rice" + "<br/>";
     }
   };
 
@@ -952,9 +1006,10 @@ function Daily_Planner() {
       ]);
       setSelectedOptionWheat3("default");
       setSubOptionsWheat3([]);
-      document.getElementById("console_").style.display="block"; 
+      document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML+="New origin railhead has been added for wheat"+'<br/>';
+      document.getElementById("console_").innerHTML +=
+        "New origin railhead has been added for wheat" + "<br/>";
     }
   };
 
@@ -971,9 +1026,10 @@ function Daily_Planner() {
       ]);
       setSelectedOption4("default");
       setSubOptions4([]);
-      document.getElementById("console_").style.display="block"; 
+      document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML+="New destination railhead has been added for rice"+'<br/>';
+      document.getElementById("console_").innerHTML +=
+        "New destination railhead has been added for rice" + "<br/>";
     }
   };
   const addConstraintWheat4 = () => {
@@ -989,9 +1045,10 @@ function Daily_Planner() {
       ]);
       setSelectedOptionWheat4("default");
       setSubOptionsWheat4([]);
-      document.getElementById("console_").style.display="block"; 
+      document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML+="New destination railhead has been added for wheat"+'<br/>';
+      document.getElementById("console_").innerHTML +=
+        "New destination railhead has been added for wheat" + "<br/>";
     }
   };
 
@@ -1021,9 +1078,18 @@ function Daily_Planner() {
       setSelectedOption2_fixed("default");
       setSubOptions_fixed([]);
       setSubOptions2_fixed([]);
-      document.getElementById("console_").style.display="block"; 
+      document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML+="Route from "+subOption1_fixed+" to " + subOption2_fixed +" has been fixed for "+commodity_fixed+" with value "+ value_fixed+'<br/>';
+      document.getElementById("console_").innerHTML +=
+        "Route from " +
+        subOption1_fixed +
+        " to " +
+        subOption2_fixed +
+        " has been fixed for " +
+        commodity_fixed +
+        " with value " +
+        value_fixed +
+        "<br/>";
     }
   };
 
@@ -1200,14 +1266,14 @@ function Daily_Planner() {
                 {/* {fileSelected && ( */}
                 <div style={{ marginTop: "-20px" }}>
                   <button style={buttonStyle} onClick={() => update_excel()}>
-                    Update Template for Scenario 1
+                    Template 1
                   </button>
                 </div>
                 {/* )} */}
                 {/* {updateExcel && ( */}
                 <div style={{ marginLeft: "150px", marginTop: "-20px" }}>
                   <button style={buttonStyle2} onClick={() => update_excel2()}>
-                    Update Template for Scenario 2
+                    Template 2
                   </button>
                 </div>
                 {/* )} */}
@@ -1268,9 +1334,17 @@ function Daily_Planner() {
                     </table>
                   </div>
                 )}
-              <div style={{ margin:'10px', marginLeft:'20%',width:'60%', border:'2px dashed black', padding:'10px', display:'none'}} id="console_">
-                
-              </div>
+              <div
+                style={{
+                  margin: "10px",
+                  marginLeft: "20%",
+                  width: "60%",
+                  border: "2px dashed black",
+                  padding: "10px",
+                  display: "none",
+                }}
+                id="console_"
+              ></div>
               <div style={{ marginLeft: "15px" }}>
                 <div style={{ fontSize: "20px", fontWeight: "700" }}>
                   <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -1290,7 +1364,15 @@ function Daily_Planner() {
                     </strong>
                     <select
                       value={TEFD}
-                      onChange={(e) => {set_TEFD(e.target.value); document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the matrix system as "+e.target.value+'<br/>';}}
+                      onChange={(e) => {
+                        set_TEFD(e.target.value);
+                        document.getElementById("console_").style.display =
+                          "block";
+                        document.getElementById("console_").innerHTML +=
+                          "You have selected the matrix system as " +
+                          e.target.value +
+                          "<br/>";
+                      }}
                       style={{ marginLeft: "547px" }}
                     >
                       <option value="">Select Matrix System</option>
@@ -1312,7 +1394,15 @@ function Daily_Planner() {
                     </strong>
                     <select
                       value={Scenerio}
-                      onChange={(e) => {set_Scenerio(e.target.value);  document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the scenario as "+e.target.value+'<br/>';}}
+                      onChange={(e) => {
+                        set_Scenerio(e.target.value);
+                        document.getElementById("console_").style.display =
+                          "block";
+                        document.getElementById("console_").innerHTML +=
+                          "You have selected the scenario as " +
+                          e.target.value +
+                          "<br/>";
+                      }}
                       style={{ marginLeft: "600px" }}
                     >
                       <option value="">Select Scenario</option>
@@ -1343,7 +1433,6 @@ function Daily_Planner() {
                         </strong>
                         <select
                           style={{ width: "200px", padding: "5px" }}
-                          
                           onChange={handleDropdownChange3}
                           value={selectedOption3}
                         >
@@ -1379,7 +1468,6 @@ function Daily_Planner() {
                           Select Origin Railhead
                         </strong>
                         <select
-                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChange3}
                           value={subOption3}
@@ -1504,7 +1592,6 @@ function Daily_Planner() {
                           Select Destination Railhead
                         </strong>
                         <select
-                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChange4}
                           value={subOption4}
@@ -1591,7 +1678,6 @@ function Daily_Planner() {
                           </strong>
                           <select
                             style={{ width: "200px", padding: "5px" }}
-                            
                             onChange={handleDropdownChange5}
                             value={selectedOption5}
                           >
@@ -1640,6 +1726,13 @@ function Daily_Planner() {
                             ))}
                           </select>
                         </div>
+
+                        <strong style={{ fontSize: "40px", padding: "5px", marginRight: "50px" }}>+</strong>
+
+
+
+                        
+
                         {/* </label> */}
                         <div>
                           {/* <label htmlFor="deficit_state"> */}
@@ -1648,7 +1741,6 @@ function Daily_Planner() {
                           </strong>
                           <select
                             style={{ width: "200px", padding: "5px" }}
-                            
                             onChange={handleDropdownChange6}
                             value={selectedOption6}
                           >
@@ -1687,7 +1779,6 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            
                             style={{ width: "200px", padding: "5px" }}
                             onChange={handleSubDropdownChange6}
                             value={subOption6}
@@ -1718,7 +1809,7 @@ function Daily_Planner() {
                         </div>
                       </div>
                     </div>
-                    <br/>
+                    <br />
                     <div style={{ marginLeft: "15px" }}>
                       <strong style={{ fontSize: "16px", padding: "5px" }}>
                         Enter Inline Value
@@ -1834,7 +1925,6 @@ function Daily_Planner() {
                         </strong>
                         <select
                           style={{ width: "200px", padding: "5px" }}
-                          
                           onChange={handleDropdownChangeWheat3}
                           value={selectedOptionWheat3}
                         >
@@ -1870,7 +1960,6 @@ function Daily_Planner() {
                           Select Origin Railhead
                         </strong>
                         <select
-                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChangeWheat3}
                           value={subOptionWheat3}
@@ -1948,6 +2037,7 @@ function Daily_Planner() {
                     )}
 
                     <br />
+                    
 
                     <div style={{ display: "flex", marginLeft: "20px" }}>
                       {/* <label htmlFor="origin_state"> */}
@@ -1995,7 +2085,6 @@ function Daily_Planner() {
                           Select Destination Railhead
                         </strong>
                         <select
-                          
                           style={{ width: "200px", padding: "5px" }}
                           onChange={handleSubDropdownChangeWheat4}
                           value={subOptionWheat4}
@@ -2073,6 +2162,7 @@ function Daily_Planner() {
                     </div>
                     <br />
                     <br />
+
                     <div>
                       <div style={{ display: "flex", marginLeft: "20px" }}>
                         {/* <label htmlFor="origin_state"> */}
@@ -2119,7 +2209,6 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            
                             style={{ width: "200px", padding: "5px" }}
                             onChange={handleSubDropdownChangeWheat5}
                             value={subOptionWheat5}
@@ -2131,7 +2220,14 @@ function Daily_Planner() {
                             ))}
                           </select>
                         </div>
+                        {/* <div style={{ fontSize: "40px", padding: "5px" }}>
+                        
+                            <strong>+</strong>
+                          
+                          </div> */}
+
                         {/* </label> */}
+                        <strong style={{ fontSize: "40px", padding: "5px", marginRight: "50px" }}>+</strong>
                         <div>
                           {/* <label htmlFor="deficit_state"> */}
                           <strong style={{ fontSize: "16px", padding: "5px" }}>
@@ -2139,7 +2235,6 @@ function Daily_Planner() {
                           </strong>
                           <select
                             style={{ width: "200px", padding: "5px" }}
-                            
                             onChange={handleDropdownChangeWheat6}
                             value={selectedOptionWheat6}
                           >
@@ -2178,7 +2273,6 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            
                             style={{ width: "200px", padding: "5px" }}
                             onChange={handleSubDropdownChangeWheat6}
                             value={subOptionWheat6}
@@ -2210,7 +2304,7 @@ function Daily_Planner() {
                       </div>
                     </div>
                     <br />
-                    <br/>
+                    <br />
                     <div style={{ marginLeft: "15px" }}>
                       <strong style={{ fontSize: "16px", padding: "5px" }}>
                         Enter Inline Value
@@ -2514,7 +2608,6 @@ function Daily_Planner() {
                       </strong>
                       <select
                         style={{ width: "200px", padding: "5px" }}
-                        
                         onChange={handleDropdownChange_fixed}
                         value={selectedOption_fixed}
                       >
@@ -2549,7 +2642,6 @@ function Daily_Planner() {
                         Select Origin Railhead
                       </strong>
                       <select
-                        
                         style={{ width: "200px", padding: "5px" }}
                         onChange={handleSubDropdownChange1_fixed}
                         value={subOption1_fixed}
@@ -2569,7 +2661,6 @@ function Daily_Planner() {
                       </strong>
                       <select
                         style={{ width: "200px", padding: "5px" }}
-                        
                         onChange={handleDropdownChange2_fixed}
                         value={selectedOption2_fixed}
                       >
@@ -2833,6 +2924,6 @@ function Daily_Planner() {
       </div>
     </div>
   );
-}}
+}
 
 export default Daily_Planner;

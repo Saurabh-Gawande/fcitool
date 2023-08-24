@@ -34,65 +34,65 @@ def login():
     response.headers.add('Access-Control-Allow-Credentials', 'true') 
     return (json.dumps(json_object, indent = 1))
 
-# @app.route("/upload_Monthly_File_M01",methods = ["POST"])
-# def upload_Monthly_File_M01():
-#     data = {}
-#     try:
-#         file = request.files['uploadFile']
-#         file.save("Input//Input_Template.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
+@app.route("/upload_Monthly_File_M01",methods = ["POST"])
+def upload_Monthly_File_M01():
+    data = {}
+    try:
+        file = request.files['uploadFile']
+        file.save("Input//Monthly_Template_M1.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
     
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
 
-#     return(json.dumps(json_object, indent = 1))
+    return(json.dumps(json_object, indent = 1))
 
-# @app.route("/upload_Monthly_File_M02",methods = ["POST"])
-# def upload_Monthly_File_M02():
-#     data = {}
-#     try:
-#         file = request.files['uploadFile_M02']
-#         file.save("Input//Input_Template_M02.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
+@app.route("/upload_Monthly_File_M02",methods = ["POST"])
+def upload_Monthly_File_M02():
+    data = {}
+    try:
+        file = request.files['uploadFile_M02']
+        file.save("Input//Input_Template_M02.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
     
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
 
-#     return(json.dumps(json_object, indent = 1))
+    return(json.dumps(json_object, indent = 1))
 
-# @app.route("/uploadDailyFile_S2",methods = ["POST"])
-# def uploadDailyFile_S2():
-#     data = {}
-#     try:
-#         file = request.files['uploadFile']
-#         file.save("Input//Temp_balanced_DPT_scen2.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
+@app.route("/uploadDailyFile_S2",methods = ["POST"])
+def uploadDailyFile_S2():
+    data = {}
+    try:
+        file = request.files['uploadFile']
+        file.save("Input//Temp_balanced_DPT_scen2.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
     
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
 
-#     return(json.dumps(json_object, indent = 1))
+    return(json.dumps(json_object, indent = 1))
 
-# @app.route("/uploadDailyFile_S1",methods = ["POST"])
-# def uploadDailyFile_S1():
-#     data = {}
-#     try:
-#         file = request.files['uploadFile']
-#         file.save("Input//Temp_balanced_DPT_scen1.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
+@app.route("/uploadDailyFile_S1",methods = ["POST"])
+def uploadDailyFile_S1():
+    data = {}
+    try:
+        file = request.files['uploadFile']
+        file.save("Input//Temp_balanced_DPT_scen1.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
     
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
 
-#     return(json.dumps(json_object, indent = 1))
+    return(json.dumps(json_object, indent = 1))
     
 
 @app.route("/read_Monthly_state_table",methods = ["POST","GET"])
@@ -402,13 +402,11 @@ def Add_Railhead():
         Daily_Template_S2 = 'Input\\Daily_Template_Scene2.xlsx'
         Data_sheet = 'Frontend/public/data/Updated_railhead_list.xlsx'
 
-
-
         # Sheets
         Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
         Daily_Sheets_S1 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
         Daily_Sheets_S2 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-# Here i Have to change
+
         # Initialize lists for DataFrames
         Monthly_df = []
         Daily_S1_df = []
@@ -429,19 +427,29 @@ def Add_Railhead():
             Daily_S2_df.append(x)
 
         for i in range(len(Railhead_name)):
-                Data_sheets = pd.concat([Data_sheets, pd.DataFrame({"RH_code": [Railhead_name[i]], "State": [Railhead_State[i]]})])
+            Data_sheets = pd.concat([Data_sheets, pd.DataFrame({"RH_code": [Railhead_name[i]], "State": [Railhead_State[i]]})])
+
         # Append data to the DataFrames
         for i in range(len(Monthly_Sheets)):
             for j in range(len(Railhead_name)):
                 Monthly_df[i] = pd.concat([Monthly_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
+                for col in Monthly_df[i].columns:
+                    if col not in ["Railhead", "State"]:
+                        Monthly_df[i][col] = 0  # Set all values to zero
 
         for i in range(len(Daily_Sheets_S1)):
             for j in range(len(Railhead_name)):
                 Daily_S1_df[i] = pd.concat([Daily_S1_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
+                for col in Daily_S1_df[i].columns:
+                    if col not in ["Railhead", "State"]:
+                        Daily_S1_df[i][col] = 0  # Set all values to zero
 
         for i in range(len(Daily_Sheets_S2)):
             for j in range(len(Railhead_name)):
                 Daily_S2_df[i] = pd.concat([Daily_S2_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
+                for col in Daily_S2_df[i].columns:
+                    if col not in ["Railhead", "State"]:
+                        Daily_S2_df[i][col] = 0  # Set all values to zero
 
         # Write modified DataFrames back to Excel files
         with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
@@ -458,6 +466,7 @@ def Add_Railhead():
 
         with pd.ExcelWriter("Frontend\\public\\data\\Updated_railhead_list.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             Data_sheets.to_excel(writer, sheet_name="RH_Sheet", index=False)
+
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
     except Exception as e:
@@ -565,16 +574,16 @@ def Modify_Monthly_Template_M01():
                 with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_allocation", index=False)
 
-            elif sht == 'Rail_cost_chart':
-                columns = ['From', 'To', 'Rate per Ton']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
-                To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
-                Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
+            # elif sht == 'Rail_cost_chart':
+            #     columns = ['From', 'To', 'Rate per Ton']
+            #     sht_data = fetched_data['Sheets'][sht]
+            #     length = len(sht_data) // len(columns)
+            #     From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
+            #     To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
+            #     Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+            #     df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
+            #     with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            #         df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
     except Exception as e:
@@ -662,16 +671,16 @@ def Modify_Daily_Template_S01():
                 with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_allocation", index=False)
 
-            elif sht == 'Rail_cost_chart':
-                columns = ['From', 'To', 'Rate per Ton']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
-                To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
-                Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
-                with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
+            # elif sht == 'Rail_cost_chart':
+            #     columns = ['From', 'To', 'Rate per Ton']
+            #     sht_data = fetched_data['Sheets'][sht]
+            #     length = len(sht_data) // len(columns)
+            #     From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
+            #     To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
+            #     Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+            #     df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
+            #     with pd.ExcelWriter("Input/Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            #         df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
     except Exception as e:
@@ -759,16 +768,16 @@ def Modify_Daily_Template_S02():
                 with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_allocation", index=False)
 
-            elif sht == 'Rail_cost_chart':
-                columns = ['From', 'To', 'Rate per Ton']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
-                To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
-                Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
-                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
+            # elif sht == 'Rail_cost_chart':
+            #     columns = ['From', 'To', 'Rate per Ton']
+            #     sht_data = fetched_data['Sheets'][sht]
+            #     length = len(sht_data) // len(columns)
+            #     From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
+            #     To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
+            #     Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
+            #     df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
+            #     with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            #         df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
     except Exception as e:
@@ -1123,10 +1132,18 @@ def Daily_Planner_Check():
             distance_rh=pd.read_excel(matrices_data,sheet_name="Railhead_dist_matrix",index_col=0)
             fetched_data = request.get_json()
             print(fetched_data)
-            inline_s = fetched_data["rice_inline"] + fetched_data["wheat_inline"]
+            inline_data = fetched_data["rice_inline"] + fetched_data["wheat_inline"]
             inline_source = ""
             inline_dest = ""
-            Inline_dist = 0
+            if fetched_data["rice_inline_value"] == '':
+                fetched_data["rice_inline_value"] = 0
+            if fetched_data["wheat_inline_value"] == '':
+                fetched_data["wheat_inline_value"] = 0  
+            Inline_dist = max(int(fetched_data["rice_inline_value"]), int(fetched_data["wheat_inline_value"]))
+            for i in range(len(inline_data)):
+                inline_source = inline_data[i]["origin_railhead"]
+            for i in range(len(inline_dest)):
+                inline_dest = inline_data[i]["destination_state"]
             if distance_rh.loc[inline_source, inline_dest]<=Inline_dist:
                 data["status"] = "YES"
             else:
