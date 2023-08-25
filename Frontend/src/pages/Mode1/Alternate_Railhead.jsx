@@ -207,7 +207,7 @@ function Alternate_Railhead() {
                       <select
                         style={{ width: "200px", padding: "5px", marginLeft: "172px" }}
                         onChange={handleSubDropdownChange2}
-                        value={setRhSource}
+                        value={rhSource}
                       >
                         {subOptions2.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -224,10 +224,10 @@ function Alternate_Railhead() {
 
                     <div>
                       <strong style={{ fontSize: "16px", padding: "5px" }}>
-                        Select Dsetination State
+                        Select Dsetination State:
                       </strong>
                       <select
-                        style={{ width: "200px", padding: "5px", marginLeft: "165px" }}
+                        style={{ width: "200px", padding: "5px", marginLeft: "161px" }}
                         onChange={handleDropdownChange}
                         value={selectedOption}
                       >
@@ -258,12 +258,12 @@ function Alternate_Railhead() {
                     <br/>
                     <div>
                       <strong style={{ fontSize: "16px", padding: "5px" }}>
-                        Select Destination Railhead
+                        Select Destination Railhead:
                       </strong>
                       <select
-                        style={{ width: "200px", padding: "5px", marginLeft: "140px" }}
+                        style={{ width: "200px", padding: "5px", marginLeft: "136px" }}
                         onChange={handleSubDropdownChange1}
-                        value={setRhDest}
+                        value={rhDest}
                       >
                         {subOptions.map((option) => (
                           <option key={option.value} value={option.value}>
