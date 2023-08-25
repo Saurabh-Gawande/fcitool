@@ -1189,7 +1189,7 @@ def Daily_Planner():
             
            
             fetched_data = request.get_json()
-            print(fetched_data)
+            
             blocked_data = fetched_data['block_data']
             confirmed_data = fetched_data['confirmed_data']
             Scenerio = fetched_data["Scenerio"]
@@ -1201,6 +1201,7 @@ def Daily_Planner():
             wheat_origin = fetched_data["wheat_origin"]
             wheat_dest = fetched_data["wheat_destination"]
             wheat_inline = fetched_data["wheat_inline"]
+          
 
             for i in range(len(rice_origin)):
                 source_rice.append(rice_origin[i]["origin_railhead"])
@@ -1230,6 +1231,10 @@ def Daily_Planner():
                 confirmed_dest_state.append(confirmed_data[i]["destination_state"])
                 confirmed_railhead_value.append(confirmed_data[i]["value_fixed"])
                 confirmed_railhead_commodities.append(confirmed_data[i]["commodity_fixed"])
+            print(confirmed_org_rhcode)
+            print( blocked_org_rhcode)
+            print(wheat_dest)
+            print(wheat_inline)
             
             if Scenerio == "Scenerio 2":
                 data=pd.ExcelFile("Input\\Temp_balanced_DPT_scen2.xlsx")

@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
 import Sidenav from "./sidenav";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function Alternate_Railhead() {
   const ProjectIp = "http://localhost:5000";
@@ -9,6 +11,10 @@ function Alternate_Railhead() {
   // const [n, setN] = useState(0);
   const buttonRef = useRef(null);
   const [data, setData] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("default");
+  const [subOptions, setSubOptions] = useState([]);
+  const [selectedOption2, setSelectedOption2] = useState("default");
+  const [subOptions2, setSubOptions2] = useState([]);
 
   const fetchData = () => {
     fetch(ProjectIp + "/Alternate_Railhead_readPickle")
@@ -43,6 +49,68 @@ function Alternate_Railhead() {
     } catch (error) {
       console.error("Error sending inputs:", error);
     }
+  };
+
+  const handleDropdownChange = async (e) => {
+    const selectedValue = e.target.value;
+    setSelectedOption(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [{ value: "", label: "Please select Railhead" }];
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedValue) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+    setSubOptions(dropdownOptions);
+    console.log(jsonData[1][1], dropdownOptions, selectedValue);
+    setSubOptions(dropdownOptions);
+  };
+  const handleSubDropdownChange1 = (e) => {
+    setRhDest(e.target.value);
+  };
+
+  const handleDropdownChange2 = async (e) => {
+    const selectedValue = e.target.value;
+    setSelectedOption2(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [{ value: "", label: "Please select Railhead" }];
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedValue) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+    setSubOptions2(dropdownOptions);
+    console.log(jsonData[1][1], dropdownOptions, selectedValue);
+    setSubOptions2(dropdownOptions);
+  };
+  const handleSubDropdownChange2 = (e) => {
+    setRhSource(e.target.value);
   };
 
   return (
@@ -94,63 +162,123 @@ function Alternate_Railhead() {
                 <br />
                 <br />
                 <form>
-                  <label>
-                    <strong style={{ fontSize: "16px", marginLeft: "15px" }}>
-                      Enter source railhead:
-                    </strong>
-                    <input
-                      type="text"
-                      value={rhSource}
-                      onChange={(e) => setRhSource(e.target.value)}
-                      style={{ marginLeft: "285px" }}
-                    />
-                  </label>
                   <br />
                   <br />
-                  <label>
-                    <strong style={{ fontSize: "16px", marginLeft: "15px" }}>
-                      Enter destination railhead:
-                    </strong>
-                    <input
-                      type="text"
-                      value={rhDest}
-                      onChange={(e) => setRhDest(e.target.value)}
-                      style={{ marginLeft: "250px" }}
-                    />
-                  </label>
-                  <br />
-                  <br />
-                  {/* <label>
-                    <strong style={{ fontSize: "16px", marginLeft: "15px" }}>
-                      Alternate railhead option for destination tagging:
-                    </strong>
-                    <select
-                      value={zone}
-                      onChange={(e) => setZone(e.target.value)}
-                      style={{ marginLeft: "75px" }}
-                    >
-                      <option value="">Select a zone</option>
-                      <option value="south">South Zone</option>
-                      <option value="north">North Zone</option>
-                      <option value="east">East Zone</option>
-                      <option value="west">West Zone</option>
-                      <option value="northeast">Northeast Zone</option>
-                    </select>
-                  </label> */}
+                  {/* <div style={{ display: "flex", marginLeft: "20px" }}> */}
+                    {/* <label htmlFor="origin_state"> */}
+                    <div>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Select Origin State:
+                      </strong>
+                      <select
+                        style={{ width: "200px", padding: "5px", marginLeft: "200px" }}
+                        onChange={handleDropdownChange2}
+                        value={selectedOption2}
+                      >
+                        <option value="default">Select Origin State</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chattisgarh">Chattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="MP">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="NE">North East</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="UP">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                      </select>
+                    </div>
+<br/>
+                    <div>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Select Origin Railhead:
+                      </strong>
+                      <select
+                        style={{ width: "200px", padding: "5px", marginLeft: "172px" }}
+                        onChange={handleSubDropdownChange2}
+                        value={setRhSource}
+                      >
+                        {subOptions2.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {/* </label> */}
+                    <div>
+                      
+                    </div>
+                    <br/>
 
-                  {/* <label>
-                    <strong style={{ fontSize: "16px", marginLeft: "15px" }}>
-                      Cost rate increment factor allowed:
-                    </strong>
-                    <input
-                      type="number"
-                      value={n}
-                      onChange={(e) => setN(parseFloat(e.target.value))}
-                      style={{ marginLeft: "185px" }}
-                    />
-                  </label> */}
-                  <br />
-                  <br />
+                    <div>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Select Dsetination State
+                      </strong>
+                      <select
+                        style={{ width: "200px", padding: "5px", marginLeft: "165px" }}
+                        onChange={handleDropdownChange}
+                        value={selectedOption}
+                      >
+                        <option value="default">Select Origin State</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chattisgarh">Chattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="MP">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="NE">North East</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="UP">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                      </select>
+                    </div>
+                    <br/>
+                    <div>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Select Destination Railhead
+                      </strong>
+                      <select
+                        style={{ width: "200px", padding: "5px", marginLeft: "140px" }}
+                        onChange={handleSubDropdownChange1}
+                        value={setRhDest}
+                      >
+                        {subOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {/* </label> */}
+                    <div>
+                      <br />
+                      <br />
+                    </div>
+
+                  {/* </div> */}
                 </form>
                 <button
                   style={{
@@ -158,7 +286,7 @@ function Alternate_Railhead() {
                     backgroundColor: "blue",
                     fontSize: "20px",
                     width: "8%",
-                    marginLeft: "465px",
+                    marginLeft: "440px",
                   }}
                   onClick={handleSolve}
                   ref={buttonRef}
