@@ -70,6 +70,9 @@ function Monthly_Solution() {
       const jsonResponse = await response.json();
 
       if (jsonResponse.status === 1) {
+        document.getElementById("console_").style.display = "block";
+        document.getElementById("console_").innerHTML +=
+        "Template file has been uploaded" + "<br/><br/>";
         alert("File Uploaded");
       } else {
         console.log(jsonResponse);
@@ -237,7 +240,9 @@ function Monthly_Solution() {
     } catch (error) {
       console.error('Error sending data:', error);
     }
-  
+    document.getElementById("console_").style.display = "block";
+    document.getElementById("console_").innerHTML +=
+      "Template has been updated" + "<br/><br/>";
     setUpdateExcel(false);
   };
   
@@ -295,8 +300,12 @@ function Monthly_Solution() {
       <Sidenav />
       <div
         className="page-content"
-        style={{ backgroundImage: "url('static/img/bg8.jpg')" }}
+        style={{
+          display: "flex",
+          backgroundImage: "url('static/img/bg8.jpg')",
+        }}
       >
+      <div>
         <ul
           className="x-navigation x-navigation-horizontal x-navigation-panel"
           style={{ backgroundColor: "rgba(235, 171, 68, 0.69)" }}
@@ -450,9 +459,6 @@ function Monthly_Solution() {
                   </table>
                 </div>
               )}
-              <div style={{ margin:'10px', marginLeft:'20%',width:'60%', border:'2px dashed black', padding:'10px', display:'none'}} id="console_">
-                
-              </div>
               <div style={{ marginLeft: "15px" }}>
                 <div style={{ fontSize: "20px", fontWeight: "700" }}>
                   <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -472,7 +478,7 @@ function Monthly_Solution() {
                     </strong>
                     <select
                       value={TEFD}
-                      onChange={(e) => {set_TEFD(e.target.value); document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the matrix system as "+e.target.value+'<br/>';}}
+                      onChange={(e) => {set_TEFD(e.target.value); document.getElementById("console_").style.display="block"; document.getElementById("console_").innerHTML+="You have selected the matrix system as "+e.target.value+'<br/><br/>';}}
                       style={{ marginLeft: "547px" }}
                     >
                       <option value="">Select Matrix System</option>
@@ -504,7 +510,7 @@ function Monthly_Solution() {
                     <input
                       type="number"
                       value={r_s}
-                      onChange={(e) => setr_s(e.target.value)}
+                      onChange={(e) => {setr_s(e.target.value);}}
                       style={{ marginLeft: "40px" }}
                     />
                   </label>
@@ -606,6 +612,38 @@ function Monthly_Solution() {
           <br />
         </div>
       </div>
+      <div style={{ backgroundColor: "#d2c4ac", width: "25%" }}>
+          <br/>
+          <div>
+            <div class="progress yellow">
+              <span class="progress-left">
+                <span class="progress-bar"></span>
+              </span>
+              <span class="progress-right">
+                <span class="progress-bar"></span>
+              </span>
+              <div class="progress-value">Steps</div>
+            </div>
+          </div>
+          <span style={{ color: "black", fontSize: "32px", marginLeft: "5%" }}>
+            Progress Bar
+          </span>
+          <div
+            style={{
+              margin: "10px",
+              marginLeft: "5%",
+              width: "90%",
+              border: "2px dashed black",
+              paddingTop:"10px",
+              paddingLeft:"10px",
+              paddingRight:"10px",
+              display:'none',
+              paddingBottom:'-10px'
+            }}
+            id="console_"
+          ></div>
+        </div>
+        </div>
     </div>
   );
 }
