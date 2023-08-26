@@ -350,14 +350,14 @@ function Template() {
                     <i className="fa fa-bars"></i>
                     Download Monthly Template
                   </button>
-                  <button
+                  {/* <button
                     style={{ color: "white", marginLeft: "100px" }}
                     className="btn btn-danger dropdown-toggle"
                     onClick={() => exportToExcel2()}
                   >
                     <i className="fa fa-bars"></i>
                     Download Daily Template of Scenario 1
-                  </button>
+                  </button> */}
                   <button
                     style={{ color: "white", marginLeft: "100px" }}
                     className="btn btn-danger dropdown-toggle"

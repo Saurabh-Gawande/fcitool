@@ -482,13 +482,13 @@ def get_monthly_excel_data():
 
 @app.route('/getDaily1ExcelData')
 def get_daily_scen1_excel_data():
-    Monthly_Template_M1 = 'Input\\Daily_Template_Scene1.xlsx'
+    Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
 
 @app.route('/getDaily2ExcelData')
 def get_daily_scen2_excel_data():
-    Monthly_Template_M1 = 'Input\\Daily_Template_Scene2.xlsx'
+    Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
 
@@ -710,7 +710,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Surplus_wheat", index=False)
 
             elif sht == 'Deficit_wheat':
@@ -721,7 +721,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 Demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': Demand})
-                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Deficit_wheat", index=False)
 
             elif sht == 'Surplus_rice':
@@ -732,7 +732,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Surplus_rice", index=False)
 
             elif sht == 'Deficit_rice':
@@ -743,7 +743,7 @@ def Modify_Daily_Template_S02():
                 state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
                 demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': demand})
-                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="Deficit_rice", index=False)
 
             elif sht == 'States_supply':
@@ -754,7 +754,7 @@ def Modify_Daily_Template_S02():
                 Supply_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 Supply_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'State': State, 'Supply_wheat': Supply_wheat, 'Supply_rice': Supply_rice})
-                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_supply", index=False)
 
             elif sht == 'States_allocation':
@@ -765,7 +765,7 @@ def Modify_Daily_Template_S02():
                 Alloc_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 Alloc_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
                 df = pd.DataFrame({'States': States, 'Alloc_wheat': Alloc_wheat, 'Alloc_rice': Alloc_rice})
-                with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Input/Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name="States_allocation", index=False)
 
             # elif sht == 'Rail_cost_chart':
@@ -776,7 +776,7 @@ def Modify_Daily_Template_S02():
             #     To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
             #     Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
             #     df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
-            #     with pd.ExcelWriter("Input/Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            #     with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             #         df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
 
         db = {"status": 1, "message": "Railhead names and states added successfully"}
@@ -869,10 +869,10 @@ def Monthly_Solution():
 
 
             data=pd.ExcelFile("Input\\Monthly_Template_M1.xlsx")
-            surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
-            deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
-            surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=1)
-            deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=1)
+            surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=0)
+            deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=0)
+            surplus_rice=pd.read_excel(data,sheet_name="Surplus_rice",index_col=0)
+            deficit_rice=pd.read_excel(data,sheet_name="Deficit_rice",index_col=0)
             states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
             rail_cost = None
             if TEFD_fetched == 'NON-TEFD':
@@ -1135,6 +1135,7 @@ def Daily_Planner_Check():
             inline_data = fetched_data["rice_inline"] + fetched_data["wheat_inline"]
             inline_source = ""
             inline_dest = ""
+          
             if fetched_data["rice_inline_value"] == '':
                 fetched_data["rice_inline_value"] = 0
             if fetched_data["wheat_inline_value"] == '':
@@ -1142,8 +1143,10 @@ def Daily_Planner_Check():
             Inline_dist = max(int(fetched_data["rice_inline_value"]), int(fetched_data["wheat_inline_value"]))
             for i in range(len(inline_data)):
                 inline_source = inline_data[i]["origin_railhead"]
-            for i in range(len(inline_dest)):
-                inline_dest = inline_data[i]["destination_state"]
+                print(inline_source)
+            for i in range(len(inline_data)):
+                inline_dest = inline_data[i]["destination_railhead"]
+        
             if distance_rh.loc[inline_source, inline_dest]<=Inline_dist:
                 data["status"] = "YES"
             else:
@@ -1189,7 +1192,7 @@ def Daily_Planner():
             
            
             fetched_data = request.get_json()
-            
+            print(fetched_data)
             blocked_data = fetched_data['block_data']
             confirmed_data = fetched_data['confirmed_data']
             Scenerio = fetched_data["Scenerio"]
@@ -1229,20 +1232,21 @@ def Daily_Planner():
                 confirmed_dest_rhcode.append(confirmed_data[i]["destination_railhead"])
                 confirmed_org_state.append(confirmed_data[i]["origin_state"])
                 confirmed_dest_state.append(confirmed_data[i]["destination_state"])
-                confirmed_railhead_value.append(confirmed_data[i]["value_fixed"])
-                confirmed_railhead_commodities.append(confirmed_data[i]["commodity_fixed"])
-            
+                confirmed_railhead_value.append(confirmed_data[i]["value"])
+                confirmed_railhead_commodities.append(confirmed_data[i]["commodity"])
+            print(confirmed_dest_rhcode)
             if Scenerio == "Scenerio 2":
                 data = pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
                 matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
 
-                surplus_wheat = pd.read_excel(data, sheet_name="Surplus_wheat", index_col=1)
-                deficit_wheat = pd.read_excel(data, sheet_name="Deficit_wheat", index_col=1)
-                surplus_rice = pd.read_excel(data, sheet_name="Surplus_rice", index_col=1)
-                deficit_rice = pd.read_excel(data, sheet_name="Deficit_rice", index_col=1)
+                surplus_wheat = pd.read_excel(data, sheet_name="Surplus_wheat", index_col=0)
+                deficit_wheat = pd.read_excel(data, sheet_name="Deficit_wheat", index_col=0)
+                surplus_rice = pd.read_excel(data, sheet_name="Surplus_rice", index_col=0)
+                deficit_rice = pd.read_excel(data, sheet_name="Deficit_rice", index_col=0)
                 states_alloc = pd.read_excel(data, sheet_name="States_allocation", index_col=0)
                 distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
                 rail_cost = None
+
                 if TEFD_fetched == 'NON-TEFD':
                     rail_cost = pd.read_excel("Input\\Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
                 elif TEFD_fetched == 'TEFD':
@@ -1253,8 +1257,6 @@ def Daily_Planner():
                     rail_cost = pd.read_excel("Input\\TEFD_TC.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
 
                 prob = LpProblem("Output\\FCI_monthly_model_allocation_rr", LpMinimize)
-
-
 
                 for i in L1:
                     Value = {}
@@ -1305,14 +1307,22 @@ def Daily_Planner():
                     prob += lpSum(x_ij_rice[(j, i)] for j in source_rice) >= 1
 
                 for i in range(len(blocked_org_rhcode)):
-                    prob += x_ij_rice[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                    prob += x_ij_wheat[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                    key = (blocked_org_rhcode[i], blocked_dest_rhcode[i])   
+                    if key in x_ij_rice:
+                        prob += x_ij_rice[key] == 0
+                    
+                    if key in x_ij_wheat:
+                        prob += x_ij_wheat[key] == 0
 
-                for i in range(len(confirmed_org_rhcode)):
-                    if confirmed_railhead_commodities[i] == "RICE":
-                        prob += x_ij_rice[(confirmed_org_rhcode[i], confirmed_dest_rhcode[i])] == int(confirmed_railhead_value[i])
-                    else:
-                        prob += x_ij_wheat[(confirmed_org_rhcode[i], confirmed_dest_rhcode[i])] == int(confirmed_railhead_value[i])
+                # for i in range(len(confirmed_org_rhcode)):
+                #     org = confirmed_org_rhcode[i]
+                #     dest = confirmed_dest_rhcode[i]
+                #     commodity = confirmed_railhead_commodities[i]
+                #     val = confirmed_railhead_value[i]
+                #     if commodity == 'RICE':
+                #         r_rice.loc[org][dest] = val
+                #     else:
+                #         r_wheat.loc[org][dest] = val
 
                 prob.writeLP("FCI_monthly_model_allocation_rr.lp")
                 prob.solve()
@@ -1326,10 +1336,26 @@ def Daily_Planner():
                 for (r, j), value in x_ij_wheat.items():
                     r_wheat.loc[r][j] = value.value()
 
-                r_rice={}
-                r_rice=pd.DataFrame([],index=surplus_rice.index,columns=deficit_rice.index)
+                r_rice = pd.DataFrame([], index=surplus_rice.index, columns=deficit_rice.index)
+
                 for (r, j), value in x_ij_rice.items():
                     r_rice.loc[r][j] = value.value()
+                    print(r_rice.loc[r][j])
+                    print(type(r), j)
+
+                for i in range(len(confirmed_org_rhcode)):
+                    org = str(confirmed_org_rhcode[i])
+                    dest = str(confirmed_dest_rhcode[i])
+                    commodity = confirmed_railhead_commodities[i]
+                    val = confirmed_railhead_value[i]
+                    if commodity == 'RICE':
+                        r_rice.loc[org][dest] = float(val)
+                        print(r_rice.loc[org][dest])
+                    else:
+                        r_wheat.loc[org][dest] = float(val)
+
+                    
+                
 
                 with pd.ExcelWriter("Output\\Results_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     r_wheat.to_excel(writer, sheet_name="r_wheat", float_format="%0.3f")
@@ -1347,13 +1373,13 @@ def Daily_Planner():
                     for j in range(len(relevant_r_wheat.columns)):
                         if relevant_r_wheat.iat[i, j] > 0:
                             relevant_Dict_wheat[relevant_r_wheat.index[i], relevant_r_wheat.columns[j]] = relevant_r_wheat.iloc[i][relevant_r_wheat.columns[j]]
-                            Wheat_cost.append((x_ij_wheat[(relevant_r_wheat.index[i], relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]]))
+                            # Wheat_cost.append((x_ij_wheat[(relevant_r_wheat.index[i], relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]]))
 
                 for i in range(len(relevant_r_rice.index)):
                     for j in range(len(relevant_r_rice.columns)):
                         if relevant_r_rice.iat[i, j] > 0:
                             relevant_Dict_rice[relevant_r_rice.index[i], relevant_r_rice.columns[j]] = relevant_r_rice.iloc[i][relevant_r_rice.columns[j]]
-                            Rice_cost.append((x_ij_rice[(relevant_r_rice.index[i], relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]]))
+                            # Rice_cost.append((x_ij_rice[(relevant_r_rice.index[i], relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]]))
 
                 L1 = list(relevant_Dict_wheat.keys())
                 L2 = list(relevant_Dict_wheat.values())
@@ -1364,9 +1390,14 @@ def Daily_Planner():
                 df_wheat = pd.DataFrame()
 
                 for i in range(len(L1)):
-                    A.append(L1[i][0])
-                    B.append(L1[i][1])
-                    C.append(L2[i])
+                    if L1[i] in dest_wheat_inline:
+                        A.append(L1[i][0] + "+" + dest_wheat_inline[L1[i][0]])
+                        B.append(L1[i][1])
+                        C.append(L2[i])
+                    else:
+                        A.append(L1[i][0])
+                        B.append(L1[i][1])
+                        C.append(L2[i])
 
                 df_wheat["From"] = A
                 df_wheat["To"] = B
@@ -1392,7 +1423,7 @@ def Daily_Planner():
                 df_wheat.insert(1, "From_state", From_state)
                 df_wheat.insert(3, "To_state", To_state)
                 df_wheat.insert(4, "Commodity", Commodity)
-                df_wheat["Cost"] = Wheat_cost
+                # df_wheat["Cost"] = Wheat_cost
 
                 L3 = list(relevant_Dict_rice.keys())
                 L4 = list(relevant_Dict_rice.values())
@@ -1404,9 +1435,14 @@ def Daily_Planner():
                 df_rice = pd.DataFrame()
 
                 for i in range(len(L3)):
-                    D.append(L3[i][0])
-                    E.append(L3[i][1])
-                    F.append(L4[i])
+                    if L3[i] in dest_rice_inline:
+                        D.append(L3[i][0] + "+" + dest_rice_inline[L3[i][0]])
+                        E.append(L3[i][1])
+                        F.append(L4[i])
+                    else:
+                        D.append(L3[i][0])
+                        E.append(L3[i][1])
+                        F.append(L4[i])
 
                 df_rice["From"] = D
                 df_rice["To"] = E
@@ -1432,7 +1468,7 @@ def Daily_Planner():
                 df_rice.insert(1, "From_state", From_state_rice)
                 df_rice.insert(3, "To_state", To_state_rice)
                 df_rice.insert(4, "Commodity", Commodity_rice)
-                df_rice["Cost"] = Rice_cost
+                # df_rice["Cost"] = Rice_cost
 
                 with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df_wheat.to_excel(writer, sheet_name="wheat")
@@ -1442,11 +1478,11 @@ def Daily_Planner():
                 List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
                 List_wheat = pd.read_excel(List_data, sheet_name="wheat", index_col=0)
 
-                def extract_value_before_asterisk(data):
-                    return float(data.split('*')[0])
+                # def extract_value_before_asterisk(data):
+                #     return float(data.split('*')[0])
 
-                List_wheat["Cost"] = List_wheat["Cost"].apply(lambda x: extract_value_before_asterisk(x))
-                List_rice["Cost"] = List_rice["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+                # List_wheat["Cost"] = List_wheat["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+                # List_rice["Cost"] = List_rice["Cost"].apply(lambda x: extract_value_before_asterisk(x))
 
                 # Write the updated DataFrame back to the Excel file
                 with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
@@ -1457,13 +1493,14 @@ def Daily_Planner():
                 data = pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
                 matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
 
-                surplus_wheat = pd.read_excel(data, sheet_name="Surplus_wheat", index_col=1)
-                deficit_wheat = pd.read_excel(data, sheet_name="Deficit_wheat", index_col=1)
-                surplus_rice = pd.read_excel(data, sheet_name="Surplus_rice", index_col=1)
-                deficit_rice = pd.read_excel(data, sheet_name="Deficit_rice", index_col=1)
+                surplus_wheat = pd.read_excel(data, sheet_name="Surplus_wheat", index_col=0)
+                deficit_wheat = pd.read_excel(data, sheet_name="Deficit_wheat", index_col=0)
+                surplus_rice = pd.read_excel(data, sheet_name="Surplus_rice", index_col=0)
+                deficit_rice = pd.read_excel(data, sheet_name="Deficit_rice", index_col=0)
                 states_alloc = pd.read_excel(data, sheet_name="States_allocation", index_col=0)
                 distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
                 rail_cost = None
+
                 if TEFD_fetched == 'NON-TEFD':
                     rail_cost = pd.read_excel("Input\\Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
                 elif TEFD_fetched == 'TEFD':
@@ -1474,8 +1511,6 @@ def Daily_Planner():
                     rail_cost = pd.read_excel("Input\\TEFD_TC.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
 
                 prob = LpProblem("Output\\FCI_monthly_model_allocation_rr", LpMinimize)
-
-
 
                 for i in L1:
                     Value = {}
@@ -1526,14 +1561,22 @@ def Daily_Planner():
                     prob += lpSum(x_ij_rice[(j, i)] for j in source_rice) >= 1
 
                 for i in range(len(blocked_org_rhcode)):
-                    prob += x_ij_rice[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                    prob += x_ij_wheat[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                    key = (blocked_org_rhcode[i], blocked_dest_rhcode[i])   
+                    if key in x_ij_rice:
+                        prob += x_ij_rice[key] == 0
+                    
+                    if key in x_ij_wheat:
+                        prob += x_ij_wheat[key] == 0
 
-                for i in range(len(confirmed_org_rhcode)):
-                    if confirmed_railhead_commodities[i] == "RICE":
-                        prob += x_ij_rice[(confirmed_org_rhcode[i], confirmed_dest_rhcode[i])] == int(confirmed_railhead_value[i])
-                    else:
-                        prob += x_ij_wheat[(confirmed_org_rhcode[i], confirmed_dest_rhcode[i])] == int(confirmed_railhead_value[i])
+                # for i in range(len(confirmed_org_rhcode)):
+                #     org = confirmed_org_rhcode[i]
+                #     dest = confirmed_dest_rhcode[i]
+                #     commodity = confirmed_railhead_commodities[i]
+                #     val = confirmed_railhead_value[i]
+                #     if commodity == 'RICE':
+                #         r_rice.loc[org][dest] = val
+                #     else:
+                #         r_wheat.loc[org][dest] = val
 
                 prob.writeLP("FCI_monthly_model_allocation_rr.lp")
                 prob.solve()
@@ -1547,10 +1590,26 @@ def Daily_Planner():
                 for (r, j), value in x_ij_wheat.items():
                     r_wheat.loc[r][j] = value.value()
 
-                r_rice={}
-                r_rice=pd.DataFrame([],index=surplus_rice.index,columns=deficit_rice.index)
+                r_rice = pd.DataFrame([], index=surplus_rice.index, columns=deficit_rice.index)
+
                 for (r, j), value in x_ij_rice.items():
                     r_rice.loc[r][j] = value.value()
+                    print(r_rice.loc[r][j])
+                    print(type(r), j)
+
+                for i in range(len(confirmed_org_rhcode)):
+                    org = str(confirmed_org_rhcode[i])
+                    dest = str(confirmed_dest_rhcode[i])
+                    commodity = confirmed_railhead_commodities[i]
+                    val = confirmed_railhead_value[i]
+                    if commodity == 'RICE':
+                        r_rice.loc[org][dest] = float(val)
+                        print(r_rice.loc[org][dest])
+                    else:
+                        r_wheat.loc[org][dest] = float(val)
+
+                    
+                
 
                 with pd.ExcelWriter("Output\\Results_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     r_wheat.to_excel(writer, sheet_name="r_wheat", float_format="%0.3f")
@@ -1568,13 +1627,13 @@ def Daily_Planner():
                     for j in range(len(relevant_r_wheat.columns)):
                         if relevant_r_wheat.iat[i, j] > 0:
                             relevant_Dict_wheat[relevant_r_wheat.index[i], relevant_r_wheat.columns[j]] = relevant_r_wheat.iloc[i][relevant_r_wheat.columns[j]]
-                            Wheat_cost.append((x_ij_wheat[(relevant_r_wheat.index[i], relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]]))
+                            # Wheat_cost.append((x_ij_wheat[(relevant_r_wheat.index[i], relevant_r_wheat.columns[j])]*rail_cost.loc[relevant_r_wheat.index[i]][relevant_r_wheat.columns[j]]))
 
                 for i in range(len(relevant_r_rice.index)):
                     for j in range(len(relevant_r_rice.columns)):
                         if relevant_r_rice.iat[i, j] > 0:
                             relevant_Dict_rice[relevant_r_rice.index[i], relevant_r_rice.columns[j]] = relevant_r_rice.iloc[i][relevant_r_rice.columns[j]]
-                            Rice_cost.append((x_ij_rice[(relevant_r_rice.index[i], relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]]))
+                            # Rice_cost.append((x_ij_rice[(relevant_r_rice.index[i], relevant_r_rice.columns[j])]*rail_cost.loc[relevant_r_rice.index[i]][relevant_r_rice.columns[j]]))
 
                 L1 = list(relevant_Dict_wheat.keys())
                 L2 = list(relevant_Dict_wheat.values())
@@ -1585,9 +1644,14 @@ def Daily_Planner():
                 df_wheat = pd.DataFrame()
 
                 for i in range(len(L1)):
-                    A.append(L1[i][0])
-                    B.append(L1[i][1])
-                    C.append(L2[i])
+                    if L1[i] in dest_wheat_inline:
+                        A.append(L1[i][0] + "+" + dest_wheat_inline[L1[i][0]])
+                        B.append(L1[i][1])
+                        C.append(L2[i])
+                    else:
+                        A.append(L1[i][0])
+                        B.append(L1[i][1])
+                        C.append(L2[i])
 
                 df_wheat["From"] = A
                 df_wheat["To"] = B
@@ -1613,7 +1677,7 @@ def Daily_Planner():
                 df_wheat.insert(1, "From_state", From_state)
                 df_wheat.insert(3, "To_state", To_state)
                 df_wheat.insert(4, "Commodity", Commodity)
-                df_wheat["Cost"] = Wheat_cost
+                # df_wheat["Cost"] = Wheat_cost
 
                 L3 = list(relevant_Dict_rice.keys())
                 L4 = list(relevant_Dict_rice.values())
@@ -1625,9 +1689,14 @@ def Daily_Planner():
                 df_rice = pd.DataFrame()
 
                 for i in range(len(L3)):
-                    D.append(L3[i][0])
-                    E.append(L3[i][1])
-                    F.append(L4[i])
+                    if L3[i] in dest_rice_inline:
+                        D.append(L3[i][0] + "+" + dest_rice_inline[L3[i][0]])
+                        E.append(L3[i][1])
+                        F.append(L4[i])
+                    else:
+                        D.append(L3[i][0])
+                        E.append(L3[i][1])
+                        F.append(L4[i])
 
                 df_rice["From"] = D
                 df_rice["To"] = E
@@ -1653,7 +1722,7 @@ def Daily_Planner():
                 df_rice.insert(1, "From_state", From_state_rice)
                 df_rice.insert(3, "To_state", To_state_rice)
                 df_rice.insert(4, "Commodity", Commodity_rice)
-                df_rice["Cost"] = Rice_cost
+                # df_rice["Cost"] = Rice_cost
 
                 with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df_wheat.to_excel(writer, sheet_name="wheat")
@@ -1663,11 +1732,11 @@ def Daily_Planner():
                 List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
                 List_wheat = pd.read_excel(List_data, sheet_name="wheat", index_col=0)
 
-                def extract_value_before_asterisk(data):
-                    return float(data.split('*')[0])
+                # def extract_value_before_asterisk(data):
+                #     return float(data.split('*')[0])
 
-                List_wheat["Cost"] = List_wheat["Cost"].apply(lambda x: extract_value_before_asterisk(x))
-                List_rice["Cost"] = List_rice["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+                # List_wheat["Cost"] = List_wheat["Cost"].apply(lambda x: extract_value_before_asterisk(x))
+                # List_rice["Cost"] = List_rice["Cost"].apply(lambda x: extract_value_before_asterisk(x))
 
                 # Write the updated DataFrame back to the Excel file
                 with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
@@ -1703,7 +1772,7 @@ def Alternate_Railhead_Solve():
     data1 = {}
     if request.method == "POST":
         try:
-            file = pd.ExcelFile("Input\\Daily_Template_Scene1.xlsx")
+            file = pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             surplus_wheat = pd.read_excel(file, sheet_name="Surplus_wheat", index_col=0)
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
@@ -1716,7 +1785,8 @@ def Alternate_Railhead_Solve():
                     lst1.append(index)
 
             lst2 = []
-
+            print(lst1)
+            print(lst2)
             for j in lst1:
                 lst2.append(rail_cost.loc[Alternate_Railhead_source, j])
 
@@ -1730,7 +1800,7 @@ def Alternate_Railhead_Solve():
             sort_dict_altrh = dict(sorted(filt_dict_altrh.items(), key=lambda item: item[1]))
             top_3_elements = list(sort_dict_altrh.items())[:3]
             result_altrh = []
-
+            print(result_altrh)
             for i in range(len(top_3_elements)):
                 result_altrh.append(top_3_elements[i][0])
 

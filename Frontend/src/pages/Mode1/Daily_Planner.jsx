@@ -68,6 +68,10 @@ function Daily_Planner() {
   const [updateExcel, setUpdateExcel] = useState(false);
   const [updateExcel2, setUpdateExcel2] = useState(false);
   const [modifiedExcel, setModifiedExcel] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
+  const [isLoading3, setIsLoading3] = useState(false);
+
 
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
 
@@ -247,44 +251,11 @@ function Daily_Planner() {
     }
   };
 
-  const handle_check = async () => {
-    try {
-      const payload1 = {
-        rice_inline: block_data2,
-        rice_inline_value: inline_value_rice,
-        wheat_inline: block_dataWheat2,
-        wheat_inline_value: inline_value_wheat,
-      };
-
-      console.log(
-        block_data2,
-        inline_value_rice,
-        inline_value_wheat,
-        block_dataWheat2
-      );
-
-      const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload1),
-      });
-
-      const responseData1 = await response2.json(); // Parse response JSON
-      console.log(responseData1); // Log the response data
-
-      if (responseData1.status === 0) {
-        alert("Distance is not within range. Please check again.");
-      }
-    } catch (error) {
-      console.error("Error sending inputs:", error);
-    }
-  };
+  
 
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
-    alert("This action will take time, click OK to continue.");
+    
     document.getElementById("console_").style.display = "block";
     document.getElementById("console_").innerHTML += "Processing..." + "<br/><br/>";
     if (Scenerio == "Scenerio 2") {
@@ -310,6 +281,9 @@ function Daily_Planner() {
       wheat_inline: block_dataWheat2,
       wheat_inline_value: inline_value_wheat,
     };
+
+    if (isLoading) return; // Prevent additional clicks while loading
+    setIsLoading(true);
     try {
       const response = await fetch(ProjectIp + "/Daily_Planner", {
         method: "POST",
@@ -320,13 +294,15 @@ function Daily_Planner() {
       });
 
       if (response.ok) {
-        alert("Solution Done!, Now you can download results");
         setSolutionSolved(true);
       } else {
         console.error("Failed to send inputs. Status code:", response.status);
       }
     } catch (error) {
       console.error("Error sending inputs:", error);
+    }
+    finally {
+      setIsLoading(false); // Reset loading state
     }
     document.getElementById("console_").innerHTML +=
       "Solution has been done" + "<br/><br/>";
@@ -903,13 +879,15 @@ function Daily_Planner() {
         },
       ]);
 
-      let data = block_data2 + [{
+      let data = [{
         origin_state: selectedOption5,
         origin_railhead: subOption5,
         destination_state: selectedOption6,
-        destination_railhead: subOption6,
-        id: Date.now(),
+        destination_railhead: subOption6
       }];
+      for(let i=0;i<block_data2.length;i++){
+        data.push(block_data2[i]);
+      }
       console.log(data);
 
       setSelectedOption5("default");
@@ -918,8 +896,8 @@ function Daily_Planner() {
       setSubOptions6([]);
 
       console.log(block_data2);
-
-      await handle_check();
+      if (isLoading2) return; // Prevent additional clicks while loading
+      setIsLoading2(true);
       try {
         const payload1 = {
           rice_inline: data,
@@ -946,13 +924,16 @@ function Daily_Planner() {
         const responseData1 = await response2.json(); // Parse response JSON
         console.log(responseData1); // Log the response data
 
-        if (responseData1.status === 0) {
+        if (responseData1.status === "NO") {
           alert("Distance is not within range. Please check again.");
         }
       } catch (error) {
         console.error("Error sending inputs:", error);
-      }
+      } // Reset loading state
+      finally {
+        setIsLoading2(false);}
     }
+    
     document.getElementById("console_").style.display = "block";
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
     document.getElementById("console_").innerHTML +=
@@ -977,18 +958,57 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      var data = block_dataWheat2+ [{
-        origin_state: selectedOptionWheat5,
-        origin_railhead: subOptionWheat5,
-        destination_state: selectedOptionWheat6,
-        destination_railhead: subOptionWheat6,
-        id: Date.now(),
+      let data = [{
+        origin_state: selectedOption5,
+        origin_railhead: subOption5,
+        destination_state: selectedOption6,
+        destination_railhead: subOption6
       }];
+      for(let i=0;i<block_dataWheat2.length;i++){
+        data.push(block_dataWheat2[i]);
+      }
       console.log(data);
       setSelectedOptionWheat5("default");
       setSelectedOptionWheat6("default");
       setSubOptionWheat5([]);
       setSubOptionWheat6([]);
+      if (isLoading3) return; // Prevent additional clicks while loading
+    setIsLoading3(true);
+      try {
+        const payload1 = {
+          rice_inline: block_data2,
+          rice_inline_value: inline_value_rice,
+          wheat_inline: data,
+          wheat_inline_value: inline_value_wheat,
+        };
+
+        console.log(
+          block_data2,
+          inline_value_rice,
+          inline_value_wheat,
+          block_dataWheat2
+        );
+
+        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload1),
+        });
+
+        const responseData1 = await response2.json(); // Parse response JSON
+        console.log(responseData1); // Log the response data
+
+        if (responseData1.status === "NO") {
+          alert("Distance is not within range. Please check again.");
+        }
+      } catch (error) {
+        console.error("Error sending inputs:", error);
+      }
+      finally {
+        setIsLoading3(false);} // Reset loading state
+    
     }
     document.getElementById("console_").style.display = "block";
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
@@ -1116,7 +1136,7 @@ function Daily_Planner() {
     }
   };
 
-  const exportToExcel1 = () => {
+  const exportToExcel1 =() => {
     fetchReservationId_Total_result();
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
@@ -1303,7 +1323,7 @@ function Daily_Planner() {
                       style={buttonStyle2}
                       onClick={() => update_excel2()}
                     >
-                      Template 2
+                      Template for Scenario 2
                     </button>
                   </div>
                   {/* )} */}
@@ -1420,7 +1440,7 @@ function Daily_Planner() {
                           color: "#9d0921",
                         }}
                       >
-                        Select Scenerio
+                        Select Scenario
                       </strong>
                       <select
                         value={Scenerio}
@@ -1436,8 +1456,8 @@ function Daily_Planner() {
                         style={{ marginLeft: "600px" }}
                       >
                         <option value="">Select Scenario</option>
-                        <option value="Scenerio 1">Scenerio 1</option>
-                        <option value="Scenerio 2">Scenerio 2</option>
+                        <option value="Scenerio 1">Scenario 1</option>
+                        <option value="Scenerio 2">Scenario 2</option>
                       </select>
                     </label>
                     <br />
@@ -1704,7 +1724,24 @@ function Daily_Planner() {
                       <br />
                       <br />
                       <div>
+                      <div style={{ marginLeft: "15px" }}>
+                        <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          Enter Inline Value
+                        </strong>
+                        <input
+                          type="number"
+                          value={inline_value_rice}
+                          onChange={(e) => setInlineValueRice(e.target.value)}
+                          style={{
+                            marginLeft: "40px",
+                            width: "200px",
+                            padding: "5px",
+                          }}
+                        />
+                      </div>
+                      <br />
                         <div style={{ display: "flex", marginLeft: "20px" }}>
+                          
                           {/* <label htmlFor="origin_state"> */}
                           <div>
                             <strong
@@ -1767,6 +1804,7 @@ function Daily_Planner() {
                             </select>
                           </div>
                           {/* </label> */}
+                          
                           <div>
                             {/* <label htmlFor="deficit_state"> */}
                             <strong
@@ -1811,6 +1849,7 @@ function Daily_Planner() {
                           </div>
                           {/* </label> */}
                           {/* <label htmlFor="deficit_railhead"> */}
+
                           <div>
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
@@ -1852,22 +1891,7 @@ function Daily_Planner() {
                         </div>
                       </div>
                       <br />
-                      <div style={{ marginLeft: "15px" }}>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Enter Inline Value
-                        </strong>
-                        <input
-                          type="number"
-                          value={inline_value_rice}
-                          onChange={(e) => setInlineValueRice(e.target.value)}
-                          style={{
-                            marginLeft: "40px",
-                            width: "200px",
-                            padding: "5px",
-                          }}
-                        />
-                      </div>
-                      <br />
+                     
                       {block_data2.length != 0 && (
                         <div>
                           {/* <div
@@ -2208,6 +2232,22 @@ function Daily_Planner() {
                       <br />
                       <br />
                       <div>
+                      <div style={{ marginLeft: "15px" }}>
+                        <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          Enter Inline Value
+                        </strong>
+                        <input
+                          type="number"
+                          value={inline_value_wheat}
+                          onChange={(e) => setInlineValueWheat(e.target.value)}
+                          style={{
+                            marginLeft: "40px",
+                            width: "200px",
+                            padding: "5px",
+                          }}
+                        />
+                      </div>
+                      <br />
                         <div style={{ display: "flex", marginLeft: "20px" }}>
                           {/* <label htmlFor="origin_state"> */}
                           <div>
@@ -2356,22 +2396,7 @@ function Daily_Planner() {
                         </div>
                       </div>
                       <br />
-                      <div style={{ marginLeft: "15px" }}>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Enter Inline Value
-                        </strong>
-                        <input
-                          type="number"
-                          value={inline_value_wheat}
-                          onChange={(e) => setInlineValueWheat(e.target.value)}
-                          style={{
-                            marginLeft: "40px",
-                            width: "200px",
-                            padding: "5px",
-                          }}
-                        />
-                      </div>
-                      <br />
+                   
                       {block_dataWheat2.length != 0 && (
                         <div>
                           {/* <div

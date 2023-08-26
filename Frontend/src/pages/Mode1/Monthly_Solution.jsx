@@ -20,6 +20,7 @@ function Monthly_Solution() {
   const [sheet, setSheet] = useState(null);
   const [updateExcel, setUpdateExcel] = useState(false);
   const [modifiedExcel, setModifiedExcel] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   
 
   const handleFileChange = (event) => {
@@ -92,7 +93,6 @@ function Monthly_Solution() {
 
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
-    alert("This action will take time, click OK to continue.");
     document.getElementById("console_").style.display="block"; 
     document.getElementById("console_").innerHTML+="Processing..."+'<br/>';
     const payload = {
@@ -100,6 +100,8 @@ function Monthly_Solution() {
       r_d: r_d,
       TEFD: TEFD,
     };
+    if (isLoading) return; // Prevent additional clicks while loading
+    setIsLoading(true);
     try {
       const response = await fetch(ProjectIp + "/Monthly_Solution", {
         method: "POST",
@@ -117,6 +119,9 @@ function Monthly_Solution() {
       }
     } catch (error) {
       console.error("Error sending inputs:", error);
+    }
+    finally {
+      setIsLoading(false); // Reset loading state
     }
     document.getElementById("console_").innerHTML+="Solution has been done"+'<br/>';
     document.getElementById("toggle").checked = false;
@@ -175,6 +180,7 @@ function Monthly_Solution() {
 
   const exportToExcel1 = () => {
     fetchReservationId_Total_result();
+    console.log(fetchReservationId_Total_result)
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
     } else {
@@ -272,7 +278,7 @@ function Monthly_Solution() {
 // };
 
 
-  const exportToExcel2 = () => {
+  const exportToExcel2 = async () => {
     fetchReservationId_Revelant_result();
     if (Relevant_result == null) {
       window.alert("Fetching Result, Please Wait");
@@ -589,14 +595,14 @@ function Monthly_Solution() {
                     </button>
                     <br />
                     <br />
-                    <button
+                    {/* <button
                       style={{ color: "white", marginLeft: "15px" }}
                       className="btn btn-danger dropdown-toggle"
                       onClick={() => exportToExcel1()}
                     >
                       <i className="fa fa-bars"></i> Download State to State
                       Detailed Plan
-                    </button>
+                    </button> */}
                   </div>
                 )}
                 <br />
