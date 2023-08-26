@@ -21,7 +21,7 @@ dest_rice_inline = {}
 L1 = list(dest_wheat_inline.keys())
 L2 = list(dest_rice_inline.keys())
 
-fetched_data = {'TEFD': 'NON-TEFD', 'origin_state': 'default', 'org_rhcode': 'HVR', 'destination_state': 'default', 'dest_rhcode': 'CHA', 'block_data': [{'origin_state': 'Karnataka', 'origin_railhead': 'HVR', 'destination_state': 'Punjab', 'destination_railhead': 'CHA', 'id': 1693033924064}], 'Scenerio': 'Scenerio 1', 'confirmed_data': [{'origin_state': 'Odisha', 'origin_railhead': 'JYP', 'destination_state': 'Punjab', 'destination_railhead': 'CHA', 'commodity': 'RICE', 'value': '1', 'id': 1693033937740}], 'rice_origin': [{'origin_state': 'Odisha', 'origin_railhead': 'KRAR', 'id': 1693033821512}], 'rice_destination': [{'origin_state': 'UP', 'origin_railhead': 'BSC', 'id': 1693033830124}], 'rice_inline': [{'origin_state': 'Telangana', 'origin_railhead': 'MBNR', 'destination_state': 'Telangana', 'destination_railhead': 'MBNR', 'id': 1693033840869}], 'rice_inline_value': '10', 'wheat_origin': [{'origin_state': 'Gujarat', 'origin_railhead': 'BL', 'id': 1693033860824}], 'wheat_destination': [{'origin_state': 'UP', 'origin_railhead': 'BNDA', 'id': 1693033865608}], 'wheat_inline': [{'origin_state': 'UP', 'origin_railhead': 'BNDA', 'destination_state': 'Odisha', 'destination_railhead': 'KSNG', 'id': 1693033874930}], 'wheat_inline_value': '10'}
+fetched_data = {'TEFD': '', 'origin_state': 'default', 'org_rhcode': '', 'destination_state': 'default', 'dest_rhcode': '', 'block_data': [], 'Scenerio': '', 'confirmed_data': [], 'rice_origin': [], 'rice_destination': [], 'rice_inline': [{'origin_state': 'UP', 'origin_railhead': 'BST', 'destination_state': 'Telangana', 'destination_railhead': 'MBNR', 'id': 1693055635701}, {'origin_state': 'Chattisgarh', 'origin_railhead': 'KMK', 'destination_state': 'Bihar', 'destination_railhead': 'BTH', 'id': 1693055651276}, {'origin_state': 'Rajasthan', 'origin_railhead': 'GADJ', 'destination_state': 'Rajasthan', 'destination_railhead': 'GADJ', 'id': 1693055656465}, {'origin_state': 'UP', 'origin_railhead': 'BLP', 'destination_state': 'Bihar', 'destination_railhead': 'DMSJ', 'id': 1693055683336}, {'origin_state': 'Telangana', 'origin_railhead': 'KMT', 'destination_state': 'Rajasthan', 'destination_railhead': 'GADJ', 'id': 1693055688414}], 'rice_inline_value': '1000000', 'wheat_origin': [], 'wheat_destination': [], 'wheat_inline': [], 'wheat_inline_value': ''}
 
 blocked_data = fetched_data['block_data']
 confirmed_data = fetched_data['confirmed_data']
@@ -125,8 +125,8 @@ for i in L2:
 x_ij_wheat = LpVariable.dicts("x_wheat", [(i, j) for i in source_wheat for j in dest_wheat], 0)
 x_ij_rice = LpVariable.dicts("x_rice", [(i, j) for i in source_rice for j in dest_rice], 0)
 
-prob += lpSum(x_ij_wheat[(i, j)] * rail_cost.loc[i][j] for i in source_wheat for j in dest_wheat) + \
-        lpSum(x_ij_rice[(i, j)] * rail_cost.loc[i][j] for i in source_rice for j in dest_rice)
+prob+=lpSum(x_ij_wheat[(i,j)]*rail_cost.loc[i][j] for i in source_wheat for j in dest_wheat)+lpSum(x_ij_rice[(i,j)]*rail_cost.loc[i][j] for i in source_rice for j in dest_rice)
+
 
 for i in source_wheat:
     prob += lpSum(x_ij_wheat[(i, j)] for j in dest_wheat) <= 1
@@ -252,7 +252,10 @@ for i in range(len(L1)):
 df_wheat.insert(1, "From_state", From_state)
 df_wheat.insert(3, "To_state", To_state)
 df_wheat.insert(4, "Commodity", Commodity)
-# df_wheat["Cost"] = Wheat_cost
+for i in dest_wheat_inline.keys():
+    for j in range(len(df_wheat["To"])):
+        if(i==df_wheat.iloc[j]["To"] or dest_wheat_inline[i]==df_wheat.iloc[j]["To"]):
+            df_wheat.loc[j,'To']=(i+'+'+dest_wheat_inline[i])
 
 L3 = list(relevant_Dict_rice.keys())
 L4 = list(relevant_Dict_rice.values())
@@ -297,7 +300,10 @@ for i in range(len(L3)):
 df_rice.insert(1, "From_state", From_state_rice)
 df_rice.insert(3, "To_state", To_state_rice)
 df_rice.insert(4, "Commodity", Commodity_rice)
-# df_rice["Cost"] = Rice_cost
+for i in dest_rice_inline.keys():
+    for j in range(len(df_rice["To"])):
+        if(i==df_rice.iloc[j]["To"] or dest_rice_inline[i]==df_rice.iloc[j]["To"]):
+            df_rice.loc[j,'To']=(i+'+'+dest_rice_inline[i])
 
 with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
     df_wheat.to_excel(writer, sheet_name="wheat")
