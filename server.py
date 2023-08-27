@@ -1585,7 +1585,7 @@ def Daily_Planner():
                     org = str(confirmed_org_rhcode[i])
                     org_state = str(confirmed_org_state[i])
                     dest = str(confirmed_dest_rhcode[i])
-                    dest_state = str(confirmed_org_state[i])
+                    dest_state = str(confirmed_dest_state[i])
                     Commodity = confirmed_railhead_commodities[i]
                     val = confirmed_railhead_value[i]
                     if Commodity == 'WHEAT':
@@ -1594,7 +1594,7 @@ def Daily_Planner():
                         From_state.append(org_state)
                         To.append(dest)
                         To_state.append(dest_state)
-                        commodity.append(Commodity)
+                        commodity.append("Wheat")
                         values.append(val)
 
                 df_wheat["From"] = From
@@ -1656,7 +1656,7 @@ def Daily_Planner():
                         From_state_rice.append(org_state)
                         To.append(dest)
                         To_state_rice.append(dest_state)
-                        commodity.append(Commodity)
+                        commodity.append("Rice")
                         values.append(val)
 
                 df_rice["From"] = From
