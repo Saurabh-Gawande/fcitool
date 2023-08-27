@@ -1648,7 +1648,7 @@ def Daily_Planner():
                     org = str(confirmed_org_rhcode[i])
                     org_state = str(confirmed_org_state[i])
                     dest = str(confirmed_dest_rhcode[i])
-                    dest_state = str(confirmed_org_state[i])
+                    dest_state = str(confirmed_dest_state[i])
                     Commodity = confirmed_railhead_commodities[i]
                     val = confirmed_railhead_value[i]
                     if Commodity == 'RICE':
