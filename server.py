@@ -278,13 +278,15 @@ def read_Daily_Template_S2():
 def Download_Template_to_add():
     if request.method == "POST":
         try:
-            df1 = pd.read_excel('Input\\Non-TEFD.xlsx', sheet_name="Railhead_cost_matrix_1rake") 
-            df2 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_wheat") 
+            df1 = pd.read_excel('Input\\Non-TEFD.xlsx', sheet_name="Railhead_cost_matrix_1rake", index_col=0) 
+            df2 = pd.read_excel('Frontend\\public\\data\\Updated_railhead_list.xlsx', sheet_name="RH_Sheet") 
 
-            prev_col = df1.columns
-            present_col = df2["Railhead"]
+            prev_col = list(df1.columns)
+            present_col = list(df2["RH_code"])
+            # print(present_col)
 
             prev_st = set(prev_col)
+            # print(prev_st)
             add_rh = []
             for rh in present_col:
                 if rh not in prev_st:
@@ -303,8 +305,11 @@ def Download_Template_to_add():
 
             json_data = {
                 "Railhead_cost_matrix_1rake": json_data1,
-                "Railhead_cost_matrix": json_data1,
-                "Railhead_dist_matrix": json_data1
+                "Railhead_dist_matrix": json_data1,
+                "Cost_matrix_Non_TEFD": json_data1,
+                "Cost_matrix_TEFD": json_data1,
+                "Cost_matrix_Non_TEFD+TC": json_data1,
+                "Cost_matrix_TEFD+TC": json_data1
             }
         except Exception as e:
             json_data = {"Status": 0, "Error": str(e)}
@@ -334,8 +339,12 @@ def Update_matrices():
     try:
         file = request.files['uploadFile']
         file.save("Input//Update_matrices.xlsx")
+        print("Got File")
         Railhead_cost_matrix_1rake_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
-        Railhead_cost_matrix_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
+        Railhead_cost_matrix_U_data_Non_TEFD = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_Non_TEFD", index_col=0)
+        Railhead_cost_matrix_U_data_TEFD = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_TEFD", index_col=0)
+        Railhead_cost_matrix_U_data_Non_TEFD_TC = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_Non_TEFD+TC", index_col=0)
+        Railhead_cost_matrix_U_data_TEFD_TC = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_TEFD+TC", index_col=0)
         Railhead_dist_matrix_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
         Railhead_cost_matrix_1rake_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
         Railhead_cost_matrix_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
@@ -347,9 +356,9 @@ def Update_matrices():
                 Railhead_cost_matrix_1rake_M_data.at[row, col] = value
                 Railhead_cost_matrix_1rake_M_data.at[col, row] = value
 
-        for row in Railhead_cost_matrix_U_data.index:
-            for col in Railhead_cost_matrix_U_data.columns:
-                value = Railhead_cost_matrix_U_data.loc[row, col]
+        for row in Railhead_cost_matrix_U_data_Non_TEFD.index:
+            for col in Railhead_cost_matrix_U_data_Non_TEFD.columns:
+                value = Railhead_cost_matrix_U_data_Non_TEFD.loc[row, col]
                 Railhead_cost_matrix_M_data.at[row, col] = value
                 Railhead_cost_matrix_M_data.at[col, row] = value
 
@@ -360,6 +369,75 @@ def Update_matrices():
                 Railhead_dist_matrix_M_data.at[col, row] = value
 
         with pd.ExcelWriter("Input/Non-TEFD.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
+            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
+            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
+
+        for row in Railhead_cost_matrix_1rake_U_data.index:
+            for col in Railhead_cost_matrix_1rake_U_data.columns:
+                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
+                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
+                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
+
+        for row in Railhead_cost_matrix_U_data_TEFD.index:
+            for col in Railhead_cost_matrix_U_data_TEFD.columns:
+                value = Railhead_cost_matrix_U_data_TEFD.loc[row, col]
+                Railhead_cost_matrix_M_data.at[row, col] = value
+                Railhead_cost_matrix_M_data.at[col, row] = value
+
+        for row in Railhead_dist_matrix_U_data.index:
+            for col in Railhead_dist_matrix_U_data.columns:
+                value = Railhead_dist_matrix_U_data.loc[row, col]
+                Railhead_dist_matrix_M_data.at[row, col] = value
+                Railhead_dist_matrix_M_data.at[col, row] = value
+
+        with pd.ExcelWriter("Input/TEFD.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
+            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
+            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
+
+        for row in Railhead_cost_matrix_1rake_U_data.index:
+            for col in Railhead_cost_matrix_1rake_U_data.columns:
+                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
+                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
+                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
+
+        for row in Railhead_cost_matrix_U_data_Non_TEFD_TC.index:
+            for col in Railhead_cost_matrix_U_data_Non_TEFD_TC.columns:
+                value = Railhead_cost_matrix_U_data_Non_TEFD_TC.loc[row, col]
+                Railhead_cost_matrix_M_data.at[row, col] = value
+                Railhead_cost_matrix_M_data.at[col, row] = value
+
+        for row in Railhead_dist_matrix_U_data.index:
+            for col in Railhead_dist_matrix_U_data.columns:
+                value = Railhead_dist_matrix_U_data.loc[row, col]
+                Railhead_dist_matrix_M_data.at[row, col] = value
+                Railhead_dist_matrix_M_data.at[col, row] = value
+
+        with pd.ExcelWriter("Input/Non_TEFD_TC.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
+            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
+            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
+            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
+
+        for row in Railhead_cost_matrix_1rake_U_data.index:
+            for col in Railhead_cost_matrix_1rake_U_data.columns:
+                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
+                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
+                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
+
+        for row in Railhead_cost_matrix_U_data_TEFD_TC.index:
+            for col in Railhead_cost_matrix_U_data_TEFD_TC.columns:
+                value = Railhead_cost_matrix_U_data_TEFD_TC.loc[row, col]
+                Railhead_cost_matrix_M_data.at[row, col] = value
+                Railhead_cost_matrix_M_data.at[col, row] = value
+
+        for row in Railhead_dist_matrix_U_data.index:
+            for col in Railhead_dist_matrix_U_data.columns:
+                value = Railhead_dist_matrix_U_data.loc[row, col]
+                Railhead_dist_matrix_M_data.at[row, col] = value
+                Railhead_dist_matrix_M_data.at[col, row] = value
+
+        with pd.ExcelWriter("Input/TEFD_TC.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
             Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
             Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
             Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
@@ -394,12 +472,15 @@ def Add_Railhead():
     try:
         Railhead_name = []
         Railhead_State = []
-        fetched_data = request.get_json()
+        fetched_data = request.get_json()  # Make sure to handle request properly in your Flask app
         Railhead_name.append(fetched_data["railhead"].upper())
         Railhead_State.append(fetched_data['state'])
+        print(Railhead_name)
+        print(Railhead_State)
+
         Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
-        Daily_Template_S1 = 'Input\\Daily_Template_Scene1.xlsx'
-        Daily_Template_S2 = 'Input\\Daily_Template_Scene2.xlsx'
+        Daily_Template_S1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
+        Daily_Template_S2 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
         Data_sheet = 'Frontend/public/data/Updated_railhead_list.xlsx'
 
         # Sheets
@@ -456,11 +537,11 @@ def Add_Railhead():
             for i in range(len(Monthly_Sheets)):
                 Monthly_df[i].to_excel(writer, sheet_name=Monthly_Sheets[i], index=False)
 
-        with pd.ExcelWriter("Input\\Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Daily_Sheets_S1)):
                 Daily_S1_df[i].to_excel(writer, sheet_name=Daily_Sheets_S1[i], index=False)
 
-        with pd.ExcelWriter("Input\\Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
             for i in range(len(Daily_Sheets_S2)):
                 Daily_S2_df[i].to_excel(writer, sheet_name=Daily_Sheets_S2[i], index=False)
 
@@ -1051,6 +1132,32 @@ def Monthly_Solution():
             with pd.ExcelWriter("Output//Relevent_Results.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
                 df_wheat.to_excel(writer,sheet_name="wheat")
                 df_rice.to_excel(writer,sheet_name="rice")
+
+            # List_data = pd.ExcelFile("Output//Relevent_Results.xlsx")
+            # List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
+            # List_wheat = pd.read_excel(List_data, sheet_name="wheat", index_col=0)
+
+            # wheat_cost = []
+            # rice_cost = []
+                
+            # for i in range(len(List_rice)):
+            #     org = List_rice["From"][i]
+            #     dest = List_rice["To"][i]
+            #     price = rail_cost.loc[org][dest]*List_rice["Values"][i]
+            #     rice_cost.append(price)
+
+            # for i in range(len(List_wheat)):
+            #     org = List_wheat["From"][i]
+            #     dest = List_wheat["To"][i]
+            #     price = rail_cost.loc[org][dest]*List_wheat["Values"][i]
+            #     wheat_cost.append(price)
+
+            # List_wheat["Cost"] = wheat_cost
+            # List_rice["Cost"] = rice_cost
+
+            # with pd.ExcelWriter("Output//Relevent_Results.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+            #     List_rice.to_excel(writer, sheet_name="rice")
+            #     List_wheat.to_excel(writer, sheet_name="wheat")
             
             table = pd.ExcelFile("Output//Relevent_Results.xlsx")
             table_data_w = pd.read_excel(table,sheet_name="wheat",index_col=0)
@@ -1450,12 +1557,28 @@ def Daily_Planner():
                     df_wheat.to_excel(writer, sheet_name="wheat")
                     df_rice.to_excel(writer, sheet_name="rice")
 
-                List_data = pd.ExcelFile("Output//List_DPT2.xlsx")
-                List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
-                List_wheat = pd.read_excel(List_data, sheet_name="wheat", index_col=0)
+                # List_data = pd.ExcelFile("Output//List_DPT2.xlsx")
+                # List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
+                # List_wheat = pd.read_excel(List_data, sheet_name="wheat", index_col=0)
 
+                # wheat_cost = []
+                # rice_cost = []
 
-                # Write the updated DataFrame back to the Excel file
+                # for i in range(len(List_rice)):
+                #     org = List_rice["From"][i]
+                #     dest = List_rice["To"][i]
+                #     price = rail_cost.loc[org][dest]*List_rice["Values"][i]
+                #     rice_cost.append(price)
+
+                # for i in range(len(List_wheat)):
+                #     org = List_wheat["From"][i]
+                #     dest = List_wheat["To"][i]
+                #     price = rail_cost.loc[org][dest]*List_wheat["Values"][i]
+                #     wheat_cost.append(price)
+
+                # List_wheat["Cost"] = wheat_cost
+                # List_rice["Cost"] = rice_cost
+
                 with pd.ExcelWriter("Output//List_DPT2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     List_rice.to_excel(writer, sheet_name="rice")
                     List_wheat.to_excel(writer, sheet_name="wheat")
@@ -1521,7 +1644,6 @@ def Daily_Planner():
 
                 prob+=lpSum(x_ij_wheat[(i,j)]*rail_cost.loc[i][j] for i in source_wheat for j in dest_wheat)+lpSum(x_ij_rice[(i,j)]*rail_cost.loc[i][j] for i in source_rice for j in dest_rice)
 
-
                 for i in source_wheat:
                     prob += lpSum(x_ij_wheat[(i, j)] for j in dest_wheat) <= 1
 
@@ -1550,13 +1672,7 @@ def Daily_Planner():
                 print("Total Number of Variables:", len(prob.variables()))
                 print("Total Number of Constraints:", len(prob.constraints))
 
-
-
-
                 df_wheat=pd.DataFrame()
-
-
-
 
                 From=[]
                 To=[]
@@ -1604,22 +1720,16 @@ def Daily_Planner():
                 df_wheat["Commodity"]=commodity
                 df_wheat["Values"] = values
 
-
-
                 for i in dest_wheat_inline.keys():
                     for j in range(len(df_wheat["To"])):
                         if(i==df_wheat.iloc[j]["To"] or dest_wheat_inline[i]==df_wheat.iloc[j]["To"]):
                             df_wheat.loc[j,'To']=(i+'+'+dest_wheat_inline[i])
-
-
 
                 D = []
                 E = []
                 F = []
 
                 df_rice = pd.DataFrame()
-
-
 
                 From=[]
                 To=[]
@@ -1636,7 +1746,6 @@ def Daily_Planner():
                             values.append(x_ij_rice[(i,j)].value())
                             commodity.append("Rice")
 
-
                 for i in range(len(From)):
                     for j in range(len(surplus_rice)):
                         if From[i] == surplus_rice.index[j]:
@@ -1650,7 +1759,7 @@ def Daily_Planner():
                     dest = str(confirmed_dest_rhcode[i])
                     dest_state = str(confirmed_dest_state[i])
                     Commodity = confirmed_railhead_commodities[i]
-                    val = confirmed_railhead_value[i]
+                    val = float(confirmed_railhead_value[i])
                     if Commodity == 'RICE':
                         From.append(org)
                         From_state_rice.append(org_state)
@@ -1666,25 +1775,17 @@ def Daily_Planner():
                 df_rice["Commodity"]=commodity
                 df_rice["Values"] = values
 
-
-
-
                 for i in dest_rice_inline.keys():
                     for j in range(len(df_rice["To"])):
                         if(i==df_rice.iloc[j]["To"] or dest_rice_inline[i]==df_rice.iloc[j]["To"]):
                             df_rice.loc[j,'To']=(i+'+'+dest_rice_inline[i])
 
-
-
                 with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df_wheat.to_excel(writer, sheet_name="wheat")
                     df_rice.to_excel(writer, sheet_name="rice")
 
-
             data1["status"] = 1
-            
-               
-                  
+                
         except Exception as e:
             print(e)
             data1["status"] = 0
