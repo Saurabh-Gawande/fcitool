@@ -71,8 +71,8 @@ function Daily_Planner() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
   const [isLoading3, setIsLoading3] = useState(false);
-
-
+  const [number_check1, setnumber_check1] = useState("");
+  const [number_check2, setnumber_check2] = useState("");
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
 
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
@@ -254,6 +254,8 @@ function Daily_Planner() {
   
 
   const handleSolve = async () => {
+    if (isLoading) return; // Prevent additional clicks while loading
+    setIsLoading(true);
     document.getElementById("toggle").checked = true;
     
     document.getElementById("console_").style.display = "block";
@@ -282,8 +284,7 @@ function Daily_Planner() {
       wheat_inline_value: inline_value_wheat,
     };
 
-    if (isLoading) return; // Prevent additional clicks while loading
-    setIsLoading(true);
+    
     try {
       const response = await fetch(ProjectIp + "/Daily_Planner", {
         method: "POST",
@@ -292,7 +293,8 @@ function Daily_Planner() {
         },
         body: JSON.stringify(payload),
       });
-
+      fetchReservationId_Total_result();
+      fetchReservationId_Revelant_result();
       if (response.ok) {
         setSolutionSolved(true);
       } else {
@@ -305,7 +307,7 @@ function Daily_Planner() {
       setIsLoading(false); // Reset loading state
     }
     document.getElementById("console_").innerHTML +=
-      "Solution has been done" + "<br/><br/>";
+    "Solution has been done" + "<br/> " +  "Click on ownload RH to RH Detailed plan" + "<br/>";
     document.getElementById("toggle").checked = false;
   };
 
@@ -1017,7 +1019,6 @@ function Daily_Planner() {
   };
 
   const addConstraint3 = () => {
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOption3 && subOption3) {
       setBlockdata3((data) => [
         ...data,
@@ -1027,12 +1028,20 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
+  
+      // Use the state update callback to perform operations dependent on the updated state
+      setnumber_check1((prevNumber) => prevNumber + 1);
+  
       setSelectedOption3("default");
       setSubOptions3([]);
       document.getElementById("console_").style.display = "block";
-      // document.getElementById("console_").innerHTML+="Origin railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML +=
-        "New origin railhead has been added for rice" + "<br/><br/>";
+  
+      // Update innerHTML after state has been updated
+      setTimeout(() => {
+        document.getElementById("console_").innerHTML +=
+          "New origin railhead has been added for rice" + "<br/><br/>" +
+          "Supply Value is of Rice is " + (number_check1.length + 1) + " Unit" + "<br/><br/>";
+      }, 0);
     }
   };
 
@@ -1067,16 +1076,20 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
+      setnumber_check2((prevNumber) => prevNumber + 1);
       setSelectedOption4("default");
       setSubOptions4([]);
       document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML +=
-        "New destination railhead has been added for rice" + "<br/><br/>";
+      setTimeout(() => {
+        document.getElementById("console_").innerHTML +=
+          "New origin railhead has been added for rice" + "<br/><br/>" +
+          "Supply Value is of Rice is " + (number_check2.length + 1) + " Unit" + "<br/><br/>";
+      }, 0);
     }
   };
   const addConstraintWheat4 = () => {
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+    console.log(selectedOption, subOption1, selectedOption2, subOption2);
     if (selectedOptionWheat4 && subOptionWheat4) {
       setWheatDestination((data) => [
         ...data,
@@ -1136,49 +1149,58 @@ function Daily_Planner() {
     }
   };
 
-  const exportToExcel1 =() => {
-    fetchReservationId_Total_result();
+  const exportToExcel1 = () => {
+    
     if (Total_result == null) {
-      window.alert("Fetching Result, Please Wait");
+        // Commented out the alert statement
+        window.alert("Fetching Result, Please Wait");
+        fetchReservationId_Total_result();
+    
     } else {
-      const workbook = XLSX.utils.book_new();
-      Object.entries(Total_result).forEach(([column, data]) => {
-        const parsedData = JSON.parse(data);
-        const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, column);
-      });
-      const excelBuffer = XLSX.write(workbook, {
-        type: "array",
-        bookType: "xlsx",
-      });
-      const excelBlob = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      saveAs(excelBlob, "Daily_Movement_Scenerio1.xlsx");
+        const workbook = XLSX.utils.book_new();
+        Object.entries(Total_result).forEach(([column, data]) => {
+            const parsedData = JSON.parse(data);
+            const worksheet = XLSX.utils.json_to_sheet(parsedData);
+            XLSX.utils.book_append_sheet(workbook, worksheet, column);
+        });
+        const excelBuffer = XLSX.write(workbook, {
+            type: "array",
+            bookType: "xlsx",
+        });
+        const excelBlob = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(excelBlob, "Daily_Movement_Scenerio1.xlsx");
+        // Commented out the alert statement
+        // window.alert("Result Downloaded");
     }
-  };
+};
 
-  const exportToExcel2 = () => {
-    fetchReservationId_Revelant_result();
+const exportToExcel2 = () => {
+    
     if (Relevant_result == null) {
-      window.alert("Fetching Result, Please Wait");
+        // Commented out the alert statement
+        window.alert("Fetching Result, Please Wait");
+        fetchReservationId_Revelant_result();
     } else {
-      const workbook = XLSX.utils.book_new();
-      Object.entries(Relevant_result).forEach(([column, data]) => {
-        const parsedData = JSON.parse(data);
-        const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, column);
-      });
-      const excelBuffer = XLSX.write(workbook, {
-        type: "array",
-        bookType: "xlsx",
-      });
-      const excelBlob = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
+        const workbook = XLSX.utils.book_new();
+        Object.entries(Relevant_result).forEach(([column, data]) => {
+            const parsedData = JSON.parse(data);
+            const worksheet = XLSX.utils.json_to_sheet(parsedData);
+            XLSX.utils.book_append_sheet(workbook, worksheet, column);
+        });
+        const excelBuffer = XLSX.write(workbook, {
+            type: "array",
+            bookType: "xlsx",
+        });
+        const excelBlob = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
+        // Commented out the alert statement
+        // window.alert("Result Downloaded");
     }
-  };
+};
 
   const buttonStyle = {
     border: updateExcel ? "4px solid rgba(235, 171, 68)" : "2px solid black",
@@ -1198,6 +1220,7 @@ function Daily_Planner() {
         style={{
           display: "flex",
           backgroundImage: "url('static/img/bg8.jpg')",
+          
         }}
       >
         <div>
@@ -3016,7 +3039,7 @@ function Daily_Planner() {
             <br />
           </div>
         </div>
-        <div style={{ backgroundColor: "#d2c4ac", width: "35%" }}>
+        <div style={{ backgroundColor: "#ebab44b0", width: "20%"  }}>
           <br/>
           <div>
             <div class="progress yellow">
@@ -3027,7 +3050,7 @@ function Daily_Planner() {
                 <span class="progress-bar"></span>
               </span>
               <div class="progress-value">Steps</div>
-            </div>
+            </div> 
           </div>
           <span style={{ color: "black", fontSize: "32px", marginLeft: "5%" }}>
             Progress Bar
