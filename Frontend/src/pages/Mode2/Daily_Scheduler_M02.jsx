@@ -50,7 +50,7 @@ function Daily_Scheduler_M02(props) {
   const [Daily_Scheduler_result, set_Daily_Scheduler_Result] = useState(null);
   const fetchReservationId_Daily_Scheduler_result = () => {
     var form = new FormData();
-    const projectIp = "http://localhost:5000/";
+    const projectIp = "http://207.180.218.55:5000/";
     fetch(projectIp + "/read_Daily_Scheduler", {
       method: "POST",
       credentials: "include",

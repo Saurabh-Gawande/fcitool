@@ -6,7 +6,7 @@ import background1 from "./../../assets/upload1_.png";
 import "./Monthly_sol.css";
 
 function Monthly_Solution() {
-  const ProjectIp = "http://localhost:5000";
+  const ProjectIp = "http://207.180.218.55:5000";
   const [fileSelected, setFileSelected] = useState(false);
   const [r_s, setr_s] = useState("");
   const [r_d, setr_d] = useState("");

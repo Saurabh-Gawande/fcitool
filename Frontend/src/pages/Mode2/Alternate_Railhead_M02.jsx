@@ -10,7 +10,7 @@ function Alternate_Railhead_M02() {
   const [data, setData] = useState([]);
 
   const fetchData = () => {
-    fetch("http://localhost:5000/Alternate_Railhead_readPickle")
+    fetch("http://207.180.218.55:5000/Alternate_Railhead_readPickle")
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => console.error(error));
@@ -26,7 +26,7 @@ function Alternate_Railhead_M02() {
     };
     try {
       const response = await fetch(
-        "http://localhost:5000/Alternate_Railhead_Solve",
+        "http://207.180.218.55:5000/Alternate_Railhead_Solve",
         {
           method: "POST",
           headers: {

@@ -34,7 +34,7 @@ def login():
             data['status'] = 'User already logged in'
         else:
             if username in users and password == users[username]:
-                active_sessions[username] = session.sid
+                active_sessions[username] = session.get('sid')
                 data['status'] = 1
                 session['username'] = username
             else:
@@ -51,7 +51,7 @@ def login():
     response.headers.add('Access-Control-Allow-Credentials', 'true') 
     return (json.dumps(json_object, indent = 1))
 
-@app.route('/logout')
+@app.route('/logout',methods = ["GET"])
 def logout():
     data = {}
     if 'username' in session:
