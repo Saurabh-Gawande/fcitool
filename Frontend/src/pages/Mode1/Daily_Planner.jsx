@@ -73,6 +73,8 @@ function Daily_Planner() {
   const [isLoading3, setIsLoading3] = useState(false);
   const [number_check1, setnumber_check1] = useState(0);
   const [number_check2, setnumber_check2] = useState(0);
+  const [supplyWeatCount, setSupplyWeatCount] = useState(0);
+  const [destinationWheatCount, setDestinationWheatCount] = useState(0);
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
   console.log({ selectedOption4, subOption4 });
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
@@ -80,6 +82,9 @@ function Daily_Planner() {
     updatedData[sheetName][rowIndex][columnIndex] = newValue;
     setExcelData(updatedData);
   };
+
+  console.log({ subOptionWheat3 });
+  console.log({ selectedOptionWheat3 });
 
   const handleFileChange = (event) => {
     setFileSelected(event.target.files.length > 0);
@@ -812,9 +817,9 @@ function Daily_Planner() {
   };
 
   const handleDeleteRow_Wheat_s = (e) => {
-    console.log(e);
     let block_data3_ = block_dataWheat3.filter((item) => item["id"] !== e);
     setBlockdataWheat3(block_data3_);
+    setSupplyWeatCount(supplyWeatCount - 1);
   };
 
   const handleDeleteRow_Rice__dest = (e) => {
@@ -824,15 +829,15 @@ function Daily_Planner() {
   };
 
   const handleDeleteRow_Wheat__dest = (e) => {
-    console.log(e);
     let wheat_destination_ = wheat_destination.filter(
       (item) => item["id"] !== e
     );
     setWheatDestination(wheat_destination_);
+    setDestinationWheatCount(destinationWheatCount - 1);
   };
 
-  const addConstraint = () => {
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+  const addConstraint = (e) => {
+    e.preventDefault();
     if (selectedOption && subOption1 && selectedOption2 && subOption2) {
       setBlockdata((data) => [
         ...data,
@@ -861,8 +866,9 @@ function Daily_Planner() {
     }
   };
 
-  const addConstraint2 = async () => {
+  const addConstraint2 = async (e) => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+    e.preventDefault();
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       setBlockdata2((data) => [
         ...data,
@@ -939,8 +945,8 @@ function Daily_Planner() {
       "New Inline details has been added for rice" + "<br/><br/>";
   };
 
-  const addConstraintWheat2 = async () => {
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+  const addConstraintWheat2 = async (e) => {
+    e.preventDefault();
     if (
       selectedOptionWheat5 &&
       subOptionWheat5 &&
@@ -1058,13 +1064,11 @@ function Daily_Planner() {
       }
     }
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions3(dropdownOptions);
   };
 
   const addConstraintWheat3 = async (e) => {
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     e.preventDefault();
     if (selectedOptionWheat3 && subOptionWheat3) {
       setBlockdataWheat3((data) => [
@@ -1075,12 +1079,8 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      // setSelectedOptionWheat3("default");
       setSubOptionsWheat3([]);
-      document.getElementById("console_").style.display = "block";
-      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML +=
-        "New origin railhead has been added for wheat" + "<br/><br/>";
+      setSupplyWeatCount(supplyWeatCount + 1);
     }
     setSubOptionWheat3("");
     const response = await fetch("/data/Updated_railhead_list.xlsx");
@@ -1166,7 +1166,7 @@ function Daily_Planner() {
     setSubOptions4(dropdownOptions);
   };
 
-  const addConstraintWheat4 = (e) => {
+  const addConstraintWheat4 = async (e) => {
     e.preventDefault();
     if (selectedOptionWheat4 && subOptionWheat4) {
       setWheatDestination((data) => [
@@ -1177,23 +1177,51 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      setSelectedOptionWheat4("default");
       setSubOptionsWheat4([]);
-      document.getElementById("console_").style.display = "block";
-      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML +=
-        "New destination railhead has been added for wheat" + "<br/><br/>";
+      setDestinationWheatCount(destinationWheatCount + 1);
+      // document.getElementById("console_").style.display = "block";
+      // // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+      // document.getElementById("console_").innerHTML +=
+      //   "New destination railhead has been added for wheat" + "<br/><br/>";
     }
+    setSubOptionWheat4("");
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedOptionWheat4) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptionsWheat4(dropdownOptions);
   };
 
-  const addConstraint_fixed = () => {
+  const addConstraint_fixed = (e) => {
+    e.preventDefault();
     if (
       selectedOption_fixed &&
       subOption1_fixed &&
       selectedOption2_fixed &&
       subOption2_fixed &&
-      commodity_fixed &&
-      value_fixed
+      commodity_fixed
+      // && value_fixed
     ) {
       setFixeddata((data) => [
         ...data,
@@ -1246,9 +1274,21 @@ function Daily_Planner() {
       const excelBlob = new Blob([excelBuffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-      saveAs(excelBlob, "Daily_Movement_Scenerio1.xlsx");
-      // Commented out the alert statement
-      // window.alert("Result Downloaded");
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[-T:]/g, "")
+        .slice(0, 14);
+
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed, so we add 1
+      const day = String(currentDate.getDate()).padStart(2, "0");
+      const hours = String(currentDate.getHours()).padStart(2, "0");
+      const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+      const seconds = String(currentDate.getSeconds()).padStart(2, "0");
+      const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
+      const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
+      saveAs(excelBlob, filenameWithDateTime);
     }
   };
 
@@ -1629,7 +1669,7 @@ function Daily_Planner() {
                             style={{
                               width: "200px",
                               padding: "5px",
-                              marginRight: 208,
+                              marginRight: 207,
                             }}
                             onChange={handleSubDropdownChange3}
                             value={subOption3}
@@ -1713,7 +1753,6 @@ function Daily_Planner() {
                           alignItems: "center",
                         }}
                       >
-                        {/* <label htmlFor="origin_state"> */}
                         <div>
                           <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Destination State:
@@ -1867,8 +1906,14 @@ function Daily_Planner() {
                           />
                         </div>
                         <br />
-                        <div style={{ display: "flex", marginLeft: "20px" }}>
-                          {/* <label htmlFor="origin_state"> */}
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: "20px",
+                            width: "1031px",
+                            alignItems: "center",
+                          }}
+                        >
                           <div>
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
@@ -1929,10 +1974,8 @@ function Daily_Planner() {
                               ))}
                             </select>
                           </div>
-                          {/* </label> */}
 
                           <div>
-                            {/* <label htmlFor="deficit_state"> */}
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
                             >
@@ -1953,7 +1996,6 @@ function Daily_Planner() {
                               <option value="Chattisgarh">Chattisgarh</option>
                               <option value="Goa">Goa</option>
                               <option value="Gujarat">Gujarat</option>
-                              {/* <option value="Haryana">Haryana</option> */}
                               <option value="Jammu & Kashmir">
                                 Jammu & Kashmir
                               </option>
@@ -1995,24 +2037,18 @@ function Daily_Planner() {
                             </select>
                           </div>
                           {/* </label> */}
-                          <div
-                            style={{
-                              padding: "2px",
-                              margin: "2px",
-                              float: "right",
-                              width: "70px",
-                              background: "orange",
-                              cursor: "pointer",
-                              height: "40px",
-                              marginTop: "20px",
-                            }}
-                            onClick={addConstraint2}
-                          >
-                            <p
-                              style={{ textAlign: "center", marginTop: "8px" }}
+                          <div onClick={addConstraint2}>
+                            <button
+                              style={{
+                                textAlign: "center",
+                                backgroundColor: "orange",
+                                width: 70,
+                                height: 40,
+                                alignItems: "center",
+                              }}
                             >
                               Add
-                            </p>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -2032,19 +2068,19 @@ function Daily_Planner() {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "209px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -2184,7 +2220,7 @@ function Daily_Planner() {
                               backgroundColor: "orange",
                               width: 70,
                               height: 40,
-                              marginLeft: 153
+                              marginLeft: 207,
                             }}
                             disabled={
                               subOptionWheat3 === "" &&
@@ -2203,13 +2239,13 @@ function Daily_Planner() {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "350px" }}>
                                   Origin State
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "350px" }}>
                                   Origin Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "350px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -2244,8 +2280,13 @@ function Daily_Planner() {
 
                       <br />
 
-                      <div style={{ display: "flex", marginLeft: "20px" , alignItems: "center"}}>
-                        {/* <label htmlFor="origin_state"> */}
+                      <div
+                        style={{
+                          display: "flex",
+                          marginLeft: "20px",
+                          alignItems: "center",
+                        }}
+                      >
                         <div>
                           <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Destination State:
@@ -2310,11 +2351,11 @@ function Daily_Planner() {
                               backgroundColor: "orange",
                               width: 70,
                               height: 40,
-                              marginLeft: 100
+                              marginLeft: 153,
                             }}
                             disabled={
-                              subOptionWheat3 === "" &&
-                              selectedOptionWheat3 === ""
+                              subOptionWheat4 === "" &&
+                              selectedOptionWheat4 === ""
                             }
                           >
                             Add
@@ -2328,13 +2369,19 @@ function Daily_Planner() {
                             <table>
                               <thead>
                                 <tr style={{ margin: "auto" }}>
-                                  <th style={{ padding: "10px", width: "15%" }}>
+                                  <th
+                                    style={{ padding: "10px", width: "350px" }}
+                                  >
                                     Destination State
                                   </th>
-                                  <th style={{ padding: "10px", width: "15%" }}>
+                                  <th
+                                    style={{ padding: "10px", width: "350px" }}
+                                  >
                                     Destination Railhead
                                   </th>
-                                  <th style={{ padding: "10px", width: "15%" }}>
+                                  <th
+                                    style={{ padding: "10px", width: "350px" }}
+                                  >
                                     Delete
                                   </th>
                                 </tr>
@@ -2388,7 +2435,14 @@ function Daily_Planner() {
                           />
                         </div>
                         <br />
-                        <div style={{ display: "flex", marginLeft: "20px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: "20px",
+                            width: "1031px",
+                            alignItems: "center",
+                          }}
+                        >
                           {/* <label htmlFor="origin_state"> */}
                           <div>
                             <strong
@@ -2514,24 +2568,18 @@ function Daily_Planner() {
                             </select>
                           </div>
                           {/* </label> */}
-                          <div
-                            style={{
-                              padding: "2px",
-                              margin: "2px",
-                              float: "right",
-                              width: "70px",
-                              background: "orange",
-                              cursor: "pointer",
-                              height: "40px",
-                              marginTop: "20px",
-                            }}
-                            onClick={addConstraintWheat2}
-                          >
-                            <p
-                              style={{ textAlign: "center", marginTop: "8px" }}
+                          <div onClick={addConstraintWheat2}>
+                            <button
+                              style={{
+                                textAlign: "center",
+                                backgroundColor: "orange",
+                                width: 70,
+                                height: 40,
+                                alignItems: "center",
+                              }}
                             >
                               Add
-                            </p>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -2551,19 +2599,19 @@ function Daily_Planner() {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "210px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "209px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -2612,7 +2660,13 @@ function Daily_Planner() {
                       </strong>
                     </p>
                     <br />
-                    <div style={{ display: "flex", marginLeft: "20px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginLeft: "20px",
+                        width: 1030,
+                      }}
+                    >
                       {/* <label htmlFor="origin_state"> */}
                       <div>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
@@ -2666,9 +2720,7 @@ function Daily_Planner() {
                           ))}
                         </select>
                       </div>
-                      {/* </label> */}
                       <div>
-                        {/* <label htmlFor="deficit_state"> */}
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Select Destination State
                         </strong>
@@ -2705,8 +2757,6 @@ function Daily_Planner() {
                           <option value="West Bengal">West Bengal</option>
                         </select>
                       </div>
-                      {/* </label> */}
-                      {/* <label htmlFor="deficit_railhead"> */}
                       <div>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Select Destination Railhead
@@ -2723,23 +2773,18 @@ function Daily_Planner() {
                           ))}
                         </select>
                       </div>
-                      {/* </label> */}
-                      <div
-                        style={{
-                          padding: "2px",
-                          margin: "2px",
-                          float: "right",
-                          width: "70px",
-                          background: "orange",
-                          cursor: "pointer",
-                          height: "40px",
-                          marginTop: "20px",
-                        }}
-                        onClick={addConstraint}
-                      >
-                        <p style={{ textAlign: "center", marginTop: "8px" }}>
+                      <div onClick={addConstraint}>
+                        <button
+                          style={{
+                            textAlign: "center",
+                            backgroundColor: "orange",
+                            width: 70,
+                            height: 40,
+                            alignItems: "center",
+                          }}
+                        >
                           Add
-                        </p>
+                        </button>
                       </div>
                     </div>
                     <br />
@@ -2748,19 +2793,19 @@ function Daily_Planner() {
                         <table>
                           <thead>
                             <tr style={{ margin: "auto" }}>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              <th style={{ padding: "10px", width: "210px" }}>
                                 Origin State
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              <th style={{ padding: "10px", width: "210px" }}>
                                 Origin Railhead
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              <th style={{ padding: "10px", width: "210px" }}>
                                 Destination State
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              <th style={{ padding: "10px", width: "210px" }}>
                                 Destination Railhead
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              <th style={{ padding: "10px", width: "208px" }}>
                                 Delete
                               </th>
                             </tr>
@@ -2822,7 +2867,13 @@ function Daily_Planner() {
                       </strong>
                     </p>
                     <br />
-                    <div style={{ display: "flex", marginLeft: "20px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginLeft: "20px",
+                        width: 1030,
+                      }}
+                    >
                       {/* <label htmlFor="origin_state"> */}
                       <div>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
@@ -2935,23 +2986,6 @@ function Daily_Planner() {
                         </select>
                       </div>
                       {/* </label> */}
-                      <div
-                        style={{
-                          padding: "2px",
-                          margin: "2px",
-                          float: "right",
-                          width: "70px",
-                          background: "orange",
-                          cursor: "pointer",
-                          height: "40px",
-                          marginTop: "20px",
-                        }}
-                        onClick={addConstraint_fixed}
-                      >
-                        <p style={{ textAlign: "center", marginTop: "8px" }}>
-                          Add
-                        </p>
-                      </div>
                     </div>
                     <div
                       style={{
@@ -2976,7 +3010,7 @@ function Daily_Planner() {
                         <option value="RICE">Rice</option>
                         <option value="WHEAT">Wheat</option>
                       </select>
-                      <div style={{ marginLeft: "50px" }}>
+                      {/* <div style={{ marginLeft: "50px" }}>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Enter Value
                         </strong>
@@ -2990,6 +3024,20 @@ function Daily_Planner() {
                             padding: "5px",
                           }}
                         />
+                      </div> */}
+
+                      <div onClick={addConstraint_fixed}>
+                        <button
+                          style={{
+                            textAlign: "center",
+                            backgroundColor: "orange",
+                            width: 70,
+                            height: 40,
+                            marginLeft: 574
+                          }}
+                        >
+                          Add
+                        </button>
                       </div>
                     </div>
                     <br />
@@ -3013,9 +3061,9 @@ function Daily_Planner() {
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Commodity
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Value
-                              </th>
+                              </th> */}
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Delete
                               </th>
@@ -3046,7 +3094,7 @@ function Daily_Planner() {
                                 <td>{item.destination_state}</td>
                                 <td>{item.destination_railhead}</td>
                                 <td>{item.commodity}</td>
-                                <td>{item.value}</td>
+                                {/* <td>{item.value}</td> */}
                                 <td>
                                   <span
                                     style={{
@@ -3196,6 +3244,22 @@ function Daily_Planner() {
                 }}
               >
                 {`Destination Value is of Rice is ${number_check2}`}
+              </div>
+            ) : null}
+            {supplyWeatCount > 0 ? (
+              <div style={{ margin: 10, padding: 6 }}>
+                {`Supply Value is of Wheat is ${supplyWeatCount}`}
+              </div>
+            ) : null}
+            {destinationWheatCount > 0 ? (
+              <div
+                style={{
+                  margin: 10,
+                  padding: 6,
+                  color: supplyWeatCount >= destinationWheatCount ? "" : "red",
+                }}
+              >
+                {`Destination Value is of Rice is ${destinationWheatCount}`}
               </div>
             ) : null}
           </div>
