@@ -71,10 +71,10 @@ function Daily_Planner() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
   const [isLoading3, setIsLoading3] = useState(false);
-  const [number_check1, setnumber_check1] = useState("");
-  const [number_check2, setnumber_check2] = useState("");
+  const [number_check1, setnumber_check1] = useState(0);
+  const [number_check2, setnumber_check2] = useState(0);
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
-
+  console.log({ selectedOption4, subOption4 });
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
     const updatedData = { ...excelData };
     updatedData[sheetName][rowIndex][columnIndex] = newValue;
@@ -251,15 +251,14 @@ function Daily_Planner() {
     }
   };
 
-  
-
   const handleSolve = async () => {
     if (isLoading) return; // Prevent additional clicks while loading
     setIsLoading(true);
     document.getElementById("toggle").checked = true;
-    
+
     document.getElementById("console_").style.display = "block";
-    document.getElementById("console_").innerHTML += "Processing..." + "<br/><br/>";
+    document.getElementById("console_").innerHTML +=
+      "Processing..." + "<br/><br/>";
     if (Scenerio == "Scenerio 2") {
       setscn(true);
       setuploadst(true);
@@ -284,7 +283,6 @@ function Daily_Planner() {
       wheat_inline_value: inline_value_wheat,
     };
 
-    
     try {
       const response = await fetch(ProjectIp + "/Daily_Planner", {
         method: "POST",
@@ -302,12 +300,14 @@ function Daily_Planner() {
       }
     } catch (error) {
       console.error("Error sending inputs:", error);
-    }
-    finally {
+    } finally {
       setIsLoading(false); // Reset loading state
     }
     document.getElementById("console_").innerHTML +=
-    "Solution has been done" + "<br/> " +  "Click on ownload RH to RH Detailed plan" + "<br/>";
+      "Solution has been done" +
+      "<br/> " +
+      "Click on ownload RH to RH Detailed plan" +
+      "<br/>";
     document.getElementById("toggle").checked = false;
   };
 
@@ -637,8 +637,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions4(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
-    setSubOptions4(dropdownOptions);
   };
 
   const handleDropdownChangeWheat4 = async (e) => {
@@ -792,29 +790,25 @@ function Daily_Planner() {
   };
 
   const handleDeleteRow = (e) => {
-    console.log(e);
     let block_data_ = block_data.filter((item) => item["id"] !== e);
     setBlockdata(block_data_);
   };
   const handleDeleteRow_fixed = (e) => {
-    console.log(e);
     let fixed_data_ = fixed_data.filter((item) => item["id"] !== e);
     setFixeddata(fixed_data_);
   };
   const handleDeleteRow_inline = (e) => {
-    console.log(e);
     let fixed_data_ = block_data2.filter((item) => item["id"] !== e);
     setBlockdata2(fixed_data_);
   };
   const handleDeleteRow_inlineWheat = (e) => {
-    console.log(e);
     let fixed_data_ = block_dataWheat2.filter((item) => item["id"] !== e);
     setBlockdataWheat2(fixed_data_);
   };
   const handleDeleteRow_Rice_s = (e) => {
-    console.log(e);
     let block_data3_ = block_data3.filter((item) => item["id"] !== e);
     setBlockdata3(block_data3_);
+    setnumber_check1(number_check1 - 1);
   };
 
   const handleDeleteRow_Wheat_s = (e) => {
@@ -824,9 +818,9 @@ function Daily_Planner() {
   };
 
   const handleDeleteRow_Rice__dest = (e) => {
-    console.log(e);
     let rice_destination_ = rice_destination.filter((item) => item["id"] !== e);
     setRiceDestination(rice_destination_);
+    setnumber_check2(number_check2 - 1);
   };
 
   const handleDeleteRow_Wheat__dest = (e) => {
@@ -881,13 +875,15 @@ function Daily_Planner() {
         },
       ]);
 
-      let data = [{
-        origin_state: selectedOption5,
-        origin_railhead: subOption5,
-        destination_state: selectedOption6,
-        destination_railhead: subOption6
-      }];
-      for(let i=0;i<block_data2.length;i++){
+      let data = [
+        {
+          origin_state: selectedOption5,
+          origin_railhead: subOption5,
+          destination_state: selectedOption6,
+          destination_railhead: subOption6,
+        },
+      ];
+      for (let i = 0; i < block_data2.length; i++) {
         data.push(block_data2[i]);
       }
       console.log(data);
@@ -931,11 +927,12 @@ function Daily_Planner() {
         }
       } catch (error) {
         console.error("Error sending inputs:", error);
-      } // Reset loading state
-      finally {
-        setIsLoading2(false);}
+      } finally {
+        // Reset loading state
+        setIsLoading2(false);
+      }
     }
-    
+
     document.getElementById("console_").style.display = "block";
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
     document.getElementById("console_").innerHTML +=
@@ -960,13 +957,15 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      let data = [{
-        origin_state: selectedOption5,
-        origin_railhead: subOption5,
-        destination_state: selectedOption6,
-        destination_railhead: subOption6
-      }];
-      for(let i=0;i<block_dataWheat2.length;i++){
+      let data = [
+        {
+          origin_state: selectedOption5,
+          origin_railhead: subOption5,
+          destination_state: selectedOption6,
+          destination_railhead: subOption6,
+        },
+      ];
+      for (let i = 0; i < block_dataWheat2.length; i++) {
         data.push(block_dataWheat2[i]);
       }
       console.log(data);
@@ -975,7 +974,7 @@ function Daily_Planner() {
       setSubOptionWheat5([]);
       setSubOptionWheat6([]);
       if (isLoading3) return; // Prevent additional clicks while loading
-    setIsLoading3(true);
+      setIsLoading3(true);
       try {
         const payload1 = {
           rice_inline: block_data2,
@@ -1007,10 +1006,9 @@ function Daily_Planner() {
         }
       } catch (error) {
         console.error("Error sending inputs:", error);
-      }
-      finally {
-        setIsLoading3(false);} // Reset loading state
-    
+      } finally {
+        setIsLoading3(false);
+      } // Reset loading state
     }
     document.getElementById("console_").style.display = "block";
     // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
@@ -1018,7 +1016,8 @@ function Daily_Planner() {
       "New Inline details has been added for wheat" + "<br/><br/>";
   };
 
-  const addConstraint3 = () => {
+  const addConstraint3 = async (e) => {
+    e.preventDefault();
     if (selectedOption3 && subOption3) {
       setBlockdata3((data) => [
         ...data,
@@ -1028,25 +1027,45 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-  
-      // Use the state update callback to perform operations dependent on the updated state
-      setnumber_check1((prevNumber) => prevNumber + 1);
-  
-      setSelectedOption3("default");
+
+      setnumber_check1(number_check1 + 1);
+
       setSubOptions3([]);
       document.getElementById("console_").style.display = "block";
-  
-      // Update innerHTML after state has been updated
-      setTimeout(() => {
-        document.getElementById("console_").innerHTML +=
-          "New origin railhead has been added for rice" + "<br/><br/>" +
-          "Supply Value is of Rice is " + (number_check1.length + 1) + " Unit" + "<br/><br/>";
-      }, 0);
     }
+    setSubOption3("");
+
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedOption3) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptions3(dropdownOptions);
   };
 
-  const addConstraintWheat3 = () => {
+  const addConstraintWheat3 = async (e) => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+    e.preventDefault();
     if (selectedOptionWheat3 && subOptionWheat3) {
       setBlockdataWheat3((data) => [
         ...data,
@@ -1056,17 +1075,45 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      setSelectedOptionWheat3("default");
+      // setSelectedOptionWheat3("default");
       setSubOptionsWheat3([]);
       document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
       document.getElementById("console_").innerHTML +=
         "New origin railhead has been added for wheat" + "<br/><br/>";
     }
+    setSubOptionWheat3("");
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedOptionWheat3) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptionsWheat3(dropdownOptions);
   };
 
-  const addConstraint4 = () => {
+  const addConstraint4 = async (e) => {
     // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+    e.preventDefault();
     if (selectedOption4 && subOption4) {
       setRiceDestination((data) => [
         ...data,
@@ -1076,20 +1123,51 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      setnumber_check2((prevNumber) => prevNumber + 1);
-      setSelectedOption4("default");
+      setnumber_check2(number_check2 + 1);
       setSubOptions4([]);
       document.getElementById("console_").style.display = "block";
       // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      setTimeout(() => {
-        document.getElementById("console_").innerHTML +=
-          "New origin railhead has been added for rice" + "<br/><br/>" +
-          "Supply Value is of Rice is " + (number_check2.length + 1) + " Unit" + "<br/><br/>";
-      }, 0);
+      // setTimeout(() => {
+      //   document.getElementById("console_").innerHTML +=
+      //     "New origin railhead has been added for rice" +
+      //     "<br/><br/>" +
+      //     "Supply Value is of Rice is " +
+      //     (number_check2.length + 1) +
+      //     " Unit" +
+      //     "<br/><br/>";
+      // }, 0);
     }
+    setSubOption4("");
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedOption4) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptions4(dropdownOptions);
   };
-  const addConstraintWheat4 = () => {
-    console.log(selectedOption, subOption1, selectedOption2, subOption2);
+
+  const addConstraintWheat4 = (e) => {
+    e.preventDefault();
     if (selectedOptionWheat4 && subOptionWheat4) {
       setWheatDestination((data) => [
         ...data,
@@ -1150,57 +1228,54 @@ function Daily_Planner() {
   };
 
   const exportToExcel1 = () => {
-    
     if (Total_result == null) {
-        // Commented out the alert statement
-        window.alert("Fetching Result, Please Wait");
-        fetchReservationId_Total_result();
-    
+      // Commented out the alert statement
+      window.alert("Fetching Result, Please Wait");
+      fetchReservationId_Total_result();
     } else {
-        const workbook = XLSX.utils.book_new();
-        Object.entries(Total_result).forEach(([column, data]) => {
-            const parsedData = JSON.parse(data);
-            const worksheet = XLSX.utils.json_to_sheet(parsedData);
-            XLSX.utils.book_append_sheet(workbook, worksheet, column);
-        });
-        const excelBuffer = XLSX.write(workbook, {
-            type: "array",
-            bookType: "xlsx",
-        });
-        const excelBlob = new Blob([excelBuffer], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-        saveAs(excelBlob, "Daily_Movement_Scenerio1.xlsx");
-        // Commented out the alert statement
-        // window.alert("Result Downloaded");
+      const workbook = XLSX.utils.book_new();
+      Object.entries(Total_result).forEach(([column, data]) => {
+        const parsedData = JSON.parse(data);
+        const worksheet = XLSX.utils.json_to_sheet(parsedData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, column);
+      });
+      const excelBuffer = XLSX.write(workbook, {
+        type: "array",
+        bookType: "xlsx",
+      });
+      const excelBlob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(excelBlob, "Daily_Movement_Scenerio1.xlsx");
+      // Commented out the alert statement
+      // window.alert("Result Downloaded");
     }
-};
+  };
 
-const exportToExcel2 = () => {
-    
+  const exportToExcel2 = () => {
     if (Relevant_result == null) {
-        // Commented out the alert statement
-        window.alert("Fetching Result, Please Wait");
-        fetchReservationId_Revelant_result();
+      // Commented out the alert statement
+      window.alert("Fetching Result, Please Wait");
+      fetchReservationId_Revelant_result();
     } else {
-        const workbook = XLSX.utils.book_new();
-        Object.entries(Relevant_result).forEach(([column, data]) => {
-            const parsedData = JSON.parse(data);
-            const worksheet = XLSX.utils.json_to_sheet(parsedData);
-            XLSX.utils.book_append_sheet(workbook, worksheet, column);
-        });
-        const excelBuffer = XLSX.write(workbook, {
-            type: "array",
-            bookType: "xlsx",
-        });
-        const excelBlob = new Blob([excelBuffer], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-        saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
-        // Commented out the alert statement
-        // window.alert("Result Downloaded");
+      const workbook = XLSX.utils.book_new();
+      Object.entries(Relevant_result).forEach(([column, data]) => {
+        const parsedData = JSON.parse(data);
+        const worksheet = XLSX.utils.json_to_sheet(parsedData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, column);
+      });
+      const excelBuffer = XLSX.write(workbook, {
+        type: "array",
+        bookType: "xlsx",
+      });
+      const excelBlob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
+      // Commented out the alert statement
+      // window.alert("Result Downloaded");
     }
-};
+  };
 
   const buttonStyle = {
     border: updateExcel ? "4px solid rgba(235, 171, 68)" : "2px solid black",
@@ -1220,7 +1295,6 @@ const exportToExcel2 = () => {
         style={{
           display: "flex",
           backgroundImage: "url('static/img/bg8.jpg')",
-          
         }}
       >
         <div>
@@ -1261,10 +1335,10 @@ const exportToExcel2 = () => {
               <div className="col-md-12">
                 <br />
                 <div className="row" style={{ marginLeft: "15px" }}>
-                  <div style={{ fontSize: "20px", fontWeight: "700" }}>
+                  {/* <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
                     Template
-                  </div>
+                  </div> */}
                   {/* <form
                   action=""
                   encType="multipart/form-data"
@@ -1341,17 +1415,17 @@ const exportToExcel2 = () => {
                   </div> */}
                   {/* )} */}
                   {/* {updateExcel && ( */}
-                  <div style={{ marginLeft: "150px", marginTop: "-20px" }}>
+                  {/* <div style={{ marginLeft: "150px", marginTop: "-20px" }}>
                     <button
                       style={buttonStyle2}
                       onClick={() => update_excel2()}
                     >
                       Template for Scenario 2
                     </button>
-                  </div>
+                  </div> */}
                   {/* )} */}
                 </div>
-                {(updateExcel || updateExcel2) && (
+                {/* {(updateExcel || updateExcel2) && (
                   <div style={{ marginLeft: "480px" }}>
                     <br />
                     <button
@@ -1361,7 +1435,7 @@ const exportToExcel2 = () => {
                       Save changes
                     </button>
                   </div>
-                )}
+                )} */}
                 {activeSheetName &&
                   (updateExcel || updateExcel2) &&
                   excelData[activeSheetName] && (
@@ -1480,7 +1554,7 @@ const exportToExcel2 = () => {
                       >
                         <option value="">Select Scenario</option>
                         <option value="Scenerio 1">Scenario 1</option>
-                        <option value="Scenerio 2">Scenario 2</option>
+                        {/* <option value="Scenerio 2">Scenario 2</option> */}
                       </select>
                     </label>
                     <br />
@@ -1498,14 +1572,23 @@ const exportToExcel2 = () => {
                         </strong>
                       </p>
                       <br />
-                      <div style={{ display: "flex", marginLeft: "20px" }}>
-                        {/* <label htmlFor="origin_state"> */}
+                      <div
+                        style={{
+                          display: "flex",
+                          marginLeft: "20px",
+                          alignItems: "center",
+                        }}
+                      >
                         <div>
                           <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Origin State:
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                              marginRight: 25,
+                            }}
                             onChange={handleDropdownChange3}
                             value={selectedOption3}
                           >
@@ -1543,7 +1626,11 @@ const exportToExcel2 = () => {
                             Select Origin Railhead
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                              marginRight: 208,
+                            }}
                             onChange={handleSubDropdownChange3}
                             value={subOption3}
                           >
@@ -1554,22 +1641,20 @@ const exportToExcel2 = () => {
                             ))}
                           </select>
                         </div>
-                        <div
-                          style={{
-                            padding: "2px",
-                            margin: "2px",
-                            marginLeft: "500px",
-                            width: "70px",
-                            background: "orange",
-                            cursor: "pointer",
-                            height: "40px",
-                            marginTop: "-5px",
-                          }}
-                          onClick={addConstraint3}
-                        >
-                          <p style={{ textAlign: "center", marginTop: "10px" }}>
+                        <div onClick={addConstraint3}>
+                          <button
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: "orange",
+                              width: 70,
+                              height: 40,
+                            }}
+                            disabled={
+                              subOption3 === "" && selectedOption3 === ""
+                            }
+                          >
                             Add
-                          </p>
+                          </button>
                         </div>
                       </div>
 
@@ -1580,13 +1665,13 @@ const exportToExcel2 = () => {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "350px" }}>
                                   Origin State
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "350px" }}>
                                   Origin Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "15%" }}>
+                                <th style={{ padding: "10px", width: "350px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -1621,14 +1706,24 @@ const exportToExcel2 = () => {
 
                       <br />
 
-                      <div style={{ display: "flex", marginLeft: "20px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          marginLeft: "20px",
+                          alignItems: "center",
+                        }}
+                      >
                         {/* <label htmlFor="origin_state"> */}
                         <div>
                           <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Destination State:
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                              marginRight: 25,
+                            }}
                             id="destination"
                             onChange={handleDropdownChange4}
                             value={selectedOption4}
@@ -1669,7 +1764,11 @@ const exportToExcel2 = () => {
                             Select Destination Railhead
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                              marginRight: 128,
+                            }}
                             onChange={handleSubDropdownChange4}
                             value={subOption4}
                           >
@@ -1680,22 +1779,21 @@ const exportToExcel2 = () => {
                             ))}
                           </select>
                         </div>
-                        <div
-                          style={{
-                            padding: "2px",
-                            margin: "2px",
-                            marginLeft: "440px",
-                            width: "70px",
-                            background: "orange",
-                            cursor: "pointer",
-                            height: "40px",
-                            marginTop: "-5px",
-                          }}
-                          onClick={addConstraint4}
-                        >
-                          <p style={{ textAlign: "center", marginTop: "10px" }}>
+                        <div onClick={addConstraint4}>
+                          <button
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: "orange",
+                              width: 70,
+                              height: 40,
+                              alignItems: "center",
+                            }}
+                            disabled={
+                              subOption4 === "" && selectedOption4 === ""
+                            }
+                          >
                             Add
-                          </p>
+                          </button>
                         </div>
                       </div>
                       <br />
@@ -1705,13 +1803,19 @@ const exportToExcel2 = () => {
                             <table>
                               <thead>
                                 <tr style={{ margin: "auto" }}>
-                                  <th style={{ padding: "10px", width: "15%" }}>
+                                  <th
+                                    style={{ padding: "10px", width: "350px" }}
+                                  >
                                     Destination State
                                   </th>
-                                  <th style={{ padding: "10px", width: "15%" }}>
+                                  <th
+                                    style={{ padding: "10px", width: "350px" }}
+                                  >
                                     Destination Railhead
                                   </th>
-                                  <th style={{ padding: "10px", width: "15%" }}>
+                                  <th
+                                    style={{ padding: "10px", width: "350px" }}
+                                  >
                                     Delete
                                   </th>
                                 </tr>
@@ -1747,24 +1851,23 @@ const exportToExcel2 = () => {
                       <br />
                       <br />
                       <div>
-                      <div style={{ marginLeft: "15px" }}>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Enter Inline Value
-                        </strong>
-                        <input
-                          type="number"
-                          value={inline_value_rice}
-                          onChange={(e) => setInlineValueRice(e.target.value)}
-                          style={{
-                            marginLeft: "40px",
-                            width: "200px",
-                            padding: "5px",
-                          }}
-                        />
-                      </div>
-                      <br />
+                        <div style={{ marginLeft: "15px" }}>
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Enter Inline Value
+                          </strong>
+                          <input
+                            type="number"
+                            value={inline_value_rice}
+                            onChange={(e) => setInlineValueRice(e.target.value)}
+                            style={{
+                              marginLeft: "40px",
+                              width: "200px",
+                              padding: "5px",
+                            }}
+                          />
+                        </div>
+                        <br />
                         <div style={{ display: "flex", marginLeft: "20px" }}>
-                          
                           {/* <label htmlFor="origin_state"> */}
                           <div>
                             <strong
@@ -1827,7 +1930,7 @@ const exportToExcel2 = () => {
                             </select>
                           </div>
                           {/* </label> */}
-                          
+
                           <div>
                             {/* <label htmlFor="deficit_state"> */}
                             <strong
@@ -1914,7 +2017,7 @@ const exportToExcel2 = () => {
                         </div>
                       </div>
                       <br />
-                     
+
                       {block_data2.length != 0 && (
                         <div>
                           {/* <div
@@ -2006,14 +2109,23 @@ const exportToExcel2 = () => {
                         </strong>
                       </p>
                       <br />
-                      <div style={{ display: "flex", marginLeft: "20px" }}>
-                        {/* <label htmlFor="origin_state"> */}
+                      <div
+                        style={{
+                          display: "flex",
+                          marginLeft: "20px",
+                          alignItems: "center",
+                        }}
+                      >
                         <div>
                           <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Origin State:
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                              marginRight: 25,
+                            }}
                             onChange={handleDropdownChangeWheat3}
                             value={selectedOptionWheat3}
                           >
@@ -2051,7 +2163,10 @@ const exportToExcel2 = () => {
                             Select Origin Railhead
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                            }}
                             onChange={handleSubDropdownChangeWheat3}
                             value={subOptionWheat3}
                           >
@@ -2062,22 +2177,22 @@ const exportToExcel2 = () => {
                             ))}
                           </select>
                         </div>
-                        <div
-                          style={{
-                            padding: "2px",
-                            margin: "2px",
-                            marginLeft: "500px",
-                            width: "70px",
-                            background: "orange",
-                            cursor: "pointer",
-                            height: "40px",
-                            marginTop: "-5px",
-                          }}
-                          onClick={addConstraintWheat3}
-                        >
-                          <p style={{ textAlign: "center", marginTop: "10px" }}>
+                        <div onClick={addConstraintWheat3}>
+                          <button
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: "orange",
+                              width: 70,
+                              height: 40,
+                              marginLeft: 153
+                            }}
+                            disabled={
+                              subOptionWheat3 === "" &&
+                              selectedOptionWheat3 === ""
+                            }
+                          >
                             Add
-                          </p>
+                          </button>
                         </div>
                       </div>
 
@@ -2129,7 +2244,7 @@ const exportToExcel2 = () => {
 
                       <br />
 
-                      <div style={{ display: "flex", marginLeft: "20px" }}>
+                      <div style={{ display: "flex", marginLeft: "20px" , alignItems: "center"}}>
                         {/* <label htmlFor="origin_state"> */}
                         <div>
                           <strong style={{ fontSize: "16px", padding: "5px" }}>
@@ -2188,22 +2303,22 @@ const exportToExcel2 = () => {
                             ))}
                           </select>
                         </div>
-                        <div
-                          style={{
-                            padding: "2px",
-                            margin: "2px",
-                            marginLeft: "440px",
-                            width: "70px",
-                            background: "orange",
-                            cursor: "pointer",
-                            height: "40px",
-                            marginTop: "-5px",
-                          }}
-                          onClick={addConstraintWheat4}
-                        >
-                          <p style={{ textAlign: "center", marginTop: "10px" }}>
+                        <div onClick={addConstraintWheat4}>
+                          <button
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: "orange",
+                              width: 70,
+                              height: 40,
+                              marginLeft: 100
+                            }}
+                            disabled={
+                              subOptionWheat3 === "" &&
+                              selectedOptionWheat3 === ""
+                            }
+                          >
                             Add
-                          </p>
+                          </button>
                         </div>
                       </div>
                       <br />
@@ -2255,22 +2370,24 @@ const exportToExcel2 = () => {
                       <br />
                       <br />
                       <div>
-                      <div style={{ marginLeft: "15px" }}>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Enter Inline Value
-                        </strong>
-                        <input
-                          type="number"
-                          value={inline_value_wheat}
-                          onChange={(e) => setInlineValueWheat(e.target.value)}
-                          style={{
-                            marginLeft: "40px",
-                            width: "200px",
-                            padding: "5px",
-                          }}
-                        />
-                      </div>
-                      <br />
+                        <div style={{ marginLeft: "15px" }}>
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Enter Inline Value
+                          </strong>
+                          <input
+                            type="number"
+                            value={inline_value_wheat}
+                            onChange={(e) =>
+                              setInlineValueWheat(e.target.value)
+                            }
+                            style={{
+                              marginLeft: "40px",
+                              width: "200px",
+                              padding: "5px",
+                            }}
+                          />
+                        </div>
+                        <br />
                         <div style={{ display: "flex", marginLeft: "20px" }}>
                           {/* <label htmlFor="origin_state"> */}
                           <div>
@@ -2419,7 +2536,7 @@ const exportToExcel2 = () => {
                         </div>
                       </div>
                       <br />
-                   
+
                       {block_dataWheat2.length != 0 && (
                         <div>
                           {/* <div
@@ -2608,24 +2725,22 @@ const exportToExcel2 = () => {
                       </div>
                       {/* </label> */}
                       <div
-                            style={{
-                              padding: "2px",
-                              margin: "2px",
-                              float: "right",
-                              width: "70px",
-                              background: "orange",
-                              cursor: "pointer",
-                              height: "40px",
-                              marginTop: "20px",
-                            }}
-                            onClick={addConstraint}
-                          >
-                            <p
-                              style={{ textAlign: "center", marginTop: "8px" }}
-                            >
-                              Add
-                            </p>
-                          </div>
+                        style={{
+                          padding: "2px",
+                          margin: "2px",
+                          float: "right",
+                          width: "70px",
+                          background: "orange",
+                          cursor: "pointer",
+                          height: "40px",
+                          marginTop: "20px",
+                        }}
+                        onClick={addConstraint}
+                      >
+                        <p style={{ textAlign: "center", marginTop: "8px" }}>
+                          Add
+                        </p>
+                      </div>
                     </div>
                     <br />
                     {!solutionSolved && block_data.length != 0 && (
@@ -2821,24 +2936,22 @@ const exportToExcel2 = () => {
                       </div>
                       {/* </label> */}
                       <div
-                            style={{
-                              padding: "2px",
-                              margin: "2px",
-                              float: "right",
-                              width: "70px",
-                              background: "orange",
-                              cursor: "pointer",
-                              height: "40px",
-                              marginTop: "20px",
-                            }}
-                            onClick={addConstraint_fixed}
-                          >
-                            <p
-                              style={{ textAlign: "center", marginTop: "8px" }}
-                            >
-                              Add
-                            </p>
-                          </div>
+                        style={{
+                          padding: "2px",
+                          margin: "2px",
+                          float: "right",
+                          width: "70px",
+                          background: "orange",
+                          cursor: "pointer",
+                          height: "40px",
+                          marginTop: "20px",
+                        }}
+                        onClick={addConstraint_fixed}
+                      >
+                        <p style={{ textAlign: "center", marginTop: "8px" }}>
+                          Add
+                        </p>
+                      </div>
                     </div>
                     <div
                       style={{
@@ -2847,7 +2960,9 @@ const exportToExcel2 = () => {
                         marginTop: "10px",
                       }}
                     >
-                      <strong style={{ fontSize: "16px", padding: "5px" }}>Select Commodity</strong>
+                      <strong style={{ fontSize: "16px", padding: "5px" }}>
+                        Select Commodity
+                      </strong>
                       <select
                         value={commodity_fixed}
                         onChange={(e) => setCommodity_fixed(e.target.value)}
@@ -2982,6 +3097,7 @@ const exportToExcel2 = () => {
                           className="checkBox"
                           id="toggle"
                           onClick={handleSolve}
+                          disabled={number_check1 >= number_check2}
                         />
                         <span></span>
                       </label>
@@ -3039,9 +3155,9 @@ const exportToExcel2 = () => {
             <br />
           </div>
         </div>
-        <div style={{ backgroundColor: "#ebab44b0", width: "20%"  }}>
-          <br/>
-          <div>
+        <div style={{ backgroundColor: "#ebab44b0", width: "20%" }}>
+          {/* <br /> */}
+          {/* <div>
             <div class="progress yellow">
               <span class="progress-left">
                 <span class="progress-bar"></span>
@@ -3050,25 +3166,39 @@ const exportToExcel2 = () => {
                 <span class="progress-bar"></span>
               </span>
               <div class="progress-value">Steps</div>
-            </div> 
-          </div>
+            </div>
+          </div> */}
           <span style={{ color: "black", fontSize: "32px", marginLeft: "5%" }}>
             Progress Bar
           </span>
           <div
             style={{
-              margin: "10px",
               marginLeft: "5%",
               width: "90%",
+              display: "flex",
+              flexDirection: "column",
               border: "2px dashed black",
-              paddingTop:"10px",
-              paddingLeft:"10px",
-              paddingRight:"10px",
-              display:'none',
-              paddingBottom:'-10px'
+              marginTop: 12,
             }}
             id="console_"
-          ></div>
+          >
+            {number_check1 > 0 ? (
+              <div style={{ margin: 10, padding: 6 }}>
+                {`Supply Value is of Rice is ${number_check1}`}
+              </div>
+            ) : null}
+            {number_check2 > 0 ? (
+              <div
+                style={{
+                  margin: 10,
+                  padding: 6,
+                  color: number_check1 >= number_check2 ? "" : "red",
+                }}
+              >
+                {`Destination Value is of Rice is ${number_check2}`}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

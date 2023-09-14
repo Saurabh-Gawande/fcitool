@@ -43,7 +43,7 @@ function Login() {
       const data = await response.json();
 
       if (data.status === 1) {
-        window.location.assign("/home");
+        window.location.assign("/Daily_Planner");
         window.alert("Login Successful! Click Ok to Continue");
       } else if(data.status === 0){
         window.alert("Incorrect Credentials");
@@ -84,7 +84,7 @@ function Login() {
                     name="username"
                     className="form-control"
                     placeholder="Username"
-                    style={{ backgroundColor: "white" }}
+                    style={{ backgroundColor: "white", color: "black" }}
                   />
                 </div>
               </div>
