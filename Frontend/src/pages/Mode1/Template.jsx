@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import background1 from "./../../assets/update1.png";
 
 function Template() {
-  const ProjectIp = "http://localhost:5000";
+  const ProjectIp = "http://207.180.218.55:5000";
   const [Monthly_Template_M1, set_Monthly_Template_M1] = useState(null);
   const [Daily_Template_S1, set_Daily_Template_S1] = useState(null);
   const [Daily_Template_S2, set_Daily_Template_S2] = useState(null);

@@ -8,7 +8,7 @@ function Login() {
     "static/img/slider6.jpg",
     // Add more image paths here as needed
   ];
-  const ProjectIp = "http://localhost:5000";
+  const ProjectIp = "http://207.180.218.55:5000"
   const totalImages = images.length;
   const autoSlideInterval = 3000; // Interval in milliseconds (5 seconds in this example)
 
@@ -31,7 +31,7 @@ function Login() {
       form.append("username", username);
       form.append("password", password);
 
-      const response = await fetch(ProjectIp + "/login", {
+      const response = await fetch(ProjectIp+"/login", {
         method: "POST",
         credentials: "include",
         body: form,
@@ -45,8 +45,11 @@ function Login() {
       if (data.status === 1) {
         window.location.assign("/Daily_Planner");
         window.alert("Login Successful! Click Ok to Continue");
-      } else {
+      } else if(data.status === 0){
         window.alert("Incorrect Credentials");
+        window.location.reload();
+      } else {
+        window.alert(data.status);
         window.location.reload();
       }
     } catch (error) {

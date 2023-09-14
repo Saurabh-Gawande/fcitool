@@ -68,7 +68,7 @@ function Monthly_Solution_M02(props) {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/Monthly_Solution_M02",
+        "http://207.180.218.55:5000/Monthly_Solution_M02",
         {
           method: "POST",
           headers: {
@@ -95,7 +95,7 @@ function Monthly_Solution_M02(props) {
 
   const fetchReservationId_cost = () => {
     var form = new FormData();
-    const projectIp = "http://localhost:5000/";
+    const projectIp = "http://207.180.218.55:5000/";
     fetch(projectIp + "/readPickle", {
       method: "POST",
       credentials: "include",
@@ -114,7 +114,7 @@ function Monthly_Solution_M02(props) {
   };
   const fetchReservationId_Total_result = () => {
     var form = new FormData();
-    const projectIp = "http://localhost:5000/";
+    const projectIp = "http://207.180.218.55:5000/";
     fetch(projectIp + "/read_Result_M02", {
       method: "POST",
       credentials: "include",
@@ -131,7 +131,7 @@ function Monthly_Solution_M02(props) {
   };
   // const fetchReservationId_Revelant_result = () => {
   //   var form = new FormData();
-  //   const projectIp = "http://localhost:5000/";
+  //   const projectIp = "http://207.180.218.55:5000/";
   //   fetch(projectIp + "/read_Relevant_Result", {
   //     method: "POST",
   //     credentials: "include",

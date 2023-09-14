@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import background1 from "./../../assets/upload1_.png";
 
 function Daily_Planner() {
-  const ProjectIp = "http://localhost:5000";
+  const ProjectIp = "http://207.180.218.55:5000";
   const [fileSelected, setFileSelected] = useState(false);
   const [inline_value_rice, setInlineValueRice] = useState("");
   const [inline_value_wheat, setInlineValueWheat] = useState("");
