@@ -3,9 +3,10 @@ import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import background1 from "./../../assets/upload1_.png";
+import config from "../../config";
 
 function Daily_Planner() {
-  const ProjectIp = "http://207.180.218.55:5000";
+  const ProjectIp = config.serverUrl;
   const [fileSelected, setFileSelected] = useState(false);
   const [inline_value_rice, setInlineValueRice] = useState("");
   const [inline_value_wheat, setInlineValueWheat] = useState("");

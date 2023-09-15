@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidenav from "./sidenav_M02";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import config from "../../config";
 
 function Daily_Scheduler_M02(props) {
   useEffect(() => {
@@ -50,7 +51,7 @@ function Daily_Scheduler_M02(props) {
   const [Daily_Scheduler_result, set_Daily_Scheduler_Result] = useState(null);
   const fetchReservationId_Daily_Scheduler_result = () => {
     var form = new FormData();
-    const projectIp = "http://207.180.218.55:5000/";
+    const projectIp = config.serverUrl;
     fetch(projectIp + "/read_Daily_Scheduler", {
       method: "POST",
       credentials: "include",

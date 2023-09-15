@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Login.css";
+import config from "../config";
 
 function Login() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -8,7 +9,7 @@ function Login() {
     "static/img/slider6.jpg",
     // Add more image paths here as needed
   ];
-  const ProjectIp = "http://207.180.218.55:5000"
+  const ProjectIp = config.serverUrl;
   const totalImages = images.length;
   const autoSlideInterval = 3000; // Interval in milliseconds (5 seconds in this example)
 

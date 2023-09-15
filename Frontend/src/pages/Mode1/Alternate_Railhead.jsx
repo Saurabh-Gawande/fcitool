@@ -2,9 +2,10 @@ import React, { useRef, useState } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import config from "../../config";
 
 function Alternate_Railhead() {
-  const ProjectIp = "http://207.180.218.55:5000";
+  const ProjectIp = config.serverUrl;;
   const [rhSource, setRhSource] = useState("");
   const [rhDest, setRhDest] = useState("");
   const [zone, setZone] = useState("");

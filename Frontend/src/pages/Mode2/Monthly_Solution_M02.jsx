@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import Sidenav from "./sidenav_M02";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import config from "../../config";
 
 // Updated_railhead_list
 function Monthly_Solution_M02(props) {
@@ -68,7 +69,7 @@ function Monthly_Solution_M02(props) {
 
     try {
       const response = await fetch(
-        "http://207.180.218.55:5000/Monthly_Solution_M02",
+        config.serverUrl + "/Monthly_Solution_M02",
         {
           method: "POST",
           headers: {
