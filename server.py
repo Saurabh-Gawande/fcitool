@@ -1730,15 +1730,13 @@ def Daily_Planner():
                 df_rice["Commodity"]=commodity
                 df_rice["Values"] = values
 
-
-
-
                 for i in dest_rice_inline.keys():
                     for j in range(len(df_rice["To"])):
                         if(i==df_rice.iloc[j]["To"] or dest_rice_inline[i]==df_rice.iloc[j]["To"]):
                             df_rice.loc[j,'To']=(i+'+'+dest_rice_inline[i])
 
-
+                data1["rice"] = df_rice
+                data1["wheat"] = df_wheat
 
                 with pd.ExcelWriter(f"Output//List_DPT{session_id}.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df_wheat.to_excel(writer, sheet_name="wheat")
@@ -1967,15 +1965,19 @@ def Daily_Planner():
                         if(i==df_rice.iloc[j]["To"] or dest_rice_inline[i]==df_rice.iloc[j]["To"]):
                             df_rice.loc[j,'To']=(i+'+'+dest_rice_inline[i])
 
+                data1["rice"] = df_rice
+                data1["wheat"] = df_wheat
+
                 with pd.ExcelWriter(f"Output//List_DPT{session_id}.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df_wheat.to_excel(writer, sheet_name="wheat")
                     df_rice.to_excel(writer, sheet_name="rice")
 
             data1["status"] = 1
-                
+            
         except Exception as e:
             print(e)
             data1["status"] = 0
+
         json_data = json.dumps(data1)
         json_object = json.loads(json_data)
 
