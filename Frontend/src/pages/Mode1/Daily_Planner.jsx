@@ -1260,9 +1260,15 @@ function Daily_Planner() {
 
   const viewGrid = () => {
     const riceData = JSON.parse(Total_result?.rice)
+    console.log("ricedata",riceData);
     const wheatData = JSON.parse(Total_result?.wheat)
+    console.log("wheatData",wheatData 
+    );
     {
-      riceData !== null ? (
+      // riceData && Object.keys(riceData).length > 0 ? (
+      // riceData && riceData.length >= 0 ? (
+        // riceData !== null ? (
+          riceData ? (
         <div>
           <table>
             <thead>
@@ -1292,12 +1298,17 @@ function Daily_Planner() {
             </thead>
             <tbody>
               {riceData.map((item) => (
-                <tr key={item.Unnamed}>
-                  <td>{item.Unnamed}</td>
+                   <tr key={item["Unnamed: 0"]}>
+                {/* //  <tr key={item,index}> */}
+                
+                   <td>{item["Unnamed: 0"]}</td>
+                  {/* <td>{item.Unnamed}</td> */}
                   <td>{item.From}</td>
-                  <td>{item.FromState}</td>
+                  {/* <td>{item.FromState}</td> */}
+                  <td>{item["From State"]}</td>
                   <td>{item.To}</td>
-                  <td>{item.ToState}</td>
+                  <td>{item["To State"]}</td>
+                  {/* <td>{item.ToState}</td> */}
                   <td>{item.Commodity}</td>
                   <td>{item.Values}</td>
                 </tr>
