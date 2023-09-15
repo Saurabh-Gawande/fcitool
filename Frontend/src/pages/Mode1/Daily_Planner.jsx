@@ -76,6 +76,7 @@ function Daily_Planner() {
   const [number_check2, setnumber_check2] = useState(0);
   const [supplyWeatCount, setSupplyWeatCount] = useState(0);
   const [destinationWheatCount, setDestinationWheatCount] = useState(0);
+  const [jsonData, setJsonData] = useState([]);
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
   console.log({ selectedOption4, subOption4 });
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
@@ -160,7 +161,7 @@ function Daily_Planner() {
 
     try {
       var scenario;
-      if (updateExcel == true) {
+      if (updateExcel === true) {
         scenario = "/Modify_Daily_Template_S01";
       } else {
         scenario = "/Modify_Daily_Template_S02";
@@ -265,7 +266,7 @@ function Daily_Planner() {
     document.getElementById("console_").style.display = "block";
     document.getElementById("console_").innerHTML +=
       "Processing..." + "<br/><br/>";
-    if (Scenerio == "Scenerio 2") {
+    if (Scenerio === "Scenerio 2") {
       setscn(true);
       setuploadst(true);
     }
@@ -296,7 +297,10 @@ function Daily_Planner() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
+       
       });
+      console.log("payload",payload);
+      
       fetchReservationId_Total_result();
       fetchReservationId_Revelant_result();
       if (response.ok) {
@@ -305,6 +309,7 @@ function Daily_Planner() {
         console.error("Failed to send inputs. Status code:", response.status);
       }
     } catch (error) {
+
       console.error("Error sending inputs:", error);
     } finally {
       setIsLoading(false); // Reset loading state
@@ -328,6 +333,11 @@ function Daily_Planner() {
       .then((data) => {
         const fetched_Total_Result = data;
         set_Total_Result(fetched_Total_Result);
+        console.log("total result in fetchReservationId_Total_result",Total_result);
+        const parsedData = JSON.parse(Total_result);
+      setJsonData(parsedData);
+      console.log("json data",jsonData);
+
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -344,6 +354,11 @@ function Daily_Planner() {
       .then((data) => {
         const fetched_Relevant_Result = data;
         set_Relevant_Result(fetched_Relevant_Result);
+        console.log("total result in fetchReservationId_Revelant_result",Relevant_result);
+        // const parsedData = JSON.parse(Relevant_result);
+        // setJsonData(parsedData);
+        // console.log("json data",jsonData);
+
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -437,7 +452,7 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -569,7 +584,7 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1261,6 +1276,7 @@ function Daily_Planner() {
       // Commented out the alert statement
       window.alert("Fetching Result, Please Wait");
       fetchReservationId_Total_result();
+      console.log("total result", Total_result);
     } else {
       const workbook = XLSX.utils.book_new();
       Object.entries(Total_result).forEach(([column, data]) => {
@@ -3158,6 +3174,59 @@ function Daily_Planner() {
                     <DynamicTable/>
                   </div> */}
                   <br />
+
+                  {solutionSolved &&(
+                    <div>
+                    {jsonData?(
+                    <div>
+                      <table>
+                        <thead>
+                          <tr style={{ margin: "auto" }}>
+                            <th style={{ padding: "10px", width: "350px" }}>
+                              id
+                            </th>
+                            <th style={{ padding: "10px", width: "350px" }}>
+                              from
+                            </th>
+                            <th style={{ padding: "10px", width: "350px" }}>
+                              fromstate
+                            </th>
+                            <th style={{ padding: "10px", width: "350px" }}>
+                              to
+                            </th>
+                            <th style={{ padding: "10px", width: "350px" }}>
+                              tostate
+                            </th>
+                            <th style={{ padding: "10px", width: "350px" }}>
+                              commodity
+                            </th>
+                            <th style={{ padding: "10px", width: "350px" }}>
+                              values
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {jsonData.map((item) => (
+                            <tr key={item.Unnamed}>
+                              <td>{item.Unnamed}</td>
+                              <td>{item.From}</td>
+                              <td>{item.FromState}</td>
+                              <td>{item.To}</td>
+                              <td>{item.ToState}</td>
+                              <td>{item.Commodity}</td>
+                              <td>{item.Values}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    ):
+                    (<p>No routes</p>)
+                    }
+                    </div>
+                  )}
+
+
                   {solutionSolved && (
                     <div>
                       {scn && (
@@ -3187,6 +3256,7 @@ function Daily_Planner() {
                     </div>
                   )}
                   <br />
+
                 </div>
               </div>
             </div>
