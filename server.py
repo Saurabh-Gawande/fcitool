@@ -72,7 +72,7 @@ def upload_Monthly_File_M01():
     data = {}
     try:
         file = request.files['uploadFile']
-        session_id = session.get('username')
+        session_id = session.get('sid')
         filename = f"Input//Monthly_Template_M1_{session_id}.xlsx"
         file.save(filename)
         data['status'] = 1
@@ -89,7 +89,7 @@ def upload_Monthly_File_M02():
     data = {}
     try:
         file = request.files['uploadFile_M02']
-        session_id = session.get('username')
+        session_id = session.get('sid')
         filename = f"Input//Input_Template_M02_{session_id}.xlsx"
         file.save(filename)
         data['status'] = 1
@@ -106,7 +106,7 @@ def uploadDailyFile_S2():
     data = {}
     try:
         file = request.files['uploadFile']
-        session_id = session.get('username')
+        session_id = session.get('sid')
         filename = f"Input//Temp_balanced_DPT_scen2{session_id}.xlsx"        
         file.save(filename)
         data['status'] = 1
@@ -123,7 +123,7 @@ def uploadDailyFile_S1():
     data = {}
     try:
         file = request.files['uploadFile']
-        session_id = session.get('username')
+        session_id = session.get('sid')
         filename = f"Input//Temp_balanced_DPT_scen1{session_id}.xlsx"
         file.save(filename)
         data['status'] = 1
@@ -140,7 +140,7 @@ def uploadDailyFile_S1():
 def read_Monthly_state_table():
     if request.method == "POST":        
         try: 
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Output\\Monthly_State_To_State_Table{session_id}.xlsx'
             filename2 = f'Output\\Monthly_State_To_State_Tablee{session_id}.xlsx'
             df1 = pd.read_excel(filename, sheet_name="Wheat")
@@ -161,7 +161,7 @@ def read_Monthly_state_table():
 def read_Relevant_Result():
     if request.method == "POST":        
         try: 
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Output\\Relevent_Results{session_id}.xlsx'
             filename2 = f'Output\\Relevent_Results{session_id}.xlsx'
             df1 = pd.read_excel(filename, sheet_name="wheat")
@@ -210,7 +210,7 @@ def read_Relevant_Result():
 def read_Daily_Planner_S2():
     if request.method == "POST":        
         try: 
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Output\\List_DPT2{session_id}.xlsx'
             filename2 = f'Output\\List_DPT2{session_id}.xlsx'            
             df1 = pd.read_excel(filename, sheet_name="rice") 
@@ -230,7 +230,7 @@ def read_Daily_Planner_S2():
 def read_Daily_Planner_S1():
     if request.method == "POST":        
         try: 
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Output\\List_DPT{session_id}.xlsx'
             df1 = pd.read_excel(filename, sheet_name="rice") 
             df2 = pd.read_excel(filename, sheet_name="wheat") 
@@ -249,7 +249,7 @@ def read_Daily_Planner_S1():
 def read_Monthly_Template_M1():
     if request.method == "POST":        
         try: 
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Input\\Monthly_Template_M1{session_id}.xlsx'            
             df1 = pd.read_excel(filename, sheet_name="Surplus_wheat") 
             df2 = pd.read_excel(filename, sheet_name="Deficit_wheat")
@@ -278,7 +278,7 @@ def read_Monthly_Template_M1():
 def read_Daily_Template_S1():
     if request.method == "POST":        
         try: 
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Input\\Daily_Template_Scene1{session_id}.xlsx' 
             df1 = pd.read_excel(filename, sheet_name="Surplus_wheat") 
             df2 = pd.read_excel(filename, sheet_name="Deficit_wheat")
@@ -307,7 +307,7 @@ def read_Daily_Template_S1():
 def read_Daily_Template_S2():
     if request.method == "POST":        
         try: 
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Input\\Daily_Template_Scene2{session_id}.xlsx' 
 
             df1 = pd.read_excel(filename, sheet_name="Surplus_wheat") 
@@ -337,7 +337,7 @@ def read_Daily_Template_S2():
 def Download_Template_to_add():
     if request.method == "POST":
         try:
-            session_id = session.get('username')
+            session_id = session.get('sid')
             filename = f'Input\\Non-TEFD{session_id}.xlsx' 
             filename2 = f'Frontend\\public\\data\\Updated_railhead_list{session_id}.xlsx' 
 
@@ -387,7 +387,7 @@ def Download_Template_to_add():
 @app.route("/Monthly_readPickle",methods = ["POST","GET"])
 def Monthly_readPickle():
     try:
-        session_id = session.get('username')
+        session_id = session.get('sid')
         filename = f'Output\\OutputPickle{session_id}.pkl' 
 
         dbfile = open(filename, 'rb')     
@@ -403,7 +403,7 @@ def Monthly_readPickle():
 def Update_matrices():
     data = {}
     try:
-        session_id = session.get('username')
+        session_id = session.get('sid')
         filename = f"Input//Update_matrices{session_id}.xlsx"
 
         file = request.files['uploadFile']
@@ -524,7 +524,7 @@ def Update_matrices():
 @app.route("/Alternate_Railhead_readPickle",methods = ["POST","GET"])
 def Alternate_Railhead_readPickle():
     try:
-        session_id = session.get('username')
+        session_id = session.get('sid')
         dbfile = open(f'Output\\Alternate_Railhead{session_id}.pkl', 'rb')     
         db = pickle.load(dbfile)
         dbfile.close()
@@ -540,7 +540,7 @@ def Alternate_Railhead_readPickle():
 @app.route("/Add_Railhead", methods=["POST", "GET"])
 def Add_Railhead():
     try:
-        session_id = session.get('username')
+        session_id = session.get('sid')
         Railhead_name = []
         Railhead_State = []
         fetched_data = request.get_json()  # Make sure to handle request properly in your Flask app
@@ -628,21 +628,21 @@ def Add_Railhead():
 
 @app.route('/getMonthlyExcelData')
 def get_monthly_excel_data():
-    session_id = session.get('username')
+    session_id = session.get('sid')
     Monthly_Template_M1 = f'Input\\Monthly_Template_M1{session_id}.xlsx'
     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
 
 @app.route('/getDaily1ExcelData')
 def get_daily_scen1_excel_data():
-    session_id = session.get('username')    
+    session_id = session.get('sid')    
     Monthly_Template_M1 = f'Input\\Temp_balanced_DPT_scen1{session_id}.xlsx'
     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
 
 @app.route('/getDaily2ExcelData')
 def get_daily_scen2_excel_data():
-    session_id = session.get('username')    
+    session_id = session.get('sid')    
     Monthly_Template_M1 = f'Input\\Temp_balanced_DPT_scen2{session_id}.xlsx'
     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
@@ -749,7 +749,7 @@ def Modify_Monthly_Template_M01():
 @app.route("/Modify_Daily_Template_S01", methods=["POST", "GET"])
 def Modify_Daily_Template_S01():
     try:
-        session_id = session.get('username')    
+        session_id = session.get('sid')    
 
         def try_float(value):
             try:
@@ -848,7 +848,7 @@ def Modify_Daily_Template_S01():
 @app.route("/Modify_Daily_Template_S02", methods=["POST", "GET"])
 def Modify_Daily_Template_S02():
     try:
-        session_id = session.get('username')    
+        session_id = session.get('sid')    
 
         def try_float(value):
             try:
@@ -952,7 +952,7 @@ def Modify_Daily_Template_S02():
 @app.route("/Remove_Railhead", methods=["POST", "GET"])
 def Remove_Railhead():
     try:
-        session_id = session.get('username')    
+        session_id = session.get('sid')    
 
         Railhead_name = []
         Railhead_State = []
@@ -1014,7 +1014,7 @@ def Remove_Railhead():
 
 @app.route("/Monthly_Solution",methods = ["POST","GET"])
 def Monthly_Solution():
-    session_id = session.get('username')    
+    session_id = session.get('sid')    
     data1 = {}
     if request.method == "POST":
         try:
@@ -1336,7 +1336,7 @@ def Monthly_Solution():
 
 @app.route("/Daily_Planner_Check", methods = ["POST","GET"]) 
 def Daily_Planner_Check():
-    session_id = session.get('username')    
+    session_id = session.get('sid')    
 
     data = {}
     if request.method == "POST":
@@ -1377,7 +1377,7 @@ def Daily_Planner_Check():
 
 @app.route("/Consistency_Check", methods=["POST", "GET"])
 def Consistency_Check():
-    session_id = session.get('username')    
+    session_id = session.get('sid')    
 
     data = {"Total Wheat supply Check": "", "Total Rice supply Check": "", "Red State": "", "status": "OK"}
     if request.method == "POST" or request.method == "GET" :
@@ -1452,7 +1452,7 @@ def Consistency_Check():
 
 @app.route("/Daily_Planner",methods = ["POST","GET"])
 def Daily_Planner():
-    session_id = session.get('username')    
+    session_id = session.get('sid')    
 
     data1 = {}
     if request.method == "POST":
@@ -1987,7 +1987,7 @@ def Daily_Planner():
 
 @app.route("/Alternate_Railhead_Solve",methods = ["POST","GET"])
 def Alternate_Railhead_Solve():
-    session_id = session.get('username')    
+    session_id = session.get('sid')    
 
     data = request.get_json()
     rh_source = data['rh_source']
