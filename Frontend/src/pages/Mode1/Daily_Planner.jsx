@@ -328,8 +328,9 @@ function Daily_Planner() {
     })
       .then((response) => response.json())
       .then((data) => {
-        const fetched_Total_Result = data;
-        set_Total_Result(fetched_Total_Result);
+        //  const fetched_Total_Result = data;
+        set_Total_Result(data);
+        console.log("total result in fetchReservationId_Total_result", Total_result);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -347,6 +348,7 @@ function Daily_Planner() {
       .then((data) => {
         const fetched_Relevant_Result = data;
         set_Relevant_Result(fetched_Relevant_Result);
+        console.log("total result in fetchReservationId_Revelant_result", Relevant_result);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -1221,6 +1223,116 @@ function Daily_Planner() {
     }
   };
   console.log({ Total_result });
+  const viewGrid = () => {
+    const riceData = JSON.parse(Total_result?.rice)
+    console.log("ricedata",riceData);
+    const wheatData = JSON.parse(Total_result?.wheat)
+    console.log("wheatData",wheatData 
+    );
+    {
+      // riceData && Object.keys(riceData).length > 0 ? (
+      // riceData && riceData.length >= 0 ? (
+        // riceData !== null ? (
+          riceData ? (
+        <div>
+          <table>
+            <thead>
+              <tr style={{ margin: "auto" }}>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  id
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  from
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  fromstate
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  to
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  tostate
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  commodity
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  values
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {riceData.map((item) => (
+                   <tr key={item["Unnamed: 0"]}>
+                {/* //  <tr key={item,index}> */}
+                
+                   <td>{item["Unnamed: 0"]}</td>
+                  {/* <td>{item.Unnamed}</td> */}
+                  <td>{item.From}</td>
+                  {/* <td>{item.FromState}</td> */}
+                  <td>{item["From State"]}</td>
+                  <td>{item.To}</td>
+                  <td>{item["To State"]}</td>
+                  {/* <td>{item.ToState}</td> */}
+                  <td>{item.Commodity}</td>
+                  <td>{item.Values}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) :
+      (<p>No Rice routes</p>)
+    }
+    {
+      wheatData !== null ? (
+        <div>
+          <table>
+            <thead>
+              <tr style={{ margin: "auto" }}>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  id
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  from
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  fromstate
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  to
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  tostate
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  commodity
+                </th>
+                <th style={{ padding: "10px", width: "350px" }}>
+                  values
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {wheatData.map((item) => (
+                <tr key={item.Unnamed}>
+                  <td>{item.Unnamed}</td>
+                  <td>{item.From}</td>
+                  <td>{item.FromState}</td>
+                  <td>{item.To}</td>
+                  <td>{item.ToState}</td>
+                  <td>{item.Commodity}</td>
+                  <td>{item.Values}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) :
+      (<p>No Wheat routes</p>)
+    }
+  };
+
   const exportToExcel1 = () => {
     if (Total_result == null) {
       // Commented out the alert statement
@@ -3112,6 +3224,10 @@ function Daily_Planner() {
                     </div>
                   </div>
                   <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
                   {/* <div>
               <br/>
                     <DynamicTable/>
@@ -3129,6 +3245,14 @@ function Daily_Planner() {
                             <i className="fa fa-bars"></i> Download
                             Railhead-Railhead Detailed Plan
                           </button>
+                          <button
+                            style={{ color: "white", marginLeft: "15px" }}
+                            className="btn btn-danger dropdown-toggle"
+                            onClick={() => viewGrid()}
+                          >
+                            View Railhead Detailed Plan
+
+                          </button>
                         </div>
                       )}
                       {!scn && (
@@ -3140,6 +3264,14 @@ function Daily_Planner() {
                           >
                             <i className="fa fa-bars"></i> Download
                             Railhead-Railhead Detailed Plan
+                          </button>
+                          <button
+                            style={{ color: "white", marginLeft: "15px" }}
+                            className="btn btn-danger dropdown-toggle"
+                            onClick={() => viewGrid()}
+                          >
+                            View Railhead Detailed Plan
+
                           </button>
                         </div>
                       )}
