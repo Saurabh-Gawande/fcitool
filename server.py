@@ -14,16 +14,35 @@ app.secret_key = 'aqswdefrgt'
 CORS(app, supports_credentials=True)
 
 
+active_sessions = {}
+
+
 @app.route('/login',methods = ["POST"])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+
+    users = {
+        "admin@iitd.com": "admin@321",
+        "srinivas@callippus.in": "password1",
+        "atul@iitd.com": "password2",
+        # Add more users as needed
+    }    
+
     data = {}
-    if(username=="admin@iitd.com" and password=="admin@321"):
-        data['status'] = 1
-        session['username'] = username
+    if 'username' in request.form and 'password' in request.form:
+        username = request.form['username']
+        password = request.form['password']
+    
+        if username in active_sessions and 1 == 0:
+            data['status'] = 'User already logged in'
+        else:
+            if username in users and password == users[username]:
+                active_sessions[username] = session.get('sid')
+                data['status'] = 1
+                session['username'] = username
+            else:
+                data['status'] = 0
     else:
-        data['status'] = 0
+        data['status'] = 'Invalid request'
 
     json_data = json.dumps(data)
     json_object = json.loads(json_data)
@@ -33,6 +52,7 @@ def login():
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     response.headers.add('Access-Control-Allow-Credentials', 'true') 
     return (json.dumps(json_object, indent = 1))
+
 
 @app.route("/upload_Monthly_File_M01",methods = ["POST"])
 def upload_Monthly_File_M01():
