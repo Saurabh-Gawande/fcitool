@@ -61,7 +61,7 @@ function Daily_Planner() {
   const [solutionSolved, setSolutionSolved] = useState(false);
   const [scn, setscn] = useState(false);
   const [uploadst, setuploadst] = useState(false);
-  const [Total_result, set_Total_Result] = useState(null);
+  const [Total_result, set_Total_Result] = useState();
   const [Relevant_result, set_Relevant_Result] = useState(null);
   const [excelData, setExcelData] = useState({});
   const [activeSheetName, setActiveSheetName] = useState(null);
@@ -77,15 +77,11 @@ function Daily_Planner() {
   const [supplyWeatCount, setSupplyWeatCount] = useState(0);
   const [destinationWheatCount, setDestinationWheatCount] = useState(0);
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
-  console.log({ selectedOption4, subOption4 });
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
     const updatedData = { ...excelData };
     updatedData[sheetName][rowIndex][columnIndex] = newValue;
     setExcelData(updatedData);
   };
-
-  console.log({ subOptionWheat3 });
-  console.log({ selectedOptionWheat3 });
 
   const handleFileChange = (event) => {
     setFileSelected(event.target.files.length > 0);
@@ -95,7 +91,6 @@ function Daily_Planner() {
     reader.onload = async (e) => {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: "array" });
-      console.log(workbook);
       const sheetsData = {};
       workbook.SheetNames.forEach((sheetName) => {
         const worksheet = workbook.Sheets[sheetName];
@@ -117,7 +112,6 @@ function Daily_Planner() {
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
     const workbook = XLSX.read(data, { type: "array" });
-    console.log(workbook);
     const sheetsData = {};
     workbook.SheetNames.forEach((sheetName) => {
       const worksheet = workbook.Sheets[sheetName];
@@ -137,7 +131,6 @@ function Daily_Planner() {
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
     const workbook = XLSX.read(data, { type: "array" });
-    console.log(workbook);
     const sheetsData = {};
     workbook.SheetNames.forEach((sheetName) => {
       const worksheet = workbook.Sheets[sheetName];
@@ -256,12 +249,20 @@ function Daily_Planner() {
       alert("An error occurred during file upload. Please try again later.");
     }
   };
-
+  console.log({ Total_result });
   const handleSolve = async () => {
-    if (isLoading) return; // Prevent additional clicks while loading
+    if (
+      number_check1 < number_check2 ||
+      supplyWeatCount < destinationWheatCount
+    ) {
+      alert("Destination indents more than Supply indents Please check");
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (isLoading) return;
     setIsLoading(true);
     document.getElementById("toggle").checked = true;
-
     document.getElementById("console_").style.display = "block";
     document.getElementById("console_").innerHTML +=
       "Processing..." + "<br/><br/>";
@@ -309,6 +310,7 @@ function Daily_Planner() {
     } finally {
       setIsLoading(false); // Reset loading state
     }
+
     document.getElementById("console_").innerHTML +=
       "Solution has been done" +
       "<br/> " +
@@ -333,6 +335,7 @@ function Daily_Planner() {
         console.error("Error:", error);
       });
   };
+
   const fetchReservationId_Revelant_result = () => {
     var form = new FormData();
     fetch(ProjectIp + "/read_Daily_Planner_S2", {
@@ -379,7 +382,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptions(dropdownOptions);
   };
 
@@ -412,7 +414,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions2(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptions2(dropdownOptions);
   };
 
@@ -445,7 +446,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions3(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptions3(dropdownOptions);
   };
 
@@ -478,7 +478,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptionsWheat3(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptionsWheat3(dropdownOptions);
   };
 
@@ -511,8 +510,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions5(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
-    setSubOptions5(dropdownOptions);
   };
 
   const handleDropdownChangeWheat5 = async (e) => {
@@ -544,7 +541,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptionsWheat5(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptionsWheat5(dropdownOptions);
   };
 
@@ -577,8 +573,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions6(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
-    setSubOptions6(dropdownOptions);
   };
 
   const handleDropdownChangeWheat6 = async (e) => {
@@ -609,8 +603,6 @@ function Daily_Planner() {
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat6(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptionsWheat6(dropdownOptions);
   };
 
@@ -673,8 +665,6 @@ function Daily_Planner() {
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat4(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptionsWheat4(dropdownOptions);
   };
 
@@ -750,8 +740,6 @@ function Daily_Planner() {
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions_fixed(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue_fixed);
-    setSubOptions_fixed(dropdownOptions);
   };
 
   const handleDropdownChange2_fixed = async (e) => {
@@ -782,8 +770,6 @@ function Daily_Planner() {
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions2_fixed(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
     setSubOptions2_fixed(dropdownOptions);
   };
 
@@ -868,7 +854,6 @@ function Daily_Planner() {
   };
 
   const addConstraint2 = async (e) => {
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     e.preventDefault();
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       setBlockdata2((data) => [
@@ -893,14 +878,12 @@ function Daily_Planner() {
       for (let i = 0; i < block_data2.length; i++) {
         data.push(block_data2[i]);
       }
-      console.log(data);
 
       setSelectedOption5("default");
       setSelectedOption6("default");
       setSubOptions5([]);
       setSubOptions6([]);
 
-      console.log(block_data2);
       if (isLoading2) return; // Prevent additional clicks while loading
       setIsLoading2(true);
       try {
@@ -910,13 +893,6 @@ function Daily_Planner() {
           wheat_inline: block_dataWheat2,
           wheat_inline_value: inline_value_wheat,
         };
-
-        console.log(
-          block_data2,
-          inline_value_rice,
-          inline_value_wheat,
-          block_dataWheat2
-        );
 
         const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
           method: "POST",
@@ -975,7 +951,6 @@ function Daily_Planner() {
       for (let i = 0; i < block_dataWheat2.length; i++) {
         data.push(block_dataWheat2[i]);
       }
-      console.log(data);
       setSelectedOptionWheat5("default");
       setSelectedOptionWheat6("default");
       setSubOptionWheat5([]);
@@ -990,13 +965,6 @@ function Daily_Planner() {
           wheat_inline_value: inline_value_wheat,
         };
 
-        console.log(
-          block_data2,
-          inline_value_rice,
-          inline_value_wheat,
-          block_dataWheat2
-        );
-
         const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
           method: "POST",
           headers: {
@@ -1006,7 +974,6 @@ function Daily_Planner() {
         });
 
         const responseData1 = await response2.json(); // Parse response JSON
-        console.log(responseData1); // Log the response data
 
         if (responseData1.status === "NO") {
           alert("Distance is not within range. Please check again.");
@@ -1113,7 +1080,6 @@ function Daily_Planner() {
   };
 
   const addConstraint4 = async (e) => {
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
     e.preventDefault();
     if (selectedOption4 && subOption4) {
       setRiceDestination((data) => [
@@ -1236,7 +1202,6 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      console.log(fixed_data);
       setSelectedOption_fixed("default");
       setSelectedOption2_fixed("default");
       setSubOptions_fixed([]);
@@ -1255,7 +1220,7 @@ function Daily_Planner() {
         "<br/><br/>";
     }
   };
-
+  console.log({ Total_result });
   const exportToExcel1 = () => {
     if (Total_result == null) {
       // Commented out the alert statement
@@ -1275,10 +1240,6 @@ function Daily_Planner() {
       const excelBlob = new Blob([excelBuffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-      const timestamp = new Date()
-        .toISOString()
-        .replace(/[-T:]/g, "")
-        .slice(0, 14);
 
       const currentDate = new Date();
       const year = currentDate.getFullYear();
@@ -3034,7 +2995,7 @@ function Daily_Planner() {
                             backgroundColor: "orange",
                             width: 70,
                             height: 40,
-                            marginLeft: 574
+                            marginLeft: 574,
                           }}
                         >
                           Add
@@ -3132,7 +3093,6 @@ function Daily_Planner() {
                       borderStyle: "solid",
                       borderColor: "#ebab44b0",
                     }}
-                    onClick={handleSolve}
                   >
                     <div className="wrap__toggle--bluetooth">
                       <span style={{ textAlign: "center", fontWeight: "bold" }}>
@@ -3145,8 +3105,7 @@ function Daily_Planner() {
                           type="checkbox"
                           className="checkBox"
                           id="toggle"
-                          onClick={handleSolve}
-                          disabled={number_check1 >= number_check2}
+                          onChange={handleSolve}
                         />
                         <span></span>
                       </label>
@@ -3233,7 +3192,7 @@ function Daily_Planner() {
           >
             {number_check1 > 0 ? (
               <div style={{ margin: 10, padding: 6 }}>
-                {`Supply Value is of Rice is ${number_check1}`}
+                {`Supply Value of Rice is ${number_check1}`}
               </div>
             ) : null}
             {number_check2 > 0 ? (
@@ -3244,12 +3203,12 @@ function Daily_Planner() {
                   color: number_check1 >= number_check2 ? "" : "red",
                 }}
               >
-                {`Destination Value is of Rice is ${number_check2}`}
+                {`Destination Value of Rice is ${number_check2}`}
               </div>
             ) : null}
             {supplyWeatCount > 0 ? (
               <div style={{ margin: 10, padding: 6 }}>
-                {`Supply Value is of Wheat is ${supplyWeatCount}`}
+                {`Supply Value of Wheat is ${supplyWeatCount}`}
               </div>
             ) : null}
             {destinationWheatCount > 0 ? (
@@ -3260,10 +3219,25 @@ function Daily_Planner() {
                   color: supplyWeatCount >= destinationWheatCount ? "" : "red",
                 }}
               >
-                {`Destination Value is of Rice is ${destinationWheatCount}`}
+                {`Destination Value of Wheat is ${destinationWheatCount}`}
               </div>
             ) : null}
           </div>
+          {/* <div>
+            {Object.key(Total_result).map((ele) => (
+              <div>{ele}</div>
+            ))}
+          </div> */}
+          {/* <div>
+            {Total_result &&
+              Total_result.rice.map((item, index) => (
+                <div key={index}>
+                  {Object.values(item).map((value, idx) => (
+                    <td key={idx}>{value}</td>
+                  ))}
+                </div>
+              ))}
+          </div> */}
         </div>
       </div>
     </div>
