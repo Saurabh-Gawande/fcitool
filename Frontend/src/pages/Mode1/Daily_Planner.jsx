@@ -76,6 +76,9 @@ function Daily_Planner() {
   const [number_check2, setnumber_check2] = useState(0);
   const [supplyWeatCount, setSupplyWeatCount] = useState(0);
   const [destinationWheatCount, setDestinationWheatCount] = useState(0);
+  const [showMessage, setShowMessage] = useState(false);
+  const [riceData, setRiceData] = useState(false);
+  const [wheatData, setWheatData] = useState(false);
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
     const updatedData = { ...excelData };
@@ -1224,113 +1227,13 @@ function Daily_Planner() {
   };
   console.log({ Total_result });
   const viewGrid = () => {
+    setShowMessage(true);
     const riceData = JSON.parse(Total_result?.rice)
     console.log("ricedata",riceData);
     const wheatData = JSON.parse(Total_result?.wheat)
-    console.log("wheatData",wheatData 
-    );
-    {
-      // riceData && Object.keys(riceData).length > 0 ? (
-      // riceData && riceData.length >= 0 ? (
-        // riceData !== null ? (
-          riceData ? (
-        <div>
-          <table>
-            <thead>
-              <tr style={{ margin: "auto" }}>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  id
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  from
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  fromstate
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  to
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  tostate
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  commodity
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  values
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {riceData.map((item) => (
-                   <tr key={item["Unnamed: 0"]}>
-                {/* //  <tr key={item,index}> */}
-                
-                   <td>{item["Unnamed: 0"]}</td>
-                  {/* <td>{item.Unnamed}</td> */}
-                  <td>{item.From}</td>
-                  {/* <td>{item.FromState}</td> */}
-                  <td>{item["From State"]}</td>
-                  <td>{item.To}</td>
-                  <td>{item["To State"]}</td>
-                  {/* <td>{item.ToState}</td> */}
-                  <td>{item.Commodity}</td>
-                  <td>{item.Values}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) :
-      (<p>No Rice routes</p>)
-    }
-    {
-      wheatData !== null ? (
-        <div>
-          <table>
-            <thead>
-              <tr style={{ margin: "auto" }}>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  id
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  from
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  fromstate
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  to
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  tostate
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  commodity
-                </th>
-                <th style={{ padding: "10px", width: "350px" }}>
-                  values
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {wheatData.map((item) => (
-                <tr key={item.Unnamed}>
-                  <td>{item.Unnamed}</td>
-                  <td>{item.From}</td>
-                  <td>{item.FromState}</td>
-                  <td>{item.To}</td>
-                  <td>{item.ToState}</td>
-                  <td>{item.Commodity}</td>
-                  <td>{item.Values}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) :
-      (<p>No Wheat routes</p>)
-    }
+    console.log("wheatData",wheatData);
+    setRiceData(riceData);
+    setWheatData(wheatData);
   };
 
   const exportToExcel1 = () => {
@@ -1402,7 +1305,9 @@ function Daily_Planner() {
   };
 
   return (
+
     <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
+
       <Sidenav />
       <div
         className="page-content"
@@ -3233,6 +3138,7 @@ function Daily_Planner() {
                     <DynamicTable/>
                   </div> */}
                   <br />
+
                   {solutionSolved && (
                     <div>
                       {scn && (
@@ -3245,14 +3151,126 @@ function Daily_Planner() {
                             <i className="fa fa-bars"></i> Download
                             Railhead-Railhead Detailed Plan
                           </button>
+                      
                           <button
                             style={{ color: "white", marginLeft: "15px" }}
                             className="btn btn-danger dropdown-toggle"
-                            onClick={() => viewGrid()}
+                            onClick={viewGrid}
                           >
-                            View Railhead Detailed Plan
-
+                             View Railhead Detailed Plan
                           </button>
+                          {showMessage && (
+                              <div>
+                              {riceData !== null && riceData.length > 0 ? (
+                                <div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        id
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        from
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        fromstate
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        to
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        tostate
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        commodity
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {riceData.map((item) => (
+                                        <tr key={item["Unnamed: 0"]}>
+                                      {/* //  <tr key={item,index}> */}
+                                      
+                                        <td>{item["Unnamed: 0"]}</td>
+                                        {/* <td>{item.Unnamed}</td> */}
+                                        <td>{item.From}</td>
+                                        {/* <td>{item.FromState}</td> */}
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        {/* <td>{item.ToState}</td> */}
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              ) : (
+                                <p>No Rice routes</p>
+                              )}
+                            </div>
+                            )
+                          }
+                          {showMessage && (
+                              <div>
+                              {wheatData !== null && wheatData.length > 0 ? (
+                                <div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        id
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        from
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        fromstate
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        to
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        tostate
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        commodity
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {wheatData.map((item) => (
+                                        <tr key={item["Unnamed: 0"]}>
+                                      {/* //  <tr key={item,index}> */}
+                                      
+                                        <td>{item["Unnamed: 0"]}</td>
+                                        {/* <td>{item.Unnamed}</td> */}
+                                        <td>{item.From}</td>
+                                        {/* <td>{item.FromState}</td> */}
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        {/* <td>{item.ToState}</td> */}
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              ) : (
+                                <p>No Wheat routes</p>
+                              )}
+                            </div>
+                            )
+                          }
                         </div>
                       )}
                       {!scn && (
@@ -3265,14 +3283,127 @@ function Daily_Planner() {
                             <i className="fa fa-bars"></i> Download
                             Railhead-Railhead Detailed Plan
                           </button>
+
                           <button
                             style={{ color: "white", marginLeft: "15px" }}
                             className="btn btn-danger dropdown-toggle"
-                            onClick={() => viewGrid()}
+                            onClick={viewGrid}
                           >
-                            View Railhead Detailed Plan
-
+                             View Railhead Detailed Plan
                           </button>
+                          {
+                          showMessage && (
+                              <div>
+                              {riceData !== null && riceData.length > 0 ? (
+                                  <div>
+                                  <table>
+                                    <thead>
+                                      <tr style={{ margin: "auto" }}>
+                                        <th style={{ padding: "10px", width: "350px" }}>
+                                          id
+                                        </th>
+                                        <th style={{ padding: "10px", width: "350px" }}>
+                                          from
+                                        </th>
+                                        <th style={{ padding: "10px", width: "350px" }}>
+                                          fromstate
+                                        </th>
+                                        <th style={{ padding: "10px", width: "350px" }}>
+                                          to
+                                        </th>
+                                        <th style={{ padding: "10px", width: "350px" }}>
+                                          tostate
+                                        </th>
+                                        <th style={{ padding: "10px", width: "350px" }}>
+                                          commodity
+                                        </th>
+                                        <th style={{ padding: "10px", width: "350px" }}>
+                                          values
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {riceData.map((item) => (
+                                          <tr key={item["Unnamed: 0"]}>
+                                        {/* //  <tr key={item,index}> */}
+                                        
+                                          <td>{item["Unnamed: 0"]}</td>
+                                          {/* <td>{item.Unnamed}</td> */}
+                                          <td>{item.From}</td>
+                                          {/* <td>{item.FromState}</td> */}
+                                          <td>{item["From State"]}</td>
+                                          <td>{item.To}</td>
+                                          <td>{item["To State"]}</td>
+                                          {/* <td>{item.ToState}</td> */}
+                                          <td>{item.Commodity}</td>
+                                          <td>{item.Values}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              ) : (
+                                <p>No Rice routes</p>
+                              )}
+                            </div>
+                            )
+                          }
+                          {showMessage && (
+                              <div>
+                              {wheatData !== null && wheatData.length > 0 ? (
+                                <div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        id
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        from
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        fromstate
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        to
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        tostate
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        commodity
+                                      </th>
+                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {wheatData.map((item) => (
+                                        <tr key={item["Unnamed: 0"]}>
+                                      {/* //  <tr key={item,index}> */}
+                                      
+                                        <td>{item["Unnamed: 0"]}</td>
+                                        {/* <td>{item.Unnamed}</td> */}
+                                        <td>{item.From}</td>
+                                        {/* <td>{item.FromState}</td> */}
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        {/* <td>{item.ToState}</td> */}
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              ) : (
+                                <p>No Wheat routes</p>
+                              )}
+                            </div>
+                            )
+                          }
                         </div>
                       )}
                     </div>
