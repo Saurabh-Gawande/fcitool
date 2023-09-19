@@ -1313,7 +1313,19 @@ function Daily_Planner() {
   };
 
   return (
-    <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
+    // <div style={{
+    //   display: 'flex',            // Enable Flexbox layout
+    //   justifyContent: 'center',  // Center content horizontally
+    //   alignItems: 'center',      // Center content vertically
+    //   // height: '100vh',           // Optional: Set the container height
+    // }}>
+    //      <div style={{
+    //   width: '100%',              // Set a fixed width for the container
+    //   overflowX: 'auto',           // Add horizontal scrollbar when content overflows
+    //   whiteSpace: 'nowrap',       // Prevent text from wrapping
+    //   border: '1px solid #ccc',   // Optional: Add a border for visibility
+    // }}>
+    <div className="page-container" style={{ backgroundColor: "#ebab44b0" , height:'100%'}}>
       <Sidenav />
       <div
         className="page-content"
@@ -3595,6 +3607,8 @@ function Daily_Planner() {
         </div>
       </div>
     </div>
+    // </div>
+    // </div>
   );
 }
 

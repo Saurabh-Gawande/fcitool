@@ -1,9 +1,7 @@
 \* Output\FCI_monthly_model_allocation_rr *\
 Minimize
-OBJ: 1556.6 x_rice_('BH',_'BUA') + 1556.6 x_wheat_('BTI',_'CHM')
+OBJ: __dummy
 Subject To
-_C1: x_wheat_('BTI',_'CHM') <= 1
-_C2: x_rice_('BH',_'BUA') <= 1
-_C3: x_wheat_('BTI',_'CHM') >= 1
-_C4: x_rice_('BH',_'BUA') >= 1
+Bounds
+ __dummy = 0
 End

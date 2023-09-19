@@ -329,7 +329,7 @@ function Monthly_Solution() {
   // fetchReservationId_cost();
 
   return (
-    <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
+    <div className="page-container" style={{ backgroundColor: "#ebab44b0" , height:'100vh'}}>
       <Sidenav />
       <div
         className="page-content"
