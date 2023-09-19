@@ -22,7 +22,7 @@ def login():
 
     users = {
         "admin@iitd.com": "admin@321",
-        "srinivas@callippus.in": "password1",
+        "saurabh@iitd.com": "password1",
         "atul@iitd.com": "password2",
         # Add more users as needed
     }    
