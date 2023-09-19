@@ -32,15 +32,12 @@ def login():
         username = request.form['username']
         password = request.form['password']
     
-        if username in active_sessions and 1 == 0:
-            data['status'] = 'User already logged in'
+        if username in users and password == users[username]:
+            active_sessions[username] = session.get('sid')
+            data['status'] = 1
+            session['username'] = username
         else:
-            if username in users and password == users[username]:
-                active_sessions[username] = session.get('sid')
-                data['status'] = 1
-                session['username'] = username
-            else:
-                data['status'] = 0
+            data['status'] = 0
     else:
         data['status'] = 'Invalid request'
 
