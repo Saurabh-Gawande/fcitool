@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -6,7 +6,7 @@ import background1 from "./../../assets/update1.png";
 import config from "../../config";
 
 function Template() {
-  const ProjectIp = config.serverUrl;;
+  const ProjectIp = config.serverUrl;
   const [Monthly_Template_M1, set_Monthly_Template_M1] = useState(null);
   const [Daily_Template_S1, set_Daily_Template_S1] = useState(null);
   const [Daily_Template_S2, set_Daily_Template_S2] = useState(null);
@@ -342,7 +342,7 @@ function Template() {
           <div className="row">
             <div className="col-md-12">
               <div className="col-md-4">
-                <div style={{ display: "flex" }}>
+                {/* <div style={{ display: "flex" }}>
                   <button
                     style={{ color: "white", marginLeft: "15px" }}
                     className="btn btn-danger dropdown-toggle"
@@ -351,14 +351,14 @@ function Template() {
                     <i className="fa fa-bars"></i>
                     Download Monthly Template
                   </button>
-                  {/* <button
+                  <button
                     style={{ color: "white", marginLeft: "100px" }}
                     className="btn btn-danger dropdown-toggle"
                     onClick={() => exportToExcel2()}
                   >
                     <i className="fa fa-bars"></i>
                     Download Daily Template of Scenario 1
-                  </button> */}
+                  </button>
                   <button
                     style={{ color: "white", marginLeft: "100px" }}
                     className="btn btn-danger dropdown-toggle"
@@ -367,7 +367,7 @@ function Template() {
                     <i className="fa fa-bars"></i>
                     Download Daily Template of Scenario 2
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
             <br />
@@ -630,7 +630,9 @@ function Template() {
                   disabled={!fileSelected}
                   style={{ cursor: "pointer" }}
                 />
-                <div style={{ marginTop: "0px", marginLeft: "8px" }}>Update</div>
+                <div style={{ marginTop: "0px", marginLeft: "8px" }}>
+                  Update
+                </div>
                 <br />
                 <br />
                 <br />

@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import background1 from "./../../assets/upload1_.png";
 import config from "../../config";
+import { CellNavigationService } from "ag-grid-community";
 
 function Daily_Planner() {
   const ProjectIp = config.serverUrl;
@@ -79,6 +80,9 @@ function Daily_Planner() {
   const [showMessage, setShowMessage] = useState(false);
   const [riceData, setRiceData] = useState(false);
   const [wheatData, setWheatData] = useState(false);
+  const [downloadMessage, setDownloadMessage] = useState(false);
+  const [progress, setProgress] = useState([]);
+
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
     const updatedData = { ...excelData };
@@ -156,7 +160,7 @@ function Daily_Planner() {
 
     try {
       var scenario;
-      if (updateExcel == true) {
+      if (updateExcel === true) {
         scenario = "/Modify_Daily_Template_S01";
       } else {
         scenario = "/Modify_Daily_Template_S02";
@@ -178,7 +182,6 @@ function Daily_Planner() {
     }
     setUpdateExcel(false);
     setUpdateExcel2(false);
-    document.getElementById("console_").style.display = "block";
     document.getElementById("console_").innerHTML +=
       "Template has been updated" + "<br/><br/>";
   };
@@ -252,8 +255,11 @@ function Daily_Planner() {
       alert("An error occurred during file upload. Please try again later.");
     }
   };
+
   console.log({ Total_result });
+
   const handleSolve = async () => {
+    setDownloadMessage(false);
     if (
       number_check1 < number_check2 ||
       supplyWeatCount < destinationWheatCount
@@ -265,10 +271,7 @@ function Daily_Planner() {
     }
     if (isLoading) return;
     setIsLoading(true);
-    document.getElementById("toggle").checked = true;
-    document.getElementById("console_").style.display = "block";
-    document.getElementById("console_").innerHTML +=
-      "Processing..." + "<br/><br/>";
+
     if (Scenerio == "Scenerio 2") {
       setscn(true);
       setuploadst(true);
@@ -312,13 +315,8 @@ function Daily_Planner() {
       console.error("Error sending inputs:", error);
     } finally {
       setIsLoading(false); // Reset loading state
+      setDownloadMessage(true);
     }
-
-    document.getElementById("console_").innerHTML +=
-      "Solution has been done" +
-      "<br/> " +
-      "Click on ownload RH to RH Detailed plan" +
-      "<br/>";
     document.getElementById("toggle").checked = false;
   };
 
@@ -331,9 +329,7 @@ function Daily_Planner() {
     })
       .then((response) => response.json())
       .then((data) => {
-        //  const fetched_Total_Result = data;
         set_Total_Result(data);
-        console.log("total result in fetchReservationId_Total_result", Total_result);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -351,7 +347,6 @@ function Daily_Planner() {
       .then((data) => {
         const fetched_Relevant_Result = data;
         set_Relevant_Result(fetched_Relevant_Result);
-        console.log("total result in fetchReservationId_Revelant_result", Relevant_result);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -379,7 +374,7 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -411,14 +406,13 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions2(dropdownOptions);
     setSubOptions2(dropdownOptions);
   };
 
@@ -443,14 +437,13 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions3(dropdownOptions);
     setSubOptions3(dropdownOptions);
   };
 
@@ -475,14 +468,13 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat3(dropdownOptions);
     setSubOptionsWheat3(dropdownOptions);
   };
 
@@ -507,7 +499,7 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -538,14 +530,13 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (jsonData[i][1] === selectedValue) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
     // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat5(dropdownOptions);
     setSubOptionsWheat5(dropdownOptions);
   };
 
@@ -789,43 +780,49 @@ function Daily_Planner() {
   const handleDeleteRow = (e) => {
     let block_data_ = block_data.filter((item) => item["id"] !== e);
     setBlockdata(block_data_);
+    setDownloadMessage(false);
   };
   const handleDeleteRow_fixed = (e) => {
     let fixed_data_ = fixed_data.filter((item) => item["id"] !== e);
     setFixeddata(fixed_data_);
+    setDownloadMessage(false);
   };
   const handleDeleteRow_inline = (e) => {
     let fixed_data_ = block_data2.filter((item) => item["id"] !== e);
     setBlockdata2(fixed_data_);
+    setDownloadMessage(false);
   };
   const handleDeleteRow_inlineWheat = (e) => {
     let fixed_data_ = block_dataWheat2.filter((item) => item["id"] !== e);
     setBlockdataWheat2(fixed_data_);
+    setDownloadMessage(false);
   };
   const handleDeleteRow_Rice_s = (e) => {
     let block_data3_ = block_data3.filter((item) => item["id"] !== e);
     setBlockdata3(block_data3_);
     setnumber_check1(number_check1 - 1);
+    setDownloadMessage(false);
   };
 
   const handleDeleteRow_Wheat_s = (e) => {
     let block_data3_ = block_dataWheat3.filter((item) => item["id"] !== e);
     setBlockdataWheat3(block_data3_);
     setSupplyWeatCount(supplyWeatCount - 1);
+    setDownloadMessage(false);
   };
 
-  const handleDeleteRow_Rice__dest = (e) => {
-    let rice_destination_ = rice_destination.filter((item) => item["id"] !== e);
+  const handleDeleteRow_Rice__dest = (index) => {
+    let rice_destination_ = rice_destination.filter((item, i) => i !== index);
     setRiceDestination(rice_destination_);
     setnumber_check2(number_check2 - 1);
+    setDownloadMessage(false);
   };
 
-  const handleDeleteRow_Wheat__dest = (e) => {
-    let wheat_destination_ = wheat_destination.filter(
-      (item) => item["id"] !== e
-    );
+  const handleDeleteRow_Wheat__dest = (index) => {
+    let wheat_destination_ = wheat_destination.filter((item, i) => i !== index);
     setWheatDestination(wheat_destination_);
     setDestinationWheatCount(destinationWheatCount - 1);
+    setDownloadMessage(false);
   };
 
   const addConstraint = (e) => {
@@ -841,20 +838,14 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      console.log(block_data3);
       setSelectedOption("default");
       setSelectedOption2("default");
       setSubOptions([]);
       setSubOptions2([]);
-      document.getElementById("console_").style.display = "block";
-      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML +=
-        "Route from " +
-        subOption1 +
-        " to " +
-        subOption2 +
-        " has been blocked" +
-        "<br/><br/>";
+      setProgress((prev) => [
+        ...prev,
+        `Route from ${subOption1} to ${subOption2} has been blocked`,
+      ]);
     }
   };
 
@@ -920,11 +911,10 @@ function Daily_Planner() {
         setIsLoading2(false);
       }
     }
-
-    document.getElementById("console_").style.display = "block";
-    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-    document.getElementById("console_").innerHTML +=
-      "New Inline details has been added for rice" + "<br/><br/>";
+    setProgress((prev) => [
+      ...prev,
+      "New Inline details has been added for rice",
+    ]);
   };
 
   const addConstraintWheat2 = async (e) => {
@@ -989,10 +979,10 @@ function Daily_Planner() {
         setIsLoading3(false);
       } // Reset loading state
     }
-    document.getElementById("console_").style.display = "block";
-    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-    document.getElementById("console_").innerHTML +=
-      "New Inline details has been added for wheat" + "<br/><br/>";
+    setProgress((prev) => [
+      ...prev,
+      "New Inline details has been added for wheat",
+    ]);
   };
 
   const addConstraint3 = async (e) => {
@@ -1010,7 +1000,6 @@ function Daily_Planner() {
       setnumber_check1(number_check1 + 1);
 
       setSubOptions3([]);
-      document.getElementById("console_").style.display = "block";
     }
     setSubOption3("");
 
@@ -1097,17 +1086,6 @@ function Daily_Planner() {
       ]);
       setnumber_check2(number_check2 + 1);
       setSubOptions4([]);
-      document.getElementById("console_").style.display = "block";
-      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      // setTimeout(() => {
-      //   document.getElementById("console_").innerHTML +=
-      //     "New origin railhead has been added for rice" +
-      //     "<br/><br/>" +
-      //     "Supply Value is of Rice is " +
-      //     (number_check2.length + 1) +
-      //     " Unit" +
-      //     "<br/><br/>";
-      // }, 0);
     }
     setSubOption4("");
     const response = await fetch("/data/Updated_railhead_list.xlsx");
@@ -1151,10 +1129,6 @@ function Daily_Planner() {
       ]);
       setSubOptionsWheat4([]);
       setDestinationWheatCount(destinationWheatCount + 1);
-      // document.getElementById("console_").style.display = "block";
-      // // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      // document.getElementById("console_").innerHTML +=
-      //   "New destination railhead has been added for wheat" + "<br/><br/>";
     }
     setSubOptionWheat4("");
     const response = await fetch("/data/Updated_railhead_list.xlsx");
@@ -1211,21 +1185,12 @@ function Daily_Planner() {
       setSelectedOption2_fixed("default");
       setSubOptions_fixed([]);
       setSubOptions2_fixed([]);
-      document.getElementById("console_").style.display = "block";
-      // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-      document.getElementById("console_").innerHTML +=
-        "Route from " +
-        subOption1_fixed +
-        " to " +
-        subOption2_fixed +
-        " has been fixed for " +
-        commodity_fixed +
-        " with value " +
-        value_fixed +
-        "<br/><br/>";
+      setProgress((prev) => [
+        ...prev,
+        `Route from ${subOption1_fixed} to ${subOption2_fixed} has been fixed for ${commodity_fixed}`,
+      ]);
     }
   };
-  console.log({ Total_result });
   const viewGrid = () => {
     setShowMessage(true);
     const riceData = JSON.parse(Total_result?.rice??0)
@@ -1305,9 +1270,7 @@ function Daily_Planner() {
   };
 
   return (
-
     <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
-
       <Sidenav />
       <div
         className="page-content"
@@ -1500,17 +1463,6 @@ function Daily_Planner() {
                       </table>
                     </div>
                   )}
-                {/* <div
-                  style={{
-                    margin: "10px",
-                    marginLeft: "20%",
-                    width: "60%",
-                    border: "2px dashed black",
-                    padding: "10px",
-                    display: "none",
-                  }}
-                  id="console_"
-                ></div> */}
                 <div style={{ marginLeft: "15px" }}>
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -1532,23 +1484,21 @@ function Daily_Planner() {
                         value={TEFD}
                         onChange={(e) => {
                           set_TEFD(e.target.value);
-                          document.getElementById("console_").style.display =
-                            "block";
-                          document.getElementById("console_").innerHTML +=
-                            "You have selected the matrix system as " +
-                            e.target.value +
-                            "<br/><br/>";
+                          setProgress((prev) => [
+                            ...prev,
+                            `You have selected the matrix system as ${e.target.value}`,
+                          ]);
                         }}
                         style={{ marginLeft: "547px" }}
                       >
-                        <option value="">Select Matrix System</option>
+                        <option>Select Matrix System</option>
                         <option value="NON-TEFD">Non-TEFD</option>
                         <option value="TEFD">TEFD</option>
                         <option value="Non-TEFD+TC">Non-TEFD + TC</option>
                         <option value="TEFD+TC">TEFD + TC</option>
                       </select>
                     </label>
-                    <label>
+                    {/* <label>
                       <strong
                         style={{
                           fontSize: "20px",
@@ -1573,9 +1523,9 @@ function Daily_Planner() {
                       >
                         <option value="">Select Scenario</option>
                         <option value="Scenerio 1">Scenario 1</option>
-                        {/* <option value="Scenerio 2">Scenario 2</option> */}
+                        <option value="Scenerio 2">Scenario 2</option>
                       </select>
-                    </label>
+                    </label> */}
                     <br />
                     <br />
                     <div>
@@ -1648,7 +1598,6 @@ function Daily_Planner() {
                             style={{
                               width: "200px",
                               padding: "5px",
-                              marginRight: 207,
                             }}
                             onChange={handleSubDropdownChange3}
                             value={subOption3}
@@ -1667,6 +1616,7 @@ function Daily_Planner() {
                               backgroundColor: "orange",
                               width: 70,
                               height: 40,
+                              marginLeft: 346,
                             }}
                             disabled={
                               subOption3 === "" && selectedOption3 === ""
@@ -1684,13 +1634,13 @@ function Daily_Planner() {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "350px" }}>
+                                <th style={{ padding: "10px", width: "396px" }}>
                                   Origin State
                                 </th>
-                                <th style={{ padding: "10px", width: "350px" }}>
+                                <th style={{ padding: "10px", width: "396px" }}>
                                   Origin Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "350px" }}>
+                                <th style={{ padding: "10px", width: "396px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -1722,9 +1672,7 @@ function Daily_Planner() {
                           </table>
                         </div>
                       )}
-
                       <br />
-
                       <div
                         style={{
                           display: "flex",
@@ -1785,7 +1733,6 @@ function Daily_Planner() {
                             style={{
                               width: "200px",
                               padding: "5px",
-                              marginRight: 128,
                             }}
                             onChange={handleSubDropdownChange4}
                             value={subOption4}
@@ -1805,6 +1752,7 @@ function Daily_Planner() {
                               width: 70,
                               height: 40,
                               alignItems: "center",
+                              marginLeft: 267,
                             }}
                             disabled={
                               subOption4 === "" && selectedOption4 === ""
@@ -1822,28 +1770,27 @@ function Daily_Planner() {
                               <thead>
                                 <tr style={{ margin: "auto" }}>
                                   <th
-                                    style={{ padding: "10px", width: "350px" }}
+                                    style={{ padding: "10px", width: "396px" }}
                                   >
                                     Destination State
                                   </th>
                                   <th
-                                    style={{ padding: "10px", width: "350px" }}
+                                    style={{ padding: "10px", width: "396px" }}
                                   >
                                     Destination Railhead
                                   </th>
                                   <th
-                                    style={{ padding: "10px", width: "350px" }}
+                                    style={{ padding: "10px", width: "396px" }}
                                   >
                                     Delete
                                   </th>
                                 </tr>
                               </thead>
                               <tbody>
-                                {rice_destination.map((item) => (
-                                  <tr key={item.id}>
+                                {rice_destination.map((item, index) => (
+                                  <tr key={index}>
                                     <td>{item.origin_state}</td>
                                     <td>{item.origin_railhead}</td>
-
                                     <td>
                                       <span
                                         style={{
@@ -1852,7 +1799,7 @@ function Daily_Planner() {
                                           fontSize: "1.2rem",
                                         }}
                                         onClick={() =>
-                                          handleDeleteRow_Rice__dest(item.id)
+                                          handleDeleteRow_Rice__dest(index)
                                         }
                                         title="Delete"
                                       >
@@ -1889,7 +1836,7 @@ function Daily_Planner() {
                           style={{
                             display: "flex",
                             marginLeft: "20px",
-                            width: "1031px",
+                            width: "1170px",
                             alignItems: "center",
                           }}
                         >
@@ -2047,19 +1994,19 @@ function Daily_Planner() {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "209px" }}>
+                                <th style={{ padding: "10px", width: "236px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -2199,7 +2146,7 @@ function Daily_Planner() {
                               backgroundColor: "orange",
                               width: 70,
                               height: 40,
-                              marginLeft: 207,
+                              marginLeft: 346,
                             }}
                             disabled={
                               subOptionWheat3 === "" &&
@@ -2218,13 +2165,13 @@ function Daily_Planner() {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "350px" }}>
+                                <th style={{ padding: "10px", width: "396px" }}>
                                   Origin State
                                 </th>
-                                <th style={{ padding: "10px", width: "350px" }}>
+                                <th style={{ padding: "10px", width: "396px" }}>
                                   Origin Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "350px" }}>
+                                <th style={{ padding: "10px", width: "396px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -2308,7 +2255,13 @@ function Daily_Planner() {
                         </div>
 
                         <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          <strong
+                            style={{
+                              fontSize: "16px",
+                              padding: "5px",
+                              marginLeft: 15,
+                            }}
+                          >
                             Select Destination Railhead
                           </strong>
                           <select
@@ -2330,7 +2283,7 @@ function Daily_Planner() {
                               backgroundColor: "orange",
                               width: 70,
                               height: 40,
-                              marginLeft: 153,
+                              marginLeft: 277,
                             }}
                             disabled={
                               subOptionWheat4 === "" &&
@@ -2349,25 +2302,25 @@ function Daily_Planner() {
                               <thead>
                                 <tr style={{ margin: "auto" }}>
                                   <th
-                                    style={{ padding: "10px", width: "350px" }}
+                                    style={{ padding: "10px", width: "396px" }}
                                   >
                                     Destination State
                                   </th>
                                   <th
-                                    style={{ padding: "10px", width: "350px" }}
+                                    style={{ padding: "10px", width: "396px" }}
                                   >
                                     Destination Railhead
                                   </th>
                                   <th
-                                    style={{ padding: "10px", width: "350px" }}
+                                    style={{ padding: "10px", width: "396px" }}
                                   >
                                     Delete
                                   </th>
                                 </tr>
                               </thead>
                               <tbody>
-                                {wheat_destination.map((item) => (
-                                  <tr key={item.id}>
+                                {wheat_destination.map((item, index) => (
+                                  <tr key={index}>
                                     <td>{item.origin_state}</td>
                                     <td>{item.origin_railhead}</td>
 
@@ -2379,7 +2332,7 @@ function Daily_Planner() {
                                           fontSize: "1.2rem",
                                         }}
                                         onClick={() =>
-                                          handleDeleteRow_Wheat__dest(item.id)
+                                          handleDeleteRow_Wheat__dest(index)
                                         }
                                         title="Delete"
                                       >
@@ -2418,7 +2371,7 @@ function Daily_Planner() {
                           style={{
                             display: "flex",
                             marginLeft: "20px",
-                            width: "1031px",
+                            width: "1170px",
                             alignItems: "center",
                           }}
                         >
@@ -2578,19 +2531,19 @@ function Daily_Planner() {
                           <table>
                             <thead>
                               <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline State
                                 </th>
-                                <th style={{ padding: "10px", width: "210px" }}>
+                                <th style={{ padding: "10px", width: "238px" }}>
                                   Inline Railhead
                                 </th>
-                                <th style={{ padding: "10px", width: "209px" }}>
+                                <th style={{ padding: "10px", width: "236px" }}>
                                   Delete
                                 </th>
                               </tr>
@@ -2643,7 +2596,7 @@ function Daily_Planner() {
                       style={{
                         display: "flex",
                         marginLeft: "20px",
-                        width: 1030,
+                        width: 1170,
                       }}
                     >
                       {/* <label htmlFor="origin_state"> */}
@@ -2772,19 +2725,19 @@ function Daily_Planner() {
                         <table>
                           <thead>
                             <tr style={{ margin: "auto" }}>
-                              <th style={{ padding: "10px", width: "210px" }}>
+                              <th style={{ padding: "10px", width: "238px" }}>
                                 Origin State
                               </th>
-                              <th style={{ padding: "10px", width: "210px" }}>
+                              <th style={{ padding: "10px", width: "238px" }}>
                                 Origin Railhead
                               </th>
-                              <th style={{ padding: "10px", width: "210px" }}>
+                              <th style={{ padding: "10px", width: "238px" }}>
                                 Destination State
                               </th>
-                              <th style={{ padding: "10px", width: "210px" }}>
+                              <th style={{ padding: "10px", width: "238px" }}>
                                 Destination Railhead
                               </th>
-                              <th style={{ padding: "10px", width: "208px" }}>
+                              <th style={{ padding: "10px", width: "236px" }}>
                                 Delete
                               </th>
                             </tr>
@@ -3012,7 +2965,7 @@ function Daily_Planner() {
                             backgroundColor: "orange",
                             width: 70,
                             height: 40,
-                            marginLeft: 574,
+                            marginLeft: 713,
                           }}
                         >
                           Add
@@ -3159,6 +3112,7 @@ function Daily_Planner() {
                           >
                              View Railhead Detailed Plan
                           </button>
+                          <div>
                           {showMessage && (
                               <div>
                               {riceData !== null && riceData.length > 0 ? (
@@ -3166,55 +3120,83 @@ function Daily_Planner() {
                                 <table>
                                   <thead>
                                     <tr style={{ margin: "auto" }}>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        id
+                                          <th
+                                            style={{
+                                              padding: "10px",
+                                              width: "350px",
+                                            }}
+                                          >
+                                            Sr. No
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        from
+                                          <th
+                                            style={{
+                                              padding: "10px",
+                                              width: "350px",
+                                            }}
+                                          >
+                                            Src RH
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        fromstate
+                                          <th
+                                            style={{
+                                              padding: "10px",
+                                              width: "350px",
+                                            }}
+                                          >
+                                            Src state
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        to
+                                          <th
+                                            style={{
+                                              padding: "10px",
+                                              width: "350px",
+                                            }}
+                                          >
+                                            Dest RH
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        tostate
+                                          <th
+                                            style={{
+                                              padding: "10px",
+                                              width: "350px",
+                                            }}
+                                          >
+                                            Dest State
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
+                                          <th
+                                            style={{
+                                              padding: "10px",
+                                              width: "350px",
+                                            }}
+                                          >
                                         commodity
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
+                                          {/* <th style={{ padding: "10px", width: "350px" }}>
                                         values
-                                      </th>
+                                      </th> */}
                                     </tr>
                                   </thead>
                                   <tbody>
                                     {riceData.map((item) => (
                                         <tr key={item["Unnamed: 0"]}>
-                                      {/* //  <tr key={item,index}> */}
-                                      
-                                        <td>{item["Unnamed: 0"]}</td>
-                                        {/* <td>{item.Unnamed}</td> */}
+                                            <td>{item["Unnamed: 0"] + 1}</td>
                                         <td>{item.From}</td>
-                                        {/* <td>{item.FromState}</td> */}
                                         <td>{item["From State"]}</td>
                                         <td>{item.To}</td>
                                         <td>{item["To State"]}</td>
-                                        {/* <td>{item.ToState}</td> */}
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                            {/* <td>{item.Values}</td> */}
                                       </tr>
                                     ))}
                                   </tbody>
                                 </table>
                               </div>
                               ) : (
-                                <p>No Rice routes</p>
+                                  <p style={{ marginTop: 10 }}>
+                                    No Rice routes
+                                  </p>
                               )}
                             </div>
-                            )
-                          }
+                            )}
+                          </div>
+                          <div></div>
                           {showMessage && (
                               <div>
                               {wheatData !== null && wheatData.length > 0 ? (
@@ -3222,44 +3204,69 @@ function Daily_Planner() {
                                 <table>
                                   <thead>
                                     <tr style={{ margin: "auto" }}>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        id
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "350px",
+                                          }}
+                                        >
+                                          Sr. No
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        from
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "350px",
+                                          }}
+                                        >
+                                          Src RH
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        fromstate
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "350px",
+                                          }}
+                                        >
+                                          Src state
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        to
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "350px",
+                                          }}
+                                        >
+                                          Dest RH
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        tostate
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "350px",
+                                          }}
+                                        >
+                                          Dest State
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "350px",
+                                          }}
+                                        >
                                         commodity
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        {/* <th style={{ padding: "10px", width: "350px" }}>
                                         values
-                                      </th>
+                                      </th> */}
                                     </tr>
                                   </thead>
                                   <tbody>
                                     {wheatData.map((item) => (
                                         <tr key={item["Unnamed: 0"]}>
-                                      {/* //  <tr key={item,index}> */}
-                                      
-                                        <td>{item["Unnamed: 0"]}</td>
-                                        {/* <td>{item.Unnamed}</td> */}
+                                          <td>{item["Unnamed: 0"] + 1}</td>
                                         <td>{item.From}</td>
-                                        {/* <td>{item.FromState}</td> */}
                                         <td>{item["From State"]}</td>
                                         <td>{item.To}</td>
                                         <td>{item["To State"]}</td>
-                                        {/* <td>{item.ToState}</td> */}
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                          {/* <td>{item.Values}</td> */}
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3269,8 +3276,7 @@ function Daily_Planner() {
                                 <p>No Wheat routes</p>
                               )}
                             </div>
-                            )
-                          }
+                          )}
                         </div>
                       )}
                       {!scn && (
@@ -3291,108 +3297,156 @@ function Daily_Planner() {
                           >
                              View Railhead Detailed Plan
                           </button>
-                          {
-                          showMessage && (
-                              <div>
+                          {showMessage && (
+                            <div style={{ marginTop: 15, marginLeft: 20 }}>
                               {riceData !== null && riceData.length > 0 ? (
                                   <div>
                                   <table>
                                     <thead>
                                       <tr style={{ margin: "auto" }}>
-                                        <th style={{ padding: "10px", width: "350px" }}>
-                                          id
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Sr. No
                                         </th>
-                                        <th style={{ padding: "10px", width: "350px" }}>
-                                          from
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Src RH
                                         </th>
-                                        <th style={{ padding: "10px", width: "350px" }}>
-                                          fromstate
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Src state
                                         </th>
-                                        <th style={{ padding: "10px", width: "350px" }}>
-                                          to
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Dest RH
                                         </th>
-                                        <th style={{ padding: "10px", width: "350px" }}>
-                                          tostate
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Dest state
                                         </th>
-                                        <th style={{ padding: "10px", width: "350px" }}>
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
                                           commodity
                                         </th>
-                                        <th style={{ padding: "10px", width: "350px" }}>
+                                        {/* <th style={{ padding: "10px", width: "350px" }}>
                                           values
-                                        </th>
+                                        </th> */}
                                       </tr>
                                     </thead>
                                     <tbody>
                                       {riceData.map((item) => (
                                           <tr key={item["Unnamed: 0"]}>
-                                        {/* //  <tr key={item,index}> */}
-                                        
-                                          <td>{item["Unnamed: 0"]}</td>
-                                          {/* <td>{item.Unnamed}</td> */}
+                                          <td>{item["Unnamed: 0"] + 1}</td>
                                           <td>{item.From}</td>
-                                          {/* <td>{item.FromState}</td> */}
                                           <td>{item["From State"]}</td>
                                           <td>{item.To}</td>
                                           <td>{item["To State"]}</td>
-                                          {/* <td>{item.ToState}</td> */}
                                           <td>{item.Commodity}</td>
-                                          <td>{item.Values}</td>
+                                          {/* <td>{item.Values}</td> */}
                                         </tr>
                                       ))}
                                     </tbody>
                                   </table>
                                 </div>
                               ) : (
-                                <p>No Rice routes</p>
+                                <p style={{ marginTop: 10 }}>No Rice routes</p>
                               )}
                             </div>
-                            )
-                          }
+                          )}
                           {showMessage && (
-                              <div>
+                            <div style={{ marginTop: 15, marginLeft: 20 }}>
                               {wheatData !== null && wheatData.length > 0 ? (
                                 <div>
                                 <table>
                                   <thead>
                                     <tr style={{ margin: "auto" }}>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        id
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Sr. No
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        from
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Src RH
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        fromstate
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Src state
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        to
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Dest RH
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
-                                        tostate
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
+                                          Dest State
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        <th
+                                          style={{
+                                            padding: "10px",
+                                            width: "200px",
+                                          }}
+                                        >
                                         commodity
                                       </th>
-                                      <th style={{ padding: "10px", width: "350px" }}>
+                                        {/* <th style={{ padding: "10px", width: "350px" }}>
                                         values
-                                      </th>
+                                      </th> */}
                                     </tr>
                                   </thead>
                                   <tbody>
                                     {wheatData.map((item) => (
                                         <tr key={item["Unnamed: 0"]}>
-                                      {/* //  <tr key={item,index}> */}
-                                      
-                                        <td>{item["Unnamed: 0"]}</td>
-                                        {/* <td>{item.Unnamed}</td> */}
+                                          <td>{item["Unnamed: 0"] + 1}</td>
                                         <td>{item.From}</td>
-                                        {/* <td>{item.FromState}</td> */}
                                         <td>{item["From State"]}</td>
                                         <td>{item.To}</td>
                                         <td>{item["To State"]}</td>
-                                        {/* <td>{item.ToState}</td> */}
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                          {/* <td>{item.Values}</td> */}
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3402,8 +3456,7 @@ function Daily_Planner() {
                                 <p>No Wheat routes</p>
                               )}
                             </div>
-                            )
-                          }
+                          )}
                         </div>
                       )}
                     </div>
@@ -3426,7 +3479,16 @@ function Daily_Planner() {
             <br />
           </div>
         </div>
-        <div style={{ backgroundColor: "#ebab44b0", width: "20%" }}>
+        <div
+          style={{
+            backgroundColor: "#ebab44b0",
+            width: "20%",
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
           {/* <br /> */}
           {/* <div>
             <div class="progress yellow">
@@ -3439,30 +3501,36 @@ function Daily_Planner() {
               <div class="progress-value">Steps</div>
             </div>
           </div> */}
-          <span style={{ color: "black", fontSize: "32px", marginLeft: "5%" }}>
-            Progress Bar
-          </span>
+          <span style={{ color: "black", fontSize: "32px" }}>Progress Bar</span>
+          {number_check1 > 0 ||
+          number_check2 > 0 ||
+          supplyWeatCount > 0 ||
+          destinationWheatCount > 0 ||
+          progress.length > 0 ? (
           <div
             style={{
-              marginLeft: "5%",
+                padding: "8px 0",
               width: "90%",
               display: "flex",
               flexDirection: "column",
               border: "2px dashed black",
-              marginTop: 12,
             }}
             id="console_"
           >
+              <div
+                style={{
+                  margin: "0px 8px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
             {number_check1 > 0 ? (
-              <div style={{ margin: 10, padding: 6 }}>
-                {`Supply Value of Rice is ${number_check1}`}
-              </div>
+                  <div>{`Supply Value of Rice is ${number_check1}`}</div>
             ) : null}
             {number_check2 > 0 ? (
               <div
                 style={{
-                  margin: 10,
-                  padding: 6,
                   color: number_check1 >= number_check2 ? "" : "red",
                 }}
               >
@@ -3470,39 +3538,31 @@ function Daily_Planner() {
               </div>
             ) : null}
             {supplyWeatCount > 0 ? (
-              <div style={{ margin: 10, padding: 6 }}>
-                {`Supply Value of Wheat is ${supplyWeatCount}`}
-              </div>
+                  <div>{`Supply Value of Wheat is ${supplyWeatCount}`}</div>
             ) : null}
             {destinationWheatCount > 0 ? (
               <div
                 style={{
-                  margin: 10,
-                  padding: 6,
-                  color: supplyWeatCount >= destinationWheatCount ? "" : "red",
+                      color:
+                        supplyWeatCount >= destinationWheatCount ? "" : "red",
                 }}
               >
                 {`Destination Value of Wheat is ${destinationWheatCount}`}
               </div>
             ) : null}
+                {progress.length > 0 && progress.map((ele) => <div>{ele}</div>)}
+                {isLoading ? <div>Processing....</div> : null}
+                {downloadMessage ? (
+                  <div>
+                    Solution has been done. Click on download RH to RH Detailed
+                    plan
           </div>
-          {/* <div>
-            {Object.key(Total_result).map((ele) => (
-              <div>{ele}</div>
-            ))}
-          </div> */}
-          {/* <div>
-            {Total_result &&
-              Total_result.rice.map((item, index) => (
-                <div key={index}>
-                  {Object.values(item).map((value, idx) => (
-                    <td key={idx}>{value}</td>
-                  ))}
+                ) : null}
                 </div>
-              ))}
-          </div> */}
         </div>
+          ) : null}
       </div>
+    </div>
     </div>
   );
 }
