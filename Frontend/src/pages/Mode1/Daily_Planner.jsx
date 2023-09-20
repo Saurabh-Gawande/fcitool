@@ -1228,9 +1228,9 @@ function Daily_Planner() {
   console.log({ Total_result });
   const viewGrid = () => {
     setShowMessage(true);
-    const riceData = JSON.parse(Total_result?.rice)
+    const riceData = JSON.parse(Total_result?.rice??0)
     console.log("ricedata",riceData);
-    const wheatData = JSON.parse(Total_result?.wheat)
+    const wheatData = JSON.parse(Total_result?.wheat??0)
     console.log("wheatData",wheatData);
     setRiceData(riceData);
     setWheatData(wheatData);
