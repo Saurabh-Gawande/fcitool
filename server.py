@@ -1695,7 +1695,7 @@ def Daily_Planner():
                 data1["wheat"] = df_wheat
 
 
-                with pd.ExcelWriter(f"Output//List_DPT{session_id}.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df_wheat.to_excel(writer, sheet_name="wheat")
                     df_rice.to_excel(writer, sheet_name="rice")
 
@@ -1925,7 +1925,7 @@ def Daily_Planner():
                 data1["rice"] = df_rice
                 data1["wheat"] = df_wheat
 
-                with pd.ExcelWriter(f"Output//List_DPT{session_id}.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+                with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                     df_wheat.to_excel(writer, sheet_name="wheat")
                     df_rice.to_excel(writer, sheet_name="rice")
 
