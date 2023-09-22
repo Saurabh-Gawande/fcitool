@@ -1,10 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import background1 from "./../../assets/upload1_.png";
 import config from "../../config";
-import { CellNavigationService } from "ag-grid-community";
+import style from "./Daily_Planner.css";
 
 function Daily_Planner() {
   const ProjectIp = config.serverUrl;
@@ -1193,10 +1192,10 @@ function Daily_Planner() {
   };
   const viewGrid = () => {
     setShowMessage(true);
-    const riceData = JSON.parse(Total_result?.rice??0)
-    console.log("ricedata",riceData);
-    const wheatData = JSON.parse(Total_result?.wheat??0)
-    console.log("wheatData",wheatData);
+    const riceData = JSON.parse(Total_result?.rice ?? 0);
+    console.log("ricedata", riceData);
+    const wheatData = JSON.parse(Total_result?.wheat ?? 0);
+    console.log("wheatData", wheatData);
     setRiceData(riceData);
     setWheatData(wheatData);
   };
@@ -3104,22 +3103,22 @@ function Daily_Planner() {
                             <i className="fa fa-bars"></i> Download
                             Railhead-Railhead Detailed Plan
                           </button>
-                      
+
                           <button
                             style={{ color: "white", marginLeft: "15px" }}
                             className="btn btn-danger dropdown-toggle"
                             onClick={viewGrid}
                           >
-                             View Railhead Detailed Plan
+                            View Railhead Detailed Plan
                           </button>
                           <div>
-                          {showMessage && (
+                            {showMessage && (
                               <div>
-                              {riceData !== null && riceData.length > 0 ? (
-                                <div>
-                                <table>
-                                  <thead>
-                                    <tr style={{ margin: "auto" }}>
+                                {riceData !== null && riceData.length > 0 ? (
+                                  <div>
+                                    <table>
+                                      <thead>
+                                        <tr style={{ margin: "auto" }}>
                                           <th
                                             style={{
                                               padding: "10px",
@@ -3127,7 +3126,7 @@ function Daily_Planner() {
                                             }}
                                           >
                                             Sr. No
-                                      </th>
+                                          </th>
                                           <th
                                             style={{
                                               padding: "10px",
@@ -3135,7 +3134,7 @@ function Daily_Planner() {
                                             }}
                                           >
                                             Src RH
-                                      </th>
+                                          </th>
                                           <th
                                             style={{
                                               padding: "10px",
@@ -3143,7 +3142,7 @@ function Daily_Planner() {
                                             }}
                                           >
                                             Src state
-                                      </th>
+                                          </th>
                                           <th
                                             style={{
                                               padding: "10px",
@@ -3151,7 +3150,7 @@ function Daily_Planner() {
                                             }}
                                           >
                                             Dest RH
-                                      </th>
+                                          </th>
                                           <th
                                             style={{
                                               padding: "10px",
@@ -3159,51 +3158,51 @@ function Daily_Planner() {
                                             }}
                                           >
                                             Dest State
-                                      </th>
+                                          </th>
                                           <th
                                             style={{
                                               padding: "10px",
                                               width: "350px",
                                             }}
                                           >
-                                        commodity
-                                      </th>
+                                            commodity
+                                          </th>
                                           {/* <th style={{ padding: "10px", width: "350px" }}>
                                         values
                                       </th> */}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {riceData.map((item) => (
-                                        <tr key={item["Unnamed: 0"]}>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {riceData.map((item) => (
+                                          <tr key={item["Unnamed: 0"]}>
                                             <td>{item["Unnamed: 0"] + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
-                                        <td>{item.Commodity}</td>
+                                            <td>{item.From}</td>
+                                            <td>{item["From State"]}</td>
+                                            <td>{item.To}</td>
+                                            <td>{item["To State"]}</td>
+                                            <td>{item.Commodity}</td>
                                             {/* <td>{item.Values}</td> */}
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                              ) : (
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                ) : (
                                   <p style={{ marginTop: 10 }}>
                                     No Rice routes
                                   </p>
-                              )}
-                            </div>
+                                )}
+                              </div>
                             )}
                           </div>
                           <div></div>
                           {showMessage && (
-                              <div>
+                            <div>
                               {wheatData !== null && wheatData.length > 0 ? (
                                 <div>
-                                <table>
-                                  <thead>
-                                    <tr style={{ margin: "auto" }}>
+                                  <table>
+                                    <thead>
+                                      <tr style={{ margin: "auto" }}>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3211,7 +3210,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Sr. No
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3219,7 +3218,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Src RH
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3227,7 +3226,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Src state
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3235,7 +3234,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Dest RH
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3243,35 +3242,35 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Dest State
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
                                             width: "350px",
                                           }}
                                         >
-                                        commodity
-                                      </th>
+                                          commodity
+                                        </th>
                                         {/* <th style={{ padding: "10px", width: "350px" }}>
                                         values
                                       </th> */}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {wheatData.map((item) => (
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {wheatData.map((item) => (
                                         <tr key={item["Unnamed: 0"]}>
                                           <td>{item["Unnamed: 0"] + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
-                                        <td>{item.Commodity}</td>
+                                          <td>{item.From}</td>
+                                          <td>{item["From State"]}</td>
+                                          <td>{item.To}</td>
+                                          <td>{item["To State"]}</td>
+                                          <td>{item.Commodity}</td>
                                           {/* <td>{item.Values}</td> */}
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
                               ) : (
                                 <p>No Wheat routes</p>
                               )}
@@ -3295,12 +3294,12 @@ function Daily_Planner() {
                             className="btn btn-danger dropdown-toggle"
                             onClick={viewGrid}
                           >
-                             View Railhead Detailed Plan
+                            View Railhead Detailed Plan
                           </button>
                           {showMessage && (
                             <div style={{ marginTop: 15, marginLeft: 20 }}>
                               {riceData !== null && riceData.length > 0 ? (
-                                  <div>
+                                <div>
                                   <table>
                                     <thead>
                                       <tr style={{ margin: "auto" }}>
@@ -3359,7 +3358,7 @@ function Daily_Planner() {
                                     </thead>
                                     <tbody>
                                       {riceData.map((item) => (
-                                          <tr key={item["Unnamed: 0"]}>
+                                        <tr key={item["Unnamed: 0"]}>
                                           <td>{item["Unnamed: 0"] + 1}</td>
                                           <td>{item.From}</td>
                                           <td>{item["From State"]}</td>
@@ -3381,9 +3380,9 @@ function Daily_Planner() {
                             <div style={{ marginTop: 15, marginLeft: 20 }}>
                               {wheatData !== null && wheatData.length > 0 ? (
                                 <div>
-                                <table>
-                                  <thead>
-                                    <tr style={{ margin: "auto" }}>
+                                  <table>
+                                    <thead>
+                                      <tr style={{ margin: "auto" }}>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3391,7 +3390,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Sr. No
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3399,7 +3398,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Src RH
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3407,7 +3406,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Src state
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3415,7 +3414,7 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Dest RH
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
@@ -3423,35 +3422,35 @@ function Daily_Planner() {
                                           }}
                                         >
                                           Dest State
-                                      </th>
+                                        </th>
                                         <th
                                           style={{
                                             padding: "10px",
                                             width: "200px",
                                           }}
                                         >
-                                        commodity
-                                      </th>
+                                          commodity
+                                        </th>
                                         {/* <th style={{ padding: "10px", width: "350px" }}>
                                         values
                                       </th> */}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {wheatData.map((item) => (
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {wheatData.map((item) => (
                                         <tr key={item["Unnamed: 0"]}>
                                           <td>{item["Unnamed: 0"] + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
-                                        <td>{item.Commodity}</td>
+                                          <td>{item.From}</td>
+                                          <td>{item["From State"]}</td>
+                                          <td>{item.To}</td>
+                                          <td>{item["To State"]}</td>
+                                          <td>{item.Commodity}</td>
                                           {/* <td>{item.Values}</td> */}
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
                               ) : (
                                 <p>No Wheat routes</p>
                               )}
@@ -3507,16 +3506,17 @@ function Daily_Planner() {
           supplyWeatCount > 0 ||
           destinationWheatCount > 0 ||
           progress.length > 0 ? (
-          <div
-            style={{
+            <div
+              style={{
                 padding: "8px 0",
-              width: "90%",
-              display: "flex",
-              flexDirection: "column",
-              border: "2px dashed black",
-            }}
-            id="console_"
-          >
+                width: "90%",
+                display: "flex",
+                flexDirection: "column",
+                border: "2px dashed black",
+                marginTop: 15,
+              }}
+              id="console_"
+            >
               <div
                 style={{
                   margin: "0px 8px",
@@ -3525,44 +3525,69 @@ function Daily_Planner() {
                   gap: 8,
                 }}
               >
-            {number_check1 > 0 ? (
+                {number_check1 > 0 ? (
                   <div>{`Supply Value of Rice is ${number_check1}`}</div>
-            ) : null}
-            {number_check2 > 0 ? (
-              <div
-                style={{
-                  color: number_check1 >= number_check2 ? "" : "red",
-                }}
-              >
-                {`Destination Value of Rice is ${number_check2}`}
-              </div>
-            ) : null}
-            {supplyWeatCount > 0 ? (
+                ) : null}
+                {number_check2 > 0 ? (
+                  <div
+                    style={{
+                      color: number_check1 >= number_check2 ? "" : "red",
+                    }}
+                  >
+                    {`Destination Value of Rice is ${number_check2}`}
+                  </div>
+                ) : null}
+                {supplyWeatCount > 0 ? (
                   <div>{`Supply Value of Wheat is ${supplyWeatCount}`}</div>
-            ) : null}
-            {destinationWheatCount > 0 ? (
-              <div
-                style={{
+                ) : null}
+                {destinationWheatCount > 0 ? (
+                  <div
+                    style={{
                       color:
                         supplyWeatCount >= destinationWheatCount ? "" : "red",
-                }}
-              >
-                {`Destination Value of Wheat is ${destinationWheatCount}`}
-              </div>
-            ) : null}
+                    }}
+                  >
+                    {`Destination Value of Wheat is ${destinationWheatCount}`}
+                  </div>
+                ) : null}
                 {progress.length > 0 && progress.map((ele) => <div>{ele}</div>)}
-                {isLoading ? <div>Processing....</div> : null}
+                {isLoading ? (
+                  <div
+                    style={{
+                      width: 200,
+                      display: "grid",
+                      gridTemplateColumns: "1fr auto",
+                      alignItems: "end",
+                    }}
+                  >
+                    Processing
+                    <span
+                      class="container"
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginLeft: -10,
+                        marginBottom: 4,
+                        gap: 1,
+                      }}
+                    >
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                    </span>
+                  </div>
+                ) : null}
                 {downloadMessage ? (
                   <div>
                     Solution has been done. Click on download RH to RH Detailed
                     plan
-          </div>
+                  </div>
                 ) : null}
-                </div>
-        </div>
+              </div>
+            </div>
           ) : null}
+        </div>
       </div>
-    </div>
     </div>
   );
 }

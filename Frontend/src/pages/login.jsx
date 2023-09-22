@@ -32,7 +32,7 @@ function Login() {
       form.append("username", username);
       form.append("password", password);
 
-      const response = await fetch(ProjectIp+"/login", {
+      const response = await fetch(ProjectIp + "/login", {
         method: "POST",
         credentials: "include",
         body: form,
@@ -46,7 +46,7 @@ function Login() {
       if (data.status === 1) {
         window.location.assign("/Daily_Planner");
         window.alert("Login Successful! Click Ok to Continue");
-      } else if(data.status === 0){
+      } else if (data.status === 0) {
         window.alert("Incorrect Credentials");
         window.location.reload();
       } else {
@@ -62,7 +62,10 @@ function Login() {
   return (
     <div
       className="login-container login_container"
-      style={{ backgroundImage: `url(${images[currentImage]})` }}
+      style={{
+        backgroundImage: `url(${images[currentImage]})`,
+        height: "100vh",
+      }}
     >
       <div className="content">
         <div className="login-box animated fadeInDown">
