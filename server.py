@@ -1622,7 +1622,7 @@ def Daily_Planner():
                 df_wheat["To"] = To
                 df_wheat["To State"] = To_state
                 df_wheat["Commodity"]=commodity
-                df_wheat["Values"] = values
+                # df_wheat["Values"] = values
 
 
 
@@ -1684,7 +1684,7 @@ def Daily_Planner():
                 df_rice["To"] = To
                 df_rice["To State"] = To_state_rice
                 df_rice["Commodity"]=commodity
-                df_rice["Values"] = values
+                # df_rice["Values"] = values
 
                 for i in dest_rice_inline.keys():
                     for j in range(len(df_rice["To"])):
@@ -1696,8 +1696,8 @@ def Daily_Planner():
 
 
                 with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df_wheat.to_excel(writer, sheet_name="wheat")
-                    df_rice.to_excel(writer, sheet_name="rice")
+                    df_wheat.to_excel(writer, sheet_name="wheat", index = False)
+                    df_rice.to_excel(writer, sheet_name="rice", index = False)
 
                 # List_data = pd.ExcelFile("Output//List_DPT2.xlsx")
                 # List_rice = pd.read_excel(List_data, sheet_name="rice", index_col=0)
