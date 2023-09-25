@@ -3173,9 +3173,9 @@ function Daily_Planner() {
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        {riceData.map((item) => (
-                                          <tr key={item["Unnamed: 0"]}>
-                                            <td>{item["Unnamed: 0"] + 1}</td>
+                                        {riceData.map((item, index) => (
+                                          <tr key={index}>
+                                            <td>{index + 1}</td>
                                             <td>{item.From}</td>
                                             <td>{item["From State"]}</td>
                                             <td>{item.To}</td>
@@ -3357,9 +3357,9 @@ function Daily_Planner() {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {riceData.map((item) => (
+                                      {riceData.map((item, index) => (
                                         <tr key={item["Unnamed: 0"]}>
-                                          <td>{item["Unnamed: 0"] + 1}</td>
+                                          <td>{index + 1}</td>
                                           <td>{item.From}</td>
                                           <td>{item["From State"]}</td>
                                           <td>{item.To}</td>
@@ -3437,9 +3437,9 @@ function Daily_Planner() {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {wheatData.map((item) => (
-                                        <tr key={item["Unnamed: 0"]}>
-                                          <td>{item["Unnamed: 0"] + 1}</td>
+                                      {wheatData.map((item, index) => (
+                                        <tr key={index}>
+                                          <td>{index + 1}</td>
                                           <td>{item.From}</td>
                                           <td>{item["From State"]}</td>
                                           <td>{item.To}</td>
