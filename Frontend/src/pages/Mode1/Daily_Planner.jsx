@@ -373,7 +373,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -405,7 +409,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -417,6 +425,7 @@ function Daily_Planner() {
 
   const handleDropdownChange3 = async (e) => {
     const selectedValue = e.target.value;
+    console.log({ selectedValue });
     setSelectedOption3(selectedValue);
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
@@ -436,7 +445,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -467,7 +480,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -622,7 +639,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -653,7 +674,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -727,7 +752,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue_fixed) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue_fixed.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -758,7 +787,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1020,7 +1053,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOption3) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOption3.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1062,7 +1099,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOptionWheat3) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOptionWheat3.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1105,7 +1146,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOption4) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOption4.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1148,7 +1193,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOptionWheat4) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOptionWheat4.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
