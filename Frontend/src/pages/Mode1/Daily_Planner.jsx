@@ -373,7 +373,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -405,7 +409,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -417,6 +425,7 @@ function Daily_Planner() {
 
   const handleDropdownChange3 = async (e) => {
     const selectedValue = e.target.value;
+    console.log({ selectedValue });
     setSelectedOption3(selectedValue);
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
@@ -436,7 +445,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -467,7 +480,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -622,7 +639,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -653,7 +674,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -727,7 +752,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue_fixed) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue_fixed.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -758,7 +787,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1020,7 +1053,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOption3) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOption3.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1062,7 +1099,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOptionWheat3) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOptionWheat3.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1105,7 +1146,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOption4) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOption4.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -1148,7 +1193,11 @@ function Daily_Planner() {
       label: "Please select Railhead",
     };
     for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedOptionWheat4) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOptionWheat4.trim().toLowerCase()
+      ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
@@ -3173,9 +3222,9 @@ function Daily_Planner() {
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        {riceData.map((item) => (
-                                          <tr key={item["Unnamed: 0"]}>
-                                            <td>{item["Unnamed: 0"] + 1}</td>
+                                        {riceData.map((item, index) => (
+                                          <tr key={index}>
+                                            <td>{index + 1}</td>
                                             <td>{item.From}</td>
                                             <td>{item["From State"]}</td>
                                             <td>{item.To}</td>
@@ -3357,9 +3406,9 @@ function Daily_Planner() {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {riceData.map((item) => (
+                                      {riceData.map((item, index) => (
                                         <tr key={item["Unnamed: 0"]}>
-                                          <td>{item["Unnamed: 0"] + 1}</td>
+                                          <td>{index + 1}</td>
                                           <td>{item.From}</td>
                                           <td>{item["From State"]}</td>
                                           <td>{item.To}</td>
@@ -3437,9 +3486,9 @@ function Daily_Planner() {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {wheatData.map((item) => (
-                                        <tr key={item["Unnamed: 0"]}>
-                                          <td>{item["Unnamed: 0"] + 1}</td>
+                                      {wheatData.map((item, index) => (
+                                        <tr key={index}>
+                                          <td>{index + 1}</td>
                                           <td>{item.From}</td>
                                           <td>{item["From State"]}</td>
                                           <td>{item.To}</td>
