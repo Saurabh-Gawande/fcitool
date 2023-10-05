@@ -81,6 +81,9 @@ function Daily_Planner() {
   const [wheatData, setWheatData] = useState(false);
   const [downloadMessage, setDownloadMessage] = useState(false);
   const [progress, setProgress] = useState([]);
+  const [filterRailHead, setfilterRailHead] = useState([]);
+    // Define a Set to keep track of added railheads
+    const [addedRailheads, setAddedRailheads] = useState(new Set());
 
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
@@ -496,6 +499,7 @@ function Daily_Planner() {
 
   const handleDropdownChange5 = async (e) => {
     const selectedValue = e.target.value;
+    console.log(selectedValue)
     setSelectedOption5(selectedValue);
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
@@ -559,33 +563,43 @@ function Daily_Planner() {
   const handleDropdownChange6 = async (e) => {
     const selectedValue = e.target.value;
     setSelectedOption6(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+  
+    // Check if the railhead for the selected state is already added
+    if (!addedRailheads.has(selectedValue)) {
+      const response = await fetch("/data/Updated_railhead_list.xlsx");
+      const arrayBuffer = await response.arrayBuffer();
+      const data = new Uint8Array(arrayBuffer);
+  
+      const workbook = XLSX.read(data, { type: "array" });
+  
+      // Assuming the Excel file has only one sheet
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+  
+      // Parse the sheet data into JSON format
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      let dropdownOptions = [];
+      let dropdownOptions_default = {
+        value: "",
+        label: "Please select Railhead",
+      };
+      for (let i = 0; i < jsonData.length; i++) {
+        if (jsonData[i][1] == selectedValue) {
+          dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+        }
       }
+      dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+      dropdownOptions.unshift(dropdownOptions_default);
+      setSubOptions6(dropdownOptions);
+  
+      // Add the railhead to the set to indicate it's added for this state
+      setAddedRailheads(new Set(addedRailheads).add(selectedValue));
+    } else {
+      // Alert message if the railhead is already added for this state
+      alert(`Railhead for ${selectedValue} is already added.`);
     }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions6(dropdownOptions);
   };
+  
 
   const handleDropdownChangeWheat6 = async (e) => {
     const selectedValue = e.target.value;
@@ -860,6 +874,12 @@ function Daily_Planner() {
   const addConstraint = (e) => {
     e.preventDefault();
     if (selectedOption && subOption1 && selectedOption2 && subOption2) {
+      // Check if origin and destination railheads are the same
+      if (subOption1 === subOption2) {
+        alert("Origin and destination railheads cannot be the same.");
+        return; // Do not proceed further
+      }
+  
       setBlockdata((data) => [
         ...data,
         {
@@ -870,20 +890,33 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
+  
+      // Reset options and suboptions
       setSelectedOption("default");
       setSelectedOption2("default");
       setSubOptions([]);
       setSubOptions2([]);
+  
       setProgress((prev) => [
         ...prev,
         `Route from ${subOption1} to ${subOption2} has been blocked`,
       ]);
     }
   };
+  
 
   const addConstraint2 = async (e) => {
     e.preventDefault();
+  
+    // Check if necessary options are selected
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
+      // Check if the origin and destination railheads are the same
+      if (selectedOption5 === selectedOption6 && subOption5 === subOption6) {
+        alert("Origin and destination railheads cannot be the same.");
+        return; // Do not proceed further
+      }
+  
+      // Update block data with the new constraint
       setBlockdata2((data) => [
         ...data,
         {
@@ -894,34 +927,24 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-
-      let data = [
-        {
-          origin_state: selectedOption5,
-          origin_railhead: subOption5,
-          destination_state: selectedOption6,
-          destination_railhead: subOption6,
-        },
-      ];
-      for (let i = 0; i < block_data2.length; i++) {
-        data.push(block_data2[i]);
-      }
-
+  
+      // Reset options and suboptions for rice
       setSelectedOption5("default");
       setSelectedOption6("default");
       setSubOptions5([]);
       setSubOptions6([]);
-
+  
       if (isLoading2) return; // Prevent additional clicks while loading
       setIsLoading2(true);
+  
       try {
         const payload1 = {
-          rice_inline: data,
+          rice_inline: block_data2,
           rice_inline_value: inline_value_rice,
           wheat_inline: block_dataWheat2,
           wheat_inline_value: inline_value_wheat,
         };
-
+  
         const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
           method: "POST",
           headers: {
@@ -929,10 +952,9 @@ function Daily_Planner() {
           },
           body: JSON.stringify(payload1),
         });
-
+  
         const responseData1 = await response2.json(); // Parse response JSON
-        console.log(responseData1); // Log the response data
-
+  
         if (responseData1.status === "NO") {
           alert("Distance is not within range. Please check again.");
         }
@@ -943,22 +965,27 @@ function Daily_Planner() {
         setIsLoading2(false);
       }
     }
+  
+    // Add progress message
     setProgress((prev) => [
       ...prev,
-      "New Inline details has been added for rice",
+      "New Inline details have been added for rice",
     ]);
   };
-
+  
   const addConstraintWheat2 = async (e) => {
     e.preventDefault();
-    if (
-      selectedOptionWheat5 &&
-      subOptionWheat5 &&
-      selectedOptionWheat6 &&
-      subOptionWheat6
-    ) {
-      setBlockdataWheat2((data) => [
-        ...data,
+  
+    // Check if necessary options are selected
+    if (selectedOptionWheat5 && subOptionWheat5 && selectedOptionWheat6 && subOptionWheat6) {
+      // Check if origin and destination railheads for wheat are the same
+      if (subOptionWheat5 === subOptionWheat6) {
+        alert("Origin and destination railheads for wheat cannot be the same.");
+        return; // Do not proceed further
+      }
+  
+      // Update wheat block data with the new constraint
+      let data = [
         {
           origin_state: selectedOptionWheat5,
           origin_railhead: subOptionWheat5,
@@ -966,24 +993,19 @@ function Daily_Planner() {
           destination_railhead: subOptionWheat6,
           id: Date.now(),
         },
-      ]);
-      let data = [
-        {
-          origin_state: selectedOption5,
-          origin_railhead: subOption5,
-          destination_state: selectedOption6,
-          destination_railhead: subOption6,
-        },
       ];
-      for (let i = 0; i < block_dataWheat2.length; i++) {
-        data.push(block_dataWheat2[i]);
-      }
+  
+      setBlockdataWheat2((prevData) => [...prevData, ...data]);
+  
+      // Reset options and suboptions for wheat
       setSelectedOptionWheat5("default");
       setSelectedOptionWheat6("default");
       setSubOptionWheat5([]);
       setSubOptionWheat6([]);
+  
       if (isLoading3) return; // Prevent additional clicks while loading
       setIsLoading3(true);
+  
       try {
         const payload1 = {
           rice_inline: block_data2,
@@ -991,7 +1013,7 @@ function Daily_Planner() {
           wheat_inline: data,
           wheat_inline_value: inline_value_wheat,
         };
-
+  
         const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
           method: "POST",
           headers: {
@@ -999,123 +1021,153 @@ function Daily_Planner() {
           },
           body: JSON.stringify(payload1),
         });
-
+  
         const responseData1 = await response2.json(); // Parse response JSON
-
+  
         if (responseData1.status === "NO") {
           alert("Distance is not within range. Please check again.");
         }
       } catch (error) {
         console.error("Error sending inputs:", error);
       } finally {
+        // Reset loading state
         setIsLoading3(false);
-      } // Reset loading state
+      }
     }
+  
+    // Add progress message
     setProgress((prev) => [
       ...prev,
-      "New Inline details has been added for wheat",
+      "New Inline details have been added for wheat",
     ]);
   };
+  
+
 
   const addConstraint3 = async (e) => {
     e.preventDefault();
+    console.log(subOption3);
+  
     if (selectedOption3 && subOption3) {
-      setBlockdata3((data) => [
-        ...data,
-        {
-          origin_state: selectedOption3,
-          origin_railhead: subOption3,
-          id: Date.now(),
-        },
-      ]);
-
-      setnumber_check1(number_check1 + 1);
-
+      // Check if the railhead for the selected state is already added
+      if (!addedRailheads.has(subOption3)) {
+        setBlockdata3((data) => [
+          ...data,
+          {
+            origin_state: selectedOption3,
+            origin_railhead: subOption3,
+            id: Date.now(),
+          },
+        ]);
+  
+        setnumber_check1(number_check1 + 1);
+  
+        // Add the railhead to the set to indicate it's added for this state
+        setAddedRailheads(new Set(addedRailheads).add(subOption3));
+      }else{
+        alert(`Railhead ${subOption3} is already added for ${selectedOption3}.`);
+      }
+  
       setSubOptions3([]);
     }
+  
     setSubOption3("");
-
+  
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
-
+  
     const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
+  
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
+  
     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
+  
+    const dropdownOptions = [{
       value: "",
       label: "Please select Railhead",
-    };
+    }];
+  
     for (let i = 0; i < jsonData.length; i++) {
       if (
         jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedOption3.trim().toLowerCase()
+        jsonData[i][1].trim().toLowerCase() === selectedOption3.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
+  
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    dropdownOptions.unshift(dropdownOptions_default);
+  
     setSubOptions3(dropdownOptions);
   };
+  
 
   const addConstraintWheat3 = async (e) => {
     e.preventDefault();
     if (selectedOptionWheat3 && subOptionWheat3) {
-      setBlockdataWheat3((data) => [
-        ...data,
-        {
-          origin_state: selectedOptionWheat3,
-          origin_railhead: subOptionWheat3,
-          id: Date.now(),
-        },
-      ]);
+      // Check if the railhead for the selected state is already added
+      if (!addedRailheads.has(subOptionWheat3)) {
+        setBlockdataWheat3((data) => [
+          ...data,
+          {
+            origin_state: selectedOptionWheat3,
+            origin_railhead: subOptionWheat3,
+            id: Date.now(),
+          },
+        ]);
+  
+        setSupplyWeatCount(supplyWeatCount + 1);
+        
+        // Add the railhead to the set to indicate it's added for this state
+        setAddedRailheads(new Set(addedRailheads).add(subOptionWheat3));
+      } else {
+        // Alert message if the railhead is already added for this state
+        alert(`Railhead ${subOptionWheat3} is already added for ${selectedOptionWheat3}.`);
+      }
+  
       setSubOptionsWheat3([]);
-      setSupplyWeatCount(supplyWeatCount + 1);
     }
+  
     setSubOptionWheat3("");
+  
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
-
+  
     const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
+  
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
+  
     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
+  
+    const dropdownOptions = [{
       value: "",
       label: "Please select Railhead",
-    };
+    }];
+  
     for (let i = 0; i < jsonData.length; i++) {
       if (
         jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedOptionWheat3.trim().toLowerCase()
+        jsonData[i][1].trim().toLowerCase() === selectedOptionWheat3.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
+  
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
+  
     setSubOptionsWheat3(dropdownOptions);
   };
+  
+const addConstraint4 = async (e) => {
+  e.preventDefault();
 
-  const addConstraint4 = async (e) => {
-    e.preventDefault();
-    if (selectedOption4 && subOption4) {
+  if (selectedOption4 && subOption4) {
+    // Check if the railhead for the selected state is already added
+    if (!addedRailheads.has(subOption4)) {
       setRiceDestination((data) => [
         ...data,
         {
@@ -1124,45 +1176,58 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
+
       setnumber_check2(number_check2 + 1);
-      setSubOptions4([]);
+
+      // Add the railhead to the set to indicate it's added for this state
+      setAddedRailheads(new Set(addedRailheads).add(subOption4));
+    } else {
+      alert(`Railhead ${subOption4} is already added for ${selectedOption4}.`);
     }
-    setSubOption4("");
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
 
-    const workbook = XLSX.read(data, { type: "array" });
+    setSubOptions4([]);
+  }
 
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
+  setSubOption4("");
 
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
+  const response = await fetch("/data/Updated_railhead_list.xlsx");
+  const arrayBuffer = await response.arrayBuffer();
+  const data = new Uint8Array(arrayBuffer);
+
+  const workbook = XLSX.read(data, { type: "array" });
+
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+
+  const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+  const dropdownOptions = [
+    {
       value: "",
       label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedOption4.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions4(dropdownOptions);
-  };
+    },
+  ];
 
-  const addConstraintWheat4 = async (e) => {
-    e.preventDefault();
-    if (selectedOptionWheat4 && subOptionWheat4) {
+  for (let i = 0; i < jsonData.length; i++) {
+    if (
+      jsonData[i][1] &&
+      jsonData[i][1].trim().toLowerCase() === selectedOption4.trim().toLowerCase()
+    ) {
+      dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+    }
+  }
+
+  dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+  setSubOptions4(dropdownOptions);
+};
+
+
+const addConstraintWheat4 = async (e) => {
+  e.preventDefault();
+  if (selectedOptionWheat4 && subOptionWheat4) {
+    // Check if the railhead for the selected state is already added
+    if (!addedRailheads.has(subOptionWheat4)) {
       setWheatDestination((data) => [
         ...data,
         {
@@ -1171,74 +1236,94 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-      setSubOptionsWheat4([]);
+
       setDestinationWheatCount(destinationWheatCount + 1);
+
+      // Add the railhead to the set to indicate it's added for this state
+      setAddedRailheads(new Set(addedRailheads).add(subOptionWheat4));
+    } else {
+      // Alert message if the railhead is already added for this state
+      alert(`Railhead ${subOptionWheat4} is already added for ${selectedOptionWheat4}.`);
     }
-    setSubOptionWheat4("");
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
 
-    const workbook = XLSX.read(data, { type: "array" });
+    setSubOptionsWheat4([]);
+  }
 
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
+  setSubOptionWheat4("");
 
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedOptionWheat4.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat4(dropdownOptions);
-  };
+  const response = await fetch("/data/Updated_railhead_list.xlsx");
+  const arrayBuffer = await response.arrayBuffer();
+  const data = new Uint8Array(arrayBuffer);
 
-  const addConstraint_fixed = (e) => {
-    e.preventDefault();
+  const workbook = XLSX.read(data, { type: "array" });
+
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+
+  const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+  const dropdownOptions = [{
+    value: "",
+    label: "Please select Railhead",
+  }];
+
+  for (let i = 0; i < jsonData.length; i++) {
     if (
-      selectedOption_fixed &&
-      subOption1_fixed &&
-      selectedOption2_fixed &&
-      subOption2_fixed &&
-      commodity_fixed
-      // && value_fixed
+      jsonData[i][1] &&
+      jsonData[i][1].trim().toLowerCase() === selectedOptionWheat4.trim().toLowerCase()
     ) {
-      setFixeddata((data) => [
-        ...data,
-        {
-          origin_state: selectedOption_fixed,
-          origin_railhead: subOption1_fixed,
-          destination_state: selectedOption2_fixed,
-          destination_railhead: subOption2_fixed,
-          commodity: commodity_fixed,
-          value: value_fixed,
-          id: Date.now(),
-        },
-      ]);
-      setSelectedOption_fixed("default");
-      setSelectedOption2_fixed("default");
-      setSubOptions_fixed([]);
-      setSubOptions2_fixed([]);
-      setProgress((prev) => [
-        ...prev,
-        `Route from ${subOption1_fixed} to ${subOption2_fixed} has been fixed for ${commodity_fixed}`,
-      ]);
+      dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
     }
-  };
+  }
+
+  dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+  setSubOptionsWheat4(dropdownOptions);
+};
+
+
+const addConstraint_fixed = (e) => {
+  e.preventDefault();
+  if (
+    selectedOption_fixed &&
+    subOption1_fixed &&
+    selectedOption2_fixed &&
+    subOption2_fixed &&
+    commodity_fixed
+    // && value_fixed
+  ) {
+    // Check if origin and destination railheads are the same
+    if (subOption1_fixed === subOption2_fixed) {
+      alert("Origin and destination railheads cannot be the same.");
+      return; // Do not proceed further
+    }
+
+    setFixeddata((data) => [
+      ...data,
+      {
+        origin_state: selectedOption_fixed,
+        origin_railhead: subOption1_fixed,
+        destination_state: selectedOption2_fixed,
+        destination_railhead: subOption2_fixed,
+        commodity: commodity_fixed,
+        value: value_fixed,
+        id: Date.now(),
+      },
+    ]);
+    
+    // Reset options and suboptions
+    setSelectedOption_fixed("default");
+    setSelectedOption2_fixed("default");
+    setSubOptions_fixed([]);
+    setSubOptions2_fixed([]);
+
+    setProgress((prev) => [
+      ...prev,
+      `Route from ${subOption1_fixed} to ${subOption2_fixed} has been fixed for ${commodity_fixed}`,
+    ]);
+  }
+};
+
   const viewGrid = () => {
     setShowMessage(true);
     const riceData = JSON.parse(Total_result?.rice ?? 0);
@@ -1333,9 +1418,10 @@ function Daily_Planner() {
             style={{ backgroundColor: "rgba(235, 171, 68, 0.69)" }}
           >
             <li className="xn-icon-button">
-              <a href="#" className="x-navigation-minimize">
-                <span className="fa fa-dedent" />
-              </a>
+             <a href="javascript:void(0)" className="x-navigation-minimize">
+  <span className="fa fa-dedent" />
+</a>
+
             </li>
             <li
               className="xn-logo"
@@ -1677,7 +1763,7 @@ function Daily_Planner() {
 
                       <br />
 
-                      {block_data3.length != 0 && (
+                      {block_data3.length !== 0 && (
                         <div>
                           <table>
                             <thead>
@@ -1812,7 +1898,8 @@ function Daily_Planner() {
                       </div>
                       <br />
                       <div>
-                        {rice_destination.length != 0 && (
+                      {rice_destination.length !== 0 && (
+
                           <div>
                             <table>
                               <thead>
@@ -1939,7 +2026,7 @@ function Daily_Planner() {
                             <select
                               style={{ width: "200px", padding: "5px" }}
                               onChange={handleSubDropdownChange5}
-                              value={subOption5}
+                              value={subOption5 === 'default' ? 'default' : subOption5}
                             >
                               {subOptions5.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -1959,6 +2046,7 @@ function Daily_Planner() {
                               style={{ width: "200px", padding: "5px" }}
                               onChange={handleDropdownChange6}
                               value={selectedOption6}
+                              
                             >
                               <option value="default">
                                 Select Inline State
@@ -2028,7 +2116,8 @@ function Daily_Planner() {
                       </div>
                       <br />
 
-                      {block_data2.length != 0 && (
+                      {block_data2.length !== 0 && (
+
                         <div>
                           {/* <div
                       style={{
@@ -2208,7 +2297,8 @@ function Daily_Planner() {
 
                       <br />
 
-                      {block_dataWheat3.length != 0 && (
+                      {block_dataWheat3.length !== 0 && (
+
                         <div>
                           <table>
                             <thead>
@@ -2344,7 +2434,8 @@ function Daily_Planner() {
                       </div>
                       <br />
                       <div>
-                        {wheat_destination.length != 0 && (
+                      {wheat_destination.length !== 0 && (
+
                           <div>
                             <table>
                               <thead>
@@ -2558,14 +2649,15 @@ function Daily_Planner() {
                                 alignItems: "center",
                               }}
                             >
-                              Add
+                             Add
                             </button>
                           </div>
                         </div>
                       </div>
                       <br />
 
-                      {block_dataWheat2.length != 0 && (
+                      {block_dataWheat2.length !== 0 && (
+
                         <div>
                           {/* <div
                       style={{
@@ -2768,7 +2860,8 @@ function Daily_Planner() {
                       </div>
                     </div>
                     <br />
-                    {!solutionSolved && block_data.length != 0 && (
+                    {!solutionSolved && block_data.length !== 0 && (
+
                       <div>
                         <table>
                           <thead>
@@ -3016,12 +3109,13 @@ function Daily_Planner() {
                             marginLeft: 713,
                           }}
                         >
-                          Add
+                         Add
                         </button>
                       </div>
                     </div>
                     <br />
-                    {!solutionSolved && fixed_data.length != 0 && (
+                    {!solutionSolved && fixed_data.length !== 0 && (
+
                       <div>
                         <table>
                           <thead>
