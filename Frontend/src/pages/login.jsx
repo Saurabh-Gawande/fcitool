@@ -119,7 +119,7 @@ function Login() {
           </div>
           <div className="login-footer">
             <div className="pull-left" style={{ color: "white" }}>
-              &copy; DEVELOPED BY IIT-DELHI
+              &copy; DEVELOPED BY IIT-DELHI v1.0.0
             </div>
           </div>
         </div>
