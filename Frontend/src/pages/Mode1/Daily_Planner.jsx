@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -9,6 +9,10 @@ function Daily_Planner() {
   const ProjectIp = config.serverUrl;
   const [fileSelected, setFileSelected] = useState(false);
   const [inline_value_rice, setInlineValueRice] = useState("");
+  const [origin_value_rice, setOriginValueRice] = useState("");
+  const [dest_value_rice, setDestValueRice] = useState("");
+  const [origin_value_wheat, setOriginValueWheat] = useState("");
+  const [dest_value_wheat, setDestValueWheat] = useState("");
   const [inline_value_wheat, setInlineValueWheat] = useState("");
   const [block_data, setBlockdata] = useState([]);
   const [block_data2, setBlockdata2] = useState([]);
@@ -82,8 +86,65 @@ function Daily_Planner() {
   const [downloadMessage, setDownloadMessage] = useState(false);
   const [progress, setProgress] = useState([]);
   const [filterRailHead, setfilterRailHead] = useState([]);
-    // Define a Set to keep track of added railheads
-    const [addedRailheads, setAddedRailheads] = useState(new Set());
+  const [commodity, set_Commodity] = useState("");
+  const [inline_value_dest_rice, setDestInlineValueRice] = useState("");
+  const [inline_value_dest_wheat, setDestInlineValueWheat] = useState("");
+  const [block_dataDest2, setBlockdataDest2] = useState([]);
+  const [block_dataDestWheat2, setBlockdataDestWheat2] = useState([]);
+  const [selectedOptionDRI5, setSelectedOptionDRI5] = useState("default");
+  const [subOptionsDRI5, setSubOptionsDRI5] = useState([]);
+  const [selectedOptionDRI6, setSelectedOptionDRI6] = useState("default");
+  const [subOptionsDRI6, setSubOptionsDRI6] = useState([]);
+  const [selectedOptionDestWheat5, setSelectedOptionDestWheat5] =
+    useState("default");
+  const [subOptionsDestWheat5, setSubOptionsDestWheat5] = useState([]);
+  const [selectedOptionDestWheat6, setSelectedOptionDestWheat6] =
+    useState("default");
+  const [subOptionsDestWheat6, setSubOptionsDestWheat6] = useState([]);
+  const [subOptionDRI5, setSubOptionDRI5] = useState("");
+  const [subOptionDRI6, setSubOptionDRI6] = useState("");
+  const [subOptionDestWheat5, setSubOptionDestWheat5] = useState("");
+  const [subOptionDestWheat6, setSubOptionDestWheat6] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange_ = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleFileUpload = async() => {
+    // Create a FormData object to send the file to the backend
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const response = await fetch(ProjectIp + "/uploadDailyFile", {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const jsonResponse = await response.json();
+
+      if (jsonResponse.status === 1) {
+        alert("File Uploaded");
+      } else {
+        console.log(jsonResponse);
+        alert("Error uploading file");
+      }
+    } catch (error) {
+      console.error("Error during file upload:", error);
+      alert("An error occurred during file upload. Please try again later.");
+    }
+  };
+
+  // Define a Set to keep track of added railheads
+  const [addedRailheads, setAddedRailheads] = useState(new Set());
 
   // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
@@ -91,6 +152,438 @@ function Daily_Planner() {
     updatedData[sheetName][rowIndex][columnIndex] = newValue;
     setExcelData(updatedData);
   };
+
+  const handleDropdownChangeDestWheat5 = async (e) => {
+    const selectedValue = e.target.value;
+    setSelectedOptionDestWheat5(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedValue) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptionsDestWheat5(dropdownOptions);
+    console.log(jsonData[1][1], dropdownOptions, selectedValue);
+    setSubOptionsDestWheat5(dropdownOptions);
+  };
+
+  const handleDropdownChangeDestWheat6 = async (e) => {
+    const selectedValue = e.target.value;
+    setSelectedOptionDestWheat6(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedValue) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptionsDestWheat6(dropdownOptions);
+    console.log(jsonData[1][1], dropdownOptions, selectedValue);
+    setSubOptionsDestWheat6(dropdownOptions);
+  };
+
+  const addConstraintDestWheat2 = async (e) => {
+    e.preventDefault();
+    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+    if (
+      selectedOptionDestWheat5 &&
+      subOptionDestWheat5 &&
+      selectedOptionDestWheat6 &&
+      subOptionDestWheat6
+    ) {
+      setBlockdataDestWheat2((data) => [
+        ...data,
+        {
+          origin_state: selectedOptionDestWheat5,
+          origin_railhead: subOptionDestWheat5,
+          destination_state: selectedOptionDestWheat6,
+          destination_railhead: subOptionDestWheat6,
+          id: Date.now(),
+        },
+      ]);
+      let data = [
+        {
+          origin_state: selectedOptionDestWheat5,
+          origin_railhead: subOptionDestWheat5,
+          destination_state: selectedOptionDestWheat6,
+          destination_railhead: subOptionDestWheat6,
+        },
+      ];
+      for (let i = 0; i < block_dataDestWheat2.length; i++) {
+        data.push(block_dataDestWheat2[i]);
+      }
+      console.log(data);
+      setSelectedOptionWheat5("default");
+      setSelectedOptionWheat6("default");
+      setSubOptionWheat5([]);
+      setSubOptionWheat6([]);
+      if (isLoading3) return; // Prevent additional clicks while loading
+      setIsLoading3(true);
+      try {
+        const payload1 = {
+          rice_inline: block_data2,
+          rice_inline_value: inline_value_rice,
+          wheat_inline: block_dataWheat2,
+          wheat_inline_value: inline_value_wheat,
+          rice_dest_inline_value: inline_value_dest_rice,
+          rice_dest_inline: block_dataDest2,
+          wheat_dest_inine_value: inline_value_dest_wheat,
+          wheat_dest_inine: block_dataDestWheat2,
+        };
+        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload1),
+        });
+
+        const responseData1 = await response2.json(); // Parse response JSON
+        console.log(responseData1); // Log the response data
+
+        if (responseData1.status === "NO") {
+          alert("Distance is not within range. Please check again.");
+        }
+      } catch (error) {
+        console.error("Error sending inputs:", error);
+      } finally {
+        setIsLoading3(false);
+      } // Reset loading state
+    }
+    document.getElementById("console_").style.display = "block";
+    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+    document.getElementById("console_").innerHTML +=
+      "New Inline details has been added for wheat" + "<br/><br/>";
+  };
+
+  const handleDeleteRow_inlineDestWheat = (e) => {
+    console.log(e);
+    let fixed_data_ = block_dataDestWheat2.filter((item) => item["id"] !== e);
+    setBlockdataDestWheat2(fixed_data_);
+  };
+
+  const handleDropdownChangeDRI6 = async (e) => {
+    const selectedValue = e.target.value;
+    setSelectedOptionDRI6(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedValue) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptionsDRI6(dropdownOptions);
+    console.log(jsonData[1][1], dropdownOptions, selectedValue);
+    setSubOptionsDRI6(dropdownOptions);
+  };
+
+  const addConstraintDRI2 = async (e) => {
+    e.preventDefault();
+    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
+    if (
+      selectedOptionDRI5 &&
+      subOptionDRI5 &&
+      selectedOptionDRI6 &&
+      subOptionDRI6
+    ) {
+      setBlockdataDest2((data) => [
+        ...data,
+        {
+          origin_state: selectedOptionDRI5,
+          origin_railhead: subOptionDRI5,
+          destination_state: selectedOptionDRI6,
+          destination_railhead: subOptionDRI6,
+          id: Date.now(),
+        },
+      ]);
+
+      let data = [
+        {
+          origin_state: selectedOptionDRI5,
+          origin_railhead: subOptionDRI5,
+          destination_state: selectedOptionDRI6,
+          destination_railhead: subOptionDRI6,
+        },
+      ];
+      for (let i = 0; i < block_dataDest2.length; i++) {
+        data.push(block_dataDest2[i]);
+      }
+      console.log(data);
+
+      setSelectedOptionDRI5("default");
+      setSelectedOptionDRI6("default");
+      setSubOptionsDRI5([]);
+      setSubOptionsDRI6([]);
+
+      console.log(block_dataDest2);
+      if (isLoading2) return; // Prevent additional clicks while loading
+      setIsLoading2(true);
+      try {
+        const payload1 = {
+          rice_inline: block_data2,
+          rice_inline_value: inline_value_rice,
+          wheat_inline: block_dataWheat2,
+          wheat_inline_value: inline_value_wheat,
+          rice_dest_inline_value: inline_value_dest_rice,
+          rice_dest_inline: block_dataDest2,
+          wheat_dest_inine_value: inline_value_dest_wheat,
+          wheat_dest_inine: block_dataDestWheat2,
+        };
+
+        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload1),
+        });
+
+        const responseData1 = await response2.json(); // Parse response JSON
+        console.log(responseData1); // Log the response data
+
+        if (responseData1.status === "NO") {
+          alert("Distance is not within range. Please check again.");
+        }
+      } catch (error) {
+        console.error("Error sending inputs:", error);
+      } finally {
+        // Reset loading state
+        setIsLoading2(false);
+      }
+    }
+
+    document.getElementById("console_").style.display = "block";
+    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
+    document.getElementById("console_").innerHTML +=
+      "New Inline details has been added for rice" + "<br/><br/>";
+  };
+
+  const handleDeleteRow_dest_inline = (e) => {
+    console.log(e);
+    let fixed_data_ = block_dataDest2.filter((item) => item["id"] !== e);
+    setBlockdataDest2(fixed_data_);
+  };
+
+  const handleDropdownChangeDRI5 = async (e) => {
+    const selectedValue = e.target.value;
+    setSelectedOptionDRI5(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // Assuming the Excel file has only one sheet
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Parse the sheet data into JSON format
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (jsonData[i][1] == selectedValue) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // dropdownOptions=dropdownOptions_default+dropdownOptions;
+    dropdownOptions.unshift(dropdownOptions_default);
+    setSubOptionsDRI5(dropdownOptions);
+    // console.log(jsonData[1][1], dropdownOptions, selectedValue);
+    setSubOptionsDRI5(dropdownOptions);
+  };
+
+  const handleSubDropdownChangeDRI5 = (e) => {
+    setSubOptionDRI5(e.target.value);
+  };
+
+  const handleSubDropdownChangeDestWheat5 = (e) => {
+    setSubOptionDestWheat5(e.target.value);
+  };
+
+  const handleSubDropdownChangeDRI6 = (e) => {
+    setSubOptionDRI6(e.target.value);
+  };
+
+  const handleSubDropdownChangeDestWheat6 = (e) => {
+    setSubOptionDestWheat6(e.target.value);
+  };
+
+  const getCommodityData = async () => {
+    // setUpdateExcel(false);
+    const response = await fetch(ProjectIp + "/getDataTemplate");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    // console.log(data);
+    // set_Commodity(e.target.value);
+    // console.log(e.target.value);
+    const workbook = XLSX.read(data, { type: "array" });
+    console.log(workbook, commodity);
+    const waitForSheetToLoad = (sheetName, maxAttempts = 10) => {
+      return new Promise((resolve, reject) => {
+        let attempts = 0;
+
+        const checkSheet = () => {
+          if (workbook.Sheets[sheetName]) {
+            resolve(workbook.Sheets[sheetName]);
+          } else {
+            attempts++;
+            if (attempts >= maxAttempts) {
+              reject(new Error(`Sheet "${sheetName}" not found in workbook.`));
+            } else {
+              setTimeout(checkSheet, 500); // Check every 500 milliseconds (adjust as needed)
+            }
+          }
+        };
+
+        checkSheet();
+      });
+    };
+
+    try {
+      const def_sheet_rice = "Deficit_rice";
+      const surplus_sheet_rice = "Surplus_rice";
+      console.log(def_sheet_rice, surplus_sheet_rice);
+      const deficitSheetRice = await waitForSheetToLoad(def_sheet_rice);
+      const surplusSheetRice = await waitForSheetToLoad(surplus_sheet_rice);
+      const deficit_data_rice = XLSX.utils.sheet_to_json(deficitSheetRice, {
+        header: 1,
+      });
+      const surplus_data_rice = XLSX.utils.sheet_to_json(surplusSheetRice, {
+        header: 1,
+      });
+      const def_10_rice = [...deficit_data_rice.slice(1, 10)];
+      const sur_10_rice = [...surplus_data_rice.slice(1, 10)];
+      setBlockdata3([]);
+      setRiceDestination([]);
+      for (let i = 0; i < sur_10_rice.length; i++) {
+        setBlockdata3((data) => [
+          ...data,
+          {
+            origin_state: sur_10_rice[i][1],
+            origin_railhead: sur_10_rice[i][0],
+            origin_value:sur_10_rice[i][2],
+            id: Date.now()+i.toString(),
+          },
+        ]);
+      }
+      for (let i = 0; i < def_10_rice.length; i++) {
+        setRiceDestination((data) => [
+          ...data,
+          {
+            origin_state: def_10_rice[i][1],
+            origin_railhead: def_10_rice[i][0],
+            origin_value:def_10_rice[i][2],
+            id: Date.now()+i.toString(),
+          },
+        ]);
+      }
+
+      const def_sheet_wheat = "Deficit_wheat";
+      const surplus_sheet_wheat = "Surplus_wheat";
+      console.log(def_sheet_wheat, surplus_sheet_wheat);
+      const deficitSheetWheat = await waitForSheetToLoad(def_sheet_wheat);
+      const surplusSheetWheat = await waitForSheetToLoad(surplus_sheet_wheat);
+      const deficit_data_wheat = XLSX.utils.sheet_to_json(deficitSheetWheat, {
+        header: 1,
+      });
+      const surplus_data_wheat = XLSX.utils.sheet_to_json(surplusSheetWheat, {
+        header: 1,
+      });
+      const def_10_wheat = [...deficit_data_wheat.slice(1, 10)];
+      const sur_10_wheat = [...surplus_data_wheat.slice(1, 10)];
+      setBlockdataWheat3([]);
+      setWheatDestination([]);
+      for (let i = 0; i < sur_10_wheat.length; i++) {
+        setBlockdataWheat3((data) => [
+          ...data,
+          {
+            origin_state: sur_10_wheat[i][1],
+            origin_railhead: sur_10_wheat[i][0],
+            origin_value:sur_10_wheat[i][2],
+            id: Date.now()+i.toString(),
+          },
+        ]);
+      }
+      for (let i = 0; i < def_10_wheat.length; i++) {
+        setWheatDestination((data) => [
+          ...data,
+          {
+            origin_state: def_10_wheat[i][1],
+            origin_railhead: def_10_wheat[i][0],
+            origin_value: def_10_wheat[i][2],
+            id: Date.now() + i,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Your code here
+    getCommodityData();
+  }, []);
 
   const handleFileChange = (event) => {
     setFileSelected(event.target.files.length > 0);
@@ -291,11 +784,15 @@ function Daily_Planner() {
       rice_origin: block_data3,
       rice_destination: rice_destination,
       rice_inline: block_data2,
+      rice_dest_inline : block_dataDest2,
+      rice_dest_inline_value : inline_value_dest_rice,
       rice_inline_value: inline_value_rice,
       wheat_origin: block_dataWheat3,
       wheat_destination: wheat_destination,
       wheat_inline: block_dataWheat2,
       wheat_inline_value: inline_value_wheat,
+      wheat_dest_inline: block_dataDestWheat2,
+      wheat_dest_inline_value: inline_value_dest_wheat
     };
 
     try {
@@ -340,7 +837,7 @@ function Daily_Planner() {
 
   const fetchReservationId_Revelant_result = () => {
     var form = new FormData();
-    fetch(ProjectIp + "/read_Daily_Planner_S2", {
+    fetch(ProjectIp + "/read_Daily_Planner_S1", {
       method: "POST",
       credentials: "include",
       body: form,
@@ -499,7 +996,7 @@ function Daily_Planner() {
 
   const handleDropdownChange5 = async (e) => {
     const selectedValue = e.target.value;
-    console.log(selectedValue)
+    console.log(selectedValue);
     setSelectedOption5(selectedValue);
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
@@ -563,19 +1060,19 @@ function Daily_Planner() {
   const handleDropdownChange6 = async (e) => {
     const selectedValue = e.target.value;
     setSelectedOption6(selectedValue);
-  
+
     // Check if the railhead for the selected state is already added
     if (!addedRailheads.has(selectedValue)) {
       const response = await fetch("/data/Updated_railhead_list.xlsx");
       const arrayBuffer = await response.arrayBuffer();
       const data = new Uint8Array(arrayBuffer);
-  
+
       const workbook = XLSX.read(data, { type: "array" });
-  
+
       // Assuming the Excel file has only one sheet
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-  
+
       // Parse the sheet data into JSON format
       const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
       let dropdownOptions = [];
@@ -585,13 +1082,16 @@ function Daily_Planner() {
       };
       for (let i = 0; i < jsonData.length; i++) {
         if (jsonData[i][1] == selectedValue) {
-          dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+          dropdownOptions.push({
+            value: jsonData[i][0],
+            label: jsonData[i][0],
+          });
         }
       }
       dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
       dropdownOptions.unshift(dropdownOptions_default);
       setSubOptions6(dropdownOptions);
-  
+
       // Add the railhead to the set to indicate it's added for this state
       setAddedRailheads(new Set(addedRailheads).add(selectedValue));
     } else {
@@ -599,7 +1099,6 @@ function Daily_Planner() {
       alert(`Railhead for ${selectedValue} is already added.`);
     }
   };
-  
 
   const handleDropdownChangeWheat6 = async (e) => {
     const selectedValue = e.target.value;
@@ -879,7 +1378,7 @@ function Daily_Planner() {
         alert("Origin and destination railheads cannot be the same.");
         return; // Do not proceed further
       }
-  
+
       setBlockdata((data) => [
         ...data,
         {
@@ -890,24 +1389,23 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-  
+
       // Reset options and suboptions
       setSelectedOption("default");
       setSelectedOption2("default");
       setSubOptions([]);
       setSubOptions2([]);
-  
+
       setProgress((prev) => [
         ...prev,
         `Route from ${subOption1} to ${subOption2} has been blocked`,
       ]);
     }
   };
-  
 
   const addConstraint2 = async (e) => {
     e.preventDefault();
-  
+
     // Check if necessary options are selected
     if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
       // Check if the origin and destination railheads are the same
@@ -915,7 +1413,7 @@ function Daily_Planner() {
         alert("Origin and destination railheads cannot be the same.");
         return; // Do not proceed further
       }
-  
+
       // Update block data with the new constraint
       setBlockdata2((data) => [
         ...data,
@@ -927,16 +1425,16 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ]);
-  
+
       // Reset options and suboptions for rice
       setSelectedOption5("default");
       setSelectedOption6("default");
       setSubOptions5([]);
       setSubOptions6([]);
-  
+
       if (isLoading2) return; // Prevent additional clicks while loading
       setIsLoading2(true);
-  
+
       try {
         const payload1 = {
           rice_inline: block_data2,
@@ -944,7 +1442,7 @@ function Daily_Planner() {
           wheat_inline: block_dataWheat2,
           wheat_inline_value: inline_value_wheat,
         };
-  
+
         const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
           method: "POST",
           headers: {
@@ -952,9 +1450,9 @@ function Daily_Planner() {
           },
           body: JSON.stringify(payload1),
         });
-  
+
         const responseData1 = await response2.json(); // Parse response JSON
-  
+
         if (responseData1.status === "NO") {
           alert("Distance is not within range. Please check again.");
         }
@@ -965,25 +1463,30 @@ function Daily_Planner() {
         setIsLoading2(false);
       }
     }
-  
+
     // Add progress message
     setProgress((prev) => [
       ...prev,
       "New Inline details have been added for rice",
     ]);
   };
-  
+
   const addConstraintWheat2 = async (e) => {
     e.preventDefault();
-  
+
     // Check if necessary options are selected
-    if (selectedOptionWheat5 && subOptionWheat5 && selectedOptionWheat6 && subOptionWheat6) {
+    if (
+      selectedOptionWheat5 &&
+      subOptionWheat5 &&
+      selectedOptionWheat6 &&
+      subOptionWheat6
+    ) {
       // Check if origin and destination railheads for wheat are the same
       if (subOptionWheat5 === subOptionWheat6) {
         alert("Origin and destination railheads for wheat cannot be the same.");
         return; // Do not proceed further
       }
-  
+
       // Update wheat block data with the new constraint
       let data = [
         {
@@ -994,18 +1497,18 @@ function Daily_Planner() {
           id: Date.now(),
         },
       ];
-  
+
       setBlockdataWheat2((prevData) => [...prevData, ...data]);
-  
+
       // Reset options and suboptions for wheat
       setSelectedOptionWheat5("default");
       setSelectedOptionWheat6("default");
       setSubOptionWheat5([]);
       setSubOptionWheat6([]);
-  
+
       if (isLoading3) return; // Prevent additional clicks while loading
       setIsLoading3(true);
-  
+
       try {
         const payload1 = {
           rice_inline: block_data2,
@@ -1013,7 +1516,7 @@ function Daily_Planner() {
           wheat_inline: data,
           wheat_inline_value: inline_value_wheat,
         };
-  
+
         const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
           method: "POST",
           headers: {
@@ -1021,9 +1524,9 @@ function Daily_Planner() {
           },
           body: JSON.stringify(payload1),
         });
-  
+
         const responseData1 = await response2.json(); // Parse response JSON
-  
+
         if (responseData1.status === "NO") {
           alert("Distance is not within range. Please check again.");
         }
@@ -1034,20 +1537,18 @@ function Daily_Planner() {
         setIsLoading3(false);
       }
     }
-  
+
     // Add progress message
     setProgress((prev) => [
       ...prev,
       "New Inline details have been added for wheat",
     ]);
   };
-  
-
 
   const addConstraint3 = async (e) => {
     e.preventDefault();
     console.log(subOption3);
-  
+
     if (selectedOption3 && subOption3) {
       // Check if the railhead for the selected state is already added
       if (!addedRailheads.has(subOption3)) {
@@ -1056,53 +1557,58 @@ function Daily_Planner() {
           {
             origin_state: selectedOption3,
             origin_railhead: subOption3,
+            origin_value: origin_value_rice,
             id: Date.now(),
           },
         ]);
-  
+
         setnumber_check1(number_check1 + 1);
-  
+
         // Add the railhead to the set to indicate it's added for this state
         setAddedRailheads(new Set(addedRailheads).add(subOption3));
-      }else{
-        alert(`Railhead ${subOption3} is already added for ${selectedOption3}.`);
+      } else {
+        alert(
+          `Railhead ${subOption3} is already added for ${selectedOption3}.`
+        );
       }
-  
+
       setSubOptions3([]);
     }
-  
+
     setSubOption3("");
-  
+
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
-  
+
     const workbook = XLSX.read(data, { type: "array" });
-  
+
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-  
+
     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-  
-    const dropdownOptions = [{
-      value: "",
-      label: "Please select Railhead",
-    }];
-  
+
+    const dropdownOptions = [
+      {
+        value: "",
+        label: "Please select Railhead",
+      },
+    ];
+
     for (let i = 0; i < jsonData.length; i++) {
       if (
         jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() === selectedOption3.trim().toLowerCase()
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOption3.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
-  
+
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-  
+
     setSubOptions3(dropdownOptions);
   };
-  
 
   const addConstraintWheat3 = async (e) => {
     e.preventDefault();
@@ -1114,215 +1620,229 @@ function Daily_Planner() {
           {
             origin_state: selectedOptionWheat3,
             origin_railhead: subOptionWheat3,
+            origin_value: origin_value_wheat,
             id: Date.now(),
           },
         ]);
-  
+
         setSupplyWeatCount(supplyWeatCount + 1);
-        
+
         // Add the railhead to the set to indicate it's added for this state
         setAddedRailheads(new Set(addedRailheads).add(subOptionWheat3));
       } else {
         // Alert message if the railhead is already added for this state
-        alert(`Railhead ${subOptionWheat3} is already added for ${selectedOptionWheat3}.`);
+        alert(
+          `Railhead ${subOptionWheat3} is already added for ${selectedOptionWheat3}.`
+        );
       }
-  
+
       setSubOptionsWheat3([]);
     }
-  
+
     setSubOptionWheat3("");
-  
+
     const response = await fetch("/data/Updated_railhead_list.xlsx");
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
-  
+
     const workbook = XLSX.read(data, { type: "array" });
-  
+
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-  
+
     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-  
-    const dropdownOptions = [{
-      value: "",
-      label: "Please select Railhead",
-    }];
-  
+
+    const dropdownOptions = [
+      {
+        value: "",
+        label: "Please select Railhead",
+      },
+    ];
+
     for (let i = 0; i < jsonData.length; i++) {
       if (
         jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() === selectedOptionWheat3.trim().toLowerCase()
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOptionWheat3.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
     }
-  
+
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-  
+
     setSubOptionsWheat3(dropdownOptions);
   };
-  
-const addConstraint4 = async (e) => {
-  e.preventDefault();
 
-  if (selectedOption4 && subOption4) {
-    // Check if the railhead for the selected state is already added
-    if (!addedRailheads.has(subOption4)) {
-      setRiceDestination((data) => [
-        ...data,
-        {
-          origin_state: selectedOption4,
-          origin_railhead: subOption4,
-          id: Date.now(),
-        },
-      ]);
+  const addConstraint4 = async (e) => {
+    e.preventDefault();
 
-      setnumber_check2(number_check2 + 1);
+    if (selectedOption4 && subOption4) {
+      // Check if the railhead for the selected state is already added
+      if (!addedRailheads.has(subOption4)) {
+        setRiceDestination((data) => [
+          ...data,
+          {
+            origin_state: selectedOption4,
+            origin_railhead: subOption4,
+            origin_value: dest_value_rice,
+            id: Date.now(),
+          },
+        ]);
 
-      // Add the railhead to the set to indicate it's added for this state
-      setAddedRailheads(new Set(addedRailheads).add(subOption4));
-    } else {
-      alert(`Railhead ${subOption4} is already added for ${selectedOption4}.`);
+        setnumber_check2(number_check2 + 1);
+
+        // Add the railhead to the set to indicate it's added for this state
+        setAddedRailheads(new Set(addedRailheads).add(subOption4));
+      } else {
+        alert(
+          `Railhead ${subOption4} is already added for ${selectedOption4}.`
+        );
+      }
+
+      setSubOptions4([]);
     }
 
-    setSubOptions4([]);
-  }
+    setSubOption4("");
 
-  setSubOption4("");
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
 
-  const response = await fetch("/data/Updated_railhead_list.xlsx");
-  const arrayBuffer = await response.arrayBuffer();
-  const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
 
-  const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
 
-  const sheetName = workbook.SheetNames[0];
-  const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-  const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-  const dropdownOptions = [
-    {
-      value: "",
-      label: "Please select Railhead",
-    },
-  ];
-
-  for (let i = 0; i < jsonData.length; i++) {
-    if (
-      jsonData[i][1] &&
-      jsonData[i][1].trim().toLowerCase() === selectedOption4.trim().toLowerCase()
-    ) {
-      dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-    }
-  }
-
-  dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-
-  setSubOptions4(dropdownOptions);
-};
-
-
-const addConstraintWheat4 = async (e) => {
-  e.preventDefault();
-  if (selectedOptionWheat4 && subOptionWheat4) {
-    // Check if the railhead for the selected state is already added
-    if (!addedRailheads.has(subOptionWheat4)) {
-      setWheatDestination((data) => [
-        ...data,
-        {
-          origin_state: selectedOptionWheat4,
-          origin_railhead: subOptionWheat4,
-          id: Date.now(),
-        },
-      ]);
-
-      setDestinationWheatCount(destinationWheatCount + 1);
-
-      // Add the railhead to the set to indicate it's added for this state
-      setAddedRailheads(new Set(addedRailheads).add(subOptionWheat4));
-    } else {
-      // Alert message if the railhead is already added for this state
-      alert(`Railhead ${subOptionWheat4} is already added for ${selectedOptionWheat4}.`);
-    }
-
-    setSubOptionsWheat4([]);
-  }
-
-  setSubOptionWheat4("");
-
-  const response = await fetch("/data/Updated_railhead_list.xlsx");
-  const arrayBuffer = await response.arrayBuffer();
-  const data = new Uint8Array(arrayBuffer);
-
-  const workbook = XLSX.read(data, { type: "array" });
-
-  const sheetName = workbook.SheetNames[0];
-  const sheet = workbook.Sheets[sheetName];
-
-  const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-  const dropdownOptions = [{
-    value: "",
-    label: "Please select Railhead",
-  }];
-
-  for (let i = 0; i < jsonData.length; i++) {
-    if (
-      jsonData[i][1] &&
-      jsonData[i][1].trim().toLowerCase() === selectedOptionWheat4.trim().toLowerCase()
-    ) {
-      dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-    }
-  }
-
-  dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-
-  setSubOptionsWheat4(dropdownOptions);
-};
-
-
-const addConstraint_fixed = (e) => {
-  e.preventDefault();
-  if (
-    selectedOption_fixed &&
-    subOption1_fixed &&
-    selectedOption2_fixed &&
-    subOption2_fixed &&
-    commodity_fixed
-    // && value_fixed
-  ) {
-    // Check if origin and destination railheads are the same
-    if (subOption1_fixed === subOption2_fixed) {
-      alert("Origin and destination railheads cannot be the same.");
-      return; // Do not proceed further
-    }
-
-    setFixeddata((data) => [
-      ...data,
+    const dropdownOptions = [
       {
-        origin_state: selectedOption_fixed,
-        origin_railhead: subOption1_fixed,
-        destination_state: selectedOption2_fixed,
-        destination_railhead: subOption2_fixed,
-        commodity: commodity_fixed,
-        value: value_fixed,
-        id: Date.now(),
+        value: "",
+        label: "Please select Railhead",
       },
-    ]);
-    
-    // Reset options and suboptions
-    setSelectedOption_fixed("default");
-    setSelectedOption2_fixed("default");
-    setSubOptions_fixed([]);
-    setSubOptions2_fixed([]);
+    ];
 
-    setProgress((prev) => [
-      ...prev,
-      `Route from ${subOption1_fixed} to ${subOption2_fixed} has been fixed for ${commodity_fixed}`,
-    ]);
-  }
-};
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOption4.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+    setSubOptions4(dropdownOptions);
+  };
+
+  const addConstraintWheat4 = async (e) => {
+    e.preventDefault();
+    if (selectedOptionWheat4 && subOptionWheat4) {
+      // Check if the railhead for the selected state is already added
+      if (!addedRailheads.has(subOptionWheat4)) {
+        setWheatDestination((data) => [
+          ...data,
+          {
+            origin_state: selectedOptionWheat4,
+            origin_railhead: subOptionWheat4,
+            origin_value: dest_value_wheat,
+            id: Date.now(),
+          },
+        ]);
+
+        setDestinationWheatCount(destinationWheatCount + 1);
+
+        // Add the railhead to the set to indicate it's added for this state
+        setAddedRailheads(new Set(addedRailheads).add(subOptionWheat4));
+      } else {
+        // Alert message if the railhead is already added for this state
+        alert(
+          `Railhead ${subOptionWheat4} is already added for ${selectedOptionWheat4}.`
+        );
+      }
+
+      setSubOptionsWheat4([]);
+    }
+
+    setSubOptionWheat4("");
+
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    const dropdownOptions = [
+      {
+        value: "",
+        label: "Please select Railhead",
+      },
+    ];
+
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedOptionWheat4.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+    setSubOptionsWheat4(dropdownOptions);
+  };
+
+  const addConstraint_fixed = (e) => {
+    e.preventDefault();
+    if (
+      selectedOption_fixed &&
+      subOption1_fixed &&
+      selectedOption2_fixed &&
+      subOption2_fixed &&
+      commodity_fixed
+      // && value_fixed
+    ) {
+      // Check if origin and destination railheads are the same
+      if (subOption1_fixed === subOption2_fixed) {
+        alert("Origin and destination railheads cannot be the same.");
+        return; // Do not proceed further
+      }
+
+      setFixeddata((data) => [
+        ...data,
+        {
+          origin_state: selectedOption_fixed,
+          origin_railhead: subOption1_fixed,
+          destination_state: selectedOption2_fixed,
+          destination_railhead: subOption2_fixed,
+          commodity: commodity_fixed,
+          value: value_fixed,
+          id: Date.now(),
+        },
+      ]);
+
+      // Reset options and suboptions
+      setSelectedOption_fixed("default");
+      setSelectedOption2_fixed("default");
+      setSubOptions_fixed([]);
+      setSubOptions2_fixed([]);
+
+      setProgress((prev) => [
+        ...prev,
+        `Route from ${subOption1_fixed} to ${subOption2_fixed} has been fixed for ${commodity_fixed}`,
+      ]);
+    }
+  };
 
   const viewGrid = () => {
     setShowMessage(true);
@@ -1418,10 +1938,9 @@ const addConstraint_fixed = (e) => {
             style={{ backgroundColor: "rgba(235, 171, 68, 0.69)" }}
           >
             <li className="xn-icon-button">
-             <a href="javascript:void(0)" className="x-navigation-minimize">
-  <span className="fa fa-dedent" />
-</a>
-
+              <a href="javascript:void(0)" className="x-navigation-minimize">
+                <span className="fa fa-dedent" />
+              </a>
             </li>
             <li
               className="xn-logo"
@@ -1521,6 +2040,10 @@ const addConstraint_fixed = (e) => {
                 </form> */}
                 </div>
                 <br />
+                <div style={{marginLeft:'35%'}}>
+      <input type="file" onChange={handleFileChange_} />
+      <button style={{margin:'5px', padding:'5px'}} onClick={handleFileUpload}>Upload</button>
+    </div>
                 <br />
                 <div style={{ display: "flex", marginLeft: "245px" }}>
                   {/* {fileSelected && ( */}
@@ -1632,6 +2155,33 @@ const addConstraint_fixed = (e) => {
                         <option value="TEFD+TC">TEFD + TC</option>
                       </select>
                     </label>
+                    <label>
+                      <strong
+                        style={{
+                          fontSize: "20px",
+                          marginLeft: "15px",
+                          color: "#9d0921",
+                        }}
+                      >
+                        Select Commodity
+                      </strong>
+                      <select
+                        value={commodity}
+                        onChange={(e) => {
+                          set_Commodity(e.target.value);
+                          setProgress((prev) => [
+                            ...prev,
+                            "You have selected the commodity as " +
+                              e.target.value,
+                          ]);
+                        }}
+                        style={{ marginLeft: "570px" }}
+                      >
+                        <option value="">Select Commodity</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Wheat">Wheat</option>
+                      </select>
+                    </label>
                     {/* <label>
                       <strong
                         style={{
@@ -1662,244 +2212,134 @@ const addConstraint_fixed = (e) => {
                     </label> */}
                     <br />
                     <br />
-                    <div>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        <strong
+                    {commodity === "Rice" && (
+                      <div>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          <strong
+                            style={{
+                              color: "#9d0921",
+                              fontSize: "20px",
+                              marginLeft: "15px",
+                            }}
+                          >
+                            For Rice:
+                          </strong>
+                        </p>
+                        <br />
+                        <div
                           style={{
-                            color: "#9d0921",
-                            fontSize: "20px",
-                            marginLeft: "15px",
+                            display: "flex",
+                            marginLeft: "20px",
+                            alignItems: "center",
                           }}
                         >
-                          For Rice:
-                        </strong>
-                      </p>
-                      <br />
-                      <div
-                        style={{
-                          display: "flex",
-                          marginLeft: "20px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Select Origin State:
-                          </strong>
-                          <select
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                              marginRight: 25,
-                            }}
-                            onChange={handleDropdownChange3}
-                            value={selectedOption3}
-                          >
-                            <option value="default">Select Origin State</option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Select Origin Railhead
-                          </strong>
-                          <select
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                            onChange={handleSubDropdownChange3}
-                            value={subOption3}
-                          >
-                            {subOptions3.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
+                          <div>
+                            <strong
+                              style={{ fontSize: "16px", padding: "5px" }}
+                            >
+                              Select Origin State:
+                            </strong>
+                            <select
+                              style={{
+                                width: "200px",
+                                padding: "5px",
+                                marginRight: 25,
+                              }}
+                              onChange={handleDropdownChange3}
+                              value={selectedOption3}
+                            >
+                              <option value="default">
+                                Select Origin State
                               </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div onClick={addConstraint3}>
-                          <button
-                            style={{
-                              textAlign: "center",
-                              backgroundColor: "orange",
-                              width: 70,
-                              height: 40,
-                              marginLeft: 346,
-                            }}
-                            disabled={
-                              subOption3 === "" && selectedOption3 === ""
-                            }
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
+                              <option value="Andhra Pradesh">
+                                Andhra Pradesh
+                              </option>
+                              <option value="Bihar">Bihar</option>
+                              <option value="Chattisgarh">Chattisgarh</option>
+                              <option value="Goa">Goa</option>
+                              <option value="Gujarat">Gujarat</option>
+                              <option value="Haryana">Haryana</option>
+                              <option value="Jammu & Kashmir">
+                                Jammu & Kashmir
+                              </option>
+                              <option value="Jharkhand">Jharkhand</option>
+                              <option value="Karnataka">Karnataka</option>
+                              <option value="Kerala">Kerala</option>
+                              <option value="MP">Madhya Pradesh</option>
+                              <option value="Maharashtra">Maharashtra</option>
+                              <option value="NE">North East</option>
+                              <option value="Odisha">Odisha</option>
+                              <option value="Punjab">Punjab</option>
+                              <option value="Rajasthan">Rajasthan</option>
+                              <option value="Tamil Nadu">Tamil Nadu</option>
+                              <option value="Telangana">Telangana</option>
+                              <option value="UP">Uttar Pradesh</option>
+                              <option value="Uttarakhand">Uttarakhand</option>
+                              <option value="West Bengal">West Bengal</option>
+                            </select>
+                          </div>
 
-                      <br />
-
-                      {block_data3.length !== 0 && (
-                        <div>
-                          <table>
-                            <thead>
-                              <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "396px" }}>
-                                  Origin State
-                                </th>
-                                <th style={{ padding: "10px", width: "396px" }}>
-                                  Origin Railhead
-                                </th>
-                                <th style={{ padding: "10px", width: "396px" }}>
-                                  Delete
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {block_data3.map((item) => (
-                                <tr key={item.id}>
-                                  <td>{item.origin_state}</td>
-                                  <td>{item.origin_railhead}</td>
-
-                                  <td>
-                                    <span
-                                      style={{
-                                        cursor: "pointer",
-                                        color: "#ff0000",
-                                        fontSize: "1.2rem",
-                                      }}
-                                      onClick={() =>
-                                        handleDeleteRow_Rice_s(item.id)
-                                      }
-                                      title="Delete"
-                                    >
-                                      &times;
-                                    </span>
-                                  </td>
-                                </tr>
+                          <div>
+                            <strong
+                              style={{ fontSize: "16px", padding: "5px" }}
+                            >
+                              Select Origin Railhead
+                            </strong>
+                            <select
+                              style={{
+                                width: "200px",
+                                padding: "5px",
+                              }}
+                              onChange={handleSubDropdownChange3}
+                              value={subOption3}
+                            >
+                              {subOptions3.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
                               ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
-                      <br />
-                      <div
-                        style={{
-                          display: "flex",
-                          marginLeft: "20px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Select Destination State:
-                          </strong>
-                          <select
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                              marginRight: 25,
-                            }}
-                            id="destination"
-                            onChange={handleDropdownChange4}
-                            value={selectedOption4}
-                          >
-                            <option value="default">
-                              Select Destination State
-                            </option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
-                          </select>
+                            </select>
+                          </div>
+                          <div style={{ marginLeft: "15px" }}>
+                            <strong
+                              style={{ fontSize: "16px", padding: "5px" }}
+                            >
+                              Enter Origin Value
+                            </strong>
+                            <input
+                              type="number"
+                              value={origin_value_rice}
+                              onChange={(e) =>
+                                setOriginValueRice(e.target.value)
+                              }
+                              style={{
+                                // marginLeft: "40px",
+                                width: "200px",
+                                padding: "5px",
+                              }}
+                            />
+                          </div>
+                          <div onClick={addConstraint3}>
+                            <button
+                              style={{
+                                textAlign: "center",
+                                backgroundColor: "orange",
+                                width: 70,
+                                height: 40,
+                                marginLeft: 346,
+                              }}
+                              disabled={
+                                subOption3 === "" && selectedOption3 === ""
+                              }
+                            >
+                              Add
+                            </button>
+                          </div>
                         </div>
 
-                        <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Select Destination Railhead
-                          </strong>
-                          <select
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                            onChange={handleSubDropdownChange4}
-                            value={subOption4}
-                          >
-                            {subOptions4.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div onClick={addConstraint4}>
-                          <button
-                            style={{
-                              textAlign: "center",
-                              backgroundColor: "orange",
-                              width: 70,
-                              height: 40,
-                              alignItems: "center",
-                              marginLeft: 267,
-                            }}
-                            disabled={
-                              subOption4 === "" && selectedOption4 === ""
-                            }
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                      <br />
-                      <div>
-                      {rice_destination.length !== 0 && (
+                        <br />
 
+                        {block_data3.length !== 0 && (
                           <div>
                             <table>
                               <thead>
@@ -1907,12 +2347,15 @@ const addConstraint_fixed = (e) => {
                                   <th
                                     style={{ padding: "10px", width: "396px" }}
                                   >
-                                    Destination State
+                                    Origin State
                                   </th>
                                   <th
                                     style={{ padding: "10px", width: "396px" }}
                                   >
-                                    Destination Railhead
+                                    Origin Railhead
+                                  </th>
+                                  <th style={{ padding: "10px", width: "15%" }}>
+                                    Origin Value
                                   </th>
                                   <th
                                     style={{ padding: "10px", width: "396px" }}
@@ -1922,10 +2365,12 @@ const addConstraint_fixed = (e) => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {rice_destination.map((item, index) => (
-                                  <tr key={index}>
+                              {block_data3.map((item) => (
+                                  <tr key={item.id}>
                                     <td>{item.origin_state}</td>
                                     <td>{item.origin_railhead}</td>
+                                    <td>{item.origin_value}</td>
+
                                     <td>
                                       <span
                                         style={{
@@ -1934,7 +2379,7 @@ const addConstraint_fixed = (e) => {
                                           fontSize: "1.2rem",
                                         }}
                                         onClick={() =>
-                                          handleDeleteRow_Rice__dest(index)
+                                          handleDeleteRow_Rice_s(item.id)
                                         }
                                         title="Delete"
                                       >
@@ -1947,31 +2392,11 @@ const addConstraint_fixed = (e) => {
                             </table>
                           </div>
                         )}
-                      </div>
-                      <br />
-                      <br />
-                      <div>
-                        <div style={{ marginLeft: "15px" }}>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Enter Inline Value
-                          </strong>
-                          <input
-                            type="number"
-                            value={inline_value_rice}
-                            onChange={(e) => setInlineValueRice(e.target.value)}
-                            style={{
-                              marginLeft: "40px",
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                          />
-                        </div>
                         <br />
                         <div
                           style={{
                             display: "flex",
                             marginLeft: "20px",
-                            width: "1170px",
                             alignItems: "center",
                           }}
                         >
@@ -1979,15 +2404,20 @@ const addConstraint_fixed = (e) => {
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
                             >
-                              Select Inline State
+                              Select Destination State:
                             </strong>
                             <select
-                              style={{ width: "200px", padding: "5px" }}
-                              onChange={handleDropdownChange5}
-                              value={selectedOption5}
+                              style={{
+                                width: "200px",
+                                padding: "5px",
+                                marginRight: 25,
+                              }}
+                              id="destination"
+                              onChange={handleDropdownChange4}
+                              value={selectedOption4}
                             >
                               <option value="default">
-                                Select Inline State
+                                Select Destination State
                               </option>
                               <option value="Andhra Pradesh">
                                 Andhra Pradesh
@@ -1996,18 +2426,18 @@ const addConstraint_fixed = (e) => {
                               <option value="Chattisgarh">Chattisgarh</option>
                               <option value="Goa">Goa</option>
                               <option value="Gujarat">Gujarat</option>
-                              {/* <option value="Haryana">Haryana</option> */}
+                              <option value="Haryana">Haryana</option>
                               <option value="Jammu & Kashmir">
                                 Jammu & Kashmir
                               </option>
                               <option value="Jharkhand">Jharkhand</option>
                               <option value="Karnataka">Karnataka</option>
                               <option value="Kerala">Kerala</option>
-                              {/* <option value="MP">Madhya Pradesh</option> */}
+                              <option value="MP">Madhya Pradesh</option>
                               <option value="Maharashtra">Maharashtra</option>
                               <option value="NE">North East</option>
                               <option value="Odisha">Odisha</option>
-                              {/* <option value="Punjab">Punjab</option> */}
+                              <option value="Punjab">Punjab</option>
                               <option value="Rajasthan">Rajasthan</option>
                               <option value="Tamil Nadu">Tamil Nadu</option>
                               <option value="Telangana">Telangana</option>
@@ -2021,85 +2451,43 @@ const addConstraint_fixed = (e) => {
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
                             >
-                              Select Inline Railhead
+                              Select Destination Railhead
                             </strong>
                             <select
-                              style={{ width: "200px", padding: "5px" }}
-                              onChange={handleSubDropdownChange5}
-                              value={subOption5 === 'default' ? 'default' : subOption5}
+                              style={{
+                                width: "200px",
+                                padding: "5px",
+                              }}
+                              onChange={handleSubDropdownChange4}
+                              value={subOption4}
                             >
-                              {subOptions5.map((option) => (
+                              {subOptions4.map((option) => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
                               ))}
                             </select>
                           </div>
-
-                          <div>
+                          <div style={{ marginLeft: "15px" }}>
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
                             >
-                              Select Inline State
+                              Enter Destination Value
                             </strong>
-                            <select
-                              style={{ width: "200px", padding: "5px" }}
-                              onChange={handleDropdownChange6}
-                              value={selectedOption6}
-                              
-                            >
-                              <option value="default">
-                                Select Inline State
-                              </option>
-                              <option value="Andhra Pradesh">
-                                Andhra Pradesh
-                              </option>
-                              <option value="Bihar">Bihar</option>
-                              <option value="Chattisgarh">Chattisgarh</option>
-                              <option value="Goa">Goa</option>
-                              <option value="Gujarat">Gujarat</option>
-                              <option value="Jammu & Kashmir">
-                                Jammu & Kashmir
-                              </option>
-                              <option value="Jharkhand">Jharkhand</option>
-                              <option value="Karnataka">Karnataka</option>
-                              <option value="Kerala">Kerala</option>
-                              {/* <option value="MP">Madhya Pradesh</option> */}
-                              <option value="Maharashtra">Maharashtra</option>
-                              <option value="NE">North East</option>
-                              <option value="Odisha">Odisha</option>
-                              {/* <option value="Punjab">Punjab</option> */}
-                              <option value="Rajasthan">Rajasthan</option>
-                              <option value="Tamil Nadu">Tamil Nadu</option>
-                              <option value="Telangana">Telangana</option>
-                              <option value="UP">Uttar Pradesh</option>
-                              <option value="Uttarakhand">Uttarakhand</option>
-                              <option value="West Bengal">West Bengal</option>
-                            </select>
+                            <input
+                              type="number"
+                              value={dest_value_rice}
+                              onChange={(e) =>
+                                setDestValueRice(e.target.value)
+                              }
+                              style={{
+                                // marginLeft: "40px",
+                                width: "200px",
+                                padding: "5px",
+                              }}
+                            />
                           </div>
-                          {/* </label> */}
-                          {/* <label htmlFor="deficit_railhead"> */}
-
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Inline Railhead
-                            </strong>
-                            <select
-                              style={{ width: "200px", padding: "5px" }}
-                              onChange={handleSubDropdownChange6}
-                              value={subOption6}
-                            >
-                              {subOptions6.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          {/* </label> */}
-                          <div onClick={addConstraint2}>
+                          <div onClick={addConstraint4}>
                             <button
                               style={{
                                 textAlign: "center",
@@ -2107,19 +2495,286 @@ const addConstraint_fixed = (e) => {
                                 width: 70,
                                 height: 40,
                                 alignItems: "center",
+                                marginLeft: 267,
                               }}
+                              disabled={
+                                subOption4 === "" && selectedOption4 === ""
+                              }
                             >
                               Add
                             </button>
                           </div>
                         </div>
-                      </div>
-                      <br />
-
-                      {block_data2.length !== 0 && (
-
+                        <br />
                         <div>
-                          {/* <div
+                          {rice_destination.length !== 0 && (
+                            <div>
+                              <table>
+                                <thead>
+                                  <tr style={{ margin: "auto" }}>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Destination State
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Destination Railhead
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Destination Value
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Delete
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {rice_destination.map((item, index) => (
+                                    <tr key={index}>
+                                      <td>{item.origin_state}</td>
+                                      <td>{item.origin_railhead}</td>
+                                      <td>{item.origin_value}</td>
+                                      <td>
+                                        <span
+                                          style={{
+                                            cursor: "pointer",
+                                            color: "#ff0000",
+                                            fontSize: "1.2rem",
+                                          }}
+                                          onClick={() =>
+                                            handleDeleteRow_Rice__dest(index)
+                                          }
+                                          title="Delete"
+                                        >
+                                          &times;
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
+                        <br />
+                        <br />
+                        <div>
+                          <div>
+                            <div style={{ marginLeft: "15px" }}>
+                              <strong
+                                style={{ fontSize: "16px", padding: "5px" }}
+                              >
+                                Enter Origin Inline Value
+                              </strong>
+                              <input
+                                type="number"
+                                value={inline_value_rice}
+                                onChange={(e) =>
+                                  setInlineValueRice(e.target.value)
+                                }
+                                style={{
+                                  marginLeft: "40px",
+                                  width: "200px",
+                                  padding: "5px",
+                                }}
+                              />
+                            </div>
+                            <br />
+                            <div
+                              style={{
+                                display: "flex",
+                                marginLeft: "20px",
+                                width: "1170px",
+                                alignItems: "center",
+                              }}
+                            >
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChange5}
+                                  value={selectedOption5}
+                                >
+                                  <option value="default">
+                                    Select Origin Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  {/* <option value="Haryana">Haryana</option> */}
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
+
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChange5}
+                                  value={
+                                    subOption5 === "default"
+                                      ? "default"
+                                      : subOption5
+                                  }
+                                >
+                                  {subOptions5.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChange6}
+                                  value={selectedOption6}
+                                >
+                                  <option value="default">
+                                    Select Origin Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
+                              {/* </label> */}
+                              {/* <label htmlFor="deficit_railhead"> */}
+
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChange6}
+                                  value={subOption6}
+                                >
+                                  {subOptions6.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              {/* </label> */}
+                              <div onClick={addConstraint2}>
+                                <button
+                                  style={{
+                                    textAlign: "center",
+                                    backgroundColor: "orange",
+                                    width: 70,
+                                    height: 40,
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <br />
+
+                          {block_data2.length !== 0 && (
+                            <div>
+                              {/* <div
                       style={{
                         fontSize: "20px",
                         fontWeight: "700",
@@ -2128,30 +2783,55 @@ const addConstraint_fixed = (e) => {
                     >
                       Route Block
                     </div> */}
-                          <table>
-                            <thead>
-                              <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline State
-                                </th>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline Railhead
-                                </th>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline State
-                                </th>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline Railhead
-                                </th>
-                                <th style={{ padding: "10px", width: "236px" }}>
-                                  Delete
-                                </th>
-                              </tr>
-                              {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
+                              <table>
+                                <thead>
+                                  <tr style={{ margin: "auto" }}>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "238px",
+                                      }}
+                                    >
+                                      Inline State
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "238px",
+                                      }}
+                                    >
+                                      Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "238px",
+                                      }}
+                                    >
+                                      Inline State
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "238px",
+                                      }}
+                                    >
+                                      Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "236px",
+                                      }}
+                                    >
+                                      Delete
+                                    </th>
+                                  </tr>
+                                  {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
                       <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
-                            </thead>
-                            <tbody>
-                              {/* <tr style={{ margin: "auto" }}>
+                                </thead>
+                                <tbody>
+                                  {/* <tr style={{ margin: "auto" }}>
                       <th style={{ padding: "10px", width: "15%" }}>
                         Origin State
                       </th>
@@ -2166,276 +2846,446 @@ const addConstraint_fixed = (e) => {
                       </th>
                       <th style={{ padding: "10px", width: "15%" }}>Delete</th>
                     </tr> */}
-                              {block_data2.map((item) => (
-                                <tr key={item.id}>
-                                  <td>{item.origin_state}</td>
-                                  <td>{item.origin_railhead}</td>
-                                  <td>{item.destination_state}</td>
-                                  <td>{item.destination_railhead}</td>
-                                  <td>
-                                    <span
-                                      style={{
-                                        cursor: "pointer",
-                                        color: "#ff0000",
-                                        fontSize: "1.2rem",
-                                      }}
-                                      onClick={() =>
-                                        handleDeleteRow_inline(item.id)
-                                      }
-                                      title="Delete"
-                                    >
-                                      &times;
-                                    </span>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
+                                  {block_data2.map((item) => (
+                                    <tr key={item.id}>
+                                      <td>{item.origin_state}</td>
+                                      <td>{item.origin_railhead}</td>
+                                      <td>{item.destination_state}</td>
+                                      <td>{item.destination_railhead}</td>
+                                      <td>
+                                        <span
+                                          style={{
+                                            cursor: "pointer",
+                                            color: "#ff0000",
+                                            fontSize: "1.2rem",
+                                          }}
+                                          onClick={() =>
+                                            handleDeleteRow_inline(item.id)
+                                          }
+                                          title="Delete"
+                                        >
+                                          &times;
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <br />
-                    <div>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        <strong
-                          style={{
-                            color: "#9d0921",
-                            fontSize: "20px",
-                            marginLeft: "15px",
-                          }}
-                        >
-                          For Wheat:
-                        </strong>
-                      </p>
-                      <br />
-                      <div
-                        style={{
-                          display: "flex",
-                          marginLeft: "20px",
-                          alignItems: "center",
-                        }}
-                      >
+                        <br />
+                        <br/>
                         <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Select Origin State:
-                          </strong>
-                          <select
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                              marginRight: 25,
-                            }}
-                            onChange={handleDropdownChangeWheat3}
-                            value={selectedOptionWheat3}
-                          >
-                            <option value="default">Select Origin State</option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
-                          </select>
-                        </div>
+                          <div>
+                            <div style={{ marginLeft: "15px" }}>
+                              <strong
+                                style={{ fontSize: "16px", padding: "5px" }}
+                              >
+                                Enter Destination Inline Value
+                              </strong>
+                              <input
+                                type="number"
+                                value={inline_value_dest_rice}
+                                onChange={(e) =>
+                                  setDestInlineValueRice(e.target.value)
+                                }
+                                style={{
+                                  marginLeft: "40px",
+                                  width: "200px",
+                                  padding: "5px",
+                                }}
+                              />
+                            </div>
+                            <br />
+                            <div
+                              style={{ display: "flex", marginLeft: "20px" }}
+                            >
+                              {/* <label htmlFor="origin_state"> */}
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChangeDRI5}
+                                  value={selectedOptionDRI5}
+                                >
+                                  <option value="default">
+                                    Select Destination Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  {/* <option value="Haryana">Haryana</option> */}
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
 
-                        <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Select Origin Railhead
-                          </strong>
-                          <select
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                            onChange={handleSubDropdownChangeWheat3}
-                            value={subOptionWheat3}
-                          >
-                            {subOptionsWheat3.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div onClick={addConstraintWheat3}>
-                          <button
-                            style={{
-                              textAlign: "center",
-                              backgroundColor: "orange",
-                              width: 70,
-                              height: 40,
-                              marginLeft: 346,
-                            }}
-                            disabled={
-                              subOptionWheat3 === "" &&
-                              selectedOptionWheat3 === ""
-                            }
-                          >
-                            Add
-                          </button>
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChangeDRI5}
+                                  value={subOptionDRI5}
+                                >
+                                  {subOptionsDRI5.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              {/* </label> */}
+
+                              <div>
+                                {/* <label htmlFor="deficit_state"> */}
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChangeDRI6}
+                                  value={selectedOptionDRI6}
+                                >
+                                  <option value="default">
+                                    Select Destination Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  {/* <option value="Haryana">Haryana</option> */}
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
+                              {/* </label> */}
+                              {/* <label htmlFor="deficit_railhead"> */}
+
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChangeDRI6}
+                                  value={subOptionDRI6}
+                                >
+                                  {subOptionsDRI6.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              {/* </label> */}
+                              <div onClick={addConstraintDRI2}>
+                                <button
+                                  style={{
+                                    textAlign: "center",
+                                    backgroundColor: "orange",
+                                    width: 70,
+                                    height: 40,
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <br />
+
+                          {block_dataDest2.length != 0 && (
+                            <div>
+                              {/* <div
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "700",
+                        textAlign: "center",
+                      }}
+                    >
+                      Route Block
+                    </div> */}
+                              <table>
+                                <thead>
+                                  <tr style={{ margin: "auto" }}>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline State
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline State
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Delete
+                                    </th>
+                                  </tr>
+                                  {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
+                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
+                                </thead>
+                                <tbody>
+                                  {/* <tr style={{ margin: "auto" }}>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Origin State
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Origin Railhead
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Destination State
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>
+                        Destination Railhead
+                      </th>
+                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
+                    </tr> */}
+                                  {block_dataDest2.map((item) => (
+                                    <tr key={item.id}>
+                                      <td>{item.origin_state}</td>
+                                      <td>{item.origin_railhead}</td>
+                                      <td>{item.destination_state}</td>
+                                      <td>{item.destination_railhead}</td>
+                                      <td>
+                                        <span
+                                          style={{
+                                            cursor: "pointer",
+                                            color: "#ff0000",
+                                            fontSize: "1.2rem",
+                                          }}
+                                          onClick={() =>
+                                            handleDeleteRow_dest_inline(item.id)
+                                          }
+                                          title="Delete"
+                                        >
+                                          &times;
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
                         </div>
                       </div>
-
-                      <br />
-
-                      {block_dataWheat3.length !== 0 && (
-
-                        <div>
-                          <table>
-                            <thead>
-                              <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "396px" }}>
-                                  Origin State
-                                </th>
-                                <th style={{ padding: "10px", width: "396px" }}>
-                                  Origin Railhead
-                                </th>
-                                <th style={{ padding: "10px", width: "396px" }}>
-                                  Delete
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {block_dataWheat3.map((item) => (
-                                <tr key={item.id}>
-                                  <td>{item.origin_state}</td>
-                                  <td>{item.origin_railhead}</td>
-
-                                  <td>
-                                    <span
-                                      style={{
-                                        cursor: "pointer",
-                                        color: "#ff0000",
-                                        fontSize: "1.2rem",
-                                      }}
-                                      onClick={() =>
-                                        handleDeleteRow_Wheat_s(item.id)
-                                      }
-                                      title="Delete"
-                                    >
-                                      &times;
-                                    </span>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
-
-                      <br />
-
-                      <div
-                        style={{
-                          display: "flex",
-                          marginLeft: "20px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Select Destination State:
-                          </strong>
-                          <select
-                            style={{ width: "200px", padding: "5px" }}
-                            id="destination"
-                            onChange={handleDropdownChangeWheat4}
-                            value={selectedOptionWheat4}
-                          >
-                            <option value="default">
-                              Select Destination State
-                            </option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
-                          </select>
-                        </div>
-
-                        <div>
+                    )}
+                    <br />
+                    {commodity === "Wheat" && (
+                      <div>
+                        <p style={{ margin: 0, padding: 0 }}>
                           <strong
                             style={{
-                              fontSize: "16px",
-                              padding: "5px",
-                              marginLeft: 15,
+                              color: "#9d0921",
+                              fontSize: "20px",
+                              marginLeft: "15px",
                             }}
                           >
-                            Select Destination Railhead
+                            For Wheat:
                           </strong>
-                          <select
-                            style={{ width: "200px", padding: "5px" }}
-                            onChange={handleSubDropdownChangeWheat4}
-                            value={subOptionWheat4}
-                          >
-                            {subOptionsWheat4.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
+                        </p>
+                        <br />
+                        <div
+                          style={{
+                            display: "flex",
+                            marginLeft: "20px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div>
+                            <strong
+                              style={{ fontSize: "16px", padding: "5px" }}
+                            >
+                              Select Origin State:
+                            </strong>
+                            <select
+                              style={{
+                                width: "200px",
+                                padding: "5px",
+                                marginRight: 25,
+                              }}
+                              onChange={handleDropdownChangeWheat3}
+                              value={selectedOptionWheat3}
+                            >
+                              <option value="default">
+                                Select Origin State
                               </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div onClick={addConstraintWheat4}>
-                          <button
-                            style={{
-                              textAlign: "center",
-                              backgroundColor: "orange",
-                              width: 70,
-                              height: 40,
-                              marginLeft: 277,
-                            }}
-                            disabled={
-                              subOptionWheat4 === "" &&
-                              selectedOptionWheat4 === ""
-                            }
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                      <br />
-                      <div>
-                      {wheat_destination.length !== 0 && (
+                              <option value="Andhra Pradesh">
+                                Andhra Pradesh
+                              </option>
+                              <option value="Bihar">Bihar</option>
+                              <option value="Chattisgarh">Chattisgarh</option>
+                              <option value="Goa">Goa</option>
+                              <option value="Gujarat">Gujarat</option>
+                              <option value="Haryana">Haryana</option>
+                              <option value="Jammu & Kashmir">
+                                Jammu & Kashmir
+                              </option>
+                              <option value="Jharkhand">Jharkhand</option>
+                              <option value="Karnataka">Karnataka</option>
+                              <option value="Kerala">Kerala</option>
+                              <option value="MP">Madhya Pradesh</option>
+                              <option value="Maharashtra">Maharashtra</option>
+                              <option value="NE">North East</option>
+                              <option value="Odisha">Odisha</option>
+                              <option value="Punjab">Punjab</option>
+                              <option value="Rajasthan">Rajasthan</option>
+                              <option value="Tamil Nadu">Tamil Nadu</option>
+                              <option value="Telangana">Telangana</option>
+                              <option value="UP">Uttar Pradesh</option>
+                              <option value="Uttarakhand">Uttarakhand</option>
+                              <option value="West Bengal">West Bengal</option>
+                            </select>
+                          </div>
 
+                          <div>
+                            <strong
+                              style={{ fontSize: "16px", padding: "5px" }}
+                            >
+                              Select Origin Railhead
+                            </strong>
+                            <select
+                              style={{
+                                width: "200px",
+                                padding: "5px",
+                              }}
+                              onChange={handleSubDropdownChangeWheat3}
+                              value={subOptionWheat3}
+                            >
+                              {subOptionsWheat3.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div style={{ marginLeft: "15px" }}>
+                            <strong
+                              style={{ fontSize: "16px", padding: "5px" }}
+                            >
+                              Enter Origin Value
+                            </strong>
+                            <input
+                              type="number"
+                              value={origin_value_wheat}
+                              onChange={(e) =>
+                                setOriginValueWheat(e.target.value)
+                              }
+                              style={{
+                                // marginLeft: "40px",
+                                width: "200px",
+                                padding: "5px",
+                              }}
+                            />
+                          </div>
+                          <div onClick={addConstraintWheat3}>
+                            <button
+                              style={{
+                                textAlign: "center",
+                                backgroundColor: "orange",
+                                width: 70,
+                                height: 40,
+                                marginLeft: 346,
+                              }}
+                              disabled={
+                                subOptionWheat3 === "" &&
+                                selectedOptionWheat3 === ""
+                              }
+                            >
+                              Add
+                            </button>
+                          </div>
+                        </div>
+
+                        <br />
+
+                        {block_dataWheat3.length !== 0 && (
                           <div>
                             <table>
                               <thead>
@@ -2443,12 +3293,15 @@ const addConstraint_fixed = (e) => {
                                   <th
                                     style={{ padding: "10px", width: "396px" }}
                                   >
-                                    Destination State
+                                    Origin State
                                   </th>
                                   <th
                                     style={{ padding: "10px", width: "396px" }}
                                   >
-                                    Destination Railhead
+                                    Origin Railhead
+                                  </th>
+                                  <th style={{ padding: "10px", width: "15%" }}>
+                                    Origin Value
                                   </th>
                                   <th
                                     style={{ padding: "10px", width: "396px" }}
@@ -2458,10 +3311,11 @@ const addConstraint_fixed = (e) => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {wheat_destination.map((item, index) => (
-                                  <tr key={index}>
+                              {block_dataWheat3.map((item) => (
+                                  <tr key={item.id}>
                                     <td>{item.origin_state}</td>
                                     <td>{item.origin_railhead}</td>
+                                    <td>{item.origin_value}</td>
 
                                     <td>
                                       <span
@@ -2471,7 +3325,7 @@ const addConstraint_fixed = (e) => {
                                           fontSize: "1.2rem",
                                         }}
                                         onClick={() =>
-                                          handleDeleteRow_Wheat__dest(index)
+                                          handleDeleteRow_Wheat_s(item.id)
                                         }
                                         title="Delete"
                                       >
@@ -2484,50 +3338,30 @@ const addConstraint_fixed = (e) => {
                             </table>
                           </div>
                         )}
-                      </div>
-                      <br />
-                      <br />
-                      <div>
-                        <div style={{ marginLeft: "15px" }}>
-                          <strong style={{ fontSize: "16px", padding: "5px" }}>
-                            Enter Inline Value
-                          </strong>
-                          <input
-                            type="number"
-                            value={inline_value_wheat}
-                            onChange={(e) =>
-                              setInlineValueWheat(e.target.value)
-                            }
-                            style={{
-                              marginLeft: "40px",
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                          />
-                        </div>
+
                         <br />
+
                         <div
                           style={{
                             display: "flex",
                             marginLeft: "20px",
-                            width: "1170px",
                             alignItems: "center",
                           }}
                         >
-                          {/* <label htmlFor="origin_state"> */}
                           <div>
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
                             >
-                              Select Inline State
+                              Select Destination State:
                             </strong>
                             <select
                               style={{ width: "200px", padding: "5px" }}
-                              onChange={handleDropdownChangeWheat5}
-                              value={selectedOptionWheat5}
+                              id="destination"
+                              onChange={handleDropdownChangeWheat4}
+                              value={selectedOptionWheat4}
                             >
                               <option value="default">
-                                Select Inline State
+                                Select Destination State
                               </option>
                               <option value="Andhra Pradesh">
                                 Andhra Pradesh
@@ -2536,18 +3370,18 @@ const addConstraint_fixed = (e) => {
                               <option value="Chattisgarh">Chattisgarh</option>
                               <option value="Goa">Goa</option>
                               <option value="Gujarat">Gujarat</option>
-                              {/* <option value="Haryana">Haryana</option> */}
+                              <option value="Haryana">Haryana</option>
                               <option value="Jammu & Kashmir">
                                 Jammu & Kashmir
                               </option>
                               <option value="Jharkhand">Jharkhand</option>
                               <option value="Karnataka">Karnataka</option>
                               <option value="Kerala">Kerala</option>
-                              {/* <option value="MP">Madhya Pradesh</option> */}
+                              <option value="MP">Madhya Pradesh</option>
                               <option value="Maharashtra">Maharashtra</option>
                               <option value="NE">North East</option>
                               <option value="Odisha">Odisha</option>
-                              {/* <option value="Punjab">Punjab</option> */}
+                              <option value="Punjab">Punjab</option>
                               <option value="Rajasthan">Rajasthan</option>
                               <option value="Tamil Nadu">Tamil Nadu</option>
                               <option value="Telangana">Telangana</option>
@@ -2559,107 +3393,332 @@ const addConstraint_fixed = (e) => {
 
                           <div>
                             <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
+                              style={{
+                                fontSize: "16px",
+                                padding: "5px",
+                                marginLeft: 15,
+                              }}
                             >
-                              Select Inline Railhead
+                              Select Destination Railhead
                             </strong>
                             <select
                               style={{ width: "200px", padding: "5px" }}
-                              onChange={handleSubDropdownChangeWheat5}
-                              value={subOptionWheat5}
+                              onChange={handleSubDropdownChangeWheat4}
+                              value={subOptionWheat4}
                             >
-                              {subOptionsWheat5.map((option) => (
+                              {subOptionsWheat4.map((option) => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
                               ))}
                             </select>
                           </div>
-                          {/* </label> */}
-                          <div>
-                            {/* <label htmlFor="deficit_state"> */}
+                          <div style={{ marginLeft: "15px" }}>
                             <strong
                               style={{ fontSize: "16px", padding: "5px" }}
                             >
-                              Select Inline State
+                              Enter Destination Value
                             </strong>
-                            <select
-                              style={{ width: "200px", padding: "5px" }}
-                              onChange={handleDropdownChangeWheat6}
-                              value={selectedOptionWheat6}
-                            >
-                              <option value="default">
-                                Select Inline State
-                              </option>
-                              <option value="Andhra Pradesh">
-                                Andhra Pradesh
-                              </option>
-                              <option value="Bihar">Bihar</option>
-                              <option value="Chattisgarh">Chattisgarh</option>
-                              <option value="Goa">Goa</option>
-                              <option value="Gujarat">Gujarat</option>
-                              {/* <option value="Haryana">Haryana</option> */}
-                              <option value="Jammu & Kashmir">
-                                Jammu & Kashmir
-                              </option>
-                              <option value="Jharkhand">Jharkhand</option>
-                              <option value="Karnataka">Karnataka</option>
-                              <option value="Kerala">Kerala</option>
-                              {/* <option value="MP">Madhya Pradesh</option> */}
-                              <option value="Maharashtra">Maharashtra</option>
-                              <option value="NE">North East</option>
-                              <option value="Odisha">Odisha</option>
-                              {/* <option value="Punjab">Punjab</option> */}
-                              <option value="Rajasthan">Rajasthan</option>
-                              <option value="Tamil Nadu">Tamil Nadu</option>
-                              <option value="Telangana">Telangana</option>
-                              <option value="UP">Uttar Pradesh</option>
-                              <option value="Uttarakhand">Uttarakhand</option>
-                              <option value="West Bengal">West Bengal</option>
-                            </select>
+                            <input
+                              type="number"
+                              value={dest_value_wheat}
+                              onChange={(e) =>
+                                setDestValueWheat(e.target.value)
+                              }
+                              style={{
+                                // marginLeft: "40px",
+                                width: "200px",
+                                padding: "5px",
+                              }}
+                            />
                           </div>
-                          {/* </label> */}
-                          {/* <label htmlFor="deficit_railhead"> */}
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Inline Railhead
-                            </strong>
-                            <select
-                              style={{ width: "200px", padding: "5px" }}
-                              onChange={handleSubDropdownChangeWheat6}
-                              value={subOptionWheat6}
-                            >
-                              {subOptionsWheat6.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          {/* </label> */}
-                          <div onClick={addConstraintWheat2}>
+                          <div onClick={addConstraintWheat4}>
                             <button
                               style={{
                                 textAlign: "center",
                                 backgroundColor: "orange",
                                 width: 70,
                                 height: 40,
-                                alignItems: "center",
+                                marginLeft: 277,
                               }}
+                              disabled={
+                                subOptionWheat4 === "" &&
+                                selectedOptionWheat4 === ""
+                              }
                             >
-                             Add
+                              Add
                             </button>
                           </div>
                         </div>
-                      </div>
-                      <br />
-
-                      {block_dataWheat2.length !== 0 && (
-
+                        <br />
                         <div>
-                          {/* <div
+                          {wheat_destination.length !== 0 && (
+                            <div>
+                              <table>
+                                <thead>
+                                  <tr style={{ margin: "auto" }}>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Destination State
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Destination Railhead
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Destination Value
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "396px",
+                                      }}
+                                    >
+                                      Delete
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {wheat_destination.map((item, index) => (
+                                    <tr key={index}>
+                                      <td>{item.origin_state}</td>
+                                      <td>{item.origin_railhead}</td>
+                                      <td>{item.origin_value}</td>
+
+                                      <td>
+                                        <span
+                                          style={{
+                                            cursor: "pointer",
+                                            color: "#ff0000",
+                                            fontSize: "1.2rem",
+                                          }}
+                                          onClick={() =>
+                                            handleDeleteRow_Wheat__dest(index)
+                                          }
+                                          title="Delete"
+                                        >
+                                          &times;
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
+                        <br />
+                        <br />
+                        <div>
+                          <div>
+                            <div style={{ marginLeft: "15px" }}>
+                              <strong
+                                style={{ fontSize: "16px", padding: "5px" }}
+                              >
+                                Enter Origin Inline Value
+                              </strong>
+                              <input
+                                type="number"
+                                value={inline_value_wheat}
+                                onChange={(e) =>
+                                  setInlineValueWheat(e.target.value)
+                                }
+                                style={{
+                                  marginLeft: "40px",
+                                  width: "200px",
+                                  padding: "5px",
+                                }}
+                              />
+                            </div>
+                            <br />
+                            <div
+                              style={{
+                                display: "flex",
+                                marginLeft: "20px",
+                                width: "1170px",
+                                alignItems: "center",
+                              }}
+                            >
+                              {/* <label htmlFor="origin_state"> */}
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChangeWheat5}
+                                  value={selectedOptionWheat5}
+                                >
+                                  <option value="default">
+                                    Select Origin Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  {/* <option value="Haryana">Haryana</option> */}
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
+
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChangeWheat5}
+                                  value={subOptionWheat5}
+                                >
+                                  {subOptionsWheat5.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              {/* </label> */}
+                              <div>
+                                {/* <label htmlFor="deficit_state"> */}
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChangeWheat6}
+                                  value={selectedOptionWheat6}
+                                >
+                                  <option value="default">
+                                    Select Origin Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  {/* <option value="Haryana">Haryana</option> */}
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
+                              {/* </label> */}
+                              {/* <label htmlFor="deficit_railhead"> */}
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Origin Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChangeWheat6}
+                                  value={subOptionWheat6}
+                                >
+                                  {subOptionsWheat6.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              {/* </label> */}
+                              <div onClick={addConstraintWheat2}>
+                                <button
+                                  style={{
+                                    textAlign: "center",
+                                    backgroundColor: "orange",
+                                    width: 70,
+                                    height: 40,
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <br />
+
+                          {block_dataWheat2.length !== 0 && (
+                            <div>
+                              {/* <div
                       style={{
                         fontSize: "20px",
                         fontWeight: "700",
@@ -2668,57 +3727,333 @@ const addConstraint_fixed = (e) => {
                     >
                       Route Block
                     </div> */}
-                          <table>
-                            <thead>
-                              <tr style={{ margin: "auto" }}>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline State
-                                </th>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline Railhead
-                                </th>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline State
-                                </th>
-                                <th style={{ padding: "10px", width: "238px" }}>
-                                  Inline Railhead
-                                </th>
-                                <th style={{ padding: "10px", width: "236px" }}>
-                                  Delete
-                                </th>
-                              </tr>
-                              {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
-                            </thead>
-                            <tbody>
-                              {block_dataWheat2.map((item) => (
-                                <tr key={item.id}>
-                                  <td>{item.origin_state}</td>
-                                  <td>{item.origin_railhead}</td>
-                                  <td>{item.destination_state}</td>
-                                  <td>{item.destination_railhead}</td>
-                                  <td>
-                                    <span
+                              <table>
+                                <thead>
+                                  <tr style={{ margin: "auto" }}>
+                                    <th
                                       style={{
-                                        cursor: "pointer",
-                                        color: "#ff0000",
-                                        fontSize: "1.2rem",
+                                        padding: "10px",
+                                        width: "238px",
                                       }}
-                                      onClick={() =>
-                                        handleDeleteRow_inlineWheat(item.id)
-                                      }
-                                      title="Delete"
                                     >
-                                      &times;
-                                    </span>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
+                                      Inline State
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "238px",
+                                      }}
+                                    >
+                                      Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "238px",
+                                      }}
+                                    >
+                                      Inline State
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "238px",
+                                      }}
+                                    >
+                                      Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{
+                                        padding: "10px",
+                                        width: "236px",
+                                      }}
+                                    >
+                                      Delete
+                                    </th>
+                                  </tr>
+                                  {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
+                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
+                                </thead>
+                                <tbody>
+                                  {block_dataWheat2.map((item) => (
+                                    <tr key={item.id}>
+                                      <td>{item.origin_state}</td>
+                                      <td>{item.origin_railhead}</td>
+                                      <td>{item.destination_state}</td>
+                                      <td>{item.destination_railhead}</td>
+                                      <td>
+                                        <span
+                                          style={{
+                                            cursor: "pointer",
+                                            color: "#ff0000",
+                                            fontSize: "1.2rem",
+                                          }}
+                                          onClick={() =>
+                                            handleDeleteRow_inlineWheat(item.id)
+                                          }
+                                          title="Delete"
+                                        >
+                                          &times;
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
+                        <br/>
+                        <div>
+                          <div>
+                            <div style={{ marginLeft: "15px" }}>
+                              <strong
+                                style={{ fontSize: "16px", padding: "5px" }}
+                              >
+                                Enter Destination Inline Value
+                              </strong>
+                              <input
+                                type="number"
+                                value={inline_value_dest_wheat}
+                                onChange={(e) =>
+                                  setDestInlineValueWheat(e.target.value)
+                                }
+                                style={{
+                                  marginLeft: "40px",
+                                  width: "200px",
+                                  padding: "5px",
+                                }}
+                              />
+                            </div>
+                            <br />
+                            <div
+                              style={{ display: "flex", marginLeft: "20px" }}
+                            >
+                              {/* <label htmlFor="origin_state"> */}
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChangeDestWheat5}
+                                  value={selectedOptionDestWheat5}
+                                >
+                                  <option value="default">
+                                    Select Destination Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  {/* <option value="Haryana">Haryana</option> */}
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
+
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChangeDestWheat5}
+                                  value={subOptionDestWheat5}
+                                >
+                                  {subOptionsDestWheat5.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              <div>
+                                {/* <label htmlFor="deficit_state"> */}
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline State
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleDropdownChangeDestWheat6}
+                                  value={selectedOptionDestWheat6}
+                                >
+                                  <option value="default">
+                                    Select Destination Inline State
+                                  </option>
+                                  <option value="Andhra Pradesh">
+                                    Andhra Pradesh
+                                  </option>
+                                  <option value="Bihar">Bihar</option>
+                                  <option value="Chattisgarh">
+                                    Chattisgarh
+                                  </option>
+                                  <option value="Goa">Goa</option>
+                                  <option value="Gujarat">Gujarat</option>
+                                  {/* <option value="Haryana">Haryana</option> */}
+                                  <option value="Jammu & Kashmir">
+                                    Jammu & Kashmir
+                                  </option>
+                                  <option value="Jharkhand">Jharkhand</option>
+                                  <option value="Karnataka">Karnataka</option>
+                                  <option value="Kerala">Kerala</option>
+                                  {/* <option value="MP">Madhya Pradesh</option> */}
+                                  <option value="Maharashtra">
+                                    Maharashtra
+                                  </option>
+                                  <option value="NE">North East</option>
+                                  <option value="Odisha">Odisha</option>
+                                  {/* <option value="Punjab">Punjab</option> */}
+                                  <option value="Rajasthan">Rajasthan</option>
+                                  <option value="Tamil Nadu">Tamil Nadu</option>
+                                  <option value="Telangana">Telangana</option>
+                                  <option value="UP">Uttar Pradesh</option>
+                                  <option value="Uttarakhand">
+                                    Uttarakhand
+                                  </option>
+                                  <option value="West Bengal">
+                                    West Bengal
+                                  </option>
+                                </select>
+                              </div>
+                              <div>
+                                <strong
+                                  style={{ fontSize: "16px", padding: "5px" }}
+                                >
+                                  Select Destination Inline Railhead
+                                </strong>
+                                <select
+                                  style={{ width: "200px", padding: "5px" }}
+                                  onChange={handleSubDropdownChangeDestWheat6}
+                                  value={subOptionDestWheat6}
+                                >
+                                  {subOptionsDestWheat6.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              <div onClick={addConstraintDestWheat2}>
+                                <button
+                                  style={{
+                                    textAlign: "center",
+                                    backgroundColor: "orange",
+                                    width: 70,
+                                    height: 40,
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <br />
+
+                          {block_dataDestWheat2.length != 0 && (
+                            <div>
+                              <table>
+                                <thead>
+                                  <tr style={{ margin: "auto" }}>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline State
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline State
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Destination Inline Railhead
+                                    </th>
+                                    <th
+                                      style={{ padding: "10px", width: "15%" }}
+                                    >
+                                      Delete
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {block_dataDestWheat2.map((item) => (
+                                    <tr key={item.id}>
+                                      <td>{item.origin_state}</td>
+                                      <td>{item.origin_railhead}</td>
+                                      <td>{item.destination_state}</td>
+                                      <td>{item.destination_railhead}</td>
+                                      <td>
+                                        <span
+                                          style={{
+                                            cursor: "pointer",
+                                            color: "#ff0000",
+                                            fontSize: "1.2rem",
+                                          }}
+                                          onClick={() =>
+                                            handleDeleteRow_inlineDestWheat(
+                                              item.id
+                                            )
+                                          }
+                                          title="Delete"
+                                        >
+                                          &times;
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                     <br />
                     <p style={{ margin: 0, padding: 0 }}>
                       <strong
@@ -2861,7 +4196,6 @@ const addConstraint_fixed = (e) => {
                     </div>
                     <br />
                     {!solutionSolved && block_data.length !== 0 && (
-
                       <div>
                         <table>
                           <thead>
@@ -3109,13 +4443,12 @@ const addConstraint_fixed = (e) => {
                             marginLeft: 713,
                           }}
                         >
-                         Add
+                          Add
                         </button>
                       </div>
                     </div>
                     <br />
                     {!solutionSolved && fixed_data.length !== 0 && (
-
                       <div>
                         <table>
                           <thead>
