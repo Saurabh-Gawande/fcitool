@@ -634,7 +634,7 @@ def get_daily_scen2_excel_data():
 @app.route('/getDataTemplate')
 def data_template():
     Monthly_Template_M1 = 'Input\\Data_template.xlsx'
-    excel_path = os.path.join(os.path.dirname(_file_), Monthly_Template_M1)
+    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
 
 @app.route("/Modify_Monthly_Template_M01", methods=["POST", "GET"])
