@@ -106,12 +106,13 @@ function Daily_Planner() {
   const [subOptionDestWheat5, setSubOptionDestWheat5] = useState("");
   const [subOptionDestWheat6, setSubOptionDestWheat6] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  let downloadedFile = null;
 
   const handleFileChange_ = (event) => {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleFileUpload = async() => {
+  const handleFileUpload = async () => {
     // Create a FormData object to send the file to the backend
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -521,8 +522,8 @@ function Daily_Planner() {
           {
             origin_state: sur_10_rice[i][1],
             origin_railhead: sur_10_rice[i][0],
-            origin_value:sur_10_rice[i][2],
-            id: Date.now()+i.toString(),
+            origin_value: sur_10_rice[i][2],
+            id: Date.now() + i.toString(),
           },
         ]);
       }
@@ -532,8 +533,8 @@ function Daily_Planner() {
           {
             origin_state: def_10_rice[i][1],
             origin_railhead: def_10_rice[i][0],
-            origin_value:def_10_rice[i][2],
-            id: Date.now()+i.toString(),
+            origin_value: def_10_rice[i][2],
+            id: Date.now() + i.toString(),
           },
         ]);
       }
@@ -559,8 +560,8 @@ function Daily_Planner() {
           {
             origin_state: sur_10_wheat[i][1],
             origin_railhead: sur_10_wheat[i][0],
-            origin_value:sur_10_wheat[i][2],
-            id: Date.now()+i.toString(),
+            origin_value: sur_10_wheat[i][2],
+            id: Date.now() + i.toString(),
           },
         ]);
       }
@@ -784,8 +785,8 @@ function Daily_Planner() {
       rice_origin: block_data3,
       rice_destination: rice_destination,
       rice_inline: block_data2,
-      rice_dest_inline : block_dataDest2,
-      rice_dest_inline_value : inline_value_dest_rice,
+      rice_dest_inline: block_dataDest2,
+      rice_dest_inline_value: inline_value_dest_rice,
       rice_inline_value: inline_value_rice,
       wheat_origin: block_dataWheat3,
       wheat_destination: wheat_destination,
@@ -876,7 +877,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
+        selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -912,7 +913,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
+        selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -948,7 +949,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
+        selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -983,7 +984,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
+        selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1155,7 +1156,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
+        selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1190,7 +1191,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
+        selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1268,7 +1269,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue_fixed.trim().toLowerCase()
+        selectedValue_fixed.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1303,7 +1304,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
+        selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1599,7 +1600,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedOption3.trim().toLowerCase()
+        selectedOption3.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1663,7 +1664,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedOptionWheat3.trim().toLowerCase()
+        selectedOptionWheat3.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1727,7 +1728,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedOption4.trim().toLowerCase()
+        selectedOption4.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1791,7 +1792,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-          selectedOptionWheat4.trim().toLowerCase()
+        selectedOptionWheat4.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1884,6 +1885,7 @@ function Daily_Planner() {
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
       saveAs(excelBlob, filenameWithDateTime);
+      downloadedFile = excelBlob;
     }
   };
 
@@ -1907,6 +1909,7 @@ function Daily_Planner() {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
       saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
+      downloadedFile = excelBlob;
       // Commented out the alert statement
       // window.alert("Result Downloaded");
     }
@@ -1920,6 +1923,53 @@ function Daily_Planner() {
   const buttonStyle2 = {
     border: updateExcel2 ? "4px solid rgba(235, 171, 68)" : "2px solid black",
     padding: "5px",
+  };
+  const convertExcelToJSON = (excelData) => {
+    const jsonData = excelData; // You may need to process the data if needed
+    return {
+      excelFile: "YourFileName.xlsx", // Replace with the desired file name
+      uniqueId: "1",
+      type: "Register",
+      projectMasterId:"1",
+      //  $('#CurrentProjectId').val(), // Replace with the appropriate value
+    //  data: jsonData,
+    };
+  };
+  // Define the function to handle file upload
+  const uploadFile = () => {
+    if (downloadedFile) {
+      // You can now use the 'downloadedFile' for uploading
+      // Create a FormData object and append the file to it
+      console.log("downloadedFile",downloadedFile);
+      const jsonData = convertExcelToJSON(downloadedFile);
+      // const formData = new FormData();
+      // formData.append("file", downloadedFile);
+      console.log("jsonData",jsonData);
+
+      // Make a POST request to the server to upload the file
+      fetch("https://192.168.1.12:5001/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile",{
+        // https://192.168.1.12:5001/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile
+      // fetch("https://rakeplanner.callippus.co.uk/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile", {
+        method: "POST",
+       // body: jsonData,
+       // body: formData,
+       body: JSON.stringify(jsonData),
+      })
+        .then((response) => {
+          if (response.ok) {
+            // File upload was successful
+            window.alert("File uploaded successfully!");
+          } else {
+            // File upload failed
+            window.alert("File upload failed. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("An error occurred during file upload:", error);
+        });
+    } else {
+      window.alert("Please download the file first before uploading.");
+    }
   };
 
   return (
@@ -2040,10 +2090,10 @@ function Daily_Planner() {
                 </form> */}
                 </div>
                 <br />
-                <div style={{marginLeft:'35%'}}>
-      <input type="file" onChange={handleFileChange_} />
-      <button style={{margin:'5px', padding:'5px'}} onClick={handleFileUpload}>Upload</button>
-    </div>
+                <div style={{ marginLeft: '35%' }}>
+                  <input type="file" onChange={handleFileChange_} />
+                  <button style={{ margin: '5px', padding: '5px' }} onClick={handleFileUpload}>Upload</button>
+                </div>
                 <br />
                 <div style={{ display: "flex", marginLeft: "245px" }}>
                   {/* {fileSelected && ( */}
@@ -2172,7 +2222,7 @@ function Daily_Planner() {
                           setProgress((prev) => [
                             ...prev,
                             "You have selected the commodity as " +
-                              e.target.value,
+                            e.target.value,
                           ]);
                         }}
                         style={{ marginLeft: "570px" }}
@@ -2365,7 +2415,7 @@ function Daily_Planner() {
                                 </tr>
                               </thead>
                               <tbody>
-                              {block_data3.map((item) => (
+                                {block_data3.map((item) => (
                                   <tr key={item.id}>
                                     <td>{item.origin_state}</td>
                                     <td>{item.origin_railhead}</td>
@@ -2875,7 +2925,7 @@ function Daily_Planner() {
                           )}
                         </div>
                         <br />
-                        <br/>
+                        <br />
                         <div>
                           <div>
                             <div style={{ marginLeft: "15px" }}>
@@ -3311,7 +3361,7 @@ function Daily_Planner() {
                                 </tr>
                               </thead>
                               <tbody>
-                              {block_dataWheat3.map((item) => (
+                                {block_dataWheat3.map((item) => (
                                   <tr key={item.id}>
                                     <td>{item.origin_state}</td>
                                     <td>{item.origin_railhead}</td>
@@ -3803,7 +3853,7 @@ function Daily_Planner() {
                             </div>
                           )}
                         </div>
-                        <br/>
+                        <br />
                         <div>
                           <div>
                             <div style={{ marginLeft: "15px" }}>
@@ -4587,6 +4637,13 @@ function Daily_Planner() {
                           >
                             View Railhead Detailed Plan
                           </button>
+                          <button
+                            style={{ color: "white", marginLeft: "15px" }}
+                            className="btn btn-danger dropdown-toggle"
+                            onClick={uploadFile}
+                          >
+                            Upload Plan
+                          </button>
                           <div>
                             {showMessage && (
                               <div>
@@ -4771,6 +4828,13 @@ function Daily_Planner() {
                             onClick={viewGrid}
                           >
                             View Railhead Detailed Plan
+                          </button>
+                          <button
+                            style={{ color: "white", marginLeft: "15px" }}
+                            className="btn btn-danger dropdown-toggle"
+                            onClick={uploadFile}
+                          >
+                            Upload Plan
                           </button>
                           {showMessage && (
                             <div style={{ marginTop: 15, marginLeft: 20 }}>
@@ -4978,10 +5042,10 @@ function Daily_Planner() {
           </div> */}
           <span style={{ color: "black", fontSize: "32px" }}>Progress Bar</span>
           {number_check1 > 0 ||
-          number_check2 > 0 ||
-          supplyWeatCount > 0 ||
-          destinationWheatCount > 0 ||
-          progress.length > 0 ? (
+            number_check2 > 0 ||
+            supplyWeatCount > 0 ||
+            destinationWheatCount > 0 ||
+            progress.length > 0 ? (
             <div
               style={{
                 padding: "8px 0",
