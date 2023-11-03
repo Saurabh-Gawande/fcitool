@@ -1948,7 +1948,8 @@ function Daily_Planner() {
     if (fileBlob) {
       // Create a FormData object and append the file Blob with its original name
       const formData = new FormData();
-      formData.append("file", fileBlob, "Daily_Movement_results_Scenerio");
+      fileName="Daily_Movement_results_Scenerio.xlsx";
+      formData.append("file", fileBlob, fileName);
       console.log("formData",formData);
       console.log("fileBlob",fileBlob);
   
