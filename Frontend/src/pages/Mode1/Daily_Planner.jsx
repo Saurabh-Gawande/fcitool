@@ -107,6 +107,7 @@ function Daily_Planner() {
   const [subOptionDestWheat6, setSubOptionDestWheat6] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   let downloadedFile = null;
+  let downloadedFileName=null;
 
   const handleFileChange_ = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -1864,7 +1865,9 @@ function Daily_Planner() {
       const workbook = XLSX.utils.book_new();
       Object.entries(Total_result).forEach(([column, data]) => {
         const parsedData = JSON.parse(data);
+        console.log("parsedData",parsedData);
         const worksheet = XLSX.utils.json_to_sheet(parsedData);
+        console.log("worksheet",worksheet);
         XLSX.utils.book_append_sheet(workbook, worksheet, column);
       });
       const excelBuffer = XLSX.write(workbook, {
@@ -1885,7 +1888,10 @@ function Daily_Planner() {
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
       saveAs(excelBlob, filenameWithDateTime);
+      console.log("excelblob in excel1 method",excelBlob);
       downloadedFile = excelBlob;
+      downloadedFileName=filenameWithDateTime;
+      uploadFile(excelBlob, downloadedFileName);
     }
   };
 
@@ -1909,7 +1915,10 @@ function Daily_Planner() {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
       saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
+      console.log("excelblob in excel2 method",excelBlob);
       downloadedFile = excelBlob;
+      downloadedFileName="Daily_Movement_results_Scenerio2.xlsx";
+      uploadFile(excelBlob, downloadedFileName);
       // Commented out the alert statement
       // window.alert("Result Downloaded");
     }
@@ -1935,42 +1944,36 @@ function Daily_Planner() {
     //  data: jsonData,
     };
   };
-  // Define the function to handle file upload
-  const uploadFile = () => {
-    if (downloadedFile) {
-      // You can now use the 'downloadedFile' for uploading
-      // Create a FormData object and append the file to it
-      console.log("downloadedFile",downloadedFile);
-      const jsonData = convertExcelToJSON(downloadedFile);
-      // const formData = new FormData();
-      // formData.append("file", downloadedFile);
-      console.log("jsonData",jsonData);
-
+  const uploadFile = (fileBlob, fileName) => {
+    if (fileBlob) {
+      // Create a FormData object and append the file Blob with its original name
+      const formData = new FormData();
+      formData.append("file", fileBlob, "Daily_Movement_results_Scenerio");
+      console.log("formData",formData);
+      console.log("fileBlob",fileBlob);
+  
       // Make a POST request to the server to upload the file
-      fetch("https://192.168.1.12:5001/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile",{
-        // https://192.168.1.12:5001/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile
-      // fetch("https://rakeplanner.callippus.co.uk/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile", {
+      fetch("https://192.168.1.12:5001/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile", {
         method: "POST",
-       // body: jsonData,
-       // body: formData,
-       body: JSON.stringify(jsonData),
+        body: formData,
       })
         .then((response) => {
           if (response.ok) {
             // File upload was successful
-            window.alert("File uploaded successfully!");
+            window.alert("File and contents uploaded successfully!");
           } else {
             // File upload failed
-            window.alert("File upload failed. Please try again.");
+            window.alert("File and contents upload failed. Please try again.");
           }
         })
         .catch((error) => {
-          console.error("An error occurred during file upload:", error);
+          console.error("An error occurred during file and contents upload:", error);
         });
     } else {
-      window.alert("Please download the file first before uploading.");
+      window.alert("Please download the file and contents first before uploading.");
     }
   };
+
 
   return (
     <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
