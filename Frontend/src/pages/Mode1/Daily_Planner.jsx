@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import config from "../../config";
 import style from "./Daily_Planner.css";
-
+import axios from 'axios';
 function Daily_Planner() {
   const ProjectIp = config.serverUrl;
   const [fileSelected, setFileSelected] = useState(false);
@@ -107,7 +107,7 @@ function Daily_Planner() {
   const [subOptionDestWheat6, setSubOptionDestWheat6] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   let downloadedFile = null;
-  let downloadedFileName=null;
+  let downloadedFileName = null;
 
   const handleFileChange_ = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -1865,9 +1865,9 @@ function Daily_Planner() {
       const workbook = XLSX.utils.book_new();
       Object.entries(Total_result).forEach(([column, data]) => {
         const parsedData = JSON.parse(data);
-        console.log("parsedData",parsedData);
+        console.log("parsedData", parsedData);
         const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        console.log("worksheet",worksheet);
+        console.log("worksheet", worksheet);
         XLSX.utils.book_append_sheet(workbook, worksheet, column);
       });
       const excelBuffer = XLSX.write(workbook, {
@@ -1888,9 +1888,9 @@ function Daily_Planner() {
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
       saveAs(excelBlob, filenameWithDateTime);
-      console.log("excelblob in excel1 method",excelBlob);
+      console.log("excelblob in excel1 method", excelBlob);
       downloadedFile = excelBlob;
-      downloadedFileName=filenameWithDateTime;
+      downloadedFileName = filenameWithDateTime;
       uploadFile(excelBlob, downloadedFileName);
     }
   };
@@ -1915,9 +1915,9 @@ function Daily_Planner() {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
       saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
-      console.log("excelblob in excel2 method",excelBlob);
+      console.log("excelblob in excel2 method", excelBlob);
       downloadedFile = excelBlob;
-      downloadedFileName="Daily_Movement_results_Scenerio2.xlsx";
+      downloadedFileName = "Daily_Movement_results_Scenerio2.xlsx";
       uploadFile(excelBlob, downloadedFileName);
       // Commented out the alert statement
       // window.alert("Result Downloaded");
@@ -1939,20 +1939,20 @@ function Daily_Planner() {
       excelFile: "YourFileName.xlsx", // Replace with the desired file name
       uniqueId: "1",
       type: "Register",
-      projectMasterId:"1",
+      projectMasterId: "1",
       //  $('#CurrentProjectId').val(), // Replace with the appropriate value
-    //  data: jsonData,
+      //  data: jsonData,
     };
   };
   const uploadFile = (fileBlob, fileName) => {
     if (fileBlob) {
       // Create a FormData object and append the file Blob with its original name
       const formData = new FormData();
-      fileName="Daily_Movement_results_Scenerio.xlsx";
+      fileName = "Daily_Movement_results_Scenerio.xlsx";
       formData.append("file", fileBlob, fileName);
-      console.log("formData",formData);
-      console.log("fileBlob",fileBlob);
-  
+      console.log("formData", formData);
+      console.log("fileBlob", fileBlob);
+
       // Make a POST request to the server to upload the file
       fetch("https://192.168.1.12:5001/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile", {
         method: "POST",
@@ -1961,9 +1961,12 @@ function Daily_Planner() {
         .then((response) => {
           if (response.ok) {
             // File upload was successful
-            window.alert("File and contents uploaded successfully!");
+            console.log("File uploaded successfully!");
+            window.alert("File uploaded successfully!");
+            // window.alert("File and contents uploaded successfully!");
           } else {
             // File upload failed
+            console.log("File and contents upload failed. Please try again.");
             window.alert("File and contents upload failed. Please try again.");
           }
         })
@@ -1974,6 +1977,82 @@ function Daily_Planner() {
       window.alert("Please download the file and contents first before uploading.");
     }
   };
+  const jsonData = [
+    {
+      "source": "SANGRUR[NF22]",
+      "destination": "",
+      "railHeadCode": "SAG",
+      "commodityName": "Wheat+FRK",
+      "rakePreference": "42W/58W",
+      "additionalRemarks": "",
+      "generalRemarks": "test",
+      "createdDate": "2023-11-07T15:28:31.36716+05:30"
+    },
+    {
+      "source": "AZAMGARH[NH27]",
+      "destination": "",
+      "railHeadCode": "PHY",
+      "commodityName": "Wheat+FRK",
+      "rakePreference": "42W/58W",
+      "additionalRemarks": "",
+      "generalRemarks": "test",
+      "createdDate": "2023-11-07T15:32:27.307497+05:30"
+    }
+  ];
+  // const uploadData = () => {
+  //   console.log('Uploading data:', jsonData);
+  //   // axios
+  //   // .post('https://rakeplanner.callippus.co.uk/api/DailyPlannerWebApi/DailyPlannerNextDayforTool', jsonData, {
+  //   //   headers: { 'Content-Type': 'application/json' }
+  //   // })
+  //     // .post('https://10.194.100.180:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool', jsonData, {
+
+
+  //  // fetch('https://10.194.100.180:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool', {
+  //     fetch('https://192.168.1.19:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool',{
+  //     method: "GET",
+  //     body: jsonData,
+  //   })
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         alert('Data sent successfully.');
+  //       } else {
+  //         alert(`Failed to send data. Status code: ${response.status}`);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       alert(`Error: ${error.message}`);
+  //     });
+  // };
+
+  const fetchData = (event) => {
+    event.preventDefault();
+    fetch('https://192.168.1.19:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool')
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json(); // Parse the JSON response
+        } else {
+          alert(`Failed to fetch data. Status code: ${response.status}`);
+          return null; // Handle the error or return an empty response as needed
+        }
+      })
+      .then((data) => {
+        if (data) {
+          const result = data.result; // Access the result indicator
+          console.log('Result:', result);
+  
+          const responseData = data.response; // Access the response data
+          console.log('Data received:', responseData);
+          
+          // Handle the data as needed
+        }
+      })
+      .catch((error) => {
+        alert(`Error: ${error.message}`);
+      });
+     // console.log('Data received:', result);
+  };
+  
 
 
   return (
@@ -2209,6 +2288,11 @@ function Daily_Planner() {
                         <option value="TEFD+TC">TEFD + TC</option>
                       </select>
                     </label>
+                    <button
+                      style={{ color: "white", marginLeft: "15px" }}
+                      className="btn btn-danger dropdown-toggle"
+                      onClick={fetchData}
+                    >Get JSON Data</button>
                     <label>
                       <strong
                         style={{
