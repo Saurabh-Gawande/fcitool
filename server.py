@@ -236,13 +236,25 @@ def read_Daily_Planner_S2():
 
 @app.route("/read_Daily_Planner_S1",methods = ["POST","GET"])
 def read_Daily_Planner_S1():
-    if request.method == "POST":        
+    if request.method == "GET":        
         try: 
-            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra") 
+            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
             df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
+            df3 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain") 
+            df4 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra") 
+            df5 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br") 
+            df6 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk") 
+            df7 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr")
+            df8 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr")
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
-            json_data = {"rra": json_data1, "wheat": json_data2}
+            json_data3 = df3.to_json(orient='records', indent=1)
+            json_data4 = df4.to_json(orient='records', indent=1)
+            json_data5 = df5.to_json(orient='records', indent=1)
+            json_data6 = df6.to_json(orient='records', indent=1)
+            json_data7 = df7.to_json(orient='records', indent=1)
+            json_data8 = df8.to_json(orient='records', indent=1)
+            json_data = {"rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "frk": json_data6, "frkcgr":json_data7 , "wcgr": json_data8}
         except:
             json_data = json.dumps({"Status": 0}, indent=1)
 
@@ -341,10 +353,9 @@ def Download_Template_to_add():
 
             prev_col = list(df1.columns)
             present_col = list(df2["RH_code"])
-            # print(present_col)
 
             prev_st = set(prev_col)
-            # print(prev_st)
+
             add_rh = []
             for rh in present_col:
                 if rh not in prev_st:
@@ -397,7 +408,6 @@ def Update_matrices():
     try:
         file = request.files['uploadFile']
         file.save("Input//Update_matrices.xlsx")
-        print("Got File")
         Railhead_cost_matrix_1rake_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
         Railhead_cost_matrix_U_data_Non_TEFD = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_Non_TEFD", index_col=0)
         Railhead_cost_matrix_U_data_TEFD = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_TEFD", index_col=0)
@@ -533,8 +543,6 @@ def Add_Railhead():
         fetched_data = request.get_json()  # Make sure to handle request properly in your Flask app
         Railhead_name.append(fetched_data["railhead"].upper())
         Railhead_State.append(fetched_data['state'])
-        print(Railhead_name)
-        print(Railhead_State)
 
         Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
         Daily_Template_S1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
@@ -647,8 +655,7 @@ def Modify_Monthly_Template_M01():
                 return value
         fetched_data = request.get_json()
         sheets = fetched_data['SheetNames']
-        # print(type(fetched_data['Sheets']['Surplus_wheat'][f'C{3}']['v']))
-        # print(fetched_data)
+       
 
         for sht in sheets:
             if sht == 'Surplus_wheat':
@@ -746,8 +753,6 @@ def Modify_Daily_Template_S01():
                 return value
         fetched_data = request.get_json()
         sheets = fetched_data['SheetNames']
-        # print(type(fetched_data['Sheets']['Surplus_wheat'][f'C{3}']['v']))
-        # print(fetched_data)
 
         for sht in sheets:
             if sht == 'Surplus_wheat':
@@ -843,9 +848,7 @@ def Modify_Daily_Template_S02():
                 return value
         fetched_data = request.get_json()
         sheets = fetched_data['SheetNames']
-        # print(type(fetched_data['Sheets']['Surplus_wheat'][f'C{3}']['v']))
-        # print(fetched_data)
-
+       
         for sht in sheets:
             if sht == 'Surplus_wheat':
                 columns = ['Railhead', 'State', 'Supply']
@@ -1054,22 +1057,18 @@ def Monthly_Solution():
             for i in surplus_wheat.index:
                 for j in deficit_wheat.index:
                     prob+=x_ij_wheat[(i,j)]>=0.027*b_ij_wheat[(i,j)]
-                    # print(x_ij_wheat[(i,j)]>=0.027*b_ij_wheat[(i,j)])
                     
             for i in surplus_wheat.index:
                 for j in deficit_wheat.index:
                     prob+=x_ij_wheat[(i,j)]<=1000000*b_ij_wheat[(i,j)]
-                    # print(x_ij_wheat[(i,j)]<=1000000*b_ij_wheat[(i,j)])
                     
             for i in surplus_rice.index:
                 for j in deficit_rice.index:
                     prob+=x_ij_rice[(i,j)]>=0.027*b_ij_rice[(i,j)]
-                    # print(x_ij_rice[(i,j)]>=0.027*b_ij_rice[(i,j)])
                     
             for i in surplus_rice.index:
                 for j in deficit_rice.index:
                     prob+=x_ij_rice[(i,j)]<=1000000*b_ij_rice[(i,j)]
-                    # print(x_ij_rice[(i,j)]<=1000000*b_ij_rice[(i,j)])
                         
             for i in surplus_wheat.index:
                 prob+=lpSum(x_ij_wheat[(i,j)] for j in deficit_wheat.index)<=surplus_wheat["Supply"][i]
@@ -1094,7 +1093,7 @@ def Monthly_Solution():
             
 
             prob.writeLP("Output\\FCI_monthly_model_allocation_rr.lp")
-            prob.solve()
+            prob.solve(CPLEX())
             print("Status:", LpStatus[prob.status])
             print("Minimum Cost of Transportation = Rs.", value(prob.objective),"Lakh")
             print("Total Number of Variables:",len(prob.variables()))
@@ -1337,7 +1336,7 @@ def Daily_Planner_Check():
             Inline_dist = max(int(fetched_data["rice_inline_value"]), int(fetched_data["wheat_inline_value"]))
             for i in range(len(inline_data)):
                 inline_source = inline_data[i]["origin_railhead"]
-                print(inline_source)
+
             for i in range(len(inline_data)):
                 inline_dest = inline_data[i]["destination_railhead"]
         
@@ -1415,7 +1414,7 @@ def Consistency_Check():
             for state, value in State_capacity.items():
                 if state in State_demand and State_demand[state] > value:
                     red_state.append(state)
-            print(red_state)
+
             data["Red State"] = red_state
 
         except Exception as e:
@@ -1464,6 +1463,18 @@ def Daily_Planner():
             wheat_dest = fetched_data["wheat_destination"]
             wheat_origin_inline = fetched_data["wheat_inline"]
             wheat_dest_inline = fetched_data["wheat_dest_inline"]
+            coarseGrain_origin = fetched_data["coarseGrain_origin"]
+            coarseGrain_dest = fetched_data["coarseGrain_destination"]
+            frkrra_origin = fetched_data["frkrra_origin"]
+            frkrra_dest = fetched_data["frkrra_destination"]
+            frkbr_origin = fetched_data["frkbr_origin"]
+            frkbr_dest = fetched_data["frkbr_destination"]
+            frk_origin = fetched_data["frk_origin"]
+            frk_dest = fetched_data["frk_destination"]
+            frkcgr_origin = fetched_data["frkcgr_origin"]
+            frkcgr_dest = fetched_data["frkcgr_destination"]
+            wcgr_origin = fetched_data["wcgr_origin"]
+            wcgr_dest = fetched_data["wcgr_destination"]
 
             for i in range(len(blocked_data)):
                 blocked_org_rhcode.append(blocked_data[i]["origin_railhead"])
@@ -1479,19 +1490,7 @@ def Daily_Planner():
                 confirmed_railhead_value.append(confirmed_data[i]["value"])
                 confirmed_railhead_commodities.append(confirmed_data[i]["commodity"])
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
-            # surplus_wheat=pd.read_excel(data,sheet_name="Surplus_wheat",index_col=1)
-            # deficit_wheat=pd.read_excel(data,sheet_name="Deficit_wheat",index_col=1)
-            # surplus_rra=pd.read_excel(data,sheet_name="Surplus_RRA",index_col=1)
-            # deficit_rra=pd.read_excel(data,sheet_name="Deficit_RRA",index_col=1)
-            # # surplus_frk_rra=pd.read_excel(data,sheet_name="Surplus_FRK_RRA",index_col=1)
-            # # deficit_frk_rra=pd.read_excel(data,sheet_name="Deficit_FRK_RRA",index_col=1)
-            # # surplus_frk_br=pd.read_excel(data,sheet_name="Surplus_FRK_BR",index_col=1)
-            # # deficit_frk_br=pd.read_excel(data,sheet_name="Deficit_FRK_BR",index_col=1)
-            # # surplus_coarse=pd.read_excel(data,sheet_name="Surplus_Coarse_GR",index_col=1)
-            # # deficit_coarse=pd.read_excel(data,sheet_name="Deficit_Coarse_GR",index_col=1)
-            # # surplus_comm_mix=pd.read_excel(data,sheet_name="Surplus_Comm_mix",index_col=1)
-            # # deficit_comm_mix=pd.read_excel(data,sheet_name="Deficit_Comm_mix",index_col=1)
-            # rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix_1rake",index_col=0)
+            
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
             distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
             # # states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
@@ -1500,41 +1499,101 @@ def Daily_Planner():
             prob = LpProblem("FCI_monthly_model_allocation_rr", LpMinimize)
 
             source_wheat = {}
-            for i in range(len(wheat_origin)):
-                if int(wheat_origin[i]["origin_value"]) > 0:
-                    source_wheat[wheat_origin[i]["origin_railhead"]] = int(wheat_origin[i]["origin_value"])
+            for wheat in wheat_origin:
+                if wheat["Value"] > 0:
+                    source_wheat[wheat["origin_railhead"]] = wheat["Value"]
 
-            source_rra = {}
-            for i in range(len(rra_origin)):
-                if int(rra_origin[i]["origin_value"]) > 0:
-                    source_rra[rra_origin[i]["origin_railhead"]] = int(rra_origin[i]["origin_value"])
+            dest_wheat = {}
+            for i in range(len(wheat_dest)):
+                if int(wheat_dest[i]["Value"]) > 0:
+                    dest_wheat[wheat_dest[i]["origin_railhead"]] = int(wheat_dest[i]["Value"])
 
             source_wheat_inline = {}
             for i in range(len(wheat_origin_inline)):
                 source_wheat_inline[wheat_origin_inline[i]["origin_railhead"]] = rra_origin_inline[i]["destination_railhead"]
+                
+            dest_wheat_inline = {}
+            for i in range(len(wheat_dest_inline)):
+                dest_wheat_inline[wheat_dest_inline[i]["origin_railhead"]] = wheat_dest_inline[i]["destination_railhead"]
+
+            source_rra = {}
+            for rra in rra_origin:
+                if rra["Value"] > 0:
+                    source_rra[rra["origin_railhead"]] = rra["Value"]
+
+            dest_rra = {}
+            for i in range(len(rra_dest)):
+                if int(rra_dest[i]["Value"]) > 0:
+                    dest_rra[rra_dest[i]["origin_railhead"]] = int(rra_dest[i]["Value"]) 
 
             source_rra_inline = {}
             for i in range(len(rra_origin_inline)):
                 source_rra_inline[rra_origin_inline[i]["origin_railhead"]] = rra_origin_inline[i]["destination_railhead"]
 
-            dest_wheat = {}
-            for i in range(len(wheat_dest)):
-                if int(wheat_dest[i]["origin_value"]) > 0:
-                    dest_wheat[wheat_dest[i]["origin_railhead"]] = int(wheat_dest[i]["origin_value"])
-
-            dest_rra = {}
-            for i in range(len(rra_dest)):
-                if int(rra_dest[i]["origin_value"]) > 0:
-                    dest_rra[rra_dest[i]["origin_railhead"]] = int(rra_dest[i]["origin_value"])
-
-            dest_wheat_inline = {}
-            for i in range(len(wheat_dest_inline)):
-                dest_wheat_inline[wheat_dest_inline[i]["origin_railhead"]] = wheat_dest_inline[i]["destination_railhead"]
-
             dest_rra_inline = {}
             for i in range(len(rra_dest_inline)):
                 dest_rra_inline[rra_dest_inline[i]["origin_railhead"]] = rra_dest_inline[i]["destination_railhead"]
 
+            source_coarseGrain = {}
+            for coarseGrain in coarseGrain_origin:
+                if coarseGrain["Value"] > 0:
+                    source_coarseGrain[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
+
+            dest_coarseGrain = {}
+            for coarseGrain in coarseGrain_dest:
+                if coarseGrain["Value"] > 0:
+                    dest_coarseGrain[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
+                    
+            source_frkrra = {}
+            for frkrra in frkrra_origin:
+                if frkrra["Value"] > 0:
+                    source_frkrra[frkrra["origin_railhead"]] = frkrra["Value"]
+
+            dest_frkrra = {}
+            for frkrra in frkrra_dest:
+                if frkrra["Value"] > 0:
+                    dest_frkrra[frkrra["origin_railhead"]] = frkrra["Value"]
+
+            source_frkbr = {}
+            for frkbr in frkbr_origin:
+                if frkbr["Value"] > 0:
+                    source_frkbr[frkbr["origin_railhead"]] = frkbr["Value"]
+
+            dest_frkbr = {}
+            for frkbr in  frkbr_dest:
+                if frkbr["Value"] > 0:
+                    dest_frkbr[frkbr["origin_railhead"]] = frkbr["Value"]
+
+            source_frk = {}
+            for frk in frk_origin:
+                if frk["Value"] > 0:
+                    source_frk[frk["origin_railhead"]] = frk["Value"]
+
+            dest_frk = {}
+            for frk in  frk_dest:
+                if frk["Value"] > 0:
+                    dest_frk[frk["origin_railhead"]] = frk["Value"]
+
+            source_frkcgr = {}
+            for frkcgr in frkcgr_origin:
+                if frkcgr["Value"] > 0:
+                    source_frkcgr[frkcgr["origin_railhead"]] = frkcgr["Value"]
+
+            dest_frkcgr = {}
+            for frkcgr in  frkcgr_dest:
+                if frkcgr["Value"] > 0:
+                    dest_frkcgr[frkcgr["origin_railhead"]] = frkcgr["Value"]
+
+            source_wcgr = {}
+            for wcgr in wcgr_origin:
+                if wcgr["Value"] > 0:
+                    source_wcgr[wcgr["origin_railhead"]] = wcgr["Value"]
+
+            dest_wcgr = {}
+            for wcgr in  wcgr_dest:
+                if wcgr["Value"] > 0:
+                    dest_wcgr[wcgr["origin_railhead"]] = wcgr["Value"]
+            
             L1 = list(source_wheat_inline.keys())
             L2 = list(source_rra_inline.keys())
             # L3=list(source_frk_rra_inline.keys())
@@ -1543,6 +1602,7 @@ def Daily_Planner():
             # L6=list(source_comm_mix_inline.keys())
             L7 = list(dest_wheat_inline.keys())
             L8 = list(dest_rra_inline.keys())
+
             list_src_wheat = []
             for i in L1:
                 Value = {}
@@ -1557,7 +1617,6 @@ def Daily_Planner():
                 for i in range(len(List_A)):
                     Value[List_B[i]] = List_A[i]
                 list_src_wheat.append(Value[max(List_B)])
-                print(list_src_wheat)
 
             for i in list_src_wheat:
                 source_wheat[i] = 1
@@ -1618,29 +1677,74 @@ def Daily_Planner():
 
             for i in list_dest_rra:
                 dest_rra[i] = 1
-
+           
             x_ij_wheat = LpVariable.dicts("x_wheat", [(i, j) for i in source_wheat.keys() for j in dest_wheat.keys()], cat="Integer")
             x_ij_rra = LpVariable.dicts("x_rra", [(i, j) for i in source_rra.keys() for j in dest_rra.keys()], cat="Integer")
-            # x_ij_frk_rra=LpVariable.dicts("x_frk_rra",[(i,j) for i in source_frk_rra.keys() for j in dest_frk_rra.keys()],cat="Integer")
-            # x_ij_frk_br=LpVariable.dicts("x_frk_br",[(i,j) for i in source_frk_br.keys() for j in dest_frk_br.keys()],cat="Integer")
-            # x_ij_cgr=LpVariable.dicts("x_cgr",[(i,j) for i in source_coarse_gr.keys() for j in dest_coarse_gr.keys()],cat="Integer")
-            # x_ij_mix=LpVariable.dicts("x_mix",[(i,j) for i in source_comm_mix.keys() for j in dest_comm_mix.keys()],cat="Integer")
+            x_ij_coarseGrain = LpVariable.dicts("x_coarsegrain", [(i, j) for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()], cat="Integer")
+            x_ij_frkrra = LpVariable.dicts("x_frkrra", [(i, j) for i in source_frkrra.keys() for j in dest_frkrra.keys()], cat="Integer")
+            x_ij_frk_br=LpVariable.dicts("x_frk_br",[(i,j) for i in source_frkbr.keys() for j in dest_frkbr.keys()],cat="Integer")
+            x_ij_frk=LpVariable.dicts("x_frk",[(i,j) for i in source_frk.keys() for j in dest_frk.keys()],cat="Integer")
+            x_ij_frkcgr=LpVariable.dicts("x_frkcgr",[(i,j) for i in source_frkcgr.keys() for j in dest_frkcgr.keys()],cat="Integer")
+            x_ij_wcgr=LpVariable.dicts("x_wcgr",[(i,j) for i in source_wcgr.keys() for j in dest_wcgr.keys()],cat="Integer")
 
-            prob += lpSum(x_ij_wheat[(i, j)] * rail_cost.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) + lpSum(x_ij_rra[(i, j)] * rail_cost.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys())
+            prob += (
+                lpSum(x_ij_wheat[(i, j)] * rail_cost.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
+                lpSum(x_ij_rra[(i, j)] * rail_cost.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
+                lpSum(x_ij_coarseGrain[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()) +
+                lpSum(x_ij_frkrra[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
+                lpSum(x_ij_frk_br[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
+                lpSum(x_ij_frk[(i, j)] * rail_cost.loc[i][j] for i in source_frk.keys() for j in dest_frk.keys()) +
+                lpSum(x_ij_frkcgr[(i, j)] * rail_cost.loc[i][j] for i in source_frkcgr.keys() for j in dest_frkcgr.keys()) +
+                lpSum(x_ij_wcgr[(i, j)] * rail_cost.loc[i][j] for i in source_wcgr.keys() for j in dest_wcgr.keys())
+            )
 
             for i in source_wheat.keys():
                 prob += lpSum(x_ij_wheat[(i, j)] for j in dest_wheat.keys()) <= source_wheat[i]
 
-            for i in source_rra.keys():
-                prob += lpSum(x_ij_rra[(i, j)] for j in dest_rra.keys()) <= source_rra[i]
-
             for i in dest_wheat.keys():
                 prob += lpSum(x_ij_wheat[(j, i)] for j in source_wheat.keys()) >= dest_wheat[i]
 
-            # 2. RRA
+            for i in source_rra.keys():
+                prob += lpSum(x_ij_rra[(i, j)] for j in dest_rra.keys()) <= source_rra[i]
 
             for i in dest_rra.keys():
                 prob += lpSum(x_ij_rra[(j, i)] for j in source_rra.keys()) >= dest_rra[i]
+
+            for i in source_coarseGrain.keys():
+                prob += lpSum(x_ij_coarseGrain[(i, j)] for j in dest_coarseGrain.keys()) <= source_coarseGrain[i]
+
+            for i in dest_coarseGrain.keys():
+                prob += lpSum(x_ij_coarseGrain[(j, i)] for j in source_coarseGrain.keys()) >= dest_coarseGrain[i]
+            
+            for i in source_frkrra.keys():
+                prob += lpSum(x_ij_frkrra[(i, j)] for j in dest_frkrra.keys()) <= source_frkrra[i]
+            
+            for i in dest_frkrra.keys():
+                prob += lpSum(x_ij_frkrra[(j, i)] for j in source_frkrra.keys()) >= dest_frkrra[i]
+
+            for i in source_frkbr.keys():
+                prob += lpSum(x_ij_frk_br[(i, j)] for j in dest_frkbr.keys()) <= source_frkbr[i]
+
+            for i in dest_frkbr.keys():
+                prob += lpSum(x_ij_frk_br[(j, i)] for j in source_frkbr.keys()) >= dest_frkbr[i] 
+
+            for i in source_frk.keys():
+                prob += lpSum(x_ij_frk[(i, j)] for j in dest_frk.keys()) <= source_frk[i]
+
+            for i in dest_frk.keys():
+                prob += lpSum(x_ij_frk[(j, i)] for j in source_frk.keys()) >= dest_frk[i] 
+
+            for i in source_frkcgr.keys():
+                prob += lpSum(x_ij_frkcgr[(i, j)] for j in dest_frkcgr.keys()) <= source_frkcgr[i]
+
+            for i in dest_frkcgr.keys():
+                prob += lpSum(x_ij_frkcgr[(j, i)] for j in source_frkcgr.keys()) >= dest_frkcgr[i] 
+
+            for i in source_wcgr.keys():
+                prob += lpSum(x_ij_wcgr[(i, j)] for j in dest_wcgr.keys()) <= source_wcgr[i]
+
+            for i in dest_wcgr.keys():
+                prob += lpSum(x_ij_wcgr[(j, i)] for j in source_wcgr.keys()) >= dest_wcgr[i] 
 
             prob.writeLP("FCI_monthly_model_allocation_rr.lp")
             prob.solve()
@@ -1650,7 +1754,6 @@ def Daily_Planner():
             print("Total Number of Constraints:", len(prob.constraints))
 
             df_wheat = pd.DataFrame()
-
             From = []
             To = []
             values = []
@@ -1660,44 +1763,51 @@ def Daily_Planner():
 
             for i in source_wheat:
                 for j in dest_wheat:
-                    if x_ij_wheat[(i, j)].value() > 0:
+                    if int(x_ij_wheat[(i, j)].value()) > 0:
                         From.append(i)
                         To.append(j)
                         values.append(x_ij_wheat[(i, j)].value())
                         commodity.append("Wheat")
-
-            for i in range(len(confirmed_org_rhcode)):
-                org = str(confirmed_org_rhcode[i])
-                org_state = str(confirmed_org_state[i])
-                dest = str(confirmed_dest_rhcode[i])
-                dest_state = str(confirmed_dest_state[i])
-                Commodity = confirmed_railhead_commodities[i]
-                # val = confirmed_railhead_value[i]
-                if Commodity == 'WHEAT':
-                    From.append(org)
-                    # From_state.append(org_state)
-                    To.append(dest)
-                    # To_state.append(dest_state)
-                    commodity.append("Wheat")
-                    # values.append(val)
+                        
+            for i in range(len(From)):
+                for wheat in wheat_origin:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                       
+            for i in range (len(To)): 
+                for wheat in wheat_dest: 
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+            
+            # for i in range(len(confirmed_org_rhcode)):
+            #     org = str(confirmed_org_rhcode[i])
+            #     org_state = str(confirmed_org_state[i])
+            #     dest = str(confirmed_dest_rhcode[i])
+            #     dest_state = str(confirmed_dest_state[i])
+            #     Commodity = confirmed_railhead_commodities[i]
+            #     # val = confirmed_railhead_value[i]
+            #     if Commodity == 'WHEAT':
+            #         From.append(org)
+            #         # From_state.append(org_state)
+            #         To.append(dest)
+            #         # To_state.append(dest_state)
+            #         commodity.append("Wheat")
+            #         # values.append(val)
 
             df_wheat["From"] = From
-            # df_wheat["From State"] = From_state
+            df_wheat["From State"] = From_state
             df_wheat["To"] = To
-            # df_wheat["To State"] = To_state
+            df_wheat["To State"] = To_state
             df_wheat["Commodity"] = commodity
-
+            df_wheat["Values"] = values
+            
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["To"])):
                     if (i == df_wheat.iloc[j]["To"] or dest_wheat_inline[i] == df_wheat.iloc[j]["To"]):
                         df_wheat.loc[j, 'To'] = (i + '+' + dest_wheat_inline[i])
 
-            D = []
-            E = []
-            F = []
-
+           
             df_rra = pd.DataFrame()
-
             From = []
             To = []
             values = []
@@ -1707,56 +1817,274 @@ def Daily_Planner():
 
             for i in source_rra:
                 for j in dest_rra:
-                    if x_ij_rra[(i, j)].value() > 0:
+                    if int(x_ij_rra[(i, j)].value()) > 0:
                         From.append(i)
                         To.append(j)
                         values.append(x_ij_rra[(i, j)].value())
                         commodity.append("RRA")
+            print(values)
+            for i in range(len(From)):
+                for rra in rra_origin:
+                    if From[i] == rra["origin_railhead"]:
+                        From_state_rra.append(rra["origin_state"])
 
-            for i in range(len(confirmed_org_rhcode)):
-                org = str(confirmed_org_rhcode[i])
-                org_state = str(confirmed_org_state[i])
-                dest = str(confirmed_dest_rhcode[i])
-                dest_state = str(confirmed_dest_state[i])
-                Commodity = confirmed_railhead_commodities[i]
-                # val = float(confirmed_railhead_value[i])
-                if Commodity == 'RICE':
-                    From.append(org)
-                    # From_state_rra.append(org_state)
-                    To.append(dest)
-                    # To_state_rra.append(dest_state)
-                    commodity.append("Rice")
-                    # values.append(val)
+            for i in range (len(To)): 
+                for rra in rra_dest: 
+                    if To[i] == rra["origin_railhead"]:
+                        To_state_rra.append(rra["origin_state"]) 
+            # for i in range(len(confirmed_org_rhcode)):
+            #     org = str(confirmed_org_rhcode[i])
+            #     org_state = str(confirmed_org_state[i])
+            #     dest = str(confirmed_dest_rhcode[i])
+            #     dest_state = str(confirmed_dest_state[i])
+            #     Commodity = confirmed_railhead_commodities[i]
+            #     # val = float(confirmed_railhead_value[i])
+            #     if Commodity == 'RICE':
+            #         From.append(org)
+            #         # From_state_rra.append(org_state)
+            #         To.append(dest)
+            #         # To_state_rra.append(dest_state)
+            #         commodity.append("Rice")
+            #         # values.append(val)
 
             df_rra["From"] = From
-            # df_rra["From State"] = From_state_rice
+            df_rra["From State"] = From_state_rra
             df_rra["To"] = To
-            # df_rra["To State"] = To_state_rice
+            df_rra["To State"] = To_state_rra
             df_rra["Commodity"] = commodity
-
+            df_rra["Values"] = values
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["To"])):
                     if (i == df_rra.iloc[j]["To"] or dest_rra_inline[i] == df_rra.iloc[j]["To"]):
                         df_rra.loc[j, 'To'] = (i + '+' + dest_rra_inline[i])
 
-            # data1["rra"] = df_rra
-            # data1["wheat"] = df_wheat
+            df_CoarseGrain = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_coarseGrain:
+                for j in dest_coarseGrain:
+                    if int(x_ij_coarseGrain[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_coarseGrain[(i,j)].value())
+                        commodity.append("Coarse Grain")
+
+            for i in range(len(From)):
+                for coarseGrain in coarseGrain_origin:
+                    if From[i] == coarseGrain["origin_railhead"]:
+                        From_state.append(coarseGrain["origin_state"])
+
+            for i in range (len(To)): 
+                for coarseGrain in coarseGrain_dest: 
+                    if To[i] == coarseGrain["origin_railhead"]:
+                        To_state.append(coarseGrain["origin_state"])
+
+            df_CoarseGrain["From"] = From
+            df_CoarseGrain["From State"] = From_state
+            df_CoarseGrain["To"] = To
+            df_CoarseGrain["To State"] = To_state
+            df_CoarseGrain["Commodity"] = commodity
+            df_CoarseGrain["Values"] = values
+          
+            df_frkrra = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_frkrra:
+                for j in dest_frkrra:
+                    if int(x_ij_frkrra[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frkrra[(i,j)].value())
+                        commodity.append("FRK RRA")
+
+            for i in range(len(From)):
+                for frkrra in frkrra_origin:
+                    if From[i] == frkrra["origin_railhead"]:
+                        From_state.append(frkrra["origin_state"])
+
+            for i in range (len(To)): 
+                for frkrra in frkrra_dest: 
+                    if To[i] == frkrra["origin_railhead"]:
+                        To_state.append(frkrra["origin_state"])
+             
+            df_frkrra["From"] = From
+            df_frkrra["From State"] = From_state
+            df_frkrra["To"] = To
+            df_frkrra["To State"] = To_state
+            df_frkrra["Commodity"] = commodity
+            df_frkrra["Values"] = values
+
+            df_frkbr = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_frkbr:
+                for j in dest_frkbr:
+                    if int(x_ij_frk_br[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frk_br[(i,j)].value())
+                        commodity.append("FRK BR")
+
+            for i in range(len(From)):
+                for frkbr in frkbr_origin:
+                    if From[i] == frkbr["origin_railhead"]:
+                        From_state.append(frkbr["origin_state"])
+
+            for i in range (len(To)): 
+                for frkbr in frkbr_dest: 
+                    if To[i] == frkbr["origin_railhead"]:
+                        To_state.append(frkbr["origin_state"])
+
+            df_frkbr["From"] = From
+            df_frkbr["From State"] = From_state
+            df_frkbr["To"] = To
+            df_frkbr["To State"] = To_state
+            df_frkbr["Commodity"] = commodity
+            df_frkbr["Values"] = values
+
+            df_frk = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_frk:
+                for j in dest_frk:
+                    if int(x_ij_frk[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frk[(i,j)].value())
+                        commodity.append("FRK")
+
+            for i in range(len(From)):
+                for frk in frk_origin:
+                    if From[i] == frk["origin_railhead"]:
+                        From_state.append(frk["origin_state"])
+
+            for i in range (len(To)): 
+                for frk in frk_dest: 
+                    if To[i] == frk["origin_railhead"]:
+                        To_state.append(frk["origin_state"])
+
+            df_frk["From"] = From
+            df_frk["From State"] = From_state
+            df_frk["To"] = To
+            df_frk["To State"] = To_state
+            df_frk["Commodity"] = commodity
+            df_frk["Values"] = values
+            
+            df_frkcgr = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_frkcgr:
+                for j in dest_frkcgr:
+                    if int(x_ij_frkcgr[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frkcgr[(i,j)].value())
+                        commodity.append("FRK+CGR")
+
+            for i in range(len(From)):
+                for frkcgr in frkcgr_origin:
+                    if From[i] == frkcgr["origin_railhead"]:
+                        From_state.append(frkcgr["origin_state"])
+
+            for i in range (len(To)): 
+                for frkcgr in frkcgr_dest: 
+                    if To[i] == frkcgr["origin_railhead"]:
+                        To_state.append(frkcgr["origin_state"])
+
+            df_frkcgr["From"] = From
+            df_frkcgr["From State"] = From_state
+            df_frkcgr["To"] = To
+            df_frkcgr["To State"] = To_state
+            df_frkcgr["Commodity"] = commodity
+            df_frkcgr["Values"] = values
+
+            df_wcgr = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_wcgr:
+                for j in dest_wcgr:
+                    if int(x_ij_wcgr[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wcgr[(i,j)].value())
+                        commodity.append("W+CGR")
+
+            for i in range(len(From)):
+                for wcgr in wcgr_origin:
+                    if From[i] == wcgr["origin_railhead"]:
+                        From_state.append(wcgr["origin_state"])
+
+            for i in range (len(To)): 
+                for wcgr in wcgr_dest: 
+                    if To[i] == wcgr["origin_railhead"]:
+                        To_state.append(wcgr["origin_state"])
+
+            df_wcgr["From"] = From
+            df_wcgr["From State"] = From_state
+            df_wcgr["To"] = To
+            df_wcgr["To State"] = To_state
+            df_wcgr["Commodity"] = commodity
+            df_wcgr["Values"] = values
+            print(df_wheat)
+            data1["rra"] = df_rra
+            data1["wheat"] = df_wheat
+            data1["coarse grain"] = df_CoarseGrain
+            data1["FRK RRA"] = df_frkrra
+            data1["FRK BR"] = df_frkbr
+            data1["FRK"] = df_frk
+            data1["FRK+CGR"] = df_frkcgr
+            data1["W+CGR"] = df_wcgr
 
             with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                 df_wheat.to_excel(writer, sheet_name="wheat", index=False)
                 df_rra.to_excel(writer, sheet_name="rra", index=False)
+                df_CoarseGrain.to_excel(writer, sheet_name="coarse_grain", index=False)
+                df_frkrra.to_excel(writer, sheet_name="frk_rra", index=False)
+                df_frkbr.to_excel(writer, sheet_name="frk_br", index=False)
+                df_frk.to_excel(writer, sheet_name="frk", index=False)
+                df_frkcgr.to_excel(writer, sheet_name="frkcgr", index=False)
+                df_wcgr.to_excel(writer, sheet_name="wcgr", index=False)
     
         except Exception as e:
             print(e)
             data1["status"] = 0
 
-        json_data = json.dumps(data1)
+        json_data = json.dumps(data1, default=lambda x: x.to_dict() if isinstance(x, pd.DataFrame) else x)
         json_object = json.loads(json_data)
 
         return(json.dumps(json_object, indent = 1))
     else:
         return ("error")
-
 
 @app.route("/Alternate_Railhead_Solve",methods = ["POST","GET"])
 def Alternate_Railhead_Solve():
@@ -1785,8 +2113,7 @@ def Alternate_Railhead_Solve():
                     lst1.append(index)
 
             lst2 = []
-            print(lst1)
-            print(lst2)
+
             for j in lst1:
                 lst2.append(rail_cost.loc[Alternate_Railhead_source, j])
 
@@ -1800,7 +2127,7 @@ def Alternate_Railhead_Solve():
             sort_dict_altrh = dict(sorted(filt_dict_altrh.items(), key=lambda item: item[1]))
             top_3_elements = list(sort_dict_altrh.items())[:3]
             result_altrh = []
-            print(result_altrh)
+
             for i in range(len(top_3_elements)):
                 result_altrh.append(top_3_elements[i][0])
 
@@ -1823,4 +2150,4 @@ def Alternate_Railhead_Solve():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000 , debug=True)

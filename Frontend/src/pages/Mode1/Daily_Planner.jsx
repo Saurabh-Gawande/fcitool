@@ -3,16 +3,51 @@ import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import config from "../../config";
-import style from "./Daily_Planner.css";
-import axios from 'axios';
+import jsPDF from "jspdf";
+// import style from "./Daily_Planner.css";
+// import Surplus from "./Surplus";
+
 function Daily_Planner() {
+  //---------------------------------------------------------------------------------------------
+  const [surplus, setSurplus] = useState([]);
+  const [surplusInline, setSurplusInline] = useState([]);
+  const [deficit, setDeficit] = useState([]);
+  const [deficitInline, setDeficitInline] = useState([]);
+
+  const [surplusState, setSurplusState] = useState();
+  const [totalSurplusRailhead, setTotalSurplusRailhead] = useState([]);
+  const [surplusRailhead, setSurplusRailhead] = useState();
+  const [surplusValue, setSurplusValue] = useState(1);
+  const [surplusCommodity, setSurplusCommodity] = useState();
+
+  const [deficitState, setDeficitState] = useState();
+  const [totalDeficitRailhead, setTotalDeficitRailhead] = useState([]);
+  const [deficitRailhead, setDeficitRailhead] = useState();
+  const [deficitValue, setDeficitValue] = useState(1);
+  const [deficitCommodity, setDeficitCommodity] = useState();
+
+  const [surplusInlineState1, setSurplusInlineState1] = useState();
+  const [surplusInlineRailhead1, setSurplusInlineRailhead1] = useState();
+  const [totalSurplusInlineRailhead1, setTotalSurplusInlineRailhead1] =
+    useState([]);
+  const [surplusInlineState2, setSurplusInlineState2] = useState();
+  const [surplusInlineRailhead2, setSurplusInlineRailhead2] = useState();
+  const [totalSurplusInlineRailhead2, setTotalSurplusInlineRailhead2] =
+    useState([]);
+  const [surplusInlineCommodity1, setSurplusInlineCommodity1] = useState();
+
+  const [deficitInlineState1, setDeficitInlineState1] = useState();
+  const [deficitInlineRailhead1, setDeficitInlineRailhead1] = useState();
+  const [totalDeficitInlineRailhead1, setTotalDeficitInlineRailhead1] =
+    useState([]);
+  const [deficitInlineState2, setDeficitInlineState2] = useState();
+  const [deficitInlineRailhead2, setDeficitInlineRailhead2] = useState();
+  const [totalDeficitInlineRailhead2, setTotalDeficitInlineRailhead2] =
+    useState([]);
+  const [deficitInlineCommodity, setDeficitInlineCommodity] = useState();
+  //----------------------------------------------------------------------------------------------------------
   const ProjectIp = config.serverUrl;
-  const [fileSelected, setFileSelected] = useState(false);
   const [inline_value_rice, setInlineValueRice] = useState("");
-  const [origin_value_rice, setOriginValueRice] = useState("");
-  const [dest_value_rice, setDestValueRice] = useState("");
-  const [origin_value_wheat, setOriginValueWheat] = useState("");
-  const [dest_value_wheat, setDestValueWheat] = useState("");
   const [inline_value_wheat, setInlineValueWheat] = useState("");
   const [block_data, setBlockdata] = useState([]);
   const [block_data2, setBlockdata2] = useState([]);
@@ -26,32 +61,10 @@ function Daily_Planner() {
   const [subOptions, setSubOptions] = useState([]);
   const [selectedOption2, setSelectedOption2] = useState("default");
   const [subOptions2, setSubOptions2] = useState([]);
-  const [selectedOption3, setSelectedOption3] = useState("default");
-  const [subOptions3, setSubOptions3] = useState([]);
-  const [selectedOptionWheat3, setSelectedOptionWheat3] = useState("default");
-  const [subOptionsWheat3, setSubOptionsWheat3] = useState([]);
-  const [selectedOption4, setSelectedOption4] = useState("default");
-  const [subOptions4, setSubOptions4] = useState([]);
-  const [selectedOptionWheat4, setSelectedOptionWheat4] = useState("default");
-  const [subOptionsWheat4, setSubOptionsWheat4] = useState([]);
-  const [selectedOption5, setSelectedOption5] = useState("default");
-  const [subOptions5, setSubOptions5] = useState([]);
-  const [selectedOption6, setSelectedOption6] = useState("default");
-  const [subOptions6, setSubOptions6] = useState([]);
   const [selectedOptionWheat5, setSelectedOptionWheat5] = useState("default");
   const [subOptionsWheat5, setSubOptionsWheat5] = useState([]);
-  const [selectedOptionWheat6, setSelectedOptionWheat6] = useState("default");
-  const [subOptionsWheat6, setSubOptionsWheat6] = useState([]);
   const [subOption1, setSubOption1] = useState("");
   const [subOption2, setSubOption2] = useState("");
-  const [subOption3, setSubOption3] = useState("");
-  const [subOptionWheat3, setSubOptionWheat3] = useState("");
-  const [subOption4, setSubOption4] = useState("");
-  const [subOptionWheat4, setSubOptionWheat4] = useState("");
-  const [subOption5, setSubOption5] = useState("");
-  const [subOption6, setSubOption6] = useState("");
-  const [subOptionWheat5, setSubOptionWheat5] = useState("");
-  const [subOptionWheat6, setSubOptionWheat6] = useState("");
   const [selectedOption_fixed, setSelectedOption_fixed] = useState("default");
   const [subOptions_fixed, setSubOptions_fixed] = useState([]);
   const [selectedOption2_fixed, setSelectedOption2_fixed] = useState("default");
@@ -69,405 +82,426 @@ function Daily_Planner() {
   const [Relevant_result, set_Relevant_Result] = useState(null);
   const [excelData, setExcelData] = useState({});
   const [activeSheetName, setActiveSheetName] = useState(null);
-  const [sheet, setSheet] = useState(null);
   const [updateExcel, setUpdateExcel] = useState(false);
   const [updateExcel2, setUpdateExcel2] = useState(false);
-  const [modifiedExcel, setModifiedExcel] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoading2, setIsLoading2] = useState(false);
-  const [isLoading3, setIsLoading3] = useState(false);
-  const [number_check1, setnumber_check1] = useState(0);
-  const [number_check2, setnumber_check2] = useState(0);
-  const [supplyWeatCount, setSupplyWeatCount] = useState(0);
-  const [destinationWheatCount, setDestinationWheatCount] = useState(0);
   const [showMessage, setShowMessage] = useState(false);
   const [riceData, setRiceData] = useState(false);
   const [wheatData, setWheatData] = useState(false);
   const [downloadMessage, setDownloadMessage] = useState(false);
   const [progress, setProgress] = useState([]);
-  const [filterRailHead, setfilterRailHead] = useState([]);
-  const [commodity, set_Commodity] = useState("");
   const [inline_value_dest_rice, setDestInlineValueRice] = useState("");
   const [inline_value_dest_wheat, setDestInlineValueWheat] = useState("");
   const [block_dataDest2, setBlockdataDest2] = useState([]);
   const [block_dataDestWheat2, setBlockdataDestWheat2] = useState([]);
-  const [selectedOptionDRI5, setSelectedOptionDRI5] = useState("default");
-  const [subOptionsDRI5, setSubOptionsDRI5] = useState([]);
-  const [selectedOptionDRI6, setSelectedOptionDRI6] = useState("default");
-  const [subOptionsDRI6, setSubOptionsDRI6] = useState([]);
-  const [selectedOptionDestWheat5, setSelectedOptionDestWheat5] =
-    useState("default");
-  const [subOptionsDestWheat5, setSubOptionsDestWheat5] = useState([]);
-  const [selectedOptionDestWheat6, setSelectedOptionDestWheat6] =
-    useState("default");
-  const [subOptionsDestWheat6, setSubOptionsDestWheat6] = useState([]);
-  const [subOptionDRI5, setSubOptionDRI5] = useState("");
-  const [subOptionDRI6, setSubOptionDRI6] = useState("");
-  const [subOptionDestWheat5, setSubOptionDestWheat5] = useState("");
-  const [subOptionDestWheat6, setSubOptionDestWheat6] = useState("");
+  useState("default");
+  useState("default");
   const [selectedFile, setSelectedFile] = useState(null);
-  let downloadedFile = null;
-  let downloadedFileName = null;
+  const [coarseGrain, setCoarseGrain] = useState(false);
+  const [frk, setFrk] = useState(false);
+  const [frk_rra, setFrk_rra] = useState(false);
+  const [frk_br, setFrk_br] = useState(false);
+  const [frk_cgr, setFrk_cgr] = useState(false);
+  const [w_cgr, setw_cgr] = useState(false);
+  const [riceOriginvalue, setRiceOriginValue] = useState();
+  const [riceDestinationValue, setRiceDestinationValue] = useState();
+  const [wheatOriginValue, setWheatOriginValue] = useState();
+  const [wheatDestinationValue, setWheatDestinationValue] = useState();
+  const [coarseGrainOriginValue, setCoarseGrainOriginValue] = useState();
+  const [coarseGrainDestinationValue, setCoarseGrainDestinationValue] =
+    useState();
+  const [frkrraOriginValue, setfrkrraOriginValue] = useState();
+  const [frkrraDestinationValue, setfrkrraDestinationValue] = useState();
+  const [frkbrOriginValue, setfrkbrOriginValue] = useState();
+  const [frkbrDestinationValue, setfrkbrDestinationValue] = useState();
+  const [wcgrOriginValue, setwcgrOriginValue] = useState();
+  const [wcgrDestinationValue, setwcgrDestinationValue] = useState();
+  const [frkcgrOriginValue, setfrkcgrOriginValue] = useState();
+  const [frkcgrDestinationValue, setfrkcgrDestinationValue] = useState();
+  const [frkOriginValue, setfrkOriginValue] = useState();
+  const [frkDestinationValue, setfrkDestinationValue] = useState();
+  // ---------------------------------------------------------------------------------------
+  const processSheetData = (workbook, sheetIndices) => {
+    const jsonData = [];
+    sheetIndices.forEach((sheetIndex) => {
+      const sheetName = workbook.SheetNames[sheetIndex];
+      const sheet = workbook.Sheets[sheetName];
+      const sheetData = XLSX.utils.sheet_to_json(sheet);
+      sheetData.forEach((row) => {
+        if (row.Value > 0) {
+          let surplusCommodity = "";
+          switch (sheetIndex) {
+            case 0:
+            case 1:
+              surplusCommodity = "Wheat";
+              break;
+            case 2:
+            case 3:
+              surplusCommodity = "RRA";
+              break;
+            case 4:
+            case 5:
+              surplusCommodity = "FRK RRA";
+              break;
+            case 6:
+            case 7:
+              surplusCommodity = "FRK BR";
+              break;
+            case 8:
+            case 9:
+              surplusCommodity = "Coarse Grain";
+              break;
+            default:
+              break;
+          }
+
+          row.Commodity = surplusCommodity;
+          jsonData.push(row);
+        }
+      });
+    });
+    return jsonData;
+  };
+
+  const handleSurplusStateChange = async (e) => {
+    const selectedValue = e.target.value;
+    setSurplusState(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    dropdownOptions.unshift(dropdownOptions_default);
+    setTotalSurplusRailhead(dropdownOptions);
+  };
+
+  const handleDefictStateChange = async (e) => {
+    const selectedValue = e.target.value;
+    setDeficitState(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    dropdownOptions.unshift(dropdownOptions_default);
+    setTotalDeficitRailhead(dropdownOptions);
+  };
+
+  const handleSurplusInlineState1Change = async (e) => {
+    const selectedValue = e.target.value;
+    setSurplusInlineState1(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    dropdownOptions.unshift(dropdownOptions_default);
+    setTotalSurplusInlineRailhead1(dropdownOptions);
+  };
+  const handleDeficitInlineState1Change = async (e) => {
+    const selectedValue = e.target.value;
+    setDeficitInlineState1(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    dropdownOptions.unshift(dropdownOptions_default);
+    setTotalDeficitInlineRailhead1(dropdownOptions);
+  };
+
+  const handleSurplusInlineState2Change = async (e) => {
+    const selectedValue = e.target.value;
+    setSurplusInlineState2(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    dropdownOptions.unshift(dropdownOptions_default);
+    setTotalSurplusInlineRailhead2(dropdownOptions);
+  };
+
+  const handleDeficitInlineState2Change = async (e) => {
+    const selectedValue = e.target.value;
+    setDeficitInlineState2(selectedValue);
+    const response = await fetch("/data/Updated_railhead_list.xlsx");
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    let dropdownOptions = [];
+    let dropdownOptions_default = {
+      value: "",
+      label: "Please select Railhead",
+    };
+    for (let i = 0; i < jsonData.length; i++) {
+      if (
+        jsonData[i][1] &&
+        jsonData[i][1].trim().toLowerCase() ===
+          selectedValue.trim().toLowerCase()
+      ) {
+        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
+      }
+    }
+    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
+    dropdownOptions.unshift(dropdownOptions_default);
+    setTotalDeficitInlineRailhead2(dropdownOptions);
+  };
+
+  const AddSurplusInline = async (e) => {
+    e.preventDefault();
+    setSurplusInline((prev) => [
+      ...prev,
+      {
+        Sno: Math.floor(Math.random() * 500) + 1,
+        origin_railhead: surplusInlineRailhead1,
+        origin_state: surplusInlineState1,
+        Value: 1,
+        Commodity: surplusInlineCommodity1,
+      },
+    ]);
+    setSurplusInline((prev) => [
+      ...prev,
+      {
+        Sno: Math.floor(Math.random() * 500) + 1,
+        origin_railhead: surplusInlineRailhead2,
+        origin_state: surplusInlineState2,
+        Value: 1,
+        Commodity: surplusInlineCommodity1,
+      },
+    ]);
+  };
+
+  const AddDeficitInline = async (e) => {
+    e.preventDefault();
+    setDeficitInline((prev) => [
+      ...prev,
+      {
+        Sno: Math.floor(Math.random() * 500) + 1,
+        origin_railhead: deficitInlineRailhead1,
+        origin_state: deficitInlineState1,
+        Value: 1,
+        Commodity: deficitInlineCommodity,
+      },
+    ]);
+    setDeficitInline((prev) => [
+      ...prev,
+      {
+        Sno: Math.floor(Math.random() * 500) + 1,
+        origin_railhead: deficitInlineRailhead2,
+        origin_state: deficitInlineState2,
+        Value: 1,
+        Commodity: deficitInlineCommodity,
+      },
+    ]);
+  };
+
+  const AddSurplus = (e) => {
+    e.preventDefault();
+    const existingIndex = surplus.findIndex(
+      (row) =>
+        row.origin_railhead === surplusRailhead &&
+        row.origin_state === surplusState &&
+        row.Commodity === surplusCommodity
+    );
+
+    if (existingIndex !== -1) {
+      const updatedSurplus = [...surplus];
+      updatedSurplus[existingIndex].Value = updatedSurplus[
+        existingIndex
+      ].Value =
+        parseInt(updatedSurplus[existingIndex].Value) + parseInt(surplusValue);
+      setSurplus(updatedSurplus);
+    } else {
+      setSurplus((prev) => [
+        ...prev,
+        {
+          Sno: Math.floor(Math.random() * 500) + 1,
+          origin_railhead: surplusRailhead,
+          origin_state: surplusState,
+          Value: surplusValue,
+          Commodity: surplusCommodity,
+        },
+      ]);
+    }
+    setSurplusRailhead("");
+    setSurplusValue(1);
+    setSurplusCommodity("");
+  };
+
+  const AddDeficit = (e) => {
+    e.preventDefault();
+    const existingIndex = deficit.findIndex(
+      (row) =>
+        row.origin_railhead === deficitRailhead &&
+        row.origin_state === deficitState &&
+        row.Commodity === deficitCommodity
+    );
+
+    if (existingIndex !== -1) {
+      const updatedDeficit = [...deficit];
+      updatedDeficit[existingIndex].Value =
+        parseInt(updatedDeficit[existingIndex].Value) + parseInt(deficitValue);
+      setDeficit(updatedDeficit);
+    } else {
+      setDeficit((prev) => [
+        ...prev,
+        {
+          Sno: Math.floor(Math.random() * 500) + 1,
+          origin_railhead: deficitRailhead,
+          origin_state: deficitState,
+          Value: deficitValue,
+          Commodity: deficitCommodity,
+        },
+      ]);
+    }
+    setDeficitRailhead("");
+    setDeficitValue(1);
+    setDeficitCommodity("");
+  };
+
+  //---------------------------------------------------------------------------------------------------
 
   const handleFileChange_ = (event) => {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleFileUpload = async () => {
-    // Create a FormData object to send the file to the backend
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-    try {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
+  const handleDeleteRow_surplus__source = (row, index) => {
+    const updatedSurplus = [...surplus];
+    updatedSurplus.splice(index, 1);
+    setSurplus(updatedSurplus);
+  };
 
-      const response = await fetch(ProjectIp + "/uploadDailyFile", {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
+  const handleDeleteRow_deficit__dest = (row, index) => {
+    const updatedDeficit = [...deficit];
+    updatedDeficit.splice(index, 1);
+    setDeficit(updatedDeficit);
+  };
+  const handleDeleteRowInline_deficit__dest = (index) => {
+    const updatedSurplusInline = [...surplusInline];
+    updatedSurplusInline.splice(index, 1);
+    setSurplusInline(updatedSurplusInline);
+  };
+  const handleDeleteRow_deficitInline__dest = (index) => {
+    const updatedDeficitInline = [...deficitInline];
+    updatedDeficitInline.splice(index, 1);
+    setDeficitInline(updatedDeficitInline);
+  };
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+  const handleFileUpload = () => {
+    if (selectedFile) {
+      const reader = new FileReader();
 
-      const jsonResponse = await response.json();
+      reader.onload = async (event) => {
+        const arrayBuffer = event.target.result;
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const surplusSheetIndices = [0, 2, 4, 6, 8, 10];
+        const deficitSheetIndices = [1, 3, 5, 7, 9, 11];
+        const surplusData = processSheetData(workbook, surplusSheetIndices);
+        setSurplus(surplusData);
+        const deficitData = processSheetData(workbook, deficitSheetIndices);
+        setDeficit(deficitData);
+      };
 
-      if (jsonResponse.status === 1) {
-        alert("File Uploaded");
-      } else {
-        console.log(jsonResponse);
-        alert("Error uploading file");
-      }
-    } catch (error) {
-      console.error("Error during file upload:", error);
-      alert("An error occurred during file upload. Please try again later.");
+      reader.readAsArrayBuffer(selectedFile);
+    } else {
+      alert("Please select a file before uploading.");
     }
   };
 
-  // Define a Set to keep track of added railheads
-  const [addedRailheads, setAddedRailheads] = useState(new Set());
-
-  // Block_data for blocking, fixed_data for fixing, block_data3 for rice_origin, block_data4 for rice_destination
   const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
     const updatedData = { ...excelData };
     updatedData[sheetName][rowIndex][columnIndex] = newValue;
     setExcelData(updatedData);
-  };
-
-  const handleDropdownChangeDestWheat5 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionDestWheat5(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsDestWheat5(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
-    setSubOptionsDestWheat5(dropdownOptions);
-  };
-
-  const handleDropdownChangeDestWheat6 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionDestWheat6(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsDestWheat6(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
-    setSubOptionsDestWheat6(dropdownOptions);
-  };
-
-  const addConstraintDestWheat2 = async (e) => {
-    e.preventDefault();
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
-    if (
-      selectedOptionDestWheat5 &&
-      subOptionDestWheat5 &&
-      selectedOptionDestWheat6 &&
-      subOptionDestWheat6
-    ) {
-      setBlockdataDestWheat2((data) => [
-        ...data,
-        {
-          origin_state: selectedOptionDestWheat5,
-          origin_railhead: subOptionDestWheat5,
-          destination_state: selectedOptionDestWheat6,
-          destination_railhead: subOptionDestWheat6,
-          id: Date.now(),
-        },
-      ]);
-      let data = [
-        {
-          origin_state: selectedOptionDestWheat5,
-          origin_railhead: subOptionDestWheat5,
-          destination_state: selectedOptionDestWheat6,
-          destination_railhead: subOptionDestWheat6,
-        },
-      ];
-      for (let i = 0; i < block_dataDestWheat2.length; i++) {
-        data.push(block_dataDestWheat2[i]);
-      }
-      console.log(data);
-      setSelectedOptionWheat5("default");
-      setSelectedOptionWheat6("default");
-      setSubOptionWheat5([]);
-      setSubOptionWheat6([]);
-      if (isLoading3) return; // Prevent additional clicks while loading
-      setIsLoading3(true);
-      try {
-        const payload1 = {
-          rice_inline: block_data2,
-          rice_inline_value: inline_value_rice,
-          wheat_inline: block_dataWheat2,
-          wheat_inline_value: inline_value_wheat,
-          rice_dest_inline_value: inline_value_dest_rice,
-          rice_dest_inline: block_dataDest2,
-          wheat_dest_inine_value: inline_value_dest_wheat,
-          wheat_dest_inine: block_dataDestWheat2,
-        };
-        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload1),
-        });
-
-        const responseData1 = await response2.json(); // Parse response JSON
-        console.log(responseData1); // Log the response data
-
-        if (responseData1.status === "NO") {
-          alert("Distance is not within range. Please check again.");
-        }
-      } catch (error) {
-        console.error("Error sending inputs:", error);
-      } finally {
-        setIsLoading3(false);
-      } // Reset loading state
-    }
-    document.getElementById("console_").style.display = "block";
-    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-    document.getElementById("console_").innerHTML +=
-      "New Inline details has been added for wheat" + "<br/><br/>";
-  };
-
-  const handleDeleteRow_inlineDestWheat = (e) => {
-    console.log(e);
-    let fixed_data_ = block_dataDestWheat2.filter((item) => item["id"] !== e);
-    setBlockdataDestWheat2(fixed_data_);
-  };
-
-  const handleDropdownChangeDRI6 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionDRI6(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsDRI6(dropdownOptions);
-    console.log(jsonData[1][1], dropdownOptions, selectedValue);
-    setSubOptionsDRI6(dropdownOptions);
-  };
-
-  const addConstraintDRI2 = async (e) => {
-    e.preventDefault();
-    // console.log(selectedOption, subOption1, selectedOption2, subOption2);
-    if (
-      selectedOptionDRI5 &&
-      subOptionDRI5 &&
-      selectedOptionDRI6 &&
-      subOptionDRI6
-    ) {
-      setBlockdataDest2((data) => [
-        ...data,
-        {
-          origin_state: selectedOptionDRI5,
-          origin_railhead: subOptionDRI5,
-          destination_state: selectedOptionDRI6,
-          destination_railhead: subOptionDRI6,
-          id: Date.now(),
-        },
-      ]);
-
-      let data = [
-        {
-          origin_state: selectedOptionDRI5,
-          origin_railhead: subOptionDRI5,
-          destination_state: selectedOptionDRI6,
-          destination_railhead: subOptionDRI6,
-        },
-      ];
-      for (let i = 0; i < block_dataDest2.length; i++) {
-        data.push(block_dataDest2[i]);
-      }
-      console.log(data);
-
-      setSelectedOptionDRI5("default");
-      setSelectedOptionDRI6("default");
-      setSubOptionsDRI5([]);
-      setSubOptionsDRI6([]);
-
-      console.log(block_dataDest2);
-      if (isLoading2) return; // Prevent additional clicks while loading
-      setIsLoading2(true);
-      try {
-        const payload1 = {
-          rice_inline: block_data2,
-          rice_inline_value: inline_value_rice,
-          wheat_inline: block_dataWheat2,
-          wheat_inline_value: inline_value_wheat,
-          rice_dest_inline_value: inline_value_dest_rice,
-          rice_dest_inline: block_dataDest2,
-          wheat_dest_inine_value: inline_value_dest_wheat,
-          wheat_dest_inine: block_dataDestWheat2,
-        };
-
-        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload1),
-        });
-
-        const responseData1 = await response2.json(); // Parse response JSON
-        console.log(responseData1); // Log the response data
-
-        if (responseData1.status === "NO") {
-          alert("Distance is not within range. Please check again.");
-        }
-      } catch (error) {
-        console.error("Error sending inputs:", error);
-      } finally {
-        // Reset loading state
-        setIsLoading2(false);
-      }
-    }
-
-    document.getElementById("console_").style.display = "block";
-    // document.getElementById("console_").innerHTML+="Destination railhead "+subOption3+" under state"+selectedOption3+" has been added for rice"+'<br/>';
-    document.getElementById("console_").innerHTML +=
-      "New Inline details has been added for rice" + "<br/><br/>";
-  };
-
-  const handleDeleteRow_dest_inline = (e) => {
-    console.log(e);
-    let fixed_data_ = block_dataDest2.filter((item) => item["id"] !== e);
-    setBlockdataDest2(fixed_data_);
-  };
-
-  const handleDropdownChangeDRI5 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionDRI5(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsDRI5(dropdownOptions);
-    // console.log(jsonData[1][1], dropdownOptions, selectedValue);
-    setSubOptionsDRI5(dropdownOptions);
-  };
-
-  const handleSubDropdownChangeDRI5 = (e) => {
-    setSubOptionDRI5(e.target.value);
-  };
-
-  const handleSubDropdownChangeDestWheat5 = (e) => {
-    setSubOptionDestWheat5(e.target.value);
-  };
-
-  const handleSubDropdownChangeDRI6 = (e) => {
-    setSubOptionDRI6(e.target.value);
-  };
-
-  const handleSubDropdownChangeDestWheat6 = (e) => {
-    setSubOptionDestWheat6(e.target.value);
   };
 
   const getCommodityData = async () => {
@@ -475,11 +509,7 @@ function Daily_Planner() {
     const response = await fetch(ProjectIp + "/getDataTemplate");
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
-    // console.log(data);
-    // set_Commodity(e.target.value);
-    // console.log(e.target.value);
     const workbook = XLSX.read(data, { type: "array" });
-    console.log(workbook, commodity);
     const waitForSheetToLoad = (sheetName, maxAttempts = 10) => {
       return new Promise((resolve, reject) => {
         let attempts = 0;
@@ -504,7 +534,6 @@ function Daily_Planner() {
     try {
       const def_sheet_rice = "Deficit_rice";
       const surplus_sheet_rice = "Surplus_rice";
-      console.log(def_sheet_rice, surplus_sheet_rice);
       const deficitSheetRice = await waitForSheetToLoad(def_sheet_rice);
       const surplusSheetRice = await waitForSheetToLoad(surplus_sheet_rice);
       const deficit_data_rice = XLSX.utils.sheet_to_json(deficitSheetRice, {
@@ -542,7 +571,6 @@ function Daily_Planner() {
 
       const def_sheet_wheat = "Deficit_wheat";
       const surplus_sheet_wheat = "Surplus_wheat";
-      console.log(def_sheet_wheat, surplus_sheet_wheat);
       const deficitSheetWheat = await waitForSheetToLoad(def_sheet_wheat);
       const surplusSheetWheat = await waitForSheetToLoad(surplus_sheet_wheat);
       const deficit_data_wheat = XLSX.utils.sheet_to_json(deficitSheetWheat, {
@@ -583,183 +611,201 @@ function Daily_Planner() {
   };
 
   useEffect(() => {
-    // Your code here
     getCommodityData();
   }, []);
 
-  const handleFileChange = (event) => {
-    setFileSelected(event.target.files.length > 0);
-    const files = document.getElementById("uploadFile").files;
-    const reader = new FileReader();
-    const file = files[0];
-    reader.onload = async (e) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheetsData = {};
-      workbook.SheetNames.forEach((sheetName) => {
-        const worksheet = workbook.Sheets[sheetName];
-        sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1,
-        });
-      });
+  const riceOrigin1 = surplus.filter((item) => item.Commodity === "RRA");
+  const riceInlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "RRA"
+  );
+  const riceOrigin = riceOrigin1.concat(riceInlineOrigin);
 
-      setExcelData(sheetsData);
-      setActiveSheetName(workbook.SheetNames[0]);
-    };
+  const riceDestination1 = deficit.filter((item) => item.Commodity === "RRA");
+  const riceInlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "RRA"
+  );
+  const riceDestination = riceDestination1.concat(riceInlineDestination);
 
-    reader.readAsArrayBuffer(file);
-  };
+  const wheatOrigin1 = surplus.filter((item) => item.Commodity === "Wheat");
+  const wheatInlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Wheat"
+  );
+  const wheatOrigin = wheatOrigin1.concat(wheatInlineOrigin);
 
-  const update_excel = async () => {
-    setUpdateExcel2(false);
-    const response = await fetch(ProjectIp + "/getDaily1ExcelData");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetsData = {};
-    workbook.SheetNames.forEach((sheetName) => {
-      const worksheet = workbook.Sheets[sheetName];
-      sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
-        header: 1,
-      });
-    });
+  const wheatDestination1 = deficit.filter(
+    (item) => item.Commodity === "Wheat"
+  );
+  const wheatInlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "Wheat"
+  );
+  const wheatDestination = wheatDestination1.concat(wheatInlineDestination);
 
-    setExcelData(sheetsData);
-    setActiveSheetName(workbook.SheetNames[0]);
-    setUpdateExcel(true);
-  };
+  const coarseGrainOrigin1 = surplus.filter(
+    (item) => item.Commodity === "Coarse Grain"
+  );
+  const coarseInlineGrainOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Coarse Grain"
+  );
+  const coarseGrainOrigin = coarseGrainOrigin1.concat(coarseInlineGrainOrigin);
 
-  const update_excel2 = async () => {
-    setUpdateExcel(false);
-    const response = await fetch(ProjectIp + "/getDaily2ExcelData");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetsData = {};
-    workbook.SheetNames.forEach((sheetName) => {
-      const worksheet = workbook.Sheets[sheetName];
-      sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
-        header: 1,
-      });
-    });
+  const coarseGrainDestination1 = deficit.filter(
+    (item) => item.Commodity === "Coarse Grain"
+  );
+  const coarseGrainInlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "Coarse Grain"
+  );
+  const coarseGrainDestination = coarseGrainDestination1.concat(
+    coarseGrainInlineDestination
+  );
 
-    setExcelData(sheetsData);
-    setActiveSheetName(workbook.SheetNames[0]);
-    setUpdateExcel2(true);
-  };
+  const frkrraOrigin1 = surplus.filter((item) => item.Commodity === "FRK RRA");
+  const frkrraInlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "FRK RRA"
+  );
+  const frkrraOrigin = frkrraOrigin1.concat(frkrraInlineOrigin);
 
-  const save_excel = async () => {
-    const newWorkbook = XLSX.utils.book_new();
-    Object.keys(excelData).forEach((sheetName) => {
-      const worksheet = XLSX.utils.json_to_sheet(excelData[sheetName]);
-      XLSX.utils.book_append_sheet(newWorkbook, worksheet, sheetName);
-    });
+  const frkrraDestination1 = deficit.filter(
+    (item) => item.Commodity === "FRK RRA"
+  );
+  const frkrraInlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "FRK RRA"
+  );
+  const frkrraDestination = frkrraDestination1.concat(frkrraInlineDestination);
 
-    try {
-      var scenario;
-      if (updateExcel === true) {
-        scenario = "/Modify_Daily_Template_S01";
-      } else {
-        scenario = "/Modify_Daily_Template_S02";
-      }
-      const response = await fetch(ProjectIp + scenario, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newWorkbook),
-      });
-      if (response.ok) {
-        console.log("Data sent to backend successfully");
-      } else {
-        console.error("Failed to send data to backend");
-      }
-    } catch (error) {
-      console.error("Error sending data:", error);
-    }
-    setUpdateExcel(false);
-    setUpdateExcel2(false);
-    document.getElementById("console_").innerHTML +=
-      "Template has been updated" + "<br/><br/>";
-  };
+  const frkBr_Origin1 = surplus.filter((item) => item.Commodity === "FRK BR");
+  const frkBr_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "FRK BR"
+  );
+  const frkBr_Origin = frkBr_Origin1.concat(frkBr_InlineOrigin);
 
-  const handleUploadConfig = async () => {
-    if (!fileSelected) {
-      alert("Please Select The File First");
-      return;
-    }
+  const frkBr_Destination1 = deficit.filter(
+    (item) => item.Commodity === "FRK BR"
+  );
+  const frkBr_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "FRK BR"
+  );
+  const frkBr_Destination = frkBr_Destination1.concat(frkBr_InlineDestination);
 
-    try {
-      const files = document.getElementById("uploadFile").files;
-      const formData = new FormData();
-      formData.append("uploadFile", files[0]);
+  const frk_Origin1 = surplus.filter((item) => item.Commodity === "FRK");
+  const frk_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "FRK"
+  );
+  const frk_Origin = frk_Origin1.concat(frk_InlineOrigin);
 
-      const response = await fetch(ProjectIp + "/uploadDailyFile_S2", {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
+  const frk_Destination1 = deficit.filter((item) => item.Commodity === "FRK");
+  const frk_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "FRK"
+  );
+  const frk_Destination = frk_Destination1.concat(frk_InlineDestination);
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+  const w_cgr_Origin1 = surplus.filter((item) => item.Commodity === "W+CGR");
+  const w_cgr_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "W+CGR"
+  );
+  const w_cgr_Origin = w_cgr_Origin1.concat(w_cgr_InlineOrigin);
 
-      const jsonResponse = await response.json();
+  const w_cgr_Destination1 = deficit.filter(
+    (item) => item.Commodity === "W+CGR"
+  );
+  const w_cgr_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "W+CGR"
+  );
+  const w_cgr_Destination = w_cgr_Destination1.concat(w_cgr_InlineDestination);
 
-      if (jsonResponse.status === 1) {
-        alert("File Uploaded");
-      } else {
-        console.log(jsonResponse);
-        alert("Error uploading file");
-      }
-    } catch (error) {
-      console.error("Error during file upload:", error);
-      alert("An error occurred during file upload. Please try again later.");
-    }
-  };
+  const frk_cgr_Origin1 = surplus.filter(
+    (item) => item.Commodity === "FRK+CGR"
+  );
+  const frk_cgr_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "FRK+CGR"
+  );
+  const frk_cgr_Origin = frk_cgr_Origin1.concat(frk_cgr_InlineOrigin);
 
-  const handleUploadConfig1 = async () => {
-    if (!fileSelected) {
-      alert("Please Select The File First");
-      return;
-    }
+  const frk_cgr_Destination1 = deficit.filter(
+    (item) => item.Commodity === "FRK+CGR"
+  );
+  const frk_cgr_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "FRK+CGR"
+  );
+  const frk_cgr_Destination = frk_cgr_Destination1.concat(
+    frk_cgr_InlineDestination
+  );
 
-    try {
-      const files = document.getElementById("uploadFile").files;
-      const formData = new FormData();
-      formData.append("uploadFile", files[0]);
+  useEffect(() => {
+    setRiceOriginValue(
+      riceOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+    setRiceDestinationValue(
+      riceDestination.reduce((total, item) => total + item.Value, 0)
+    );
 
-      const response = await fetch(ProjectIp + "/uploadDailyFile_S1", {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
+    setWheatOriginValue(
+      wheatOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+    setWheatDestinationValue(
+      wheatDestination.reduce((total, item) => total + item.Value, 0)
+    );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+    setCoarseGrainOriginValue(
+      coarseGrainOrigin.reduce((total, item) => total + item.Value, 0)
+    );
 
-      const jsonResponse = await response.json();
+    setCoarseGrainDestinationValue(
+      coarseGrainDestination.reduce((total, item) => total + item.Value, 0)
+    );
 
-      if (jsonResponse.status === 1) {
-        alert("File Uploaded");
-      } else {
-        console.log(jsonResponse);
-        alert("Error uploading file");
-      }
-    } catch (error) {
-      console.error("Error during file upload:", error);
-      alert("An error occurred during file upload. Please try again later.");
-    }
-  };
+    setfrkrraOriginValue(
+      frkrraOrigin.reduce((total, item) => total + item.Value, 0)
+    );
 
-  console.log({ Total_result });
+    setfrkrraDestinationValue(
+      frkrraDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkbrOriginValue(
+      frkBr_Origin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkbrDestinationValue(
+      frkBr_Destination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setwcgrOriginValue(
+      w_cgr_Origin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setwcgrDestinationValue(
+      w_cgr_Destination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkcgrOriginValue(
+      frk_cgr_Origin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkcgrDestinationValue(
+      frk_cgr_Destination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkOriginValue(
+      frk_Origin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkDestinationValue(
+      frk_Destination.reduce((total, item) => total + item.Value, 0)
+    );
+  });
 
   const handleSolve = async () => {
+    setShowMessage(false);
     setDownloadMessage(false);
     if (
-      number_check1 < number_check2 ||
-      supplyWeatCount < destinationWheatCount
+      riceOriginvalue < riceDestinationValue ||
+      wheatOriginValue < wheatDestinationValue ||
+      coarseGrainOriginValue < coarseGrainDestinationValue ||
+      frkOriginValue < frkDestinationValue ||
+      frkcgrOriginValue < frkcgrDestinationValue ||
+      wcgrOriginValue < wcgrDestinationValue ||
+      frkrraOriginValue < frkrraDestinationValue ||
+      frkbrOriginValue < frkbrDestinationValue
     ) {
       alert("Destination indents more than Supply indents Please check");
       setIsLoading(false);
@@ -769,32 +815,47 @@ function Daily_Planner() {
     if (isLoading) return;
     setIsLoading(true);
 
-    if (Scenerio == "Scenerio 2") {
-      setscn(true);
-      setuploadst(true);
-    }
-
     const payload = {
       TEFD: TEFD,
-      origin_state: selectedOption,
-      org_rhcode: subOption1,
-      destination_state: selectedOption2,
-      dest_rhcode: subOption2,
-      block_data: block_data,
+      origin_state: selectedOption, //blocking state1
+      org_rhcode: subOption1, //blocking railhead1
+      destination_state: selectedOption2, //blocking state2
+      dest_rhcode: subOption2, //blocking state2
+      block_data: block_data, //blocking all data
       Scenerio: Scenerio,
-      confirmed_data: fixed_data,
-      rice_origin: block_data3,
-      rice_destination: rice_destination,
-      rice_inline: block_data2,
+      confirmed_data: fixed_data, // fixing all data
+
+      rice_origin: riceOrigin, // rice origin data
+      rice_destination: riceDestination, //rice destination data
+      rice_inline: block_data2, //rice inline data
       rice_dest_inline: block_dataDest2,
       rice_dest_inline_value: inline_value_dest_rice,
-      rice_inline_value: inline_value_rice,
-      wheat_origin: block_dataWheat3,
-      wheat_destination: wheat_destination,
-      wheat_inline: block_dataWheat2,
-      wheat_inline_value: inline_value_wheat,
+      rice_inline_value: inline_value_rice, // rice inline value
+
+      wheat_origin: wheatOrigin, //origin wheat data
+      wheat_destination: wheatDestination, // wheat destination data
+      wheat_inline: block_dataWheat2, //wheat inline data
+      wheat_inline_value: inline_value_wheat, // wheat inline value
       wheat_dest_inline: block_dataDestWheat2,
-      wheat_dest_inline_value: inline_value_dest_wheat
+      wheat_dest_inline_value: inline_value_dest_wheat,
+
+      coarseGrain_origin: coarseGrainOrigin,
+      coarseGrain_destination: coarseGrainDestination,
+
+      frkrra_origin: frkrraOrigin,
+      frkrra_destination: frkrraDestination,
+
+      frkbr_origin: frkBr_Origin,
+      frkbr_destination: frkBr_Destination,
+
+      frk_origin: frk_Origin,
+      frk_destination: frk_Destination,
+
+      wcgr_origin: w_cgr_Origin,
+      wcgr_destination: w_cgr_Destination,
+
+      frkcgr_origin: frk_cgr_Origin,
+      frkcgr_destination: frk_cgr_Destination,
     };
 
     try {
@@ -815,18 +876,18 @@ function Daily_Planner() {
     } catch (error) {
       console.error("Error sending inputs:", error);
     } finally {
-      setIsLoading(false); // Reset loading state
+      setIsLoading(false);
       setDownloadMessage(true);
     }
     document.getElementById("toggle").checked = false;
   };
 
   const fetchReservationId_Total_result = () => {
-    var form = new FormData();
+    // var form = new FormData();
     fetch(ProjectIp + "/read_Daily_Planner_S1", {
-      method: "POST",
+      method: "GET",
       credentials: "include",
-      body: form,
+      // body: form,
     })
       .then((response) => response.json())
       .then((data) => {
@@ -878,7 +939,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-        selectedValue.trim().toLowerCase()
+          selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -914,7 +975,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-        selectedValue.trim().toLowerCase()
+          selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -925,282 +986,38 @@ function Daily_Planner() {
     setSubOptions2(dropdownOptions);
   };
 
-  const handleDropdownChange3 = async (e) => {
-    const selectedValue = e.target.value;
-    console.log({ selectedValue });
-    setSelectedOption3(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions3(dropdownOptions);
-  };
-
-  const handleDropdownChangeWheat3 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionWheat3(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat3(dropdownOptions);
-  };
-
-  const handleDropdownChange5 = async (e) => {
-    const selectedValue = e.target.value;
-    console.log(selectedValue);
-    setSelectedOption5(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions5(dropdownOptions);
-  };
-
-  const handleDropdownChangeWheat5 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionWheat5(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] === selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat5(dropdownOptions);
-  };
-
-  const handleDropdownChange6 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOption6(selectedValue);
-
-    // Check if the railhead for the selected state is already added
-    if (!addedRailheads.has(selectedValue)) {
-      const response = await fetch("/data/Updated_railhead_list.xlsx");
-      const arrayBuffer = await response.arrayBuffer();
-      const data = new Uint8Array(arrayBuffer);
-
-      const workbook = XLSX.read(data, { type: "array" });
-
-      // Assuming the Excel file has only one sheet
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-
-      // Parse the sheet data into JSON format
-      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-      let dropdownOptions = [];
-      let dropdownOptions_default = {
-        value: "",
-        label: "Please select Railhead",
-      };
-      for (let i = 0; i < jsonData.length; i++) {
-        if (jsonData[i][1] == selectedValue) {
-          dropdownOptions.push({
-            value: jsonData[i][0],
-            label: jsonData[i][0],
-          });
-        }
-      }
-      dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-      dropdownOptions.unshift(dropdownOptions_default);
-      setSubOptions6(dropdownOptions);
-
-      // Add the railhead to the set to indicate it's added for this state
-      setAddedRailheads(new Set(addedRailheads).add(selectedValue));
+  const exportToPDF = () => {
+    if (Total_result == null) {
+      window.alert("Fetching Result, Please Wait");
+      fetchReservationId_Total_result();
     } else {
-      // Alert message if the railhead is already added for this state
-      alert(`Railhead for ${selectedValue} is already added.`);
+      const pdfDoc = new jsPDF();
+      const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+      Object.entries(Total_result).forEach(([column, data]) => {
+        const parsedData = JSON.parse(data);
+
+        pdfDoc.addPage();
+        pdfDoc.text(`Column: ${column}`, 10, 10);
+
+        // Display data from the column below the header
+        let yPos = 20;
+        parsedData.forEach((item) => {
+          const formattedData = formatData(item);
+          pdfDoc.text(formattedData, 10, yPos, { maxWidth: 180 });
+          yPos +=
+            pdfDoc.splitTextToSize(formattedData, { maxWidth: 180 }).length *
+              10 +
+            5;
+        });
+      });
+
+      pdfDoc.save(`Railhead_data_${timestamp}.pdf`);
     }
   };
 
-  const handleDropdownChangeWheat6 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionWheat6(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (jsonData[i][1] == selectedValue) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat6(dropdownOptions);
-  };
-
-  const handleDropdownChange4 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOption4(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions4(dropdownOptions);
-  };
-
-  const handleDropdownChangeWheat4 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOptionWheat4(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptionsWheat4(dropdownOptions);
+  // Function to format data with line breaks
+  const formatData = (item) => {
+    return `From: ${item.From}\nFrom State: ${item["From State"]}\nTo: ${item.To}\nTo State: ${item["To State"]}\nCommodity: ${item.Commodity}`;
   };
 
   const handleSubDropdownChange1 = (e) => {
@@ -1209,41 +1026,6 @@ function Daily_Planner() {
 
   const handleSubDropdownChange2 = (e) => {
     setSubOption2(e.target.value);
-  };
-  const handleSubDropdownChange3 = (e) => {
-    setSubOption3(e.target.value);
-  };
-  const handleSubDropdownChangeWheat3 = (e) => {
-    setSubOptionWheat3(e.target.value);
-  };
-
-  const handleSubDropdownChange4 = (e) => {
-    setSubOption4(e.target.value);
-  };
-  const handleSubDropdownChangeWheat4 = (e) => {
-    setSubOptionWheat4(e.target.value);
-  };
-
-  const handleSubDropdownChange5 = (e) => {
-    setSubOption5(e.target.value);
-  };
-
-  const handleSubDropdownChangeWheat5 = (e) => {
-    setSubOptionWheat5(e.target.value);
-  };
-
-  const handleSubDropdownChange6 = (e) => {
-    setSubOption6(e.target.value);
-  };
-  const handleSubDropdownChangeWheat6 = (e) => {
-    setSubOptionWheat6(e.target.value);
-  };
-
-  const handleInlineValueWheat = (e) => {
-    setInlineValueWheat(e.target.value);
-  };
-  const handleInlineValueRice = (e) => {
-    setInlineValueRice(e.target.value);
   };
 
   const handleDropdownChange_fixed = async (e) => {
@@ -1270,7 +1052,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-        selectedValue_fixed.trim().toLowerCase()
+          selectedValue_fixed.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1305,7 +1087,7 @@ function Daily_Planner() {
       if (
         jsonData[i][1] &&
         jsonData[i][1].trim().toLowerCase() ===
-        selectedValue.trim().toLowerCase()
+          selectedValue.trim().toLowerCase()
       ) {
         dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
       }
@@ -1332,43 +1114,6 @@ function Daily_Planner() {
   const handleDeleteRow_fixed = (e) => {
     let fixed_data_ = fixed_data.filter((item) => item["id"] !== e);
     setFixeddata(fixed_data_);
-    setDownloadMessage(false);
-  };
-  const handleDeleteRow_inline = (e) => {
-    let fixed_data_ = block_data2.filter((item) => item["id"] !== e);
-    setBlockdata2(fixed_data_);
-    setDownloadMessage(false);
-  };
-  const handleDeleteRow_inlineWheat = (e) => {
-    let fixed_data_ = block_dataWheat2.filter((item) => item["id"] !== e);
-    setBlockdataWheat2(fixed_data_);
-    setDownloadMessage(false);
-  };
-  const handleDeleteRow_Rice_s = (e) => {
-    let block_data3_ = block_data3.filter((item) => item["id"] !== e);
-    setBlockdata3(block_data3_);
-    setnumber_check1(number_check1 - 1);
-    setDownloadMessage(false);
-  };
-
-  const handleDeleteRow_Wheat_s = (e) => {
-    let block_data3_ = block_dataWheat3.filter((item) => item["id"] !== e);
-    setBlockdataWheat3(block_data3_);
-    setSupplyWeatCount(supplyWeatCount - 1);
-    setDownloadMessage(false);
-  };
-
-  const handleDeleteRow_Rice__dest = (index) => {
-    let rice_destination_ = rice_destination.filter((item, i) => i !== index);
-    setRiceDestination(rice_destination_);
-    setnumber_check2(number_check2 - 1);
-    setDownloadMessage(false);
-  };
-
-  const handleDeleteRow_Wheat__dest = (index) => {
-    let wheat_destination_ = wheat_destination.filter((item, i) => i !== index);
-    setWheatDestination(wheat_destination_);
-    setDestinationWheatCount(destinationWheatCount - 1);
     setDownloadMessage(false);
   };
 
@@ -1405,405 +1150,6 @@ function Daily_Planner() {
     }
   };
 
-  const addConstraint2 = async (e) => {
-    e.preventDefault();
-
-    // Check if necessary options are selected
-    if (selectedOption5 && subOption5 && selectedOption6 && subOption6) {
-      // Check if the origin and destination railheads are the same
-      if (selectedOption5 === selectedOption6 && subOption5 === subOption6) {
-        alert("Origin and destination railheads cannot be the same.");
-        return; // Do not proceed further
-      }
-
-      // Update block data with the new constraint
-      setBlockdata2((data) => [
-        ...data,
-        {
-          origin_state: selectedOption5,
-          origin_railhead: subOption5,
-          destination_state: selectedOption6,
-          destination_railhead: subOption6,
-          id: Date.now(),
-        },
-      ]);
-
-      // Reset options and suboptions for rice
-      setSelectedOption5("default");
-      setSelectedOption6("default");
-      setSubOptions5([]);
-      setSubOptions6([]);
-
-      if (isLoading2) return; // Prevent additional clicks while loading
-      setIsLoading2(true);
-
-      try {
-        const payload1 = {
-          rice_inline: block_data2,
-          rice_inline_value: inline_value_rice,
-          wheat_inline: block_dataWheat2,
-          wheat_inline_value: inline_value_wheat,
-        };
-
-        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload1),
-        });
-
-        const responseData1 = await response2.json(); // Parse response JSON
-
-        if (responseData1.status === "NO") {
-          alert("Distance is not within range. Please check again.");
-        }
-      } catch (error) {
-        console.error("Error sending inputs:", error);
-      } finally {
-        // Reset loading state
-        setIsLoading2(false);
-      }
-    }
-
-    // Add progress message
-    setProgress((prev) => [
-      ...prev,
-      "New Inline details have been added for rice",
-    ]);
-  };
-
-  const addConstraintWheat2 = async (e) => {
-    e.preventDefault();
-
-    // Check if necessary options are selected
-    if (
-      selectedOptionWheat5 &&
-      subOptionWheat5 &&
-      selectedOptionWheat6 &&
-      subOptionWheat6
-    ) {
-      // Check if origin and destination railheads for wheat are the same
-      if (subOptionWheat5 === subOptionWheat6) {
-        alert("Origin and destination railheads for wheat cannot be the same.");
-        return; // Do not proceed further
-      }
-
-      // Update wheat block data with the new constraint
-      let data = [
-        {
-          origin_state: selectedOptionWheat5,
-          origin_railhead: subOptionWheat5,
-          destination_state: selectedOptionWheat6,
-          destination_railhead: subOptionWheat6,
-          id: Date.now(),
-        },
-      ];
-
-      setBlockdataWheat2((prevData) => [...prevData, ...data]);
-
-      // Reset options and suboptions for wheat
-      setSelectedOptionWheat5("default");
-      setSelectedOptionWheat6("default");
-      setSubOptionWheat5([]);
-      setSubOptionWheat6([]);
-
-      if (isLoading3) return; // Prevent additional clicks while loading
-      setIsLoading3(true);
-
-      try {
-        const payload1 = {
-          rice_inline: block_data2,
-          rice_inline_value: inline_value_rice,
-          wheat_inline: data,
-          wheat_inline_value: inline_value_wheat,
-        };
-
-        const response2 = await fetch(ProjectIp + "/Daily_Planner_Check", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload1),
-        });
-
-        const responseData1 = await response2.json(); // Parse response JSON
-
-        if (responseData1.status === "NO") {
-          alert("Distance is not within range. Please check again.");
-        }
-      } catch (error) {
-        console.error("Error sending inputs:", error);
-      } finally {
-        // Reset loading state
-        setIsLoading3(false);
-      }
-    }
-
-    // Add progress message
-    setProgress((prev) => [
-      ...prev,
-      "New Inline details have been added for wheat",
-    ]);
-  };
-
-  const addConstraint3 = async (e) => {
-    e.preventDefault();
-    console.log(subOption3);
-
-    if (selectedOption3 && subOption3) {
-      // Check if the railhead for the selected state is already added
-      if (!addedRailheads.has(subOption3)) {
-        setBlockdata3((data) => [
-          ...data,
-          {
-            origin_state: selectedOption3,
-            origin_railhead: subOption3,
-            origin_value: origin_value_rice,
-            id: Date.now(),
-          },
-        ]);
-
-        setnumber_check1(number_check1 + 1);
-
-        // Add the railhead to the set to indicate it's added for this state
-        setAddedRailheads(new Set(addedRailheads).add(subOption3));
-      } else {
-        alert(
-          `Railhead ${subOption3} is already added for ${selectedOption3}.`
-        );
-      }
-
-      setSubOptions3([]);
-    }
-
-    setSubOption3("");
-
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-    const dropdownOptions = [
-      {
-        value: "",
-        label: "Please select Railhead",
-      },
-    ];
-
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedOption3.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-
-    setSubOptions3(dropdownOptions);
-  };
-
-  const addConstraintWheat3 = async (e) => {
-    e.preventDefault();
-    if (selectedOptionWheat3 && subOptionWheat3) {
-      // Check if the railhead for the selected state is already added
-      if (!addedRailheads.has(subOptionWheat3)) {
-        setBlockdataWheat3((data) => [
-          ...data,
-          {
-            origin_state: selectedOptionWheat3,
-            origin_railhead: subOptionWheat3,
-            origin_value: origin_value_wheat,
-            id: Date.now(),
-          },
-        ]);
-
-        setSupplyWeatCount(supplyWeatCount + 1);
-
-        // Add the railhead to the set to indicate it's added for this state
-        setAddedRailheads(new Set(addedRailheads).add(subOptionWheat3));
-      } else {
-        // Alert message if the railhead is already added for this state
-        alert(
-          `Railhead ${subOptionWheat3} is already added for ${selectedOptionWheat3}.`
-        );
-      }
-
-      setSubOptionsWheat3([]);
-    }
-
-    setSubOptionWheat3("");
-
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-    const dropdownOptions = [
-      {
-        value: "",
-        label: "Please select Railhead",
-      },
-    ];
-
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedOptionWheat3.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-
-    setSubOptionsWheat3(dropdownOptions);
-  };
-
-  const addConstraint4 = async (e) => {
-    e.preventDefault();
-
-    if (selectedOption4 && subOption4) {
-      // Check if the railhead for the selected state is already added
-      if (!addedRailheads.has(subOption4)) {
-        setRiceDestination((data) => [
-          ...data,
-          {
-            origin_state: selectedOption4,
-            origin_railhead: subOption4,
-            origin_value: dest_value_rice,
-            id: Date.now(),
-          },
-        ]);
-
-        setnumber_check2(number_check2 + 1);
-
-        // Add the railhead to the set to indicate it's added for this state
-        setAddedRailheads(new Set(addedRailheads).add(subOption4));
-      } else {
-        alert(
-          `Railhead ${subOption4} is already added for ${selectedOption4}.`
-        );
-      }
-
-      setSubOptions4([]);
-    }
-
-    setSubOption4("");
-
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-    const dropdownOptions = [
-      {
-        value: "",
-        label: "Please select Railhead",
-      },
-    ];
-
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedOption4.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-
-    setSubOptions4(dropdownOptions);
-  };
-
-  const addConstraintWheat4 = async (e) => {
-    e.preventDefault();
-    if (selectedOptionWheat4 && subOptionWheat4) {
-      // Check if the railhead for the selected state is already added
-      if (!addedRailheads.has(subOptionWheat4)) {
-        setWheatDestination((data) => [
-          ...data,
-          {
-            origin_state: selectedOptionWheat4,
-            origin_railhead: subOptionWheat4,
-            origin_value: dest_value_wheat,
-            id: Date.now(),
-          },
-        ]);
-
-        setDestinationWheatCount(destinationWheatCount + 1);
-
-        // Add the railhead to the set to indicate it's added for this state
-        setAddedRailheads(new Set(addedRailheads).add(subOptionWheat4));
-      } else {
-        // Alert message if the railhead is already added for this state
-        alert(
-          `Railhead ${subOptionWheat4} is already added for ${selectedOptionWheat4}.`
-        );
-      }
-
-      setSubOptionsWheat4([]);
-    }
-
-    setSubOptionWheat4("");
-
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-    const dropdownOptions = [
-      {
-        value: "",
-        label: "Please select Railhead",
-      },
-    ];
-
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-        selectedOptionWheat4.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-
-    setSubOptionsWheat4(dropdownOptions);
-  };
-
   const addConstraint_fixed = (e) => {
     e.preventDefault();
     if (
@@ -1817,7 +1163,7 @@ function Daily_Planner() {
       // Check if origin and destination railheads are the same
       if (subOption1_fixed === subOption2_fixed) {
         alert("Origin and destination railheads cannot be the same.");
-        return; // Do not proceed further
+        return;
       }
 
       setFixeddata((data) => [
@@ -1848,12 +1194,22 @@ function Daily_Planner() {
 
   const viewGrid = () => {
     setShowMessage(true);
-    const riceData = JSON.parse(Total_result?.rice ?? 0);
-    console.log("ricedata", riceData);
+    const riceData = JSON.parse(Total_result?.rra ?? 0);
     const wheatData = JSON.parse(Total_result?.wheat ?? 0);
-    console.log("wheatData", wheatData);
+    const coarseGrainData = JSON.parse(Total_result?.coarse_grain ?? 0);
+    const frk_rraData = JSON.parse(Total_result?.frk_rra ?? 0);
+    const frk_brData = JSON.parse(Total_result?.frk_br ?? 0);
+    const frkData = JSON.parse(Total_result?.frk ?? 0);
+    const frkcgrData = JSON.parse(Total_result?.frkcgr ?? 0);
+    const wcgrData = JSON.parse(Total_result?.wcgr ?? 0);
     setRiceData(riceData);
     setWheatData(wheatData);
+    setCoarseGrain(coarseGrainData);
+    setFrk_rra(frk_rraData);
+    setFrk_br(frk_brData);
+    setFrk(frkData);
+    setFrk_cgr(frkcgrData);
+    setw_cgr(wcgrData);
   };
 
   const exportToExcel1 = () => {
@@ -1865,9 +1221,7 @@ function Daily_Planner() {
       const workbook = XLSX.utils.book_new();
       Object.entries(Total_result).forEach(([column, data]) => {
         const parsedData = JSON.parse(data);
-        console.log("parsedData", parsedData);
         const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        console.log("worksheet", worksheet);
         XLSX.utils.book_append_sheet(workbook, worksheet, column);
       });
       const excelBuffer = XLSX.write(workbook, {
@@ -1888,175 +1242,11 @@ function Daily_Planner() {
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
       saveAs(excelBlob, filenameWithDateTime);
-      console.log("excelblob in excel1 method", excelBlob);
-      downloadedFile = excelBlob;
-      downloadedFileName = filenameWithDateTime;
-      uploadFile(excelBlob, downloadedFileName);
     }
   };
-
-  const exportToExcel2 = () => {
-    if (Relevant_result == null) {
-      // Commented out the alert statement
-      window.alert("Fetching Result, Please Wait");
-      fetchReservationId_Revelant_result();
-    } else {
-      const workbook = XLSX.utils.book_new();
-      Object.entries(Relevant_result).forEach(([column, data]) => {
-        const parsedData = JSON.parse(data);
-        const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, column);
-      });
-      const excelBuffer = XLSX.write(workbook, {
-        type: "array",
-        bookType: "xlsx",
-      });
-      const excelBlob = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      saveAs(excelBlob, "Daily_Movement_results_Scenerio2.xlsx");
-      console.log("excelblob in excel2 method", excelBlob);
-      downloadedFile = excelBlob;
-      downloadedFileName = "Daily_Movement_results_Scenerio2.xlsx";
-      uploadFile(excelBlob, downloadedFileName);
-      // Commented out the alert statement
-      // window.alert("Result Downloaded");
-    }
-  };
-
-  const buttonStyle = {
-    border: updateExcel ? "4px solid rgba(235, 171, 68)" : "2px solid black",
-    padding: "5px",
-  };
-
-  const buttonStyle2 = {
-    border: updateExcel2 ? "4px solid rgba(235, 171, 68)" : "2px solid black",
-    padding: "5px",
-  };
-  const convertExcelToJSON = (excelData) => {
-    const jsonData = excelData; // You may need to process the data if needed
-    return {
-      excelFile: "YourFileName.xlsx", // Replace with the desired file name
-      uniqueId: "1",
-      type: "Register",
-      projectMasterId: "1",
-      //  $('#CurrentProjectId').val(), // Replace with the appropriate value
-      //  data: jsonData,
-    };
-  };
-  const uploadFile = (fileBlob, fileName) => {
-    if (fileBlob) {
-      // Create a FormData object and append the file Blob with its original name
-      const formData = new FormData();
-      fileName = "Daily_Movement_results_Scenerio.xlsx";
-      formData.append("file", fileBlob, fileName);
-      console.log("formData", formData);
-      console.log("fileBlob", fileBlob);
-
-      // Make a POST request to the server to upload the file
-      fetch("https://192.168.1.12:5001/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => {
-          if (response.ok) {
-            // File upload was successful
-            console.log("File uploaded successfully!");
-            window.alert("File uploaded successfully!");
-            // window.alert("File and contents uploaded successfully!");
-          } else {
-            // File upload failed
-            console.log("File and contents upload failed. Please try again.");
-            window.alert("File and contents upload failed. Please try again.");
-          }
-        })
-        .catch((error) => {
-          console.error("An error occurred during file and contents upload:", error);
-        });
-    } else {
-      window.alert("Please download the file and contents first before uploading.");
-    }
-  };
-  const jsonData = [
-    {
-      "source": "SANGRUR[NF22]",
-      "destination": "",
-      "railHeadCode": "SAG",
-      "commodityName": "Wheat+FRK",
-      "rakePreference": "42W/58W",
-      "additionalRemarks": "",
-      "generalRemarks": "test",
-      "createdDate": "2023-11-07T15:28:31.36716+05:30"
-    },
-    {
-      "source": "AZAMGARH[NH27]",
-      "destination": "",
-      "railHeadCode": "PHY",
-      "commodityName": "Wheat+FRK",
-      "rakePreference": "42W/58W",
-      "additionalRemarks": "",
-      "generalRemarks": "test",
-      "createdDate": "2023-11-07T15:32:27.307497+05:30"
-    }
-  ];
-  // const uploadData = () => {
-  //   console.log('Uploading data:', jsonData);
-  //   // axios
-  //   // .post('https://rakeplanner.callippus.co.uk/api/DailyPlannerWebApi/DailyPlannerNextDayforTool', jsonData, {
-  //   //   headers: { 'Content-Type': 'application/json' }
-  //   // })
-  //     // .post('https://10.194.100.180:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool', jsonData, {
-
-
-  //  // fetch('https://10.194.100.180:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool', {
-  //     fetch('https://192.168.1.19:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool',{
-  //     method: "GET",
-  //     body: jsonData,
-  //   })
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         alert('Data sent successfully.');
-  //       } else {
-  //         alert(`Failed to send data. Status code: ${response.status}`);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       alert(`Error: ${error.message}`);
-  //     });
-  // };
-
-  const fetchData = (event) => {
-    event.preventDefault();
-    fetch('https://192.168.1.19:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool')
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json(); // Parse the JSON response
-        } else {
-          alert(`Failed to fetch data. Status code: ${response.status}`);
-          return null; // Handle the error or return an empty response as needed
-        }
-      })
-      .then((data) => {
-        if (data) {
-          const result = data.result; // Access the result indicator
-          console.log('Result:', result);
-  
-          const responseData = data.response; // Access the response data
-          console.log('Data received:', responseData);
-          
-          // Handle the data as needed
-        }
-      })
-      .catch((error) => {
-        alert(`Error: ${error.message}`);
-      });
-     // console.log('Data received:', result);
-  };
-  
-
 
   return (
-    <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
+    <div className="page-container" style={{ backgroundColor: "#E7A63D" }}>
       <Sidenav />
       <div
         className="page-content"
@@ -2068,7 +1258,7 @@ function Daily_Planner() {
         <div>
           <ul
             className="x-navigation x-navigation-horizontal x-navigation-panel"
-            style={{ backgroundColor: "rgba(235, 171, 68, 0.69)" }}
+            style={{ backgroundColor: "#E7A63D" }}
           >
             <li className="xn-icon-button">
               <a href="javascript:void(0)" className="x-navigation-minimize">
@@ -2102,112 +1292,16 @@ function Daily_Planner() {
             <div className="row">
               <div className="col-md-12">
                 <br />
-                <div className="row" style={{ marginLeft: "15px" }}>
-                  {/* <div style={{ fontSize: "20px", fontWeight: "700" }}>
-                    <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
-                    Template
-                  </div> */}
-                  {/* <form
-                  action=""
-                  encType="multipart/form-data"
-                  id="uploadForm"
-                  className="form-horizontal"
-                >
-                  <div
-                    className="col-md-6"
-                    style={{ marginTop: "15px", marginLeft: "50px" }}
-                  >
-                    <div className="form-group">
-                      <div className="col-md-9">
-                        <div className="input-group">
-                          <span
-                            className="input-group-addon"
-                            style={{
-                              backgroundColor: "rgba(235, 171, 68, 0.69)",
-                            }}
-                          >
-                            <span className="fa fa-info" />
-                          </span>
-
-                          <input
-                            type="file"
-                            className="form-control"
-                            onChange={handleFileChange}
-                            id="uploadFile"
-                            name="uploadFile"
-                            defaultValue=""
-                            required=""
-                          />
-                        </div>
-                        <span className="help-block" style={{ color: "black" }}>
-                          Choose Data Template
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    {setuploadst && (
-                      <div>
-                        <img
-                          className="upload_class"
-                          src={background1}
-                          id="uploadConfig"
-                          onClick={handleUploadConfig}
-                          disabled={!fileSelected}
-                        />
-                      </div>
-                    )}
-                    {!setuploadst && (
-                      <div>
-                        <img
-                          className="upload_class"
-                          src={background1}
-                          id="uploadConfig"
-                          onClick={handleUploadConfig1}
-                          disabled={!fileSelected}
-                        />
-                      </div>
-                    )}
-                    <div style={{ marginTop: "-25px" }}>Click here</div>
-                  </div>
-                </form> */}
-                </div>
-                <br />
-                <div style={{ marginLeft: '35%' }}>
+                <div style={{ marginLeft: "35%" }}>
                   <input type="file" onChange={handleFileChange_} />
-                  <button style={{ margin: '5px', padding: '5px' }} onClick={handleFileUpload}>Upload</button>
+                  <button
+                    style={{ margin: "5px", padding: "5px" }}
+                    onClick={handleFileUpload}
+                  >
+                    Upload
+                  </button>
                 </div>
                 <br />
-                <div style={{ display: "flex", marginLeft: "245px" }}>
-                  {/* {fileSelected && ( */}
-                  {/* <div style={{ marginTop: "-20px" }}>
-                    <button style={buttonStyle} onClick={() => update_excel()}>
-                      Template 1
-                    </button>
-                  </div> */}
-                  {/* )} */}
-                  {/* {updateExcel && ( */}
-                  {/* <div style={{ marginLeft: "150px", marginTop: "-20px" }}>
-                    <button
-                      style={buttonStyle2}
-                      onClick={() => update_excel2()}
-                    >
-                      Template for Scenario 2
-                    </button>
-                  </div> */}
-                  {/* )} */}
-                </div>
-                {/* {(updateExcel || updateExcel2) && (
-                  <div style={{ marginLeft: "480px" }}>
-                    <br />
-                    <button
-                      style={{ padding: "5px" }}
-                      onClick={() => save_excel()}
-                    >
-                      Save changes
-                    </button>
-                  </div>
-                )} */}
                 {activeSheetName &&
                   (updateExcel || updateExcel2) &&
                   excelData[activeSheetName] && (
@@ -2288,1912 +1382,817 @@ function Daily_Planner() {
                         <option value="TEFD+TC">TEFD + TC</option>
                       </select>
                     </label>
-                    <button
-                      style={{ color: "white", marginLeft: "15px" }}
-                      className="btn btn-danger dropdown-toggle"
-                      onClick={fetchData}
-                    >Get JSON Data</button>
-                    <label>
-                      <strong
-                        style={{
-                          fontSize: "20px",
-                          marginLeft: "15px",
-                          color: "#9d0921",
-                        }}
-                      >
-                        Select Commodity
-                      </strong>
-                      <select
-                        value={commodity}
-                        onChange={(e) => {
-                          set_Commodity(e.target.value);
-                          setProgress((prev) => [
-                            ...prev,
-                            "You have selected the commodity as " +
-                            e.target.value,
-                          ]);
-                        }}
-                        style={{ marginLeft: "570px" }}
-                      >
-                        <option value="">Select Commodity</option>
-                        <option value="Rice">Rice</option>
-                        <option value="Wheat">Wheat</option>
-                      </select>
-                    </label>
-                    {/* <label>
-                      <strong
-                        style={{
-                          fontSize: "20px",
-                          marginLeft: "15px",
-                          color: "#9d0921",
-                        }}
-                      >
-                        Select Scenario
-                      </strong>
-                      <select
-                        value={Scenerio}
-                        onChange={(e) => {
-                          set_Scenerio(e.target.value);
-                          document.getElementById("console_").style.display =
-                            "block";
-                          document.getElementById("console_").innerHTML +=
-                            "You have selected the scenario as " +
-                            e.target.value +
-                            "<br/><br/>";
-                        }}
-                        style={{ marginLeft: "600px" }}
-                      >
-                        <option value="">Select Scenario</option>
-                        <option value="Scenerio 1">Scenario 1</option>
-                        <option value="Scenerio 2">Scenario 2</option>
-                      </select>
-                    </label> */}
+
                     <br />
-                    <br />
-                    {commodity === "Rice" && (
-                      <div>
-                        <p style={{ margin: 0, padding: 0 }}>
+                    {/* ------------------------------------------------------------------------------------------------- */}
+                    <div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "60vw",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Origin State
+                          </strong>
+                          <select
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                              marginRight: 25,
+                            }}
+                            onChange={handleSurplusStateChange}
+                            value={surplusState}
+                          >
+                            <option value="default">Select Origin State</option>
+                            <option value="Andhra Pradesh">
+                              Andhra Pradesh
+                            </option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chattisgarh">Chattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Jammu & Kashmir">
+                              Jammu & Kashmir
+                            </option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="MP">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="NE">North East</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="UP">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Origin Railhead
+                          </strong>
+                          <select
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                            }}
+                            onChange={(e) => setSurplusRailhead(e.target.value)}
+                            value={surplusRailhead}
+                          >
+                            {totalSurplusRailhead.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <strong
                             style={{
-                              color: "#9d0921",
-                              fontSize: "20px",
-                              marginLeft: "15px",
+                              width: "200px",
+                              padding: "5px",
                             }}
                           >
-                            For Rice:
+                            Select Commodity
                           </strong>
-                        </p>
-                        <br />
+                          <select
+                            value={surplusCommodity}
+                            onChange={(e) => {
+                              setSurplusCommodity(e.target.value);
+                            }}
+                          >
+                            <option value="">Select Commodity</option>
+                            <option value="RRA">RRA</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="FRK">FRK</option>
+                            <option value="FRK RRA">FRK RRA</option>
+                            <option value="FRK BR">FRK BR</option>
+                            <option value="Coarse Grain">Coarse Grain</option>
+                            <option value="W+CGR">W+CGR</option>
+                            <option value="FRK+CGR">FRK+CGR</option>
+                          </select>
+                        </div>
                         <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Enter Value:
+                          </strong>
+                          <input
+                            type="number"
+                            min={1}
+                            onChange={(e) =>
+                              setSurplusValue(parseInt(e.target.value))
+                            }
+                            value={surplusValue}
+                          />
+                        </div>
+                        <button
+                          onClick={AddSurplus}
+                          disabled={
+                            surplusState === undefined ||
+                            surplusState === "default" ||
+                            surplusRailhead === undefined ||
+                            surplusRailhead === "" ||
+                            surplusCommodity === undefined ||
+                            surplusCommodity === ""
+                          }
                           style={{
-                            display: "flex",
-                            marginLeft: "20px",
-                            alignItems: "center",
+                            backgroundColor: "orange",
+                            width: 70,
+                            height: 40,
                           }}
                         >
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Origin State:
-                            </strong>
-                            <select
-                              style={{
-                                width: "200px",
-                                padding: "5px",
-                                marginRight: 25,
-                              }}
-                              onChange={handleDropdownChange3}
-                              value={selectedOption3}
-                            >
-                              <option value="default">
-                                Select Origin State
-                              </option>
-                              <option value="Andhra Pradesh">
-                                Andhra Pradesh
-                              </option>
-                              <option value="Bihar">Bihar</option>
-                              <option value="Chattisgarh">Chattisgarh</option>
-                              <option value="Goa">Goa</option>
-                              <option value="Gujarat">Gujarat</option>
-                              <option value="Haryana">Haryana</option>
-                              <option value="Jammu & Kashmir">
-                                Jammu & Kashmir
-                              </option>
-                              <option value="Jharkhand">Jharkhand</option>
-                              <option value="Karnataka">Karnataka</option>
-                              <option value="Kerala">Kerala</option>
-                              <option value="MP">Madhya Pradesh</option>
-                              <option value="Maharashtra">Maharashtra</option>
-                              <option value="NE">North East</option>
-                              <option value="Odisha">Odisha</option>
-                              <option value="Punjab">Punjab</option>
-                              <option value="Rajasthan">Rajasthan</option>
-                              <option value="Tamil Nadu">Tamil Nadu</option>
-                              <option value="Telangana">Telangana</option>
-                              <option value="UP">Uttar Pradesh</option>
-                              <option value="Uttarakhand">Uttarakhand</option>
-                              <option value="West Bengal">West Bengal</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Origin Railhead
-                            </strong>
-                            <select
-                              style={{
-                                width: "200px",
-                                padding: "5px",
-                              }}
-                              onChange={handleSubDropdownChange3}
-                              value={subOption3}
-                            >
-                              {subOptions3.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div style={{ marginLeft: "15px" }}>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Enter Origin Value
-                            </strong>
-                            <input
-                              type="number"
-                              value={origin_value_rice}
-                              onChange={(e) =>
-                                setOriginValueRice(e.target.value)
-                              }
-                              style={{
-                                // marginLeft: "40px",
-                                width: "200px",
-                                padding: "5px",
-                              }}
-                            />
-                          </div>
-                          <div onClick={addConstraint3}>
-                            <button
-                              style={{
-                                textAlign: "center",
-                                backgroundColor: "orange",
-                                width: 70,
-                                height: 40,
-                                marginLeft: 346,
-                              }}
-                              disabled={
-                                subOption3 === "" && selectedOption3 === ""
-                              }
-                            >
-                              Add
-                            </button>
-                          </div>
-                        </div>
-
-                        <br />
-
-                        {block_data3.length !== 0 && (
-                          <div>
-                            <table>
-                              <thead>
-                                <tr style={{ margin: "auto" }}>
-                                  <th
-                                    style={{ padding: "10px", width: "396px" }}
-                                  >
-                                    Origin State
-                                  </th>
-                                  <th
-                                    style={{ padding: "10px", width: "396px" }}
-                                  >
-                                    Origin Railhead
-                                  </th>
-                                  <th style={{ padding: "10px", width: "15%" }}>
-                                    Origin Value
-                                  </th>
-                                  <th
-                                    style={{ padding: "10px", width: "396px" }}
-                                  >
-                                    Delete
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {block_data3.map((item) => (
-                                  <tr key={item.id}>
-                                    <td>{item.origin_state}</td>
-                                    <td>{item.origin_railhead}</td>
-                                    <td>{item.origin_value}</td>
-
-                                    <td>
-                                      <span
-                                        style={{
-                                          cursor: "pointer",
-                                          color: "#ff0000",
-                                          fontSize: "1.2rem",
-                                        }}
-                                        onClick={() =>
-                                          handleDeleteRow_Rice_s(item.id)
-                                        }
-                                        title="Delete"
-                                      >
-                                        &times;
-                                      </span>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                        <br />
-                        <div
-                          style={{
-                            display: "flex",
-                            marginLeft: "20px",
-                            alignItems: "center",
-                          }}
-                        >
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Destination State:
-                            </strong>
-                            <select
-                              style={{
-                                width: "200px",
-                                padding: "5px",
-                                marginRight: 25,
-                              }}
-                              id="destination"
-                              onChange={handleDropdownChange4}
-                              value={selectedOption4}
-                            >
-                              <option value="default">
-                                Select Destination State
-                              </option>
-                              <option value="Andhra Pradesh">
-                                Andhra Pradesh
-                              </option>
-                              <option value="Bihar">Bihar</option>
-                              <option value="Chattisgarh">Chattisgarh</option>
-                              <option value="Goa">Goa</option>
-                              <option value="Gujarat">Gujarat</option>
-                              <option value="Haryana">Haryana</option>
-                              <option value="Jammu & Kashmir">
-                                Jammu & Kashmir
-                              </option>
-                              <option value="Jharkhand">Jharkhand</option>
-                              <option value="Karnataka">Karnataka</option>
-                              <option value="Kerala">Kerala</option>
-                              <option value="MP">Madhya Pradesh</option>
-                              <option value="Maharashtra">Maharashtra</option>
-                              <option value="NE">North East</option>
-                              <option value="Odisha">Odisha</option>
-                              <option value="Punjab">Punjab</option>
-                              <option value="Rajasthan">Rajasthan</option>
-                              <option value="Tamil Nadu">Tamil Nadu</option>
-                              <option value="Telangana">Telangana</option>
-                              <option value="UP">Uttar Pradesh</option>
-                              <option value="Uttarakhand">Uttarakhand</option>
-                              <option value="West Bengal">West Bengal</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Destination Railhead
-                            </strong>
-                            <select
-                              style={{
-                                width: "200px",
-                                padding: "5px",
-                              }}
-                              onChange={handleSubDropdownChange4}
-                              value={subOption4}
-                            >
-                              {subOptions4.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div style={{ marginLeft: "15px" }}>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Enter Destination Value
-                            </strong>
-                            <input
-                              type="number"
-                              value={dest_value_rice}
-                              onChange={(e) =>
-                                setDestValueRice(e.target.value)
-                              }
-                              style={{
-                                // marginLeft: "40px",
-                                width: "200px",
-                                padding: "5px",
-                              }}
-                            />
-                          </div>
-                          <div onClick={addConstraint4}>
-                            <button
-                              style={{
-                                textAlign: "center",
-                                backgroundColor: "orange",
-                                width: 70,
-                                height: 40,
-                                alignItems: "center",
-                                marginLeft: 267,
-                              }}
-                              disabled={
-                                subOption4 === "" && selectedOption4 === ""
-                              }
-                            >
-                              Add
-                            </button>
-                          </div>
-                        </div>
-                        <br />
-                        <div>
-                          {rice_destination.length !== 0 && (
-                            <div>
-                              <table>
-                                <thead>
-                                  <tr style={{ margin: "auto" }}>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Destination State
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Destination Railhead
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Destination Value
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Delete
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {rice_destination.map((item, index) => (
-                                    <tr key={index}>
-                                      <td>{item.origin_state}</td>
-                                      <td>{item.origin_railhead}</td>
-                                      <td>{item.origin_value}</td>
-                                      <td>
-                                        <span
-                                          style={{
-                                            cursor: "pointer",
-                                            color: "#ff0000",
-                                            fontSize: "1.2rem",
-                                          }}
-                                          onClick={() =>
-                                            handleDeleteRow_Rice__dest(index)
-                                          }
-                                          title="Delete"
-                                        >
-                                          &times;
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-                        </div>
-                        <br />
-                        <br />
-                        <div>
-                          <div>
-                            <div style={{ marginLeft: "15px" }}>
-                              <strong
-                                style={{ fontSize: "16px", padding: "5px" }}
-                              >
-                                Enter Origin Inline Value
-                              </strong>
-                              <input
-                                type="number"
-                                value={inline_value_rice}
-                                onChange={(e) =>
-                                  setInlineValueRice(e.target.value)
-                                }
-                                style={{
-                                  marginLeft: "40px",
-                                  width: "200px",
-                                  padding: "5px",
-                                }}
-                              />
-                            </div>
-                            <br />
-                            <div
-                              style={{
-                                display: "flex",
-                                marginLeft: "20px",
-                                width: "1170px",
-                                alignItems: "center",
-                              }}
-                            >
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChange5}
-                                  value={selectedOption5}
-                                >
-                                  <option value="default">
-                                    Select Origin Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  {/* <option value="Haryana">Haryana</option> */}
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChange5}
-                                  value={
-                                    subOption5 === "default"
-                                      ? "default"
-                                      : subOption5
+                          Add
+                        </button>
+                      </div>
+                      <br />
+                      <div>Surplus</div>
+                      <table style={{ width: "60vw" }}>
+                        <thead>
+                          <tr>
+                            <th>Sno</th>
+                            <th>Railhead</th>
+                            <th>State</th>
+                            <th>Value</th>
+                            <th>Commodity</th>
+                            <th>Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {surplus.map((row, index) => (
+                            <tr key={index}>
+                              <td>{index}</td>
+                              <td>{row.origin_railhead}</td>
+                              <td>{row.origin_state}</td>
+                              <td>{row.Value}</td>
+                              <td>{row.Commodity}</td>
+                              <td>
+                                <span
+                                  style={{
+                                    cursor: "pointer",
+                                    color: "#ff0000",
+                                    fontSize: "1.2rem",
+                                  }}
+                                  onClick={() =>
+                                    handleDeleteRow_surplus__source(row, index)
                                   }
+                                  title="Delete"
                                 >
-                                  {subOptions5.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChange6}
-                                  value={selectedOption6}
-                                >
-                                  <option value="default">
-                                    Select Origin Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-                              {/* </label> */}
-                              {/* <label htmlFor="deficit_railhead"> */}
-
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChange6}
-                                  value={subOption6}
-                                >
-                                  {subOptions6.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              {/* </label> */}
-                              <div onClick={addConstraint2}>
-                                <button
-                                  style={{
-                                    textAlign: "center",
-                                    backgroundColor: "orange",
-                                    width: 70,
-                                    height: 40,
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  Add
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <br />
-
-                          {block_data2.length !== 0 && (
-                            <div>
-                              {/* <div
-                      style={{
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                    >
-                      Route Block
-                    </div> */}
-                              <table>
-                                <thead>
-                                  <tr style={{ margin: "auto" }}>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline State
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline State
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "236px",
-                                      }}
-                                    >
-                                      Delete
-                                    </th>
-                                  </tr>
-                                  {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
-                                </thead>
-                                <tbody>
-                                  {/* <tr style={{ margin: "auto" }}>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
-                    </tr> */}
-                                  {block_data2.map((item) => (
-                                    <tr key={item.id}>
-                                      <td>{item.origin_state}</td>
-                                      <td>{item.origin_railhead}</td>
-                                      <td>{item.destination_state}</td>
-                                      <td>{item.destination_railhead}</td>
-                                      <td>
-                                        <span
-                                          style={{
-                                            cursor: "pointer",
-                                            color: "#ff0000",
-                                            fontSize: "1.2rem",
-                                          }}
-                                          onClick={() =>
-                                            handleDeleteRow_inline(item.id)
-                                          }
-                                          title="Delete"
-                                        >
-                                          &times;
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
+                                  &times;
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <br />
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "60vw",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Destination State
+                          </strong>
+                          <select
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                              marginRight: 25,
+                            }}
+                            onChange={handleDefictStateChange}
+                            value={deficitState}
+                          >
+                            <option value="default">Select Origin State</option>
+                            <option value="Andhra Pradesh">
+                              Andhra Pradesh
+                            </option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chattisgarh">Chattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Jammu & Kashmir">
+                              Jammu & Kashmir
+                            </option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="MP">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="NE">North East</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="UP">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                          </select>
                         </div>
-                        <br />
-                        <br />
-                        <div>
-                          <div>
-                            <div style={{ marginLeft: "15px" }}>
-                              <strong
-                                style={{ fontSize: "16px", padding: "5px" }}
-                              >
-                                Enter Destination Inline Value
-                              </strong>
-                              <input
-                                type="number"
-                                value={inline_value_dest_rice}
-                                onChange={(e) =>
-                                  setDestInlineValueRice(e.target.value)
-                                }
-                                style={{
-                                  marginLeft: "40px",
-                                  width: "200px",
-                                  padding: "5px",
-                                }}
-                              />
-                            </div>
-                            <br />
-                            <div
-                              style={{ display: "flex", marginLeft: "20px" }}
-                            >
-                              {/* <label htmlFor="origin_state"> */}
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChangeDRI5}
-                                  value={selectedOptionDRI5}
-                                >
-                                  <option value="default">
-                                    Select Destination Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  {/* <option value="Haryana">Haryana</option> */}
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChangeDRI5}
-                                  value={subOptionDRI5}
-                                >
-                                  {subOptionsDRI5.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              {/* </label> */}
-
-                              <div>
-                                {/* <label htmlFor="deficit_state"> */}
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChangeDRI6}
-                                  value={selectedOptionDRI6}
-                                >
-                                  <option value="default">
-                                    Select Destination Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  {/* <option value="Haryana">Haryana</option> */}
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-                              {/* </label> */}
-                              {/* <label htmlFor="deficit_railhead"> */}
-
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChangeDRI6}
-                                  value={subOptionDRI6}
-                                >
-                                  {subOptionsDRI6.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              {/* </label> */}
-                              <div onClick={addConstraintDRI2}>
-                                <button
-                                  style={{
-                                    textAlign: "center",
-                                    backgroundColor: "orange",
-                                    width: 70,
-                                    height: 40,
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  Add
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <br />
-
-                          {block_dataDest2.length != 0 && (
-                            <div>
-                              {/* <div
-                      style={{
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                    >
-                      Route Block
-                    </div> */}
-                              <table>
-                                <thead>
-                                  <tr style={{ margin: "auto" }}>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline State
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline State
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Delete
-                                    </th>
-                                  </tr>
-                                  {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
-                                </thead>
-                                <tbody>
-                                  {/* <tr style={{ margin: "auto" }}>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
-                    </tr> */}
-                                  {block_dataDest2.map((item) => (
-                                    <tr key={item.id}>
-                                      <td>{item.origin_state}</td>
-                                      <td>{item.origin_railhead}</td>
-                                      <td>{item.destination_state}</td>
-                                      <td>{item.destination_railhead}</td>
-                                      <td>
-                                        <span
-                                          style={{
-                                            cursor: "pointer",
-                                            color: "#ff0000",
-                                            fontSize: "1.2rem",
-                                          }}
-                                          onClick={() =>
-                                            handleDeleteRow_dest_inline(item.id)
-                                          }
-                                          title="Delete"
-                                        >
-                                          &times;
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Destination Railhead
+                          </strong>
+                          <select
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                            }}
+                            onChange={(e) => setDeficitRailhead(e.target.value)}
+                            value={deficitRailhead}
+                          >
+                            {totalDeficitRailhead.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
                         </div>
-                      </div>
-                    )}
-                    <br />
-                    {commodity === "Wheat" && (
-                      <div>
-                        <p style={{ margin: 0, padding: 0 }}>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <strong
                             style={{
-                              color: "#9d0921",
-                              fontSize: "20px",
-                              marginLeft: "15px",
+                              width: "200px",
+                              padding: "5px",
                             }}
                           >
-                            For Wheat:
+                            Select Commodity
                           </strong>
-                        </p>
-                        <br />
+                          <select
+                            value={deficitCommodity}
+                            onChange={(e) => {
+                              setDeficitCommodity(e.target.value);
+                            }}
+                          >
+                            <option value="">Select Commodity</option>
+                            <option value="RRA">RRA</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="FRK">FRK</option>
+                            <option value="FRK RRA">FRK RRA</option>
+                            <option value="FRK BR">FRK BR</option>
+                            <option value="Coarse Grain">Coarse Grain</option>
+                            <option value="W+CGR">W+CGR</option>
+                            <option value="FRK+CGR">FRK+CGR</option>
+                          </select>
+                        </div>
                         <div
-                          style={{
-                            display: "flex",
-                            marginLeft: "20px",
-                            alignItems: "center",
-                          }}
+                          style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Origin State:
-                            </strong>
-                            <select
-                              style={{
-                                width: "200px",
-                                padding: "5px",
-                                marginRight: 25,
-                              }}
-                              onChange={handleDropdownChangeWheat3}
-                              value={selectedOptionWheat3}
-                            >
-                              <option value="default">
-                                Select Origin State
-                              </option>
-                              <option value="Andhra Pradesh">
-                                Andhra Pradesh
-                              </option>
-                              <option value="Bihar">Bihar</option>
-                              <option value="Chattisgarh">Chattisgarh</option>
-                              <option value="Goa">Goa</option>
-                              <option value="Gujarat">Gujarat</option>
-                              <option value="Haryana">Haryana</option>
-                              <option value="Jammu & Kashmir">
-                                Jammu & Kashmir
-                              </option>
-                              <option value="Jharkhand">Jharkhand</option>
-                              <option value="Karnataka">Karnataka</option>
-                              <option value="Kerala">Kerala</option>
-                              <option value="MP">Madhya Pradesh</option>
-                              <option value="Maharashtra">Maharashtra</option>
-                              <option value="NE">North East</option>
-                              <option value="Odisha">Odisha</option>
-                              <option value="Punjab">Punjab</option>
-                              <option value="Rajasthan">Rajasthan</option>
-                              <option value="Tamil Nadu">Tamil Nadu</option>
-                              <option value="Telangana">Telangana</option>
-                              <option value="UP">Uttar Pradesh</option>
-                              <option value="Uttarakhand">Uttarakhand</option>
-                              <option value="West Bengal">West Bengal</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Origin Railhead
-                            </strong>
-                            <select
-                              style={{
-                                width: "200px",
-                                padding: "5px",
-                              }}
-                              onChange={handleSubDropdownChangeWheat3}
-                              value={subOptionWheat3}
-                            >
-                              {subOptionsWheat3.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div style={{ marginLeft: "15px" }}>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Enter Origin Value
-                            </strong>
-                            <input
-                              type="number"
-                              value={origin_value_wheat}
-                              onChange={(e) =>
-                                setOriginValueWheat(e.target.value)
-                              }
-                              style={{
-                                // marginLeft: "40px",
-                                width: "200px",
-                                padding: "5px",
-                              }}
-                            />
-                          </div>
-                          <div onClick={addConstraintWheat3}>
-                            <button
-                              style={{
-                                textAlign: "center",
-                                backgroundColor: "orange",
-                                width: 70,
-                                height: 40,
-                                marginLeft: 346,
-                              }}
-                              disabled={
-                                subOptionWheat3 === "" &&
-                                selectedOptionWheat3 === ""
-                              }
-                            >
-                              Add
-                            </button>
-                          </div>
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Enter Value:
+                          </strong>
+                          <input
+                            type="number"
+                            min={1}
+                            onChange={(e) =>
+                              setDeficitValue(parseInt(e.target.value))
+                            }
+                            value={deficitValue}
+                          />
                         </div>
-
-                        <br />
-
-                        {block_dataWheat3.length !== 0 && (
-                          <div>
-                            <table>
-                              <thead>
-                                <tr style={{ margin: "auto" }}>
-                                  <th
-                                    style={{ padding: "10px", width: "396px" }}
-                                  >
-                                    Origin State
-                                  </th>
-                                  <th
-                                    style={{ padding: "10px", width: "396px" }}
-                                  >
-                                    Origin Railhead
-                                  </th>
-                                  <th style={{ padding: "10px", width: "15%" }}>
-                                    Origin Value
-                                  </th>
-                                  <th
-                                    style={{ padding: "10px", width: "396px" }}
-                                  >
-                                    Delete
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {block_dataWheat3.map((item) => (
-                                  <tr key={item.id}>
-                                    <td>{item.origin_state}</td>
-                                    <td>{item.origin_railhead}</td>
-                                    <td>{item.origin_value}</td>
-
-                                    <td>
-                                      <span
-                                        style={{
-                                          cursor: "pointer",
-                                          color: "#ff0000",
-                                          fontSize: "1.2rem",
-                                        }}
-                                        onClick={() =>
-                                          handleDeleteRow_Wheat_s(item.id)
-                                        }
-                                        title="Delete"
-                                      >
-                                        &times;
-                                      </span>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-
-                        <br />
-
-                        <div
+                        <button
+                          onClick={AddDeficit}
                           style={{
-                            display: "flex",
-                            marginLeft: "20px",
-                            alignItems: "center",
+                            backgroundColor: "orange",
+                            width: 70,
+                            height: 40,
                           }}
+                          disabled={
+                            deficitState === undefined ||
+                            deficitState === "default" ||
+                            deficitRailhead === undefined ||
+                            deficitRailhead === "" ||
+                            deficitCommodity === undefined ||
+                            deficitCommodity === ""
+                          }
                         >
-                          <div>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Select Destination State:
-                            </strong>
-                            <select
-                              style={{ width: "200px", padding: "5px" }}
-                              id="destination"
-                              onChange={handleDropdownChangeWheat4}
-                              value={selectedOptionWheat4}
-                            >
-                              <option value="default">
-                                Select Destination State
-                              </option>
-                              <option value="Andhra Pradesh">
-                                Andhra Pradesh
-                              </option>
-                              <option value="Bihar">Bihar</option>
-                              <option value="Chattisgarh">Chattisgarh</option>
-                              <option value="Goa">Goa</option>
-                              <option value="Gujarat">Gujarat</option>
-                              <option value="Haryana">Haryana</option>
-                              <option value="Jammu & Kashmir">
-                                Jammu & Kashmir
-                              </option>
-                              <option value="Jharkhand">Jharkhand</option>
-                              <option value="Karnataka">Karnataka</option>
-                              <option value="Kerala">Kerala</option>
-                              <option value="MP">Madhya Pradesh</option>
-                              <option value="Maharashtra">Maharashtra</option>
-                              <option value="NE">North East</option>
-                              <option value="Odisha">Odisha</option>
-                              <option value="Punjab">Punjab</option>
-                              <option value="Rajasthan">Rajasthan</option>
-                              <option value="Tamil Nadu">Tamil Nadu</option>
-                              <option value="Telangana">Telangana</option>
-                              <option value="UP">Uttar Pradesh</option>
-                              <option value="Uttarakhand">Uttarakhand</option>
-                              <option value="West Bengal">West Bengal</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <strong
-                              style={{
-                                fontSize: "16px",
-                                padding: "5px",
-                                marginLeft: 15,
-                              }}
-                            >
-                              Select Destination Railhead
-                            </strong>
-                            <select
-                              style={{ width: "200px", padding: "5px" }}
-                              onChange={handleSubDropdownChangeWheat4}
-                              value={subOptionWheat4}
-                            >
-                              {subOptionsWheat4.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div style={{ marginLeft: "15px" }}>
-                            <strong
-                              style={{ fontSize: "16px", padding: "5px" }}
-                            >
-                              Enter Destination Value
-                            </strong>
-                            <input
-                              type="number"
-                              value={dest_value_wheat}
-                              onChange={(e) =>
-                                setDestValueWheat(e.target.value)
-                              }
-                              style={{
-                                // marginLeft: "40px",
-                                width: "200px",
-                                padding: "5px",
-                              }}
-                            />
-                          </div>
-                          <div onClick={addConstraintWheat4}>
-                            <button
-                              style={{
-                                textAlign: "center",
-                                backgroundColor: "orange",
-                                width: 70,
-                                height: 40,
-                                marginLeft: 277,
-                              }}
-                              disabled={
-                                subOptionWheat4 === "" &&
-                                selectedOptionWheat4 === ""
-                              }
-                            >
-                              Add
-                            </button>
-                          </div>
-                        </div>
-                        <br />
-                        <div>
-                          {wheat_destination.length !== 0 && (
-                            <div>
-                              <table>
-                                <thead>
-                                  <tr style={{ margin: "auto" }}>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Destination State
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Destination Railhead
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Destination Value
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "396px",
-                                      }}
-                                    >
-                                      Delete
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {wheat_destination.map((item, index) => (
-                                    <tr key={index}>
-                                      <td>{item.origin_state}</td>
-                                      <td>{item.origin_railhead}</td>
-                                      <td>{item.origin_value}</td>
-
-                                      <td>
-                                        <span
-                                          style={{
-                                            cursor: "pointer",
-                                            color: "#ff0000",
-                                            fontSize: "1.2rem",
-                                          }}
-                                          onClick={() =>
-                                            handleDeleteRow_Wheat__dest(index)
-                                          }
-                                          title="Delete"
-                                        >
-                                          &times;
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-                        </div>
-                        <br />
-                        <br />
-                        <div>
-                          <div>
-                            <div style={{ marginLeft: "15px" }}>
-                              <strong
-                                style={{ fontSize: "16px", padding: "5px" }}
-                              >
-                                Enter Origin Inline Value
-                              </strong>
-                              <input
-                                type="number"
-                                value={inline_value_wheat}
-                                onChange={(e) =>
-                                  setInlineValueWheat(e.target.value)
-                                }
-                                style={{
-                                  marginLeft: "40px",
-                                  width: "200px",
-                                  padding: "5px",
-                                }}
-                              />
-                            </div>
-                            <br />
-                            <div
-                              style={{
-                                display: "flex",
-                                marginLeft: "20px",
-                                width: "1170px",
-                                alignItems: "center",
-                              }}
-                            >
-                              {/* <label htmlFor="origin_state"> */}
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChangeWheat5}
-                                  value={selectedOptionWheat5}
-                                >
-                                  <option value="default">
-                                    Select Origin Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  {/* <option value="Haryana">Haryana</option> */}
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChangeWheat5}
-                                  value={subOptionWheat5}
-                                >
-                                  {subOptionsWheat5.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              {/* </label> */}
-                              <div>
-                                {/* <label htmlFor="deficit_state"> */}
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChangeWheat6}
-                                  value={selectedOptionWheat6}
-                                >
-                                  <option value="default">
-                                    Select Origin Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  {/* <option value="Haryana">Haryana</option> */}
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-                              {/* </label> */}
-                              {/* <label htmlFor="deficit_railhead"> */}
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Origin Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChangeWheat6}
-                                  value={subOptionWheat6}
-                                >
-                                  {subOptionsWheat6.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              {/* </label> */}
-                              <div onClick={addConstraintWheat2}>
-                                <button
-                                  style={{
-                                    textAlign: "center",
-                                    backgroundColor: "orange",
-                                    width: 70,
-                                    height: 40,
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  Add
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <br />
-
-                          {block_dataWheat2.length !== 0 && (
-                            <div>
-                              {/* <div
-                      style={{
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                    >
-                      Route Block
-                    </div> */}
-                              <table>
-                                <thead>
-                                  <tr style={{ margin: "auto" }}>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline State
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline State
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "238px",
-                                      }}
-                                    >
-                                      Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{
-                                        padding: "10px",
-                                        width: "236px",
-                                      }}
-                                    >
-                                      Delete
-                                    </th>
-                                  </tr>
-                                  {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
-                                </thead>
-                                <tbody>
-                                  {block_dataWheat2.map((item) => (
-                                    <tr key={item.id}>
-                                      <td>{item.origin_state}</td>
-                                      <td>{item.origin_railhead}</td>
-                                      <td>{item.destination_state}</td>
-                                      <td>{item.destination_railhead}</td>
-                                      <td>
-                                        <span
-                                          style={{
-                                            cursor: "pointer",
-                                            color: "#ff0000",
-                                            fontSize: "1.2rem",
-                                          }}
-                                          onClick={() =>
-                                            handleDeleteRow_inlineWheat(item.id)
-                                          }
-                                          title="Delete"
-                                        >
-                                          &times;
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-                        </div>
-                        <br />
-                        <div>
-                          <div>
-                            <div style={{ marginLeft: "15px" }}>
-                              <strong
-                                style={{ fontSize: "16px", padding: "5px" }}
-                              >
-                                Enter Destination Inline Value
-                              </strong>
-                              <input
-                                type="number"
-                                value={inline_value_dest_wheat}
-                                onChange={(e) =>
-                                  setDestInlineValueWheat(e.target.value)
-                                }
-                                style={{
-                                  marginLeft: "40px",
-                                  width: "200px",
-                                  padding: "5px",
-                                }}
-                              />
-                            </div>
-                            <br />
-                            <div
-                              style={{ display: "flex", marginLeft: "20px" }}
-                            >
-                              {/* <label htmlFor="origin_state"> */}
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChangeDestWheat5}
-                                  value={selectedOptionDestWheat5}
-                                >
-                                  <option value="default">
-                                    Select Destination Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  {/* <option value="Haryana">Haryana</option> */}
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChangeDestWheat5}
-                                  value={subOptionDestWheat5}
-                                >
-                                  {subOptionsDestWheat5.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              <div>
-                                {/* <label htmlFor="deficit_state"> */}
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline State
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleDropdownChangeDestWheat6}
-                                  value={selectedOptionDestWheat6}
-                                >
-                                  <option value="default">
-                                    Select Destination Inline State
-                                  </option>
-                                  <option value="Andhra Pradesh">
-                                    Andhra Pradesh
-                                  </option>
-                                  <option value="Bihar">Bihar</option>
-                                  <option value="Chattisgarh">
-                                    Chattisgarh
-                                  </option>
-                                  <option value="Goa">Goa</option>
-                                  <option value="Gujarat">Gujarat</option>
-                                  {/* <option value="Haryana">Haryana</option> */}
-                                  <option value="Jammu & Kashmir">
-                                    Jammu & Kashmir
-                                  </option>
-                                  <option value="Jharkhand">Jharkhand</option>
-                                  <option value="Karnataka">Karnataka</option>
-                                  <option value="Kerala">Kerala</option>
-                                  {/* <option value="MP">Madhya Pradesh</option> */}
-                                  <option value="Maharashtra">
-                                    Maharashtra
-                                  </option>
-                                  <option value="NE">North East</option>
-                                  <option value="Odisha">Odisha</option>
-                                  {/* <option value="Punjab">Punjab</option> */}
-                                  <option value="Rajasthan">Rajasthan</option>
-                                  <option value="Tamil Nadu">Tamil Nadu</option>
-                                  <option value="Telangana">Telangana</option>
-                                  <option value="UP">Uttar Pradesh</option>
-                                  <option value="Uttarakhand">
-                                    Uttarakhand
-                                  </option>
-                                  <option value="West Bengal">
-                                    West Bengal
-                                  </option>
-                                </select>
-                              </div>
-                              <div>
-                                <strong
-                                  style={{ fontSize: "16px", padding: "5px" }}
-                                >
-                                  Select Destination Inline Railhead
-                                </strong>
-                                <select
-                                  style={{ width: "200px", padding: "5px" }}
-                                  onChange={handleSubDropdownChangeDestWheat6}
-                                  value={subOptionDestWheat6}
-                                >
-                                  {subOptionsDestWheat6.map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              <div onClick={addConstraintDestWheat2}>
-                                <button
-                                  style={{
-                                    textAlign: "center",
-                                    backgroundColor: "orange",
-                                    width: 70,
-                                    height: 40,
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  Add
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <br />
-
-                          {block_dataDestWheat2.length != 0 && (
-                            <div>
-                              <table>
-                                <thead>
-                                  <tr style={{ margin: "auto" }}>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline State
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline State
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Destination Inline Railhead
-                                    </th>
-                                    <th
-                                      style={{ padding: "10px", width: "15%" }}
-                                    >
-                                      Delete
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {block_dataDestWheat2.map((item) => (
-                                    <tr key={item.id}>
-                                      <td>{item.origin_state}</td>
-                                      <td>{item.origin_railhead}</td>
-                                      <td>{item.destination_state}</td>
-                                      <td>{item.destination_railhead}</td>
-                                      <td>
-                                        <span
-                                          style={{
-                                            cursor: "pointer",
-                                            color: "#ff0000",
-                                            fontSize: "1.2rem",
-                                          }}
-                                          onClick={() =>
-                                            handleDeleteRow_inlineDestWheat(
-                                              item.id
-                                            )
-                                          }
-                                          title="Delete"
-                                        >
-                                          &times;
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-                        </div>
+                          Add
+                        </button>
                       </div>
-                    )}
+                      <br />
+                      <div>Deficit</div>
+                      <table style={{ width: "60vw" }}>
+                        <thead>
+                          <tr>
+                            <th>Sno</th>
+                            <th>Railhead</th>
+                            <th>State</th>
+                            <th>Value</th>
+                            <th>Commodity</th>
+                            <th>Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {deficit.map((row, index) => (
+                            <tr key={index}>
+                              <td>{index}</td>
+                              <td>{row.origin_railhead}</td>
+                              <td>{row.origin_state}</td>
+                              <td>{row.Value}</td>
+                              <td>{row.Commodity}</td>
+                              <td>
+                                <span
+                                  style={{
+                                    cursor: "pointer",
+                                    color: "#ff0000",
+                                    fontSize: "1.2rem",
+                                  }}
+                                  onClick={() =>
+                                    handleDeleteRow_deficit__dest(row, index)
+                                  }
+                                  title="Delete"
+                                >
+                                  &times;
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
+                        <strong
+                          style={{
+                            color: "#9d0921",
+                            fontSize: "20px",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          For Inline Origin:
+                        </strong>
+                      </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "60vw",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline State
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={handleSurplusInlineState1Change}
+                            value={surplusInlineState1}
+                          >
+                            <option value="default">Select Inline State</option>
+                            <option value="Andhra Pradesh">
+                              Andhra Pradesh
+                            </option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chattisgarh">Chattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Jammu & Kashmir">
+                              Jammu & Kashmir
+                            </option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="MP">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="NE">North East</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="UP">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline Railhead
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={(e) =>
+                              setSurplusInlineRailhead1(e.target.value)
+                            }
+                            value={surplusInlineRailhead1}
+                          >
+                            {totalSurplusInlineRailhead1.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline State
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={handleSurplusInlineState2Change}
+                            value={surplusInlineState2}
+                          >
+                            <option value="default">Select Inline State</option>
+                            <option value="Andhra Pradesh">
+                              Andhra Pradesh
+                            </option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chattisgarh">Chattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Jammu & Kashmir">
+                              Jammu & Kashmir
+                            </option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="MP">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="NE">North East</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="UP">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline Railhead
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={(e) =>
+                              setSurplusInlineRailhead2(e.target.value)
+                            }
+                            value={surplusInlineRailhead2}
+                          >
+                            {totalSurplusInlineRailhead2.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                            }}
+                          >
+                            Select Commodity
+                          </strong>
+                          <select
+                            value={surplusInlineCommodity1}
+                            onChange={(e) => {
+                              setSurplusInlineCommodity1(e.target.value);
+                            }}
+                          >
+                            <option value="">Select Commodity</option>
+                            <option value="RRA">RRA</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="FRK">FRK</option>
+                            <option value="FRK RRA">FRK RRA</option>
+                            <option value="FRK BR">FRK BR</option>
+                            <option value="Coarse Grain">Coarse Grain</option>
+                            <option value="W+CGR">W+CGR</option>
+                            <option value="FRK+CGR">FRK+CGR</option>
+                          </select>
+                        </div>
+                        <button
+                          onClick={AddSurplusInline}
+                          style={{
+                            backgroundColor: "orange",
+                            width: 70,
+                            height: 40,
+                          }}
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <table style={{ width: "60vw", marginTop: 20 }}>
+                        <thead>
+                          <tr>
+                            <th>Sno</th>
+                            <th>Railhead1</th>
+                            <th>State1</th>
+                            <th>Railhead2</th>
+                            <th>State2</th>
+                            <th>Value</th>
+                            <th>Commodity</th>
+                            <th>Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {surplusInline
+                            .filter((_, index) => index % 2 === 0)
+                            .map((row, index) => {
+                              const nextRow = surplusInline[index + 1];
+
+                              return (
+                                <tr key={index}>
+                                  <td>{index}</td>
+                                  <td>{row.origin_railhead}</td>
+                                  <td>{row.origin_state}</td>
+                                  <td>
+                                    {nextRow ? nextRow.origin_railhead : ""}
+                                  </td>
+                                  <td>{nextRow ? nextRow.origin_state : ""}</td>
+                                  <td>{row.Value}</td>
+                                  <td>{row.Commodity}</td>
+                                  <td>
+                                    <span
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#ff0000",
+                                        fontSize: "1.2rem",
+                                      }}
+                                      onClick={() =>
+                                        handleDeleteRowInline_deficit__dest(
+                                          row,
+                                          index
+                                        )
+                                      }
+                                      title="Delete"
+                                    >
+                                      &times;
+                                    </span>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+
+                      <p style={{ margin: 2, padding: 0, marginTop: 20 }}>
+                        <strong
+                          style={{
+                            color: "#9d0921",
+                            fontSize: "20px",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          For Inline Destination:
+                        </strong>
+                      </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "60vw",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline State
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={handleDeficitInlineState1Change}
+                            value={deficitInlineState1}
+                          >
+                            <option value="default">Select Inline State</option>
+                            <option value="Andhra Pradesh">
+                              Andhra Pradesh
+                            </option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chattisgarh">Chattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Jammu & Kashmir">
+                              Jammu & Kashmir
+                            </option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="MP">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="NE">North East</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="UP">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline Railhead
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={(e) =>
+                              setDeficitInlineRailhead1(e.target.value)
+                            }
+                            value={deficitInlineRailhead1}
+                          >
+                            {totalDeficitInlineRailhead1.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline State
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={handleDeficitInlineState2Change}
+                            value={deficitInlineState2}
+                          >
+                            <option value="default">Select Inline State</option>
+                            <option value="Andhra Pradesh">
+                              Andhra Pradesh
+                            </option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chattisgarh">Chattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Jammu & Kashmir">
+                              Jammu & Kashmir
+                            </option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="MP">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="NE">North East</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="UP">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
+                            Select Inline Railhead
+                          </strong>
+                          <select
+                            style={{ width: "200px", padding: "5px" }}
+                            onChange={(e) =>
+                              setDeficitInlineRailhead2(e.target.value)
+                            }
+                            value={deficitInlineRailhead2}
+                          >
+                            {totalDeficitInlineRailhead2.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <strong
+                            style={{
+                              width: "200px",
+                              padding: "5px",
+                            }}
+                          >
+                            Select Commodity
+                          </strong>
+                          <select
+                            value={deficitInlineCommodity}
+                            onChange={(e) => {
+                              setDeficitInlineCommodity(e.target.value);
+                            }}
+                          >
+                            <option value="">Select Commodity</option>
+                            <option value="RRA">RRA</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="FRK">FRK</option>
+                            <option value="FRK RRA">FRK RRA</option>
+                            <option value="FRK BR">FRK BR</option>
+                            <option value="Coarse Grain">Coarse Grain</option>
+                            <option value="W+CGR">W+CGR</option>
+                            <option value="FRK+CGR">FRK+CGR</option>
+                          </select>
+                        </div>
+                        <button
+                          onClick={AddDeficitInline}
+                          style={{
+                            backgroundColor: "orange",
+                            width: 70,
+                            height: 40,
+                          }}
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <table style={{ width: "60vw", marginTop: 20 }}>
+                        <thead>
+                          <tr>
+                            <th>Sno</th>
+                            <th>Railhead1</th>
+                            <th>State1</th>
+                            <th>Railhead2</th>
+                            <th>State2</th>
+                            <th>Value</th>
+                            <th>Commodity</th>
+                            <th>Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {deficitInline
+                            .filter((_, index) => index % 2 === 0)
+                            .map((row, index) => {
+                              const nextRow = deficitInline[index + 1];
+                              return (
+                                <tr key={index}>
+                                  <td>{index}</td>
+                                  <td>{row.origin_railhead}</td>
+                                  <td>{row.origin_state}</td>
+                                  <td>
+                                    {nextRow ? nextRow.origin_railhead : ""}
+                                  </td>
+                                  <td>{nextRow ? nextRow.origin_state : ""}</td>
+                                  <td>{row.Value}</td>
+                                  <td>{row.Commodity}</td>
+                                  <td>
+                                    <span
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#ff0000",
+                                        fontSize: "1.2rem",
+                                      }}
+                                      onClick={() =>
+                                        handleDeleteRow_deficitInline__dest(
+                                          row,
+                                          index
+                                        )
+                                      }
+                                      title="Delete"
+                                    >
+                                      &times;
+                                    </span>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                    {/* ----------------------------------------------------------------------------------------- */}
                     <br />
-                    <p style={{ margin: 0, padding: 0 }}>
+                    <p style={{ margin: 2, padding: 0 }}>
                       <strong
                         style={{
                           color: "#9d0921",
@@ -4204,7 +2203,6 @@ function Daily_Planner() {
                         For Route Blocking:
                       </strong>
                     </p>
-                    <br />
                     <div
                       style={{
                         display: "flex",
@@ -4212,7 +2210,6 @@ function Daily_Planner() {
                         width: 1170,
                       }}
                     >
-                      {/* <label htmlFor="origin_state"> */}
                       <div>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Select Origin State
@@ -4696,9 +2693,6 @@ function Daily_Planner() {
                   </div>
                   <br />
                   <br />
-                  <br />
-                  <br />
-                  <br />
                   {/* <div>
               <br/>
                     <DynamicTable/>
@@ -4707,408 +2701,732 @@ function Daily_Planner() {
 
                   {solutionSolved && (
                     <div>
-                      {scn && (
-                        <div>
-                          <button
-                            style={{ color: "white", marginLeft: "15px" }}
-                            className="btn btn-danger dropdown-toggle"
-                            onClick={() => exportToExcel2()}
-                          >
-                            <i className="fa fa-bars"></i> Download
-                            Railhead-Railhead Detailed Plan
-                          </button>
+                      <div>
+                        <button
+                          style={{ color: "white", marginLeft: "15px" }}
+                          className="btn btn-danger dropdown-toggle"
+                          onClick={() => exportToExcel1()}
+                        >
+                          <i className="fa fa-bars"></i>
+                          Download Railhead-Railhead Detailed Plan
+                        </button>
 
-                          <button
-                            style={{ color: "white", marginLeft: "15px" }}
-                            className="btn btn-danger dropdown-toggle"
-                            onClick={viewGrid}
-                          >
-                            View Railhead Detailed Plan
-                          </button>
-                          <button
-                            style={{ color: "white", marginLeft: "15px" }}
-                            className="btn btn-danger dropdown-toggle"
-                            onClick={uploadFile}
-                          >
-                            Upload Plan
-                          </button>
-                          <div>
-                            {showMessage && (
+                        <button
+                          style={{ color: "white", marginLeft: "15px" }}
+                          className="btn btn-danger dropdown-toggle"
+                          onClick={viewGrid}
+                        >
+                          View Railhead Detailed Plan
+                        </button>
+
+                        <button
+                          style={{ color: "white", marginLeft: "15px" }}
+                          className="btn btn-danger dropdown-toggle"
+                          onClick={exportToPDF}
+                        >
+                          Download PDF
+                        </button>
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {riceData !== null && riceData.length > 0 ? (
                               <div>
-                                {riceData !== null && riceData.length > 0 ? (
-                                  <div>
-                                    <table>
-                                      <thead>
-                                        <tr style={{ margin: "auto" }}>
-                                          <th
-                                            style={{
-                                              padding: "10px",
-                                              width: "350px",
-                                            }}
-                                          >
-                                            Sr. No
-                                          </th>
-                                          <th
-                                            style={{
-                                              padding: "10px",
-                                              width: "350px",
-                                            }}
-                                          >
-                                            Src RH
-                                          </th>
-                                          <th
-                                            style={{
-                                              padding: "10px",
-                                              width: "350px",
-                                            }}
-                                          >
-                                            Src state
-                                          </th>
-                                          <th
-                                            style={{
-                                              padding: "10px",
-                                              width: "350px",
-                                            }}
-                                          >
-                                            Dest RH
-                                          </th>
-                                          <th
-                                            style={{
-                                              padding: "10px",
-                                              width: "350px",
-                                            }}
-                                          >
-                                            Dest State
-                                          </th>
-                                          <th
-                                            style={{
-                                              padding: "10px",
-                                              width: "350px",
-                                            }}
-                                          >
-                                            commodity
-                                          </th>
-                                          {/* <th style={{ padding: "10px", width: "350px" }}>
+                                <div>RRA</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
                                         values
-                                      </th> */}
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {riceData.map((item, index) => (
-                                          <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>{item.From}</td>
-                                            <td>{item["From State"]}</td>
-                                            <td>{item.To}</td>
-                                            <td>{item["To State"]}</td>
-                                            <td>{item.Commodity}</td>
-                                            {/* <td>{item.Values}</td> */}
-                                          </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                ) : (
-                                  <p style={{ marginTop: 10 }}>
-                                    No Rice routes
-                                  </p>
-                                )}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {riceData.map((item, index) => (
+                                      <tr key={item["Unnamed: 0"]}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
                               </div>
+                            ) : (
+                              <div />
                             )}
                           </div>
-                          <div></div>
-                          {showMessage && (
-                            <div>
-                              {wheatData !== null && wheatData.length > 0 ? (
-                                <div>
-                                  <table>
-                                    <thead>
-                                      <tr style={{ margin: "auto" }}>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "350px",
-                                          }}
-                                        >
-                                          Sr. No
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "350px",
-                                          }}
-                                        >
-                                          Src RH
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "350px",
-                                          }}
-                                        >
-                                          Src state
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "350px",
-                                          }}
-                                        >
-                                          Dest RH
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "350px",
-                                          }}
-                                        >
-                                          Dest State
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "350px",
-                                          }}
-                                        >
-                                          commodity
-                                        </th>
-                                        {/* <th style={{ padding: "10px", width: "350px" }}>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {wheatData !== null && wheatData.length > 0 ? (
+                              <div>
+                                <div>Wheat</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
                                         values
-                                      </th> */}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {wheatData.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                      {wheatData.map((item) => (
-                                        <tr key={item["Unnamed: 0"]}>
-                                          <td>{item["Unnamed: 0"] + 1}</td>
-                                          <td>{item.From}</td>
-                                          <td>{item["From State"]}</td>
-                                          <td>{item.To}</td>
-                                          <td>{item["To State"]}</td>
-                                          <td>{item.Commodity}</td>
-                                          {/* <td>{item.Values}</td> */}
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              ) : (
-                                <p>No Wheat routes</p>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      {!scn && (
-                        <div>
-                          <button
-                            style={{ color: "white", marginLeft: "15px" }}
-                            className="btn btn-danger dropdown-toggle"
-                            onClick={() => exportToExcel1()}
-                          >
-                            <i className="fa fa-bars"></i> Download
-                            Railhead-Railhead Detailed Plan
-                          </button>
-
-                          <button
-                            style={{ color: "white", marginLeft: "15px" }}
-                            className="btn btn-danger dropdown-toggle"
-                            onClick={viewGrid}
-                          >
-                            View Railhead Detailed Plan
-                          </button>
-                          <button
-                            style={{ color: "white", marginLeft: "15px" }}
-                            className="btn btn-danger dropdown-toggle"
-                            onClick={uploadFile}
-                          >
-                            Upload Plan
-                          </button>
-                          {showMessage && (
-                            <div style={{ marginTop: 15, marginLeft: 20 }}>
-                              {riceData !== null && riceData.length > 0 ? (
-                                <div>
-                                  <table>
-                                    <thead>
-                                      <tr style={{ margin: "auto" }}>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Sr. No
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Src RH
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Src state
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Dest RH
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Dest state
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          commodity
-                                        </th>
-                                        {/* <th style={{ padding: "10px", width: "350px" }}>
-                                          values
-                                        </th> */}
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {riceData.map((item, index) => (
-                                        <tr key={item["Unnamed: 0"]}>
-                                          <td>{index + 1}</td>
-                                          <td>{item.From}</td>
-                                          <td>{item["From State"]}</td>
-                                          <td>{item.To}</td>
-                                          <td>{item["To State"]}</td>
-                                          <td>{item.Commodity}</td>
-                                          {/* <td>{item.Values}</td> */}
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              ) : (
-                                <p style={{ marginTop: 10 }}>No Rice routes</p>
-                              )}
-                            </div>
-                          )}
-                          {showMessage && (
-                            <div style={{ marginTop: 15, marginLeft: 20 }}>
-                              {wheatData !== null && wheatData.length > 0 ? (
-                                <div>
-                                  <table>
-                                    <thead>
-                                      <tr style={{ margin: "auto" }}>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Sr. No
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Src RH
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Src state
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Dest RH
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          Dest State
-                                        </th>
-                                        <th
-                                          style={{
-                                            padding: "10px",
-                                            width: "200px",
-                                          }}
-                                        >
-                                          commodity
-                                        </th>
-                                        {/* <th style={{ padding: "10px", width: "350px" }}>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {coarseGrain !== null && coarseGrain.length > 0 ? (
+                              <div>
+                                <div>Coarse Grain</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
                                         values
-                                      </th> */}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {coarseGrain.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                      {wheatData.map((item, index) => (
-                                        <tr key={index}>
-                                          <td>{index + 1}</td>
-                                          <td>{item.From}</td>
-                                          <td>{item["From State"]}</td>
-                                          <td>{item.To}</td>
-                                          <td>{item["To State"]}</td>
-                                          <td>{item.Commodity}</td>
-                                          {/* <td>{item.Values}</td> */}
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              ) : (
-                                <p>No Wheat routes</p>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {frk_rra !== null && frk_rra.length > 0 ? (
+                              <div>
+                                <div>frk rra</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {frk_rra.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {frk_br !== null && frk_br.length > 0 ? (
+                              <div>
+                                <div>Frk Br</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {frk_br.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {frk !== null && frk.length > 0 ? (
+                              <div>
+                                <div>frk</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {frk.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {frk_cgr !== null && frk_cgr.length > 0 ? (
+                              <div>
+                                <div>frk cgr</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {frk_cgr.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {w_cgr !== null && w_cgr.length > 0 ? (
+                              <div>
+                                <div>w+cgr</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {w_cgr.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From}</td>
+                                        <td>{item["From State"]}</td>
+                                        <td>{item.To}</td>
+                                        <td>{item["To State"]}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                   <br />
                 </div>
               </div>
             </div>
-            {/* {solutionSolved && (
-            <div>
-              <p style={{ display: "inline", marginLeft: "25px" }}>
-                <strong style={{ fontSize: "16px" }}>
-                  Optimal Cost of Transportation is INR{" "}
-                  <span style={{ color: "#FF0509" }}>{cost}</span> Lakhs
-                </strong>
-              </p>
-            </div>
-          )} */}
-
             <br />
           </div>
         </div>
         <div
           style={{
-            backgroundColor: "#ebab44b0",
+            backgroundColor: "#E7A63D",
             width: "20%",
             display: "flex",
             flexDirection: "column",
@@ -5116,104 +3434,116 @@ function Daily_Planner() {
             alignItems: "center",
           }}
         >
-          {/* <br /> */}
-          {/* <div>
-            <div class="progress yellow">
-              <span class="progress-left">
-                <span class="progress-bar"></span>
-              </span>
-              <span class="progress-right">
-                <span class="progress-bar"></span>
-              </span>
-              <div class="progress-value">Steps</div>
-            </div>
-          </div> */}
           <span style={{ color: "black", fontSize: "32px" }}>Progress Bar</span>
-          {number_check1 > 0 ||
-            number_check2 > 0 ||
-            supplyWeatCount > 0 ||
-            destinationWheatCount > 0 ||
-            progress.length > 0 ? (
+
+          <div
+            style={{
+              padding: "8px 0",
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              border: "2px dashed black",
+              marginTop: 15,
+            }}
+            id="console_"
+          >
             <div
               style={{
-                padding: "8px 0",
-                width: "90%",
+                margin: "0px 8px",
                 display: "flex",
                 flexDirection: "column",
-                border: "2px dashed black",
-                marginTop: 15,
+                gap: 8,
               }}
-              id="console_"
             >
-              <div
-                style={{
-                  margin: "0px 8px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                }}
-              >
-                {number_check1 > 0 ? (
-                  <div>{`Supply Value of Rice is ${number_check1}`}</div>
-                ) : null}
-                {number_check2 > 0 ? (
-                  <div
-                    style={{
-                      color: number_check1 >= number_check2 ? "" : "red",
-                    }}
-                  >
-                    {`Destination Value of Rice is ${number_check2}`}
-                  </div>
-                ) : null}
-                {supplyWeatCount > 0 ? (
-                  <div>{`Supply Value of Wheat is ${supplyWeatCount}`}</div>
-                ) : null}
-                {destinationWheatCount > 0 ? (
-                  <div
-                    style={{
-                      color:
-                        supplyWeatCount >= destinationWheatCount ? "" : "red",
-                    }}
-                  >
-                    {`Destination Value of Wheat is ${destinationWheatCount}`}
-                  </div>
-                ) : null}
-                {progress.length > 0 && progress.map((ele) => <div>{ele}</div>)}
-                {isLoading ? (
-                  <div
-                    style={{
-                      width: 200,
-                      display: "grid",
-                      gridTemplateColumns: "1fr auto",
-                      alignItems: "end",
-                    }}
-                  >
-                    Processing
-                    <span
-                      class="container"
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        marginLeft: -10,
-                        marginBottom: 4,
-                        gap: 1,
-                      }}
-                    >
-                      <div class="dot"></div>
-                      <div class="dot"></div>
-                      <div class="dot"></div>
-                    </span>
-                  </div>
-                ) : null}
-                {downloadMessage ? (
-                  <div>
-                    Solution has been done. Click on download RH to RH Detailed
-                    plan
-                  </div>
-                ) : null}
-              </div>
+              {riceOriginvalue > 0 || riceDestinationValue > 0 ? (
+                <div
+                  style={{
+                    color: riceDestinationValue > riceOriginvalue ? "red" : "",
+                  }}
+                >{`Supply Value of Rice is ${riceOriginvalue}`}</div>
+              ) : null}
+              {riceDestinationValue > 0 ? (
+                <div>{`Destination Value of Rice is ${riceDestinationValue}`}</div>
+              ) : null}
+              {wheatOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      wheatDestinationValue > wheatOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of Wheat is ${wheatOriginValue}`}</div>
+              ) : null}
+              {wheatDestinationValue > 0 ? (
+                <div>{`Destination Value of Wheat is ${wheatDestinationValue}`}</div>
+              ) : null}
+              {coarseGrainOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      coarseGrainDestinationValue > coarseGrainOriginValue
+                        ? "red"
+                        : "",
+                  }}
+                >{`Supply Value of Coarse Grain is ${coarseGrainOriginValue}`}</div>
+              ) : null}
+              {coarseGrainDestinationValue > 0 ? (
+                <div>{`Supply Value of Coarse Grain is ${coarseGrainDestinationValue}`}</div>
+              ) : null}
+              {frkrraOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      frkrraDestinationValue > frkrraOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of FRK RRA is ${frkrraOriginValue}`}</div>
+              ) : null}
+              {frkrraDestinationValue > 0 ? (
+                <div>{`Supply Value of FRK RRA is ${frkrraDestinationValue}`}</div>
+              ) : null}
+              {frkbrOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      frkbrDestinationValue > frkbrOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of FRK BR is ${frkbrOriginValue}`}</div>
+              ) : null}
+              {frkbrDestinationValue > 0 ? (
+                <div>{`Supply Value of FRK BR is ${frkbrDestinationValue}`}</div>
+              ) : null}
+              {wcgrOriginValue > 0 ? (
+                <div
+                  style={{
+                    color: wcgrDestinationValue > wcgrOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of W+CGR is ${wcgrOriginValue}`}</div>
+              ) : null}
+              {wcgrDestinationValue > 0 ? (
+                <div>{`Supply Value of W+CGR is ${wcgrDestinationValue}`}</div>
+              ) : null}
+              {frkcgrOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      frkcgrDestinationValue > frkcgrOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of FRK+CGR is ${frkcgrOriginValue}`}</div>
+              ) : null}
+              {frkcgrDestinationValue > 0 ? (
+                <div>{`Supply Value of FRK+CGR is ${frkcgrDestinationValue}`}</div>
+              ) : null}
+              {frkOriginValue > 0 ? (
+                <div
+                  style={{
+                    color: frkDestinationValue > frkOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of FRK is ${frkOriginValue}`}</div>
+              ) : null}
+              {frkDestinationValue > 0 ? (
+                <div>{`Supply Value of FRK is ${frkDestinationValue}`}</div>
+              ) : null}
             </div>
-          ) : null}
+          </div>
         </div>
       </div>
     </div>
