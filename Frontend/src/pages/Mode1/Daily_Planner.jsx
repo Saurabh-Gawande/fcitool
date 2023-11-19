@@ -50,7 +50,7 @@ function Daily_Planner() {
   const [inline_value_rice, setInlineValueRice] = useState("");
   const [inline_value_wheat, setInlineValueWheat] = useState("");
   const [block_data, setBlockdata] = useState([]);
-  const [block_data2, setBlockdata2] = useState([]);
+  // const [block_data2, setBlockdata2] = useState([]);
   const [block_dataWheat2, setBlockdataWheat2] = useState([]);
   const [block_data3, setBlockdata3] = useState([]);
   const [block_dataWheat3, setBlockdataWheat3] = useState([]);
@@ -92,7 +92,7 @@ function Daily_Planner() {
   const [progress, setProgress] = useState([]);
   const [inline_value_dest_rice, setDestInlineValueRice] = useState("");
   const [inline_value_dest_wheat, setDestInlineValueWheat] = useState("");
-  const [block_dataDest2, setBlockdataDest2] = useState([]);
+  // const [block_dataDest2, setBlockdataDest2] = useState([]);
   const [block_dataDestWheat2, setBlockdataDestWheat2] = useState([]);
   useState("default");
   useState("default");
@@ -120,6 +120,7 @@ function Daily_Planner() {
   const [frkcgrDestinationValue, setfrkcgrDestinationValue] = useState();
   const [frkOriginValue, setfrkOriginValue] = useState();
   const [frkDestinationValue, setfrkDestinationValue] = useState();
+  const [excelfiledata, setExcelFileData] = useState();
   // ---------------------------------------------------------------------------------------
   const processSheetData = (workbook, sheetIndices) => {
     const jsonData = [];
@@ -344,20 +345,22 @@ function Daily_Planner() {
         Sno: Math.floor(Math.random() * 500) + 1,
         origin_railhead: surplusInlineRailhead1,
         origin_state: surplusInlineState1,
+        destination_railhead: surplusInlineRailhead2,
+        destination_state: surplusInlineState2,
         Value: 1,
         Commodity: surplusInlineCommodity1,
       },
     ]);
-    setSurplusInline((prev) => [
-      ...prev,
-      {
-        Sno: Math.floor(Math.random() * 500) + 1,
-        origin_railhead: surplusInlineRailhead2,
-        origin_state: surplusInlineState2,
-        Value: 1,
-        Commodity: surplusInlineCommodity1,
-      },
-    ]);
+    // setSurplusInline((prev) => [
+    //   ...prev,
+    //   {
+    //     Sno: Math.floor(Math.random() * 500) + 1,
+    //     origin_railhead: surplusInlineRailhead2,
+    //     origin_state: surplusInlineState2,
+    //     Value: 1,
+    //     Commodity: surplusInlineCommodity1,
+    //   },
+    // ]);
   };
 
   const AddDeficitInline = async (e) => {
@@ -368,20 +371,22 @@ function Daily_Planner() {
         Sno: Math.floor(Math.random() * 500) + 1,
         origin_railhead: deficitInlineRailhead1,
         origin_state: deficitInlineState1,
+        destination_railhead: deficitInlineRailhead2,
+        destination_state: deficitInlineState2,
         Value: 1,
         Commodity: deficitInlineCommodity,
       },
     ]);
-    setDeficitInline((prev) => [
-      ...prev,
-      {
-        Sno: Math.floor(Math.random() * 500) + 1,
-        origin_railhead: deficitInlineRailhead2,
-        origin_state: deficitInlineState2,
-        Value: 1,
-        Commodity: deficitInlineCommodity,
-      },
-    ]);
+    // setDeficitInline((prev) => [
+    //   ...prev,
+    //   {
+    //     Sno: Math.floor(Math.random() * 500) + 1,
+    //     origin_railhead: deficitInlineRailhead2,
+    //     origin_state: deficitInlineState2,
+    //     Value: 1,
+    //     Commodity: deficitInlineCommodity,
+    //   },
+    // ]);
   };
 
   const AddSurplus = (e) => {
@@ -614,121 +619,121 @@ function Daily_Planner() {
     getCommodityData();
   }, []);
 
-  const riceOrigin1 = surplus.filter((item) => item.Commodity === "RRA");
-  const riceInlineOrigin = surplusInline.filter(
+  const riceOrigin = surplus.filter((item) => item.Commodity === "RRA");
+  const block_data2 = surplusInline.filter((item) => item.Commodity === "RRA");
+  // const riceInlineOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "RRA"
+  // );
+  // const riceOrigin = riceOrigin1.concat(riceInlineOrigin);
+
+  const riceDestination = deficit.filter((item) => item.Commodity === "RRA");
+  const block_dataDest2 = deficitInline.filter(
     (item) => item.Commodity === "RRA"
   );
-  const riceOrigin = riceOrigin1.concat(riceInlineOrigin);
+  // const riceInlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "RRA"
+  // );
+  // const riceDestination = riceDestination1.concat(riceInlineDestination);
 
-  const riceDestination1 = deficit.filter((item) => item.Commodity === "RRA");
-  const riceInlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "RRA"
-  );
-  const riceDestination = riceDestination1.concat(riceInlineDestination);
+  const wheatOrigin = surplus.filter((item) => item.Commodity === "Wheat");
+  // const wheatInlineOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "Wheat"
+  // );
+  // const wheatOrigin = wheatOrigin1.concat(wheatInlineOrigin);
 
-  const wheatOrigin1 = surplus.filter((item) => item.Commodity === "Wheat");
-  const wheatInlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Wheat"
-  );
-  const wheatOrigin = wheatOrigin1.concat(wheatInlineOrigin);
+  const wheatDestination = deficit.filter((item) => item.Commodity === "Wheat");
+  // const wheatInlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "Wheat"
+  // );
+  // const wheatDestination = wheatDestination1.concat(wheatInlineDestination);
 
-  const wheatDestination1 = deficit.filter(
-    (item) => item.Commodity === "Wheat"
-  );
-  const wheatInlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Wheat"
-  );
-  const wheatDestination = wheatDestination1.concat(wheatInlineDestination);
-
-  const coarseGrainOrigin1 = surplus.filter(
+  const coarseGrainOrigin = surplus.filter(
     (item) => item.Commodity === "Coarse Grain"
   );
-  const coarseInlineGrainOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Coarse Grain"
-  );
-  const coarseGrainOrigin = coarseGrainOrigin1.concat(coarseInlineGrainOrigin);
+  // const coarseInlineGrainOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "Coarse Grain"
+  // );
+  // const coarseGrainOrigin = coarseGrainOrigin1.concat(coarseInlineGrainOrigin);
 
-  const coarseGrainDestination1 = deficit.filter(
+  const coarseGrainDestination = deficit.filter(
     (item) => item.Commodity === "Coarse Grain"
   );
-  const coarseGrainInlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Coarse Grain"
-  );
-  const coarseGrainDestination = coarseGrainDestination1.concat(
-    coarseGrainInlineDestination
-  );
+  // const coarseGrainInlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "Coarse Grain"
+  // );
+  // const coarseGrainDestination = coarseGrainDestination1.concat(
+  //   coarseGrainInlineDestination
+  // );
 
-  const frkrraOrigin1 = surplus.filter((item) => item.Commodity === "FRK RRA");
-  const frkrraInlineOrigin = surplusInline.filter(
+  const frkrraOrigin = surplus.filter((item) => item.Commodity === "FRK RRA");
+  // const frkrraInlineOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "FRK RRA"
+  // );
+  // const frkrraOrigin = frkrraOrigin1.concat(frkrraInlineOrigin);
+
+  const frkrraDestination = deficit.filter(
     (item) => item.Commodity === "FRK RRA"
   );
-  const frkrraOrigin = frkrraOrigin1.concat(frkrraInlineOrigin);
+  // const frkrraInlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "FRK RRA"
+  // );
+  // const frkrraDestination = frkrraDestination1.concat(frkrraInlineDestination);
 
-  const frkrraDestination1 = deficit.filter(
-    (item) => item.Commodity === "FRK RRA"
-  );
-  const frkrraInlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK RRA"
-  );
-  const frkrraDestination = frkrraDestination1.concat(frkrraInlineDestination);
+  const frkBr_Origin = surplus.filter((item) => item.Commodity === "FRK BR");
+  // const frkBr_InlineOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "FRK BR"
+  // );
+  // const frkBr_Origin = frkBr_Origin1.concat(frkBr_InlineOrigin);
 
-  const frkBr_Origin1 = surplus.filter((item) => item.Commodity === "FRK BR");
-  const frkBr_InlineOrigin = surplusInline.filter(
+  const frkBr_Destination = deficit.filter(
     (item) => item.Commodity === "FRK BR"
   );
-  const frkBr_Origin = frkBr_Origin1.concat(frkBr_InlineOrigin);
+  // const frkBr_InlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "FRK BR"
+  // );
+  // const frkBr_Destination = frkBr_Destination1.concat(frkBr_InlineDestination);
 
-  const frkBr_Destination1 = deficit.filter(
-    (item) => item.Commodity === "FRK BR"
-  );
-  const frkBr_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK BR"
-  );
-  const frkBr_Destination = frkBr_Destination1.concat(frkBr_InlineDestination);
+  const frk_Origin = surplus.filter((item) => item.Commodity === "FRK");
+  // const frk_InlineOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "FRK"
+  // );
+  // const frk_Origin = frk_Origin1.concat(frk_InlineOrigin);
 
-  const frk_Origin1 = surplus.filter((item) => item.Commodity === "FRK");
-  const frk_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "FRK"
-  );
-  const frk_Origin = frk_Origin1.concat(frk_InlineOrigin);
+  const frk_Destination = deficit.filter((item) => item.Commodity === "FRK");
+  // const frk_InlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "FRK"
+  // );
+  // const frk_Destination = frk_Destination1.concat(frk_InlineDestination);
 
-  const frk_Destination1 = deficit.filter((item) => item.Commodity === "FRK");
-  const frk_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK"
-  );
-  const frk_Destination = frk_Destination1.concat(frk_InlineDestination);
+  const w_cgr_Origin = surplus.filter((item) => item.Commodity === "W+CGR");
+  // const w_cgr_InlineOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "W+CGR"
+  // );
+  // const w_cgr_Origin = w_cgr_Origin1.concat(w_cgr_InlineOrigin);
 
-  const w_cgr_Origin1 = surplus.filter((item) => item.Commodity === "W+CGR");
-  const w_cgr_InlineOrigin = surplusInline.filter(
+  const w_cgr_Destination = deficit.filter(
     (item) => item.Commodity === "W+CGR"
   );
-  const w_cgr_Origin = w_cgr_Origin1.concat(w_cgr_InlineOrigin);
+  // const w_cgr_InlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "W+CGR"
+  // );
+  // const w_cgr_Destination = w_cgr_Destination1.concat(w_cgr_InlineDestination);
 
-  const w_cgr_Destination1 = deficit.filter(
-    (item) => item.Commodity === "W+CGR"
-  );
-  const w_cgr_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "W+CGR"
-  );
-  const w_cgr_Destination = w_cgr_Destination1.concat(w_cgr_InlineDestination);
+  const frk_cgr_Origin = surplus.filter((item) => item.Commodity === "FRK+CGR");
+  // const frk_cgr_InlineOrigin = surplusInline.filter(
+  //   (item) => item.Commodity === "FRK+CGR"
+  // );
+  // const frk_cgr_Origin = frk_cgr_Origin1.concat(frk_cgr_InlineOrigin);
 
-  const frk_cgr_Origin1 = surplus.filter(
+  const frk_cgr_Destination = deficit.filter(
     (item) => item.Commodity === "FRK+CGR"
   );
-  const frk_cgr_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "FRK+CGR"
-  );
-  const frk_cgr_Origin = frk_cgr_Origin1.concat(frk_cgr_InlineOrigin);
-
-  const frk_cgr_Destination1 = deficit.filter(
-    (item) => item.Commodity === "FRK+CGR"
-  );
-  const frk_cgr_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK+CGR"
-  );
-  const frk_cgr_Destination = frk_cgr_Destination1.concat(
-    frk_cgr_InlineDestination
-  );
+  // const frk_cgr_InlineDestination = deficitInline.filter(
+  //   (item) => item.Commodity === "FRK+CGR"
+  // );
+  // const frk_cgr_Destination = frk_cgr_Destination1.concat(
+  //   frk_cgr_InlineDestination
+  // );
 
   useEffect(() => {
     setRiceOriginValue(
@@ -828,8 +833,8 @@ function Daily_Planner() {
       rice_origin: riceOrigin, // rice origin data
       rice_destination: riceDestination, //rice destination data
       rice_inline: block_data2, //rice inline data
-      rice_dest_inline: block_dataDest2,
-      rice_dest_inline_value: inline_value_dest_rice,
+      rice_dest_inline: block_dataDest2, //rice destination inline data
+      rice_dest_inline_value: inline_value_dest_rice, // rice inline value
       rice_inline_value: inline_value_rice, // rice inline value
 
       wheat_origin: wheatOrigin, //origin wheat data
@@ -1241,8 +1246,72 @@ function Daily_Planner() {
       const seconds = String(currentDate.getSeconds()).padStart(2, "0");
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
+      console.log({ excelBlob });
       saveAs(excelBlob, filenameWithDateTime);
+      setExcelFileData(excelBlob);
     }
+  };
+
+  const uploadFile = (fileName) => {
+    console.log({ excelfiledata });
+    if (excelfiledata) {
+      const formData = new FormData();
+      fileName = "Daily_Movement_results_Scenario.xlsx";
+      formData.append("file", excelfiledata, fileName);
+
+      fetch(
+        "https://rakeplanner.callippus.co.uk/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+        .then((response) => {
+          if (response.ok) {
+            // File upload was successful
+            console.log("File uploaded successfully!");
+            window.alert("File uploaded successfully!");
+          } else {
+            // File upload failed
+            console.log("File upload failed. Please try again.");
+            window.alert("File upload failed. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("An error occurred during file upload:", error);
+        });
+    } else {
+      window.alert("Invalid file format. Please select a valid file.");
+    }
+  };
+
+  const fetchData = (event) => {
+    event.preventDefault();
+    // fetch('https://192.168.1.19:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool')
+    fetch(
+      "https://10.194.100.180:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool"
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json(); // Parse the JSON response
+        } else {
+          alert(`Failed to fetch data. Status code: ${response.status}`);
+          return null; // Handle the error or return an empty response as needed
+        }
+      })
+      .then((data) => {
+        if (data) {
+          const result = data.result; // Access the result indicator
+          console.log("Result:", result);
+
+          const responseData = data.response; // Access the response data
+          console.log("Data received:", responseData);
+        }
+      })
+      .catch((error) => {
+        alert(`Error: ${error.message}`);
+      });
+    // console.log('Data received:', result);
   };
 
   return (
@@ -1347,6 +1416,21 @@ function Daily_Planner() {
                       </table>
                     </div>
                   )}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "end",
+                    width: "80%",
+                  }}
+                >
+                  <button
+                    style={{ color: "white", display: "flex", flexFlow: 1 }}
+                    className="btn btn-danger dropdown-toggle"
+                    onClick={fetchData}
+                  >
+                    Upload data
+                  </button>
+                </div>
                 <div style={{ marginLeft: "15px" }}>
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -1923,19 +2007,20 @@ function Daily_Planner() {
                         </thead>
                         <tbody>
                           {surplusInline
-                            .filter((_, index) => index % 2 === 0)
+                            // .filter((_, index) => index % 2 === 0)
                             .map((row, index) => {
-                              const nextRow = surplusInline[index + 1];
-
+                              // const nextRow = surplusInline[index + 1];
                               return (
                                 <tr key={index}>
                                   <td>{index}</td>
                                   <td>{row.origin_railhead}</td>
                                   <td>{row.origin_state}</td>
-                                  <td>
+                                  <td>{row.destination_railhead}</td>
+                                  <td>{row.destination_state}</td>
+                                  {/* <td>
                                     {nextRow ? nextRow.origin_railhead : ""}
                                   </td>
-                                  <td>{nextRow ? nextRow.origin_state : ""}</td>
+                                  <td>{nextRow ? nextRow.origin_state : ""}</td> */}
                                   <td>{row.Value}</td>
                                   <td>{row.Commodity}</td>
                                   <td>
@@ -2152,18 +2237,21 @@ function Daily_Planner() {
                         </thead>
                         <tbody>
                           {deficitInline
-                            .filter((_, index) => index % 2 === 0)
+                            // .filter((_, index) => index % 2 === 0)
                             .map((row, index) => {
-                              const nextRow = deficitInline[index + 1];
+                              // const nextRow = deficitInline[index + 1];
                               return (
                                 <tr key={index}>
                                   <td>{index}</td>
                                   <td>{row.origin_railhead}</td>
                                   <td>{row.origin_state}</td>
-                                  <td>
+                                  <td>{row.destination_railhead}</td>
+                                  <td>{row.destination_state}</td>
+
+                                  {/* <td>
                                     {nextRow ? nextRow.origin_railhead : ""}
                                   </td>
-                                  <td>{nextRow ? nextRow.origin_state : ""}</td>
+                                  <td>{nextRow ? nextRow.origin_state : ""}</td> */}
                                   <td>{row.Value}</td>
                                   <td>{row.Commodity}</td>
                                   <td>
@@ -2726,6 +2814,13 @@ function Daily_Planner() {
                         >
                           Download PDF
                         </button>
+                        <button
+                          style={{ color: "white", marginLeft: "15px" }}
+                          className="btn btn-danger dropdown-toggle"
+                          onClick={uploadFile}
+                        >
+                          Upload Plan
+                        </button>
                         {showMessage && (
                           <div style={{ marginTop: 15, marginLeft: 20 }}>
                             {riceData !== null && riceData.length > 0 ? (
@@ -2796,10 +2891,10 @@ function Daily_Planner() {
                                     {riceData.map((item, index) => (
                                       <tr key={item["Unnamed: 0"]}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
@@ -2882,10 +2977,10 @@ function Daily_Planner() {
                                     {wheatData.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
@@ -2968,10 +3063,10 @@ function Daily_Planner() {
                                     {coarseGrain.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
@@ -3054,10 +3149,10 @@ function Daily_Planner() {
                                     {frk_rra.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
@@ -3140,10 +3235,10 @@ function Daily_Planner() {
                                     {frk_br.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
@@ -3226,10 +3321,10 @@ function Daily_Planner() {
                                     {frk.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
@@ -3312,10 +3407,10 @@ function Daily_Planner() {
                                     {frk_cgr.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
@@ -3398,10 +3493,10 @@ function Daily_Planner() {
                                     {w_cgr.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.From}</td>
-                                        <td>{item["From State"]}</td>
-                                        <td>{item.To}</td>
-                                        <td>{item["To State"]}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Values}</td>
                                       </tr>
