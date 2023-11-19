@@ -1168,7 +1168,7 @@ def Monthly_Solution():
                     prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index)+lpSum(x_ij_rra[(i,j)] for i in surplus_rra.index)+lpSum(x_ij_frk_rra[(i,j)] for i in surplus_frk_rra.index)+lpSum(x_ij_frk_br[(i,j)] for i in surplus_frk_br.index)<=67.5 
 
                 prob.writeLP("Output\\FCI_monthly_model_allocation_rr.lp")
-                prob.solve(CPLEX())
+                prob.solve()
                 print("Status:", LpStatus[prob.status])
                 print("Minimum Cost of Transportation = Rs.", value(prob.objective),"Lakh")
                 print("Total Number of Variables:",len(prob.variables()))
@@ -1632,7 +1632,7 @@ def Monthly_Solution():
                     prob+=lpSum(x_ij_wheat[(i,j)] for i in surplus_wheat.index)+lpSum(x_ij_rra[(i,j)] for i in surplus_rra.index)+lpSum(x_ij_frk_rra[(i,j)] for i in surplus_frk_rra.index)+lpSum(x_ij_frk_br[(i,j)] for i in surplus_frk_br.index)<=67.5 
                 
                 prob.writeLP("FCI_monthly_model_allocation_rr.lp")
-                prob.solve(CPLEX())
+                prob.solve()
                 #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
                 print("Status:", LpStatus[prob.status])
                 print("Minimum Cost of Transportation = Rs.", value(prob.objective),"Lakh")

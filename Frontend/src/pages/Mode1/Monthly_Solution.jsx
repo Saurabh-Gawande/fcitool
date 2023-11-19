@@ -7,7 +7,7 @@ import "./Monthly_sol.css";
 import config from "../../config";
 
 function Monthly_Solution() {
-  const ProjectIp = config.serverUrl;;
+  const ProjectIp = config.serverUrl;
   const [fileSelected, setFileSelected] = useState(false);
   const [r_s, setr_s] = useState("");
   const [r_d, setr_d] = useState("");
@@ -26,6 +26,7 @@ function Monthly_Solution() {
   const [redState, setRedState] = useState([]);
   const [totalRiceSupplyCheck, setTotalRiceSupplyCheck] = useState("");
   const [demand, setDemand] = useState("");
+  const [type, setType] = useState("Non-FIFO");
 
   const Consistency_Check_frontend = async () => {
     try {
@@ -41,8 +42,6 @@ function Monthly_Solution() {
       console.error("Error during consistency check:", error);
     }
   };
-
-
 
   const handleFileChange = (event) => {
     setFileSelected(event.target.files.length > 0);
@@ -95,10 +94,9 @@ function Monthly_Solution() {
         document.getElementById("console_").style.display = "block";
         document.getElementById("console_").innerHTML +=
           "Template file has been uploaded" + "<br/><br/>";
-          
-          alert("File Uploaded");
+
+        alert("File Uploaded");
         Consistency_Check_frontend();
-       
       } else {
         console.log(jsonResponse);
         alert("Error uploading file");
@@ -126,7 +124,7 @@ function Monthly_Solution() {
       r_d: r_d,
       TEFD: TEFD,
     };
-    
+
     try {
       const response = await fetch(ProjectIp + "/Monthly_Solution", {
         method: "POST",
@@ -139,7 +137,6 @@ function Monthly_Solution() {
       if (response.ok) {
         alert("Solution Done!, Now you can download results");
         setSolutionSolved(true);
-        
       } else {
         console.error("Failed to send inputs. Status code:", response.status);
       }
@@ -149,10 +146,12 @@ function Monthly_Solution() {
       setIsLoading(false); // Reset loading state
     }
     document.getElementById("console_").innerHTML +=
-      "Solution has been done" + "<br/> " +  "Click on ownload RH to RH Detailed plan" + "<br/>";
-      
+      "Solution has been done" +
+      "<br/> " +
+      "Click on ownload RH to RH Detailed plan" +
+      "<br/>";
+
     document.getElementById("toggle").checked = false;
-    
   };
 
   const fetchReservationId_cost = () => {
@@ -269,7 +268,6 @@ function Monthly_Solution() {
       console.log(newWorkbook);
       if (response.ok) {
         console.log("Data sent to backend successfully");
-        
       } else {
         console.error("Failed to send data to backend");
       }
@@ -306,7 +304,7 @@ function Monthly_Solution() {
   // };
 
   const exportToExcel2 = async () => {
-    if (Relevant_result ===null) {
+    if (Relevant_result === null) {
       window.alert("Fetching Result, Please Wait");
       fetchReservationId_Revelant_result();
     } else {
@@ -373,6 +371,30 @@ function Monthly_Solution() {
 
           <div className="page-content-wrap">
             <div className="row">
+              <br />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "45vw",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "700",
+                    marginLeft: 20,
+                  }}
+                >
+                  Type
+                </div>
+                <div>
+                  <select onChange={(e) => setType(e.target.value)}>
+                    <option value="Non-FIFO">Non-FIFO</option>
+                    <option value="FIFO">FIFO</option>
+                  </select>
+                </div>
+              </div>
               <div className="col-md-12">
                 <br />
                 <div className="row" style={{ marginLeft: "15px" }}>
@@ -635,7 +657,6 @@ function Monthly_Solution() {
                         style={{ color: "white", marginLeft: "15px" }}
                         className="btn btn-danger dropdown-toggle"
                         onClick={() => exportToExcel2()}
-                        
                       >
                         <i className="fa fa-bars"></i> Download Railhead To
                         Railhead Detailed Plan
