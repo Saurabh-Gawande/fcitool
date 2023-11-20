@@ -51,7 +51,7 @@ function Daily_Planner() {
   const [inline_value_wheat, setInlineValueWheat] = useState("");
   const [block_data, setBlockdata] = useState([]);
   // const [block_data2, setBlockdata2] = useState([]);
-  const [block_dataWheat2, setBlockdataWheat2] = useState([]);
+  // const [block_dataWheat2, setBlockdataWheat2] = useState([]);
   const [block_data3, setBlockdata3] = useState([]);
   const [block_dataWheat3, setBlockdataWheat3] = useState([]);
   const [rice_destination, setRiceDestination] = useState([]);
@@ -93,9 +93,7 @@ function Daily_Planner() {
   const [inline_value_dest_rice, setDestInlineValueRice] = useState("");
   const [inline_value_dest_wheat, setDestInlineValueWheat] = useState("");
   // const [block_dataDest2, setBlockdataDest2] = useState([]);
-  const [block_dataDestWheat2, setBlockdataDestWheat2] = useState([]);
-  useState("default");
-  useState("default");
+  // const [block_dataDestWheat2, setBlockdataDestWheat2] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [coarseGrain, setCoarseGrain] = useState(false);
   const [frk, setFrk] = useState(false);
@@ -636,12 +634,18 @@ function Daily_Planner() {
   // const riceDestination = riceDestination1.concat(riceInlineDestination);
 
   const wheatOrigin = surplus.filter((item) => item.Commodity === "Wheat");
+  const block_dataWheat2 = surplusInline.filter(
+    (item) => item.Commodity === "Wheat"
+  );
   // const wheatInlineOrigin = surplusInline.filter(
   //   (item) => item.Commodity === "Wheat"
   // );
   // const wheatOrigin = wheatOrigin1.concat(wheatInlineOrigin);
 
   const wheatDestination = deficit.filter((item) => item.Commodity === "Wheat");
+  const block_dataDestWheat2 = deficitInline.filter(
+    (item) => item.Commodity === "Wheat"
+  );
   // const wheatInlineDestination = deficitInline.filter(
   //   (item) => item.Commodity === "Wheat"
   // );
@@ -834,15 +838,15 @@ function Daily_Planner() {
       rice_destination: riceDestination, //rice destination data
       rice_inline: block_data2, //rice inline data
       rice_dest_inline: block_dataDest2, //rice destination inline data
-      rice_dest_inline_value: inline_value_dest_rice, // rice inline value
-      rice_inline_value: inline_value_rice, // rice inline value
+      // rice_dest_inline_value: inline_value_dest_rice, // rice inline value
+      // rice_inline_value: inline_value_rice, // rice inline value
 
       wheat_origin: wheatOrigin, //origin wheat data
       wheat_destination: wheatDestination, // wheat destination data
       wheat_inline: block_dataWheat2, //wheat inline data
-      wheat_inline_value: inline_value_wheat, // wheat inline value
-      wheat_dest_inline: block_dataDestWheat2,
-      wheat_dest_inline_value: inline_value_dest_wheat,
+      // wheat_inline_value: inline_value_wheat, // wheat inline value
+      wheat_dest_inline: block_dataDestWheat2, //wheat destination inline data
+      // wheat_dest_inline_value: inline_value_dest_wheat,
 
       coarseGrain_origin: coarseGrainOrigin,
       coarseGrain_destination: coarseGrainDestination,
@@ -1246,14 +1250,12 @@ function Daily_Planner() {
       const seconds = String(currentDate.getSeconds()).padStart(2, "0");
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
-      console.log({ excelBlob });
       saveAs(excelBlob, filenameWithDateTime);
       setExcelFileData(excelBlob);
     }
   };
 
   const uploadFile = (fileName) => {
-    console.log({ excelfiledata });
     if (excelfiledata) {
       const formData = new FormData();
       fileName = "Daily_Movement_results_Scenario.xlsx";
@@ -1269,11 +1271,9 @@ function Daily_Planner() {
         .then((response) => {
           if (response.ok) {
             // File upload was successful
-            console.log("File uploaded successfully!");
             window.alert("File uploaded successfully!");
           } else {
             // File upload failed
-            console.log("File upload failed. Please try again.");
             window.alert("File upload failed. Please try again.");
           }
         })
@@ -1289,29 +1289,42 @@ function Daily_Planner() {
     event.preventDefault();
     // fetch('https://192.168.1.19:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool')
     fetch(
-      "https://10.194.100.180:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool"
+      "https://rakeplanner.callippus.co.uk/api/DailyPlannerWebApi/DailyPlannerNextDayforTool"
     )
       .then((response) => {
         if (response.status === 200) {
           return response.json(); // Parse the JSON response
         } else {
           alert(`Failed to fetch data. Status code: ${response.status}`);
-          return null; // Handle the error or return an empty response as needed
+          return null;
         }
       })
       .then((data) => {
         if (data) {
-          const result = data.result; // Access the result indicator
-          console.log("Result:", result);
+          console.log("Get data from Portal:", data.result);
 
-          const responseData = data.response; // Access the response data
-          console.log("Data received:", responseData);
+          const updatedSurplus = data.sourceResponse.map((item) => ({
+            Sno: Math.floor(Math.random() * 500) + 1,
+            origin_railhead: item.sourceRailHead,
+            origin_state: item.sourceState,
+            Value: item.value,
+            Commodity: item.commodity,
+          }));
+          setSurplus(updatedSurplus);
+
+          const updatedDeficit = data.destinationResponse.map((item) => ({
+            Sno: Math.floor(Math.random() * 500) + 1,
+            origin_railhead: item.destinationRailHeadCode,
+            origin_state: item.destinationState,
+            Value: item.value,
+            Commodity: item.commodity,
+          }));
+          setDeficit(updatedDeficit);
         }
       })
       .catch((error) => {
         alert(`Error: ${error.message}`);
       });
-    // console.log('Data received:', result);
   };
 
   return (
@@ -1996,10 +2009,10 @@ function Daily_Planner() {
                         <thead>
                           <tr>
                             <th>Sno</th>
-                            <th>Railhead1</th>
-                            <th>State1</th>
-                            <th>Railhead2</th>
-                            <th>State2</th>
+                            <th>Railhead</th>
+                            <th>State</th>
+                            <th>Railhead</th>
+                            <th>State</th>
                             <th>Value</th>
                             <th>Commodity</th>
                             <th>Delete</th>
@@ -2226,10 +2239,10 @@ function Daily_Planner() {
                         <thead>
                           <tr>
                             <th>Sno</th>
-                            <th>Railhead1</th>
-                            <th>State1</th>
-                            <th>Railhead2</th>
-                            <th>State2</th>
+                            <th>Railhead</th>
+                            <th>State</th>
+                            <th>Railhead</th>
+                            <th>State</th>
                             <th>Value</th>
                             <th>Commodity</th>
                             <th>Delete</th>
@@ -2280,7 +2293,7 @@ function Daily_Planner() {
                     </div>
                     {/* ----------------------------------------------------------------------------------------- */}
                     <br />
-                    <p style={{ margin: 2, padding: 0 }}>
+                    {/* <p style={{ margin: 2, padding: 0 }}>
                       <strong
                         style={{
                           color: "#9d0921",
@@ -2416,7 +2429,7 @@ function Daily_Planner() {
                           Add
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                     <br />
                     {!solutionSolved && block_data.length !== 0 && (
                       <div>

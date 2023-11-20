@@ -2070,14 +2070,12 @@ def Daily_Planner():
             rra_dest = fetched_data["rice_destination"]
             rra_origin_inline = fetched_data["rice_inline"]
             rra_dest_inline = fetched_data["rice_dest_inline"]
-            print("rra_origin_inline", rra_origin_inline)
-            print("rra_dest_inline", rra_dest_inline)
-            # rice_src_inline = fetched_data["rice_inline"]
-            # rice_dest_inline = fetched_data["rice_dest_inline"]
             wheat_origin = fetched_data["wheat_origin"]
             wheat_dest = fetched_data["wheat_destination"]
             wheat_origin_inline = fetched_data["wheat_inline"]
             wheat_dest_inline = fetched_data["wheat_dest_inline"]
+            # print(wheat_origin_inline)
+            # print(wheat_dest_inline)
             coarseGrain_origin = fetched_data["coarseGrain_origin"]
             coarseGrain_dest = fetched_data["coarseGrain_destination"]
             frkrra_origin = fetched_data["frkrra_origin"]
@@ -2122,11 +2120,11 @@ def Daily_Planner():
             for i in range(len(wheat_dest)):
                 if int(wheat_dest[i]["Value"]) > 0:
                     dest_wheat[wheat_dest[i]["origin_railhead"]] = int(wheat_dest[i]["Value"])
-
+            
             source_wheat_inline = {}
             for i in range(len(wheat_origin_inline)):
-                source_wheat_inline[wheat_origin_inline[i]["origin_railhead"]] = rra_origin_inline[i]["destination_railhead"]
-                
+                source_wheat_inline[wheat_origin_inline[i]["origin_railhead"]] = wheat_origin_inline[i]["destination_railhead"]
+            
             dest_wheat_inline = {}
             for i in range(len(wheat_dest_inline)):
                 dest_wheat_inline[wheat_dest_inline[i]["origin_railhead"]] = wheat_dest_inline[i]["destination_railhead"]
@@ -2144,11 +2142,11 @@ def Daily_Planner():
             source_rra_inline = {}
             for i in range(len(rra_origin_inline)):
                 source_rra_inline[rra_origin_inline[i]["origin_railhead"]] = rra_origin_inline[i]["destination_railhead"]
-            print("source rra inline", source_rra_inline)
+
             dest_rra_inline = {}
             for i in range(len(rra_dest_inline)):
                 dest_rra_inline[rra_dest_inline[i]["origin_railhead"]] = rra_dest_inline[i]["destination_railhead"]
-            print("dest rra inline", dest_rra_inline)
+
             source_coarseGrain = {}
             for coarseGrain in coarseGrain_origin:
                 if coarseGrain["Value"] > 0:
@@ -2211,14 +2209,12 @@ def Daily_Planner():
             
             L1 = list(source_wheat_inline.keys())
             L2 = list(source_rra_inline.keys())
-            print ("L2", L2)
             # L3=list(source_frk_rra_inline.keys())
             # L4=list(source_frk_br_inline.keys())
             # L5=list(source_coarse_gr_inline.keys())
             # L6=list(source_comm_mix_inline.keys())
             L7 = list(dest_wheat_inline.keys())
             L8 = list(dest_rra_inline.keys())
-            print("L8", L8)
 
             list_src_wheat = []
             for i in L1:
@@ -2248,17 +2244,15 @@ def Daily_Planner():
                     List_A.append(source_rra_inline[i])
                     List_B.append(distance_rh[i][j])
                     List_B.append(distance_rh[source_rra_inline[i]][j])
-                    print(distance_rh[source_rra_inline[i]][j])
-                print(List_B)
-                # for i in range(len(List_A)):
-                #     print(List_A[i])
-                #     Value[List_B[i]] = List_A[i]
-                # print(Value[max(List_B)])
-                # list_src_rra.append(Value[max(List_B)])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_rra.append(Value[max(List_B)])
 
             for i in list_src_rra:
                 source_rra[i] = 1
-            print("list_src_rra", list_src_rra)
+
             list_dest_wheat = []
             for i in L7:
                 Value = {}
@@ -2289,11 +2283,10 @@ def Daily_Planner():
                     List_A.append(dest_rra_inline[i])
                     List_B.append(distance_rh[i][j])
                     List_B.append(distance_rh[dest_rra_inline[i]][j])
-
                 for i in range(len(List_A)):
                     Value[List_B[i]] = List_A[i]
                 list_dest_rra.append(Value[max(List_B)])
-
+            
             for i in list_dest_rra:
                 dest_rra[i] = 1
            
@@ -2366,7 +2359,7 @@ def Daily_Planner():
                 prob += lpSum(x_ij_wcgr[(j, i)] for j in source_wcgr.keys()) >= dest_wcgr[i] 
 
             prob.writeLP("FCI_monthly_model_allocation_rr.lp")
-            prob.solve()
+            prob.solve(CPLEX())
             print("Status:", LpStatus[prob.status])
             print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
             print("Total Number of Variables:", len(prob.variables()))
@@ -2387,7 +2380,23 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wheat[(i, j)].value())
                         commodity.append("Wheat")
-                        
+            for key in source_wheat.keys():
+                for wheat in wheat_origin_inline:
+                    if key == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                    elif key == wheat["destination_railhead"]:
+                        From_state.append(wheat["destination_state"])
+            
+            for key in dest_wheat.keys():
+                print(key , "destkey")
+                for wheat in wheat_dest_inline:
+                    print(wheat, "dest wheatinline")
+                    if key == wheat["destination_railhead"]:
+                        To_state.append(wheat["origin_state"])
+                    elif key == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])  
+            print(To_state)
+
             for i in range(len(From)):
                 for wheat in wheat_origin:
                     if From[i] == wheat["origin_railhead"]:
@@ -2398,20 +2407,20 @@ def Daily_Planner():
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
             
-            for i in range(len(confirmed_org_rhcode)):
-                org = str(confirmed_org_rhcode[i])
-                org_state = str(confirmed_org_state[i])
-                dest = str(confirmed_dest_rhcode[i])
-                dest_state = str(confirmed_dest_state[i])
-                Commodity = confirmed_railhead_commodities[i]
-                val = confirmed_railhead_value[i]
-                if Commodity == 'WHEAT':
-                    From.append(org)
-                    From_state.append(org_state)
-                    To.append(dest)
-                    To_state.append(dest_state)
-                    commodity.append("Wheat")
-                    values.append(val)
+            # for i in range(len(confirmed_org_rhcode)):
+            #     org = str(confirmed_org_rhcode[i])
+            #     org_state = str(confirmed_org_state[i])
+            #     dest = str(confirmed_dest_rhcode[i])
+            #     dest_state = str(confirmed_dest_state[i])
+            #     Commodity = confirmed_railhead_commodities[i]
+            #     val = confirmed_railhead_value[i]
+            #     if Commodity == 'WHEAT':
+            #         From.append(org)
+            #         From_state.append(org_state)
+            #         To.append(dest)
+            #         To_state.append(dest_state)
+            #         commodity.append("Wheat")
+            #         values.append(val)
 
             df_wheat["SourceRailHead"] = From
             df_wheat["SourceState"] = From_state
@@ -2419,13 +2428,13 @@ def Daily_Planner():
             df_wheat["DestinationState"] = To_state
             df_wheat["Commodity"] = commodity
             df_wheat["Values"] = values
-            print(df_wheat)
-            for i in dest_wheat_inline.keys():
-                for j in range(len(df_wheat["To"])):
-                    if (i == df_wheat.iloc[j]["To"] or dest_wheat_inline[i] == df_wheat.iloc[j]["To"]):
-                        df_wheat.loc[j, 'To'] = (i + '+' + dest_wheat_inline[i])
 
-           
+            for i in dest_wheat_inline.keys():
+                for j in range(len(df_wheat["DestinationRailHead"])):
+                    if (i == df_wheat.iloc[j]["DestinationRailHead"] or dest_wheat_inline[i] == df_wheat.iloc[j]["DestinationRailHead"]):
+                        df_wheat.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheat_inline[i])
+
+            print(df_wheat)
             df_rra = pd.DataFrame()
             From = []
             To = []
@@ -2441,7 +2450,22 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_rra[(i, j)].value())
                         commodity.append("RRA")
-            print(values)
+
+            for key in source_rra.keys():
+                for rra in rra_origin_inline:
+                    if key == rra["origin_railhead"]:
+                        From_state_rra.append(rra["origin_state"])
+                    elif key == rra["destination_railhead"]:
+                        From_state_rra.append(rra["origin_state"])
+            
+            for key in dest_rra.keys():
+                for rra in rra_dest_inline:
+                    print(rra)
+                    if key == rra["destination_railhead"]:
+                        To_state_rra.append(rra["origin_state"])
+                    elif key == rra["origin_railhead"]:
+                        To_state_rra.append(rra["origin_state"])
+
             for i in range(len(From)):
                 for rra in rra_origin:
                     if From[i] == rra["origin_railhead"]:
@@ -2452,31 +2476,32 @@ def Daily_Planner():
                     if To[i] == rra["origin_railhead"]:
                         To_state_rra.append(rra["origin_state"]) 
 
-            for i in range(len(confirmed_org_rhcode)):
-                org = str(confirmed_org_rhcode[i])
-                org_state = str(confirmed_org_state[i])
-                dest = str(confirmed_dest_rhcode[i])
-                dest_state = str(confirmed_dest_state[i])
-                Commodity = confirmed_railhead_commodities[i]
-                val = float(confirmed_railhead_value[i])
-                if Commodity == 'RICE':
-                    From.append(org)
-                    From_state_rra.append(org_state)
-                    To.append(dest)
-                    To_state_rra.append(dest_state)
-                    commodity.append("Rice")
-                    values.append(val)
-
+            # for i in range(len(confirmed_org_rhcode)):
+            #     org = str(confirmed_org_rhcode[i])
+            #     org_state = str(confirmed_org_state[i])
+            #     dest = str(confirmed_dest_rhcode[i])
+            #     dest_state = str(confirmed_dest_state[i])
+            #     Commodity = confirmed_railhead_commodities[i]
+            #     val = float(confirmed_railhead_value[i])
+            #     if Commodity == 'RICE':
+            #         From.append(org)
+            #         From_state_rra.append(org_state)
+            #         To.append(dest)
+            #         To_state_rra.append(dest_state)
+            #         commodity.append("Rice")
+            #         values.append(val)
             df_rra["SourceRailHead"] = From
             df_rra["SourceState"] = From_state_rra
             df_rra["DestinationRailHead"] = To
             df_rra["DestinationState"] = To_state_rra
             df_rra["Commodity"] = commodity
             df_rra["Values"] = values
+           
             for i in dest_rra_inline.keys():
-                for j in range(len(df_rra["To"])):
-                    if (i == df_rra.iloc[j]["To"] or dest_rra_inline[i] == df_rra.iloc[j]["To"]):
-                        df_rra.loc[j, 'To'] = (i + '+' + dest_rra_inline[i])
+                for j in range(len(df_rra["DestinationRailHead"])):
+                    if (i == df_rra.iloc[j]["DestinationRailHead"] or dest_rra_inline[i] == df_rra.iloc[j]["DestinationRailHead"]):
+                        df_rra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rra_inline[i])
+            print(df_rra)
 
             df_CoarseGrain = pd.DataFrame()
             From = []
