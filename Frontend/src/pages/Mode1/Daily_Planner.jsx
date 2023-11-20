@@ -1314,7 +1314,7 @@ function Daily_Planner() {
 
           const updatedDeficit = data.destinationResponse.map((item) => ({
             Sno: Math.floor(Math.random() * 500) + 1,
-            origin_railhead: item.destinationRailHeadCode,
+            origin_railhead: item.destinationRailHead,
             origin_state: item.destinationState,
             Value: item.value,
             Commodity: item.commodity,

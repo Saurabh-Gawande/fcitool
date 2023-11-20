@@ -2233,7 +2233,7 @@ def Daily_Planner():
 
             for i in list_src_wheat:
                 source_wheat[i] = 1
-
+            print(source_wheat)
             list_src_rra = []
             for i in L2:
                 Value = {}
@@ -2271,7 +2271,7 @@ def Daily_Planner():
 
             for i in list_dest_wheat:
                 dest_wheat[i] = 1
-
+            print(dest_wheat)
             list_dest_rra = []
 
             for i in L8:
@@ -2380,27 +2380,30 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wheat[(i, j)].value())
                         commodity.append("Wheat")
-            for key in source_wheat.keys():
-                for wheat in wheat_origin_inline:
-                    if key == wheat["origin_railhead"]:
-                        From_state.append(wheat["origin_state"])
-                    elif key == wheat["destination_railhead"]:
-                        From_state.append(wheat["destination_state"])
-            
-            for key in dest_wheat.keys():
-                print(key , "destkey")
-                for wheat in wheat_dest_inline:
-                    print(wheat, "dest wheatinline")
-                    if key == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
-                    elif key == wheat["origin_railhead"]:
-                        To_state.append(wheat["origin_state"])  
-            print(To_state)
-
+                        
             for i in range(len(From)):
                 for wheat in wheat_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
+
+            for key in source_wheat.keys():
+                print(key , "sourcekey")
+                for wheat in wheat_origin_inline:
+                    print(wheat, "source wheat inline")
+                    if key == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                    elif key == wheat["destination_railhead"]:
+                        From_state.append(wheat["origin_railhead"])
+            
+            for key in dest_wheat.keys():
+                # print(key , "destkey")
+                for wheat in wheat_dest_inline:
+                    # print(wheat, "dest wheatinline")
+                    if key == wheat["destination_railhead"]:
+                        To_state.append(wheat["origin_state"])
+                    elif key == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])  
+            print(From_state)
                        
             for i in range (len(To)): 
                 for wheat in wheat_dest: 
