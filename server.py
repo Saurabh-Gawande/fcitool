@@ -2359,7 +2359,7 @@ def Daily_Planner():
                 prob += lpSum(x_ij_wcgr[(j, i)] for j in source_wcgr.keys()) >= dest_wcgr[i] 
 
             prob.writeLP("FCI_monthly_model_allocation_rr.lp")
-            prob.solve(CPLEX())
+            prob.solve()
             print("Status:", LpStatus[prob.status])
             print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
             print("Total Number of Variables:", len(prob.variables()))
@@ -2380,7 +2380,7 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wheat[(i, j)].value())
                         commodity.append("Wheat")
-                        
+
             for i in range(len(From)):
                 for wheat in wheat_origin:
                     if From[i] == wheat["origin_railhead"]:
