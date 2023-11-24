@@ -1,4 +1,6 @@
+import React from "react";
 function Sidenav() {
+  console.log(sessionStorage.getItem("username"));
   return (
     <div className="page-sidebar">
       <ul className="x-navigation" style={{ backgroundColor: "#ebab44b0" }}>
@@ -26,30 +28,30 @@ function Sidenav() {
             <span className="xn-text">Home</span>
           </a>
         </li>
-        <li>
-          <a href="/Monthly_Solution">
-            <span className="fa fa-calendar"></span>{" "}
-            <span className="xn-text">Monthly Plan</span>
-          </a>
-        </li>
-        <li>
-          <a href="/Daily_Planner">
-            <span className="fa fa-desktop"></span>{" "}
-            <span className="xn-text">Daily Planner</span>
-          </a>
-        </li>
+        {sessionStorage.getItem("username") === "saurabh@iitd.com" ||
+        sessionStorage.getItem("username") === "admin@iitd.com" ||
+        sessionStorage.getItem("username") === "FcihqUser" ? (
+          <li>
+            <a href="/Monthly_Solution">
+              <span className="fa fa-calendar"></span>{" "}
+              <span className="xn-text">Monthly Plan</span>
+            </a>
+          </li>
+        ) : null}
+        {sessionStorage.getItem("username") === "FcihqUser" ? null : (
+          <li>
+            <a href="/Daily_Planner">
+              <span className="fa fa-desktop"></span>{" "}
+              <span className="xn-text">Daily Planner</span>
+            </a>
+          </li>
+        )}
         <li>
           <a href="/Alternate_Railhead">
             <span className="fa fa-desktop"></span>{" "}
             <span className="xn-text">Alternate Railhead</span>
           </a>
         </li>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
         <li>
           <a href="/Template">
             <span className="fa fa-train"></span>{" "}

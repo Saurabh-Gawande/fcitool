@@ -123,6 +123,7 @@ function Monthly_Solution() {
       r_s: r_s,
       r_d: r_d,
       TEFD: TEFD,
+      Type: type,
     };
 
     try {
@@ -618,7 +619,7 @@ function Monthly_Solution() {
                       borderStyle: "solid",
                       borderColor: "#ebab44b0",
                     }}
-                    onClick={handleSolve}
+                    // onClick={handleSolve}
                   >
                     <div className="wrap__toggle--bluetooth">
                       <span style={{ textAlign: "center", fontWeight: "bold" }}>
@@ -631,7 +632,7 @@ function Monthly_Solution() {
                           type="checkbox"
                           className="checkBox"
                           id="toggle"
-                          onClick={handleSolve}
+                          onChange={handleSolve}
                         />
                         <span></span>
                       </label>

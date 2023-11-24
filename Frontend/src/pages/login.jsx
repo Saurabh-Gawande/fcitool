@@ -3,12 +3,11 @@ import "./Login.css";
 import config from "../config";
 
 function Login() {
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
   const [currentImage, setCurrentImage] = useState(0);
-  const images = [
-    "static/img/slider1.jpg",
-    "static/img/slider6.jpg",
-    // Add more image paths here as needed
-  ];
+
+  const images = ["static/img/slider1.jpg", "static/img/slider6.jpg"];
   const ProjectIp = config.serverUrl;
   const totalImages = images.length;
   const autoSlideInterval = 3000; // Interval in milliseconds (5 seconds in this example)
@@ -25,9 +24,6 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
       const form = new FormData();
       form.append("username", username);
       form.append("password", password);
@@ -44,8 +40,13 @@ function Login() {
       const data = await response.json();
 
       if (data.status === 1) {
-        window.location.assign("/Daily_Planner");
         window.alert("Login Successful! Click Ok to Continue");
+        sessionStorage.setItem("username", data.username);
+        if (data.username === "FcihqUser") {
+          window.location.assign("/Monthly_Solution");
+        } else {
+          window.location.assign("/Daily_Planner");
+        }
       } else if (data.status === 0) {
         window.alert("Incorrect Credentials");
         window.location.reload();
@@ -89,6 +90,7 @@ function Login() {
                     className="form-control"
                     placeholder="Username"
                     style={{ backgroundColor: "white", color: "black" }}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
               </div>
@@ -101,6 +103,7 @@ function Login() {
                     name="password"
                     className="form-control"
                     placeholder="Password"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>

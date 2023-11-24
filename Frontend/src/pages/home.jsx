@@ -1,14 +1,21 @@
-import React, { useEffect } from "react";
-import Sidenav from "./sidenav";
+import React from "react";
+import Sidenav from "./Mode1/sidenav";
 
 function Home() {
-  useEffect(() => {});
-
   return (
-    <div className="page-container" style={{ backgroundColor: "#ebab44b0"}}>
+    <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
       <Sidenav />
-      <div className="page-content" style={{ backgroundImage: "url('static/img/home3.jpg')" , height:'100vh'}}>
-        <ul className="x-navigation x-navigation-horizontal x-navigation-panel" style={{ backgroundColor: "#ebab44b0"}}>
+      <div
+        className="page-content"
+        style={{
+          backgroundImage: "url('static/img/home3.jpg')",
+          height: "100vh",
+        }}
+      >
+        <ul
+          className="x-navigation x-navigation-horizontal x-navigation-panel"
+          style={{ backgroundColor: "#ebab44b0" }}
+        >
           <li className="xn-icon-button">
             <a href="#" className="x-navigation-minimize">
               <span className="fa fa-dedent" />
