@@ -18,9 +18,7 @@ function Monthly_Solution() {
   const [Relevant_result, set_Relevant_Result] = useState(null);
   const [excelData, setExcelData] = useState({});
   const [activeSheetName, setActiveSheetName] = useState(null);
-  const [sheet, setSheet] = useState(null);
   const [updateExcel, setUpdateExcel] = useState(false);
-  const [modifiedExcel, setModifiedExcel] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   //
   const [redState, setRedState] = useState([]);
@@ -173,6 +171,7 @@ function Monthly_Solution() {
         console.error("Error:", error);
       });
   };
+
   const fetchReservationId_Total_result = () => {
     var form = new FormData();
     fetch(ProjectIp + "/read_Monthly_state_table", {
@@ -189,6 +188,7 @@ function Monthly_Solution() {
         console.error("Error:", error);
       });
   };
+  
   const fetchReservationId_Revelant_result = () => {
     var form = new FormData();
     fetch(ProjectIp + "/read_Relevant_Result", {
@@ -205,7 +205,8 @@ function Monthly_Solution() {
         console.error("Error:", error);
       });
   };
-
+  console.log({ Relevant_result });
+  console.log({ Total_result });
   const exportToExcel1 = () => {
     fetchReservationId_Total_result();
     console.log(fetchReservationId_Total_result);
@@ -325,7 +326,6 @@ function Monthly_Solution() {
       saveAs(excelBlob, "Monthly_Movement_results.xlsx");
     }
   };
-  // fetchReservationId_cost();
 
   return (
     <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>

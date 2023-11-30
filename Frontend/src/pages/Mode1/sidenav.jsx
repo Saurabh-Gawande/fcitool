@@ -1,6 +1,5 @@
 import React from "react";
 function Sidenav() {
-  console.log(sessionStorage.getItem("username"));
   return (
     <div className="page-sidebar">
       <ul className="x-navigation" style={{ backgroundColor: "#ebab44b0" }}>
@@ -28,9 +27,9 @@ function Sidenav() {
             <span className="xn-text">Home</span>
           </a>
         </li>
-        {sessionStorage.getItem("username") === "saurabh@iitd.com" ||
-        sessionStorage.getItem("username") === "admin@iitd.com" ||
-        sessionStorage.getItem("username") === "FcihqUser" ? (
+        {sessionStorage.getItem("state") === "admin" ||
+        sessionStorage.getItem("state") === "admin" ||
+        sessionStorage.getItem("state") === "Fcihq" ? (
           <li>
             <a href="/Monthly_Solution">
               <span className="fa fa-calendar"></span>{" "}
@@ -38,7 +37,7 @@ function Sidenav() {
             </a>
           </li>
         ) : null}
-        {sessionStorage.getItem("username") === "FcihqUser" ? null : (
+        {sessionStorage.getItem("state") === "Fcihq" ? null : (
           <li>
             <a href="/Daily_Planner">
               <span className="fa fa-desktop"></span>{" "}

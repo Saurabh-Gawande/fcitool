@@ -6,6 +6,7 @@ function Login() {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [currentImage, setCurrentImage] = useState(0);
+  const [state, setState] = useState();
 
   const images = ["static/img/slider1.jpg", "static/img/slider6.jpg"];
   const ProjectIp = config.serverUrl;
@@ -28,30 +29,28 @@ function Login() {
       form.append("username", username);
       form.append("password", password);
 
-      const response = await fetch(ProjectIp + "/login", {
+      const response = await fetch(ProjectIp + "/login1", {
         method: "POST",
         credentials: "include",
-        body: form,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: form,
+        body: JSON.stringify({ username, password }),
       });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
       const data = await response.json();
 
-      if (data.status === 1) {
+      if (response.ok) {
+        setState(data.state);
+        sessionStorage.setItem("state", data.state);
         window.alert("Login Successful! Click Ok to Continue");
-        sessionStorage.setItem("username", data.username);
-        if (data.username === "FcihqUser") {
+        if (data.state === "Fcihq") {
           window.location.assign("/Monthly_Solution");
         } else {
           window.location.assign("/Daily_Planner");
         }
-      } else if (data.status === 0) {
-        window.alert("Incorrect Credentials");
-        window.location.reload();
       } else {
-        window.alert(data.status);
+        window.alert("Invallid Credentials");
         window.location.reload();
       }
     } catch (error) {
@@ -59,7 +58,7 @@ function Login() {
       window.alert("An error occurred during login. Please try again later.");
     }
   };
-
+ 
   return (
     <div
       className="login-container login_container"

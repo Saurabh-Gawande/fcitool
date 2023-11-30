@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import config from "../../config";
 import jsPDF from "jspdf";
+import "jspdf-autotable";
 import "./Daily_Planner.css";
 // import Surplus from "./Surplus";
 
@@ -45,6 +46,7 @@ function Daily_Planner() {
   const [totalDeficitInlineRailhead2, setTotalDeficitInlineRailhead2] =
     useState([]);
   const [deficitInlineCommodity, setDeficitInlineCommodity] = useState();
+  const [state, setState] = useState();
   //----------------------------------------------------------------------------------------------------------
   const ProjectIp = config.serverUrl;
   const [block_data, setBlockdata] = useState([]);
@@ -150,6 +152,28 @@ function Daily_Planner() {
     });
     return jsonData;
   };
+
+  // useEffect(() => {
+  //   fetch(
+  //     `https://10.194.109.188:5001/api/DailyPlannerWebApi/LatestRailHeadCodesforTool`
+  //   )
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         return response.json();
+  //       } else {
+  //         alert(`Failed to fetch data. Status code: ${response.status}`);
+  //         return null;
+  //       }
+  //     })
+  //     .then((data) => {
+  //       if (data) {
+  //         console.log({ data });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       alert(`Error: ${error.message}`);
+  //     });
+  // }, []);
 
   const handleSurplusStateChange = async (e) => {
     const selectedValue = e.target.value;
@@ -605,17 +629,17 @@ function Daily_Planner() {
   );
 
   const coarseGrainOrigin = surplus.filter(
-    (item) => item.Commodity === "Coarse Grain"
+    (item) => item.Commodity === "Coarse Grains"
   );
   const coarseGrainInlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Coarse Grain"
+    (item) => item.Commodity === "Coarse Grains"
   );
 
   const coarseGrainDestination = deficit.filter(
-    (item) => item.Commodity === "Coarse Grain"
+    (item) => item.Commodity === "Coarse Grains"
   );
   const coarseGrainInlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Coarse Grain"
+    (item) => item.Commodity === "Coarse Grains"
   );
 
   const frkrraOrigin = surplus.filter((item) => item.Commodity === "FRK RRA");
@@ -642,26 +666,28 @@ function Daily_Planner() {
     (item) => item.Commodity === "FRK BR"
   );
 
-  const frk_Origin = surplus.filter((item) => item.Commodity === "FRK");
+  const frk_Origin = surplus.filter((item) => item.Commodity === "Wheat+FRK");
   const frk_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "FRK"
+    (item) => item.Commodity === "Wheat+FRK"
   );
 
-  const frk_Destination = deficit.filter((item) => item.Commodity === "FRK");
+  const frk_Destination = deficit.filter(
+    (item) => item.Commodity === "Wheat+FRK"
+  );
   const frk_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK"
+    (item) => item.Commodity === "Wheat+FRK"
   );
 
-  const w_cgr_Origin = surplus.filter((item) => item.Commodity === "W+CGR");
+  const w_cgr_Origin = surplus.filter((item) => item.Commodity === "Wheat+CGR");
   const w_cgr_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "W+CGR"
+    (item) => item.Commodity === "Wheat+CGR"
   );
 
   const w_cgr_Destination = deficit.filter(
-    (item) => item.Commodity === "W+CGR"
+    (item) => item.Commodity === "Wheat+CGR"
   );
   const w_cgr_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "W+CGR"
+    (item) => item.Commodity === "Wheat+CGR"
   );
 
   const frk_cgr_Origin = surplus.filter((item) => item.Commodity === "FRK+CGR");
@@ -966,21 +992,23 @@ function Daily_Planner() {
     } else {
       const pdfDoc = new jsPDF();
       const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+
       Object.entries(Total_result).forEach(([column, data]) => {
         const parsedData = JSON.parse(data);
 
         pdfDoc.addPage();
         pdfDoc.text(`Column: ${column}`, 10, 10);
 
-        // Display data from the column below the header
-        let yPos = 20;
-        parsedData.forEach((item) => {
-          const formattedData = formatData(item);
-          pdfDoc.text(formattedData, 10, yPos, { maxWidth: 180 });
-          yPos +=
-            pdfDoc.splitTextToSize(formattedData, { maxWidth: 180 }).length *
-              10 +
-            5;
+        // Extract headers and rows from parsedData
+        const headers = Object.keys(parsedData[0]);
+        const rows = parsedData.map((item) => Object.values(item));
+
+        // Auto-generate the table using autotable
+        pdfDoc.autoTable({
+          head: [headers],
+          body: rows,
+          startY: 20,
+          margin: { top: 20 },
         });
       });
 
@@ -988,7 +1016,6 @@ function Daily_Planner() {
     }
   };
 
-  // Function to format data with line breaks
   const formatData = (item) => {
     return `From: ${item.From}\nFrom State: ${item["From State"]}\nTo: ${item.To}\nTo State: ${item["To State"]}\nCommodity: ${item.Commodity}`;
   };
@@ -1248,12 +1275,18 @@ function Daily_Planner() {
       window.alert("Invalid file format. Please select a valid file.");
     }
   };
+  // console.log(sessionStorage.getItem("state"));
+
+  useEffect(() => {
+    setState(sessionStorage.getItem("state"));
+    // console.log(state);
+  }, []);
 
   const fetchData = (event) => {
     event.preventDefault();
     // fetch('https://192.168.1.19:5001/api/DailyPlannerWebApi/DailyPlannerNextDayforTool')
     fetch(
-      "https://rakeplanner.callippus.co.uk/api/DailyPlannerWebApi/DailyPlannerNextDayforTool"
+      `https://rakeplanner.callippus.co.uk/api/DailyPlannerWebApi/DailyPlannerNextDayforTool?region=${state}`
     )
       .then((response) => {
         if (response.status === 200) {
@@ -1404,7 +1437,7 @@ function Daily_Planner() {
                     className="btn btn-danger dropdown-toggle"
                     onClick={fetchData}
                   >
-                    Upload data
+                    Import data
                   </button>
                 </div>
                 <div style={{ marginLeft: "15px" }}>
@@ -1537,11 +1570,11 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
-                            <option value="FRK">FRK</option>
+                            <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
-                            <option value="Coarse Grain">Coarse Grain</option>
-                            <option value="W+CGR">W+CGR</option>
+                            <option value="Coarse Grains">Coarse Grains</option>
+                            <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
                           </select>
                         </div>
@@ -1711,11 +1744,11 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
-                            <option value="FRK">FRK</option>
+                            <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
-                            <option value="Coarse Grain">Coarse Grain</option>
-                            <option value="W+CGR">W+CGR</option>
+                            <option value="Coarse Grains">Coarse Grains</option>
+                            <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
                           </select>
                         </div>
@@ -1949,11 +1982,11 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
-                            <option value="FRK">FRK</option>
+                            <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
-                            <option value="Coarse Grain">Coarse Grain</option>
-                            <option value="W+CGR">W+CGR</option>
+                            <option value="Coarse Grains">Coarse Grains</option>
+                            <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
                           </select>
                         </div>
@@ -2179,11 +2212,11 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
-                            <option value="FRK">FRK</option>
+                            <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
-                            <option value="Coarse Grain">Coarse Grain</option>
-                            <option value="W+CGR">W+CGR</option>
+                            <option value="Coarse Grains">Coarse Grains</option>
+                            <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
                           </select>
                         </div>
@@ -2795,7 +2828,7 @@ function Daily_Planner() {
                           className="btn btn-danger dropdown-toggle"
                           onClick={uploadFile}
                         >
-                          Upload Plan
+                          Import Plan
                         </button>
                         {showMessage && (
                           <div style={{ marginTop: 15, marginLeft: 20 }}>
@@ -3231,7 +3264,7 @@ function Daily_Planner() {
                           <div style={{ marginTop: 15, marginLeft: 20 }}>
                             {frk !== null && frk.length > 0 ? (
                               <div>
-                                <div>frk</div>
+                                <div>Wheat+FRK</div>
                                 <table>
                                   <thead>
                                     <tr style={{ margin: "auto" }}>
@@ -3403,7 +3436,7 @@ function Daily_Planner() {
                           <div style={{ marginTop: 15, marginLeft: 20 }}>
                             {w_cgr !== null && w_cgr.length > 0 ? (
                               <div>
-                                <div>w+cgr</div>
+                                <div>wheat+cgr</div>
                                 <table>
                                   <thead>
                                     <tr style={{ margin: "auto" }}>
