@@ -11,10 +11,12 @@ import Monthly_Solution_M02 from './pages/Mode2/Monthly_Solution_M02';
 import Alternate_Railhead_M02 from './pages/Mode2/Alternate_Railhead_M02';
 import Daily_Scheduler_M02 from './pages/Mode2/Daily_Scheduler_M02';
 import Daily_Planner from './pages/Mode1/Daily_Planner';
+import UserState from './Context/userState';
 
 function App() {
   return (
   <BrowserRouter>
+  <UserState>
     <Routes>
 		<Route path='/' element={<Login />} />
 		<Route path='/login' element={<Login />} />
@@ -28,6 +30,7 @@ function App() {
     <Route path='/Daily_Scheduler_M02' element={<Daily_Scheduler_M02 />} />
     <Route path='/Daily_Planner' element={<Daily_Planner />} />
     </Routes>
+  </UserState>
   </BrowserRouter>
   );
 }

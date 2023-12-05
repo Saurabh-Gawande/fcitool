@@ -1,4 +1,5 @@
 import React from "react";
+
 function Sidenav() {
   return (
     <div className="page-sidebar">
@@ -27,17 +28,17 @@ function Sidenav() {
             <span className="xn-text">Home</span>
           </a>
         </li>
-        {sessionStorage.getItem("state") === "admin" ||
-        sessionStorage.getItem("state") === "admin" ||
-        sessionStorage.getItem("state") === "Fcihq" ? (
+        {sessionStorage.getItem("region") === "admin" ||
+        sessionStorage.getItem("region") === "admin" ||
+        sessionStorage.getItem("region") === "H.P." ? (
           <li>
             <a href="/Monthly_Solution">
-              <span className="fa fa-calendar"></span>{" "}
+              <span className="fa fa-calendar"></span>
               <span className="xn-text">Monthly Plan</span>
             </a>
           </li>
         ) : null}
-        {sessionStorage.getItem("state") === "Fcihq" ? null : (
+        {sessionStorage.getItem("region") === "H.P." ? null : (
           <li>
             <a href="/Daily_Planner">
               <span className="fa fa-desktop"></span>{" "}
