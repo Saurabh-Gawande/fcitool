@@ -1,5 +1,4 @@
 import pandas as pd
-import pymongo
 from pulp import *
 from array import *
 import json
@@ -12,105 +11,7 @@ import time
 app = Flask(__name__)
 app.secret_key = 'aqswdefrgt'
 CORS(app, supports_credentials=True)
-app.config['MONGO_URI'] = "mongodb://localhost:27017"
-mongo = pymongo.MongoClient(app.config['MONGO_URI'])
-db = mongo["fcitool"]  
-collection = db["Users"]
 active_sessions = {}
-
-@app.route('/add_user', methods=['POST'])
-def add_user():
-    if request.method == 'POST':
-        user_data = request.get_json()
-
-        result = collection.insert_one(user_data)
-
-        if result.inserted_id:
-            return jsonify({"message": "User added successfully", "user_id": str(result.inserted_id)}), 201
-        else:
-            return jsonify({"message": "Failed to add user"}), 400
-    else:
-        return jsonify({"message": "Invalid request method"}), 405
-
-@app.route('/login1', methods=['POST'])
-def login1():
-    if request.method == 'POST':
-        login_data = request.get_json()
-        username = login_data.get('username')
-        password = login_data.get('password')
-        print(username)
-        print(password)
-        # Check if user with provided name and password exists
-        user = collection.find_one({"username": username, "password": password})
-
-        if user:
-            # User found, return the state
-            return jsonify({"message": "Login successful", "state": user.get('state')}), 200
-        else:
-            # User not found or incorrect credentials
-            return jsonify({"message": "Invalid credentials"}), 401
-    else:
-        return jsonify({"message": "Invalid request method"}), 405
-
-# @app.route('/login',methods = ["POST"])
-# def login():
-
-#     users = {
-#         "admin@iitd.com": "admin@321",
-#         "saurabh@iitd.com": "password1",
-#         "atul@iitd.com": "password2",
-#         "biharuser":"biharuser@123",
-#         "jharkhanduser":"jharkhanduser@123",
-#         "orissauser":"orissauser@123",
-#         "westbengaluser":"westbengaluser@123",
-#         "haryanauser":"haryanauser@123",
-#         "jkuser":"jkuser@123",
-#         "punjabuser":"punjabuser@123",
-#         "rajasthanuser":"rajasthanuser@123",
-#         "uttarpradeshuser":"uttarpradeshuser@123",
-#         "uttaranchaluser":"uttaranchaluser@123",
-#         "arunachalpradeshuser":"arunachalpradeshuser@123",
-#         "assamuser":"assamuser@123",
-#         "manipuruser":"manipuruser@123",
-#         "nagalanduser":"nagalanduser@123",
-#         "nefuser":"nefuser@123",
-#         "andhrapradeshuser":"andhrapradeshuser@123",
-#         "karnatakauser":"karnatakauser@123",
-#         "keralauser":"keralauser@123",
-#         "tamilnaduuser":"tamilnaduuser@123",
-#         "telanganauser":"telanganauser@123",
-#         "chhattisgarhuser":"chhattisgarhuser@123",
-#         "gujaratuser":"gujaratuser@123",
-#         "madhyapradeshuser":"madhyapradeshuser@123",
-#         "maharastrauser":"maharastrauser@123",
-#         "hpuser":"hpuser@123",
-#         "FcihqUser":"FcihqUser@123",
-#         "dfpduser":"dfpsuser@123",
-#     }    
-
-#     data = {}
-#     if 'username' in request.form and 'password' in request.form:
-#         username = request.form['username']
-#         password = request.form['password']
-       
-#         if username in users and password == users[username]:
-#             active_sessions[username] = session.get('sid')
-#             data['status'] = 1
-#             session['username'] = username
-#             data['username'] = username
-#         else:
-#             data['status'] = 0
-#     else:
-#         data['status'] = 'Invalid request'
-
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
-#     response = jsonify(json_object)
-#     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-#     response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-#     response.headers.add('Access-Control-Allow-Credentials', 'true') 
-#     return (json.dumps(json_object, indent = 1))
 
 @app.route("/upload_Monthly_File_M01",methods = ["POST"])
 def upload_Monthly_File_M01():
