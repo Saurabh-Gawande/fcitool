@@ -675,6 +675,27 @@ function Daily_Planner() {
     (item) => item.Commodity === "FRK+CGR"
   );
 
+  const rrc_Origin = surplus.filter((item) => item.Commodity === "RRC");
+  const rrc_Destination = deficit.filter((item) => item.Commodity === "RRC");
+
+  const ragi_Origin = surplus.filter((item) => item.Commodity === "Ragi");
+  const ragi_Destination = deficit.filter((item) => item.Commodity === "Ragi");
+
+  const jowar_Origin = surplus.filter((item) => item.Commodity === "Jowar");
+  const jowar_Destination = deficit.filter(
+    (item) => item.Commodity === "Jowar"
+  );
+
+  const bajra_Origin = surplus.filter((item) => item.Commodity === "Bajra");
+  const bajra_Destination = deficit.filter(
+    (item) => item.Commodity === "Bajra"
+  );
+
+  const maize_Origin = surplus.filter((item) => item.Commodity === "Maize");
+  const maize_Destination = deficit.filter(
+    (item) => item.Commodity === "Maize"
+  );
+
   useEffect(() => {
     setRiceOriginValue(
       riceOrigin.reduce((total, item) => total + item.Value, 0) +
@@ -828,6 +849,21 @@ function Daily_Planner() {
       frkcgr_destination: frk_cgr_Destination,
       frkcgr_inline: frk_cgr_InlineOrigin,
       frkcgr_dest_inline: frk_cgr_InlineDestination,
+
+      rrc_Origin: rrc_Origin,
+      rrc_Destination: rrc_Destination,
+
+      ragi_Origin: ragi_Origin,
+      ragi_Destination: ragi_Destination,
+
+      jowar_Origin: jowar_Origin,
+      jowar_Destination: jowar_Destination,
+
+      bajra_Origin: bajra_Origin,
+      bajra_Destination: bajra_Destination,
+
+      maize_Origin: maize_Origin,
+      maize_Destination: maize_Destination,
     };
 
     try {
@@ -1544,6 +1580,11 @@ function Daily_Planner() {
                             <option value="Coarse Grains">Coarse Grains</option>
                             <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
+                            <option value="RRC">RRC</option>
+                            <option value="Ragi">Ragi</option>
+                            <option value="Jowar">Jowar</option>
+                            <option value="Bajra">Bajra</option>
+                            <option value="Maize">Maize</option>
                           </select>
                         </div>
                         <div
@@ -1714,6 +1755,11 @@ function Daily_Planner() {
                             <option value="Coarse Grains">Coarse Grains</option>
                             <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
+                            <option value="RRC">RRC</option>
+                            <option value="Ragi">Ragi</option>
+                            <option value="Jowar">Jowar</option>
+                            <option value="Bajra">Bajra</option>
+                            <option value="Maize">Maize</option>
                           </select>
                         </div>
                         <div
@@ -1952,6 +1998,11 @@ function Daily_Planner() {
                             <option value="Coarse Grains">Coarse Grains</option>
                             <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
+                            <option value="RRC">RRC</option>
+                            <option value="Jowar">Jowar</option>
+                            <option value="Ragi">Ragi</option>
+                            <option value="Bajra">Bajra</option>
+                            <option value="Maize">Maize</option>
                           </select>
                         </div>
                         <button
@@ -2182,6 +2233,11 @@ function Daily_Planner() {
                             <option value="Coarse Grains">Coarse Grains</option>
                             <option value="Wheat+CGR">Wheat+CGR</option>
                             <option value="FRK+CGR">FRK+CGR</option>
+                            <option value="RRC">RRC</option>
+                            <option value="Jowar">Jowar</option>
+                            <option value="Ragi">Ragi</option>
+                            <option value="Bajra">Bajra</option>
+                            <option value="Maize">Maize</option>
                           </select>
                         </div>
                         <button
@@ -3605,10 +3661,10 @@ function Daily_Planner() {
                   style={{
                     color: frkDestinationValue > frkOriginValue ? "red" : "",
                   }}
-                >{`Supply Value of FRK is ${frkOriginValue}`}</div>
+                >{`Supply Value of Wheat+FRK is ${frkOriginValue}`}</div>
               ) : null}
               {frkDestinationValue > 0 ? (
-                <div>{`Destination Value of FRK is ${frkDestinationValue}`}</div>
+                <div>{`Destination Value of Wheat+FRK is ${frkDestinationValue}`}</div>
               ) : null}
               {isLoading ? (
                 <div
