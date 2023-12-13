@@ -111,6 +111,15 @@ function Daily_Planner() {
   const [frkDestinationValue, setfrkDestinationValue] = useState();
   const [excelfiledata, setExcelFileData] = useState();
   const [railheadData, setRailheadData] = useState();
+  const[rrc, setRrc] = useState(false)
+  const[ragi, setRagi] = useState(false)
+  const[jowar, setJowar] = useState(false)
+  const[bajra, setBajra] = useState(false)
+  const[maize, setMaize] = useState(false)
+  const[whear_urs, setWheat_urs] = useState(false)
+  const[whear_faq, setWheat_faq] = useState(false)
+  const[misc1, setMisc1] = useState(false)
+  const[misc2, setMisc2] = useState(false)
   // ---------------------------------------------------------------------------------------
   useEffect(() => {
     try {
@@ -696,6 +705,30 @@ function Daily_Planner() {
     (item) => item.Commodity === "Maize"
   );
 
+  const misc1_Origin = surplus.filter((item) => item.Commodity === "Misc1");
+  const misc1_Destination = deficit.filter(
+    (item) => item.Commodity === "Misc1"
+  );
+
+  const misc2_Origin = surplus.filter((item) => item.Commodity === "Misc2");
+  const misc2_Destination = deficit.filter(
+    (item) => item.Commodity === "Misc2"
+  );
+
+  const wheaturs_Origin = surplus.filter(
+    (item) => item.Commodity === "Wheat(URS)"
+  );
+  const wheaturs_Destination = deficit.filter(
+    (item) => item.Commodity === "Wheat(URS)"
+  );
+
+  const wheatfaq_Origin = surplus.filter(
+    (item) => item.Commodity === "Wheat(FAQ)"
+  );
+  const wheatfaq_Destination = deficit.filter(
+    (item) => item.Commodity === "Wheat(FAQ)"
+  );
+
   useEffect(() => {
     setRiceOriginValue(
       riceOrigin.reduce((total, item) => total + item.Value, 0) +
@@ -864,6 +897,18 @@ function Daily_Planner() {
 
       maize_Origin: maize_Origin,
       maize_Destination: maize_Destination,
+
+      misc1_Origin: misc1_Origin,
+      misc1_Destination: misc1_Destination,
+
+      misc2_Origin: misc2_Origin,
+      misc2_Destination: misc2_Destination,
+
+      wheaturs_Origin: wheaturs_Origin,
+      wheaturs_Destination: wheaturs_Destination,
+
+      wheatfaq_Origin: wheatfaq_Origin,
+      wheatfaq_Destination: wheatfaq_Destination,
     };
 
     try {
@@ -1211,6 +1256,15 @@ function Daily_Planner() {
     const frkData = JSON.parse(Total_result?.frk ?? 0);
     const frkcgrData = JSON.parse(Total_result?.frkcgr ?? 0);
     const wcgrData = JSON.parse(Total_result?.wcgr ?? 0);
+    const rrc = JSON.parse(Total_result?.rrc ?? 0);
+    const ragi = JSON.parse(Total_result?.ragi ?? 0);
+    const bajra = JSON.parse(Total_result?.bajra ?? 0);
+    const jowar = JSON.parse(Total_result?.jowar ?? 0);
+    const maize = JSON.parse(Total_result?.maize ?? 0);
+    const wheat_faq = JSON.parse(Total_result?.wheat_faq ?? 0);
+    const wheat_urs = JSON.parse(Total_result?.wheat_urs ?? 0);
+    const misc1 = JSON.parse(Total_result?.misc1 ?? 0);
+    const misc2 = JSON.parse(Total_result?.misc2 ?? 0);
     setRiceData(riceData);
     setWheatData(wheatData);
     setCoarseGrain(coarseGrainData);
@@ -1219,8 +1273,17 @@ function Daily_Planner() {
     setFrk(frkData);
     setFrk_cgr(frkcgrData);
     setw_cgr(wcgrData);
+    setRrc(rrc)
+    setRagi(ragi)
+    setBajra(bajra)
+    setJowar(jowar)
+    setMaize(maize)
+    setWheat_faq(wheat_faq)
+    setWheat_urs(wheat_urs)
+    setMisc1(misc1)
+    setMisc2(misc2)
   };
-
+  
   const exportToExcel1 = () => {
     if (Total_result == null) {
       // Commented out the alert statement
@@ -1574,6 +1637,8 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
+                            <option value="Wheat(URS)">Wheat(URS)</option>
+                            <option value="Wheat(FAQ)">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
@@ -1585,6 +1650,8 @@ function Daily_Planner() {
                             <option value="Jowar">Jowar</option>
                             <option value="Bajra">Bajra</option>
                             <option value="Maize">Maize</option>
+                            <option value="Misc1">Misc1</option>
+                            <option value="Misc2">Misc2</option>
                           </select>
                         </div>
                         <div
@@ -1749,6 +1816,8 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
+                            <option value="Wheat(URS)">Wheat(URS)</option>
+                            <option value="Wheat(FAQ)">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
@@ -1760,6 +1829,8 @@ function Daily_Planner() {
                             <option value="Jowar">Jowar</option>
                             <option value="Bajra">Bajra</option>
                             <option value="Maize">Maize</option>
+                            <option value="Misc1">Misc1</option>
+                            <option value="Misc2">Misc2</option>
                           </select>
                         </div>
                         <div
@@ -1992,6 +2063,9 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
+                            <option value="Wheat(URS)">Wheat(URS)</option>
+                            <option value="Wheat(FAQ)">Wheat(FAQ)</option>
+                            <option value="Wheat_faq">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
@@ -2002,7 +2076,9 @@ function Daily_Planner() {
                             <option value="Jowar">Jowar</option>
                             <option value="Ragi">Ragi</option>
                             <option value="Bajra">Bajra</option>
-                            <option value="Maize">Maize</option>
+                            <option value="Maize">Maize</option>{" "}
+                            <option value="Misc1">Misc1</option>
+                            <option value="Misc2">Misc2</option>
                           </select>
                         </div>
                         <button
@@ -2227,6 +2303,8 @@ function Daily_Planner() {
                             <option value="">Select Commodity</option>
                             <option value="RRA">RRA</option>
                             <option value="Wheat">Wheat</option>
+                            <option value="Wheat(URS)">Wheat(URS)</option>
+                            <option value="Wheat(FAQ)">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
@@ -2238,6 +2316,8 @@ function Daily_Planner() {
                             <option value="Ragi">Ragi</option>
                             <option value="Bajra">Bajra</option>
                             <option value="Maize">Maize</option>
+                            <option value="Misc1">Misc1</option>
+                            <option value="Misc2">Misc2</option>
                           </select>
                         </div>
                         <button
@@ -2669,21 +2749,6 @@ function Daily_Planner() {
                         <option value="RICE">Rice</option>
                         <option value="WHEAT">Wheat</option>
                       </select>
-                      {/* <div style={{ marginLeft: "50px" }}>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Enter Value
-                        </strong>
-                        <input
-                          type="number"
-                          value={value_fixed}
-                          onChange={(e) => setValue_fixed(e.target.value)}
-                          style={{
-                            marginLeft: "40px",
-                            width: "200px",
-                            padding: "5px",
-                          }}
-                        />
-                      </div> */}
 
                       <div onClick={addConstraint_fixed}>
                         <button

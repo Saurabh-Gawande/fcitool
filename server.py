@@ -189,6 +189,15 @@ def read_Daily_Planner_S1():
             df6 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk") 
             df7 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr")
             df8 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr")
+            df9 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs")
+            df10 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq")
+            df11 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc")
+            df12 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar")
+            df13 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi")
+            df14 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra")
+            df15 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize")
+            df16 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1")
+            df17 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2")
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
             json_data3 = df3.to_json(orient='records', indent=1)
@@ -197,7 +206,20 @@ def read_Daily_Planner_S1():
             json_data6 = df6.to_json(orient='records', indent=1)
             json_data7 = df7.to_json(orient='records', indent=1)
             json_data8 = df8.to_json(orient='records', indent=1)
-            json_data = {"rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "frk": json_data6, "frkcgr":json_data7 , "wcgr": json_data8}
+            json_data9 = df9.to_json(orient='records', indent=1)
+            json_data10 = df10.to_json(orient='records', indent=1)
+            json_data11 = df11.to_json(orient='records', indent=1)
+            json_data12 = df12.to_json(orient='records', indent=1)
+            json_data13 = df13.to_json(orient='records', indent=1)
+            json_data14 = df14.to_json(orient='records', indent=1)
+            json_data15 = df15.to_json(orient='records', indent=1)
+            json_data16 = df16.to_json(orient='records', indent=1)
+            json_data17 = df17.to_json(orient='records', indent=1)
+            json_data = {
+             "rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "frk": json_data6,
+             "frkcgr":json_data7 , "wcgr": json_data8, "wheat_urs": json_data9 , "wheat_faq": json_data10, "rrc": json_data11, "jowar": json_data12, 
+             "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17
+             }
         except:
             json_data = json.dumps({"Status": 0}, indent=1)
 
@@ -1972,7 +1994,15 @@ def Daily_Planner():
             bajra_dest = fetched_data['bajra_Destination']
             maize_origin = fetched_data['maize_Origin']
             maize_dest = fetched_data['maize_Destination']
-            
+            misc1_origin = fetched_data['misc1_Origin']
+            misc1_dest = fetched_data['misc1_Destination']
+            misc2_origin = fetched_data['misc2_Origin']
+            misc2_dest = fetched_data['misc2_Destination']
+            wheaturs_origin = fetched_data['wheaturs_Origin']
+            wheaturs_dest = fetched_data['wheaturs_Destination']
+            wheatfaq_origin = fetched_data['wheatfaq_Origin']
+            wheatfaq_dest = fetched_data['wheatfaq_Destination']
+           
             rra_origin_inline = fetched_data["rice_inline"]
             rra_dest_inline = fetched_data["rice_dest_inline"]
             wheat_origin_inline = fetched_data["wheat_inline"]
@@ -2142,6 +2172,46 @@ def Daily_Planner():
                 if maize["Value"] > 0:
                     dest_maize[maize["origin_railhead"]] = maize["Value"]
 
+            source_misc1 = {}
+            for misc1 in misc1_origin:
+                if misc1["Value"] > 0:
+                    source_misc1[misc1["origin_railhead"]] = misc1["Value"]
+
+            dest_misc1 = {}
+            for misc1 in misc1_dest:
+                if misc1["Value"] > 0:
+                    dest_misc1[misc1["origin_railhead"]] = misc1["Value"]
+
+            source_misc2 = {}
+            for misc2 in misc2_origin:
+                if misc2["Value"] > 0:
+                    source_misc2[misc2["origin_railhead"]] = misc2["Value"]
+
+            dest_misc2 = {}
+            for misc2 in misc2_dest:
+                if misc2["Value"] > 0:
+                    dest_misc2[misc2["origin_railhead"]] = misc2["Value"]
+
+            source_wheaturs = {}
+            for wheat in wheaturs_origin:
+                if wheat["Value"] > 0:
+                    source_wheaturs[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheaturs = {}
+            for wheat in wheaturs_dest:
+                if wheat["Value"] > 0:
+                    dest_wheaturs[wheat["origin_railhead"]] = wheat["Value"]
+
+            source_wheatfaq = {}
+            for wheat in wheatfaq_origin:
+                if wheat["Value"] > 0:
+                    source_wheatfaq[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheatfaq = {}
+            for wheat in wheatfaq_dest:
+                if wheat["Value"] > 0:
+                    dest_wheatfaq[wheat["origin_railhead"]] = wheat["Value"]
+            
             source_wheat_inline = {}
             for i in range(len(wheat_origin_inline)):
                 source_wheat_inline[wheat_origin_inline[i]["origin_railhead"]] = wheat_origin_inline[i]["destination_railhead"]
@@ -2310,6 +2380,10 @@ def Daily_Planner():
             x_ij_jowar=LpVariable.dicts("x_jowar",[(i,j) for i in source_jowar.keys() for j in dest_jowar.keys()],lowBound = 0,cat="Integer")
             x_ij_bajra=LpVariable.dicts("x_bajra",[(i,j) for i in source_bajra.keys() for j in dest_bajra.keys()],lowBound = 0,cat="Integer")
             x_ij_maize=LpVariable.dicts("x_maize",[(i,j) for i in source_maize.keys() for j in dest_maize.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc1=LpVariable.dicts("x_misc1",[(i,j) for i in source_misc1.keys() for j in dest_misc1.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc2=LpVariable.dicts("x_misc2",[(i,j) for i in source_misc2.keys() for j in dest_misc2.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheaturs=LpVariable.dicts("x_wheaturs",[(i,j) for i in source_wheaturs.keys() for j in dest_wheaturs.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheatfaq=LpVariable.dicts("x_wheatfaq",[(i,j) for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()],lowBound = 0,cat="Integer")
 
             prob += (
                 lpSum(x_ij_wheat[(i, j)] * rail_cost.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
@@ -2324,7 +2398,11 @@ def Daily_Planner():
                 lpSum(x_ij_ragi[(i, j)] * rail_cost.loc[i][j] for i in source_ragi.keys() for j in dest_ragi.keys()) +
                 lpSum(x_ij_jowar[(i, j)] * rail_cost.loc[i][j] for i in source_jowar.keys() for j in dest_jowar.keys()) +
                 lpSum(x_ij_bajra[(i, j)] * rail_cost.loc[i][j] for i in source_bajra.keys() for j in dest_bajra.keys()) +
-                lpSum(x_ij_maize[(i, j)] * rail_cost.loc[i][j] for i in source_maize.keys() for j in dest_maize.keys()) 
+                lpSum(x_ij_maize[(i, j)] * rail_cost.loc[i][j] for i in source_maize.keys() for j in dest_maize.keys()) +
+                lpSum(x_ij_misc1[(i, j)] * rail_cost.loc[i][j] for i in source_misc1.keys() for j in dest_misc1.keys()) +
+                lpSum(x_ij_misc2[(i, j)] * rail_cost.loc[i][j] for i in source_misc2.keys() for j in dest_misc2.keys()) +
+                lpSum(x_ij_wheaturs[(i, j)] * rail_cost.loc[i][j] for i in source_wheaturs.keys() for j in dest_wheaturs.keys()) +
+                lpSum(x_ij_wheatfaq[(i, j)] * rail_cost.loc[i][j] for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()) 
             )
            
             for i in source_wheat.keys():
@@ -2398,6 +2476,36 @@ def Daily_Planner():
 
             for i in dest_bajra.keys():
                 prob += lpSum(x_ij_bajra[(j, i)] for j in source_bajra.keys()) >= dest_bajra[i] 
+
+            for i in source_maize.keys():
+                prob += lpSum(x_ij_maize[(i, j)] for j in dest_maize.keys()) <= source_maize[i]
+
+            for i in dest_maize.keys():
+                prob += lpSum(x_ij_maize[(j, i)] for j in source_maize.keys()) >= dest_maize[i] 
+
+            for i in source_misc1.keys():
+                prob += lpSum(x_ij_misc1[(i, j)] for j in dest_misc1.keys()) <= source_misc1[i]
+
+            for i in dest_misc1.keys():
+                prob += lpSum(x_ij_misc1[(j, i)] for j in source_misc1.keys()) >= dest_misc1[i] 
+
+            for i in source_misc2.keys():
+                prob += lpSum(x_ij_misc2[(i, j)] for j in dest_misc2.keys()) <= source_misc2[i]
+
+            for i in dest_misc2.keys():
+                prob += lpSum(x_ij_misc2[(j, i)] for j in source_misc2.keys()) >= dest_misc2[i] 
+
+            for i in source_wheaturs.keys():
+                prob += lpSum(x_ij_wheaturs[(i, j)] for j in dest_wheaturs.keys()) <= source_wheaturs[i]
+
+            for i in dest_wheaturs.keys():
+                prob += lpSum(x_ij_wheaturs[(j, i)] for j in source_wheaturs.keys()) >= dest_wheaturs[i] 
+
+            for i in source_wheatfaq.keys():
+                prob += lpSum(x_ij_wheatfaq[(i, j)] for j in dest_wheatfaq.keys()) <= source_wheatfaq[i]
+
+            for i in dest_wheatfaq.keys():
+                prob += lpSum(x_ij_wheatfaq[(j, i)] for j in source_wheatfaq.keys()) >= dest_wheatfaq[i] 
 
             prob.writeLP("FCI_monthly_model_allocation_rr.lp")
             # prob.solve(CPLEX())
@@ -2858,17 +2966,180 @@ def Daily_Planner():
                         From_state.append(bajra["origin_state"])
 
             for i in range (len(To)): 
-                for jowar in bajra_dest: 
-                    if To[i] == jowar["origin_railhead"]:
-                        To_state.append(jowar["origin_state"])
+                for bajra in bajra_dest: 
+                    if To[i] == bajra["origin_railhead"]:
+                        To_state.append(bajra["origin_state"])
 
             df_bajra["SourceRailHead"] = From
             df_bajra["SourceState"] = From_state
             df_bajra["DestinationRailHead"] = To
             df_bajra["DestinationState"] = To_state
             df_bajra["Commodity"] = commodity
-            df_bajra["Values"] = values
-            print (df_bajra)
+
+            df_maize = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_maize:
+                for j in dest_maize:
+                    if int(x_ij_maize[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_maize[(i,j)].value())
+                        commodity.append("Maize")
+
+            for i in range(len(From)):
+                for maize in maize_origin:
+                    if From[i] == maize["origin_railhead"]:
+                        From_state.append(maize["origin_state"])
+
+            for i in range (len(To)): 
+                for maize in maize_dest: 
+                    if To[i] == maize["origin_railhead"]:
+                        To_state.append(maize["origin_state"])
+
+            df_maize["SourceRailHead"] = From
+            df_maize["SourceState"] = From_state
+            df_maize["DestinationRailHead"] = To
+            df_maize["DestinationState"] = To_state
+            df_maize["Commodity"] = commodity
+
+            df_misc1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_misc1:
+                for j in dest_misc1:
+                    if int(x_ij_misc1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_misc1[(i,j)].value())
+                        commodity.append("Misc1")
+
+            for i in range(len(From)):
+                for misc1 in misc1_origin:
+                    if From[i] == misc1["origin_railhead"]:
+                        From_state.append(misc1["origin_state"])
+
+            for i in range (len(To)): 
+                for misc1 in misc1_dest: 
+                    if To[i] == misc1["origin_railhead"]:
+                        To_state.append(misc1["origin_state"])
+
+            df_misc1["SourceRailHead"] = From
+            df_misc1["SourceState"] = From_state
+            df_misc1["DestinationRailHead"] = To
+            df_misc1["DestinationState"] = To_state
+            df_misc1["Commodity"] = commodity
+            df_misc1["Values"] = values
+
+            df_misc2 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_misc2:
+                for j in dest_misc2:
+                    if int(x_ij_misc2[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_misc2[(i,j)].value())
+                        commodity.append("Misc2")
+
+            for i in range(len(From)):
+                for misc2 in misc2_origin:
+                    if From[i] == misc2["origin_railhead"]:
+                        From_state.append(misc2["origin_state"])
+
+            for i in range (len(To)): 
+                for misc2 in misc2_dest: 
+                    if To[i] == misc2["origin_railhead"]:
+                        To_state.append(misc2["origin_state"])
+
+            df_misc2["SourceRailHead"] = From
+            df_misc2["SourceState"] = From_state
+            df_misc2["DestinationRailHead"] = To
+            df_misc2["DestinationState"] = To_state
+            df_misc2["Commodity"] = commodity
+            df_misc2["Values"] = values
+
+            df_wheaturs = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_wheaturs:
+                for j in dest_wheaturs:
+                    if int(x_ij_wheaturs[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wheaturs[(i,j)].value())
+                        commodity.append("Wheat(URS)")
+
+            for i in range(len(From)):
+                for wheat in wheaturs_origin:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+
+            for i in range (len(To)): 
+                for wheat in wheaturs_dest: 
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+
+            df_wheaturs["SourceRailHead"] = From
+            df_wheaturs["SourceState"] = From_state
+            df_wheaturs["DestinationRailHead"] = To
+            df_wheaturs["DestinationState"] = To_state
+            df_wheaturs["Commodity"] = commodity
+            df_wheaturs["Values"] = values
+
+            df_wheatfaq = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            
+            for i in source_wheatfaq:
+                for j in dest_wheatfaq:
+                    if int(x_ij_wheatfaq[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wheatfaq[(i,j)].value())
+                        commodity.append("Wheat(FAQ)")
+
+            for i in range(len(From)):
+                for wheat in wheatfaq_origin:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+
+            for i in range (len(To)): 
+                for wheat in wheatfaq_dest: 
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+
+            df_wheatfaq["SourceRailHead"] = From
+            df_wheatfaq["SourceState"] = From_state
+            df_wheatfaq["DestinationRailHead"] = To
+            df_wheatfaq["DestinationState"] = To_state
+            df_wheatfaq["Commodity"] = commodity
+            df_wheatfaq["Values"] = values
+
             data1["rra"] = df_rra
             data1["wheat"] = df_wheat
             data1["coarse grain"] = df_CoarseGrain
@@ -2877,7 +3148,16 @@ def Daily_Planner():
             data1["FRK"] = df_frk
             data1["FRK+CGR"] = df_frkcgr
             data1["W+CGR"] = df_wcgr
-
+            data1["RRC"] = df_rrc
+            data1["wheat_urs"] = df_wheaturs
+            data1["wheat_faq"] = df_wheatfaq
+            data1["Ragi"] = df_ragi
+            data1["Jowar"] = df_jowar
+            data1["Bajra"] = df_bajra
+            data1["Maize"] = df_maize
+            data1["Misc1"] = df_misc1
+            data1["Misc2"] = df_misc2
+            
             with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                 df_wheat.to_excel(writer, sheet_name="wheat", index=False)
                 df_rra.to_excel(writer, sheet_name="rra", index=False)
@@ -2887,7 +3167,16 @@ def Daily_Planner():
                 df_frk.to_excel(writer, sheet_name="frk", index=False)
                 df_frkcgr.to_excel(writer, sheet_name="frkcgr", index=False)
                 df_wcgr.to_excel(writer, sheet_name="wcgr", index=False)
-    
+                df_rrc.to_excel(writer, sheet_name="rrc", index=False)
+                df_wheaturs.to_excel(writer, sheet_name="wheaturs", index=False)
+                df_wheatfaq.to_excel(writer, sheet_name="wheatfaq", index=False)
+                df_ragi.to_excel(writer, sheet_name="ragi", index=False)
+                df_jowar.to_excel(writer, sheet_name="jowar", index=False)
+                df_bajra.to_excel(writer, sheet_name="bajra", index=False)
+                df_maize.to_excel(writer, sheet_name="maize", index=False)
+                df_misc1.to_excel(writer, sheet_name="misc1", index=False)
+                df_misc2.to_excel(writer, sheet_name="misc2", index=False)
+
         except Exception as e:
             print(e)
             data1["status"] = 0
