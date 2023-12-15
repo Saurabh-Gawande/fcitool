@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -6,10 +6,8 @@ import config from "../../config";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import "./Daily_Planner.css";
-import UserContext from "../../Context/userContext";
 
 function Daily_Planner() {
-  const { state } = useContext(UserContext);
   //---------------------------------------------------------------------------------------------
   const [surplus, setSurplus] = useState([]);
   const [surplusInline, setSurplusInline] = useState([]);
@@ -72,6 +70,7 @@ function Daily_Planner() {
   const [commodity_fixed, setCommodity_fixed] = useState("");
   const [value_fixed, setValue_fixed] = useState("");
   const [TEFD, set_TEFD] = useState("");
+  const [TEFDdata, set_TEFDdata] = useState();
   const [solutionSolved, setSolutionSolved] = useState(false);
   const [Total_result, set_Total_Result] = useState();
   const [Relevant_result, set_Relevant_Result] = useState(null);
@@ -108,18 +107,39 @@ function Daily_Planner() {
   const [frkcgrOriginValue, setfrkcgrOriginValue] = useState();
   const [frkcgrDestinationValue, setfrkcgrDestinationValue] = useState();
   const [frkOriginValue, setfrkOriginValue] = useState();
+
+  const [rrcOriginValue, setRrcOriginValue] = useState();
+  const [ragiOriginValue, setRagiOriginValue] = useState();
+  const [jowarOriginValue, setJowarOriginValue] = useState();
+  const [bajraOriginValue, setBajraOriginValue] = useState();
+  const [maizeOriginValue, setMiazeOriginValue] = useState();
+  const [wheatUrsOriginValue, setWheatUrsOriginValue] = useState();
+  const [wheatFaqOriginValue, setWheatFaqOriginValue] = useState();
+  const [misc1OriginValue, setMisc1OriginValue] = useState();
+  const [misc2OriginValue, setMisc2OriginValue] = useState();
+
+  const [rrcDestinationValue, setRrcDestinationValue] = useState();
+  const [ragiDestinationValue, setRagiDestinationValue] = useState();
+  const [jowarDestinationValue, setJowarDestinationValue] = useState();
+  const [bajraDestinationValue, setBajraDestinationValue] = useState();
+  const [maizeDestinationValue, setMiazeDestinationValue] = useState();
+  const [wheatUrsDestinationValue, setWheatUrsDestinationValue] = useState();
+  const [wheatFaqDestinationValue, setWheatFaqDestinationValue] = useState();
+  const [misc1DestinationValue, setMisc1DestinationValue] = useState();
+  const [misc2DestinationValue, setMisc2DestinationValue] = useState();
+
   const [frkDestinationValue, setfrkDestinationValue] = useState();
   const [excelfiledata, setExcelFileData] = useState();
   const [railheadData, setRailheadData] = useState();
-  const[rrc, setRrc] = useState(false)
-  const[ragi, setRagi] = useState(false)
-  const[jowar, setJowar] = useState(false)
-  const[bajra, setBajra] = useState(false)
-  const[maize, setMaize] = useState(false)
-  const[whear_urs, setWheat_urs] = useState(false)
-  const[whear_faq, setWheat_faq] = useState(false)
-  const[misc1, setMisc1] = useState(false)
-  const[misc2, setMisc2] = useState(false)
+  const [rrc, setRrc] = useState(false);
+  const [ragi, setRagi] = useState(false);
+  const [jowar, setJowar] = useState(false);
+  const [bajra, setBajra] = useState(false);
+  const [maize, setMaize] = useState(false);
+  const [wheat_urs, setWheat_urs] = useState(false);
+  const [wheat_faq, setWheat_faq] = useState(false);
+  const [misc1, setMisc1] = useState(false);
+  const [misc2, setMisc2] = useState(false);
   // ---------------------------------------------------------------------------------------
   useEffect(() => {
     try {
@@ -138,6 +158,28 @@ function Daily_Planner() {
       console.error("Error during login:", error);
       window.alert("An error occurred during login. Please try again later.");
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=TEFD_TC"
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const result = await response.json();
+        set_TEFDdata(result);
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const processSheetData = (workbook, sheetIndices) => {
@@ -482,115 +524,115 @@ function Daily_Planner() {
     setExcelData(updatedData);
   };
 
-  const getCommodityData = async () => {
-    // setUpdateExcel(false);
-    const response = await fetch(ProjectIp + "/getDataTemplate");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const waitForSheetToLoad = (sheetName, maxAttempts = 10) => {
-      return new Promise((resolve, reject) => {
-        let attempts = 0;
+  // const getCommodityData = async () => {
+  //   // setUpdateExcel(false);
+  //   const response = await fetch(ProjectIp + "/getDataTemplate");
+  //   const arrayBuffer = await response.arrayBuffer();
+  //   const data = new Uint8Array(arrayBuffer);
+  //   const workbook = XLSX.read(data, { type: "array" });
+  //   const waitForSheetToLoad = (sheetName, maxAttempts = 10) => {
+  //     return new Promise((resolve, reject) => {
+  //       let attempts = 0;
 
-        const checkSheet = () => {
-          if (workbook.Sheets[sheetName]) {
-            resolve(workbook.Sheets[sheetName]);
-          } else {
-            attempts++;
-            if (attempts >= maxAttempts) {
-              reject(new Error(`Sheet "${sheetName}" not found in workbook.`));
-            } else {
-              setTimeout(checkSheet, 500); // Check every 500 milliseconds (adjust as needed)
-            }
-          }
-        };
+  //       const checkSheet = () => {
+  //         if (workbook.Sheets[sheetName]) {
+  //           resolve(workbook.Sheets[sheetName]);
+  //         } else {
+  //           attempts++;
+  //           if (attempts >= maxAttempts) {
+  //             reject(new Error(`Sheet "${sheetName}" not found in workbook.`));
+  //           } else {
+  //             setTimeout(checkSheet, 500); // Check every 500 milliseconds (adjust as needed)
+  //           }
+  //         }
+  //       };
 
-        checkSheet();
-      });
-    };
+  //       checkSheet();
+  //     });
+  //   };
 
-    try {
-      const def_sheet_rice = "Deficit_rice";
-      const surplus_sheet_rice = "Surplus_rice";
-      const deficitSheetRice = await waitForSheetToLoad(def_sheet_rice);
-      const surplusSheetRice = await waitForSheetToLoad(surplus_sheet_rice);
-      const deficit_data_rice = XLSX.utils.sheet_to_json(deficitSheetRice, {
-        header: 1,
-      });
-      const surplus_data_rice = XLSX.utils.sheet_to_json(surplusSheetRice, {
-        header: 1,
-      });
-      const def_10_rice = [...deficit_data_rice.slice(1, 10)];
-      const sur_10_rice = [...surplus_data_rice.slice(1, 10)];
-      setBlockdata3([]);
-      setRiceDestination([]);
-      for (let i = 0; i < sur_10_rice.length; i++) {
-        setBlockdata3((data) => [
-          ...data,
-          {
-            origin_state: sur_10_rice[i][1],
-            origin_railhead: sur_10_rice[i][0],
-            origin_value: sur_10_rice[i][2],
-            id: Date.now() + i.toString(),
-          },
-        ]);
-      }
-      for (let i = 0; i < def_10_rice.length; i++) {
-        setRiceDestination((data) => [
-          ...data,
-          {
-            origin_state: def_10_rice[i][1],
-            origin_railhead: def_10_rice[i][0],
-            origin_value: def_10_rice[i][2],
-            id: Date.now() + i.toString(),
-          },
-        ]);
-      }
+  //   try {
+  //     const def_sheet_rice = "Deficit_rice";
+  //     const surplus_sheet_rice = "Surplus_rice";
+  //     const deficitSheetRice = await waitForSheetToLoad(def_sheet_rice);
+  //     const surplusSheetRice = await waitForSheetToLoad(surplus_sheet_rice);
+  //     const deficit_data_rice = XLSX.utils.sheet_to_json(deficitSheetRice, {
+  //       header: 1,
+  //     });
+  //     const surplus_data_rice = XLSX.utils.sheet_to_json(surplusSheetRice, {
+  //       header: 1,
+  //     });
+  //     const def_10_rice = [...deficit_data_rice.slice(1, 10)];
+  //     const sur_10_rice = [...surplus_data_rice.slice(1, 10)];
+  //     setBlockdata3([]);
+  //     setRiceDestination([]);
+  //     for (let i = 0; i < sur_10_rice.length; i++) {
+  //       setBlockdata3((data) => [
+  //         ...data,
+  //         {
+  //           origin_state: sur_10_rice[i][1],
+  //           origin_railhead: sur_10_rice[i][0],
+  //           origin_value: sur_10_rice[i][2],
+  //           id: Date.now() + i.toString(),
+  //         },
+  //       ]);
+  //     }
+  //     for (let i = 0; i < def_10_rice.length; i++) {
+  //       setRiceDestination((data) => [
+  //         ...data,
+  //         {
+  //           origin_state: def_10_rice[i][1],
+  //           origin_railhead: def_10_rice[i][0],
+  //           origin_value: def_10_rice[i][2],
+  //           id: Date.now() + i.toString(),
+  //         },
+  //       ]);
+  //     }
 
-      const def_sheet_wheat = "Deficit_wheat";
-      const surplus_sheet_wheat = "Surplus_wheat";
-      const deficitSheetWheat = await waitForSheetToLoad(def_sheet_wheat);
-      const surplusSheetWheat = await waitForSheetToLoad(surplus_sheet_wheat);
-      const deficit_data_wheat = XLSX.utils.sheet_to_json(deficitSheetWheat, {
-        header: 1,
-      });
-      const surplus_data_wheat = XLSX.utils.sheet_to_json(surplusSheetWheat, {
-        header: 1,
-      });
-      const def_10_wheat = [...deficit_data_wheat.slice(1, 10)];
-      const sur_10_wheat = [...surplus_data_wheat.slice(1, 10)];
-      setBlockdataWheat3([]);
-      setWheatDestination([]);
-      for (let i = 0; i < sur_10_wheat.length; i++) {
-        setBlockdataWheat3((data) => [
-          ...data,
-          {
-            origin_state: sur_10_wheat[i][1],
-            origin_railhead: sur_10_wheat[i][0],
-            origin_value: sur_10_wheat[i][2],
-            id: Date.now() + i.toString(),
-          },
-        ]);
-      }
-      for (let i = 0; i < def_10_wheat.length; i++) {
-        setWheatDestination((data) => [
-          ...data,
-          {
-            origin_state: def_10_wheat[i][1],
-            origin_railhead: def_10_wheat[i][0],
-            origin_value: def_10_wheat[i][2],
-            id: Date.now() + i,
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  //     const def_sheet_wheat = "Deficit_wheat";
+  //     const surplus_sheet_wheat = "Surplus_wheat";
+  //     const deficitSheetWheat = await waitForSheetToLoad(def_sheet_wheat);
+  //     const surplusSheetWheat = await waitForSheetToLoad(surplus_sheet_wheat);
+  //     const deficit_data_wheat = XLSX.utils.sheet_to_json(deficitSheetWheat, {
+  //       header: 1,
+  //     });
+  //     const surplus_data_wheat = XLSX.utils.sheet_to_json(surplusSheetWheat, {
+  //       header: 1,
+  //     });
+  //     const def_10_wheat = [...deficit_data_wheat.slice(1, 10)];
+  //     const sur_10_wheat = [...surplus_data_wheat.slice(1, 10)];
+  //     setBlockdataWheat3([]);
+  //     setWheatDestination([]);
+  //     for (let i = 0; i < sur_10_wheat.length; i++) {
+  //       setBlockdataWheat3((data) => [
+  //         ...data,
+  //         {
+  //           origin_state: sur_10_wheat[i][1],
+  //           origin_railhead: sur_10_wheat[i][0],
+  //           origin_value: sur_10_wheat[i][2],
+  //           id: Date.now() + i.toString(),
+  //         },
+  //       ]);
+  //     }
+  //     for (let i = 0; i < def_10_wheat.length; i++) {
+  //       setWheatDestination((data) => [
+  //         ...data,
+  //         {
+  //           origin_state: def_10_wheat[i][1],
+  //           origin_railhead: def_10_wheat[i][0],
+  //           origin_value: def_10_wheat[i][2],
+  //           id: Date.now() + i,
+  //         },
+  //       ]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    getCommodityData();
-  }, []);
+  // useEffect(() => {
+  //   getCommodityData();
+  // }, []);
 
   const riceOrigin = surplus.filter((item) => item.Commodity === "RRA");
   const block_data2 = surplusInline.filter((item) => item.Commodity === "RRA");
@@ -685,47 +727,101 @@ function Daily_Planner() {
   );
 
   const rrc_Origin = surplus.filter((item) => item.Commodity === "RRC");
+  const rrc_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "RRC"
+  );
   const rrc_Destination = deficit.filter((item) => item.Commodity === "RRC");
+  const rrc_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "RRC"
+  );
 
   const ragi_Origin = surplus.filter((item) => item.Commodity === "Ragi");
+  const ragi_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Ragi"
+  );
   const ragi_Destination = deficit.filter((item) => item.Commodity === "Ragi");
+  const ragi_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "Ragi"
+  );
 
   const jowar_Origin = surplus.filter((item) => item.Commodity === "Jowar");
+  const jowar_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Jowar"
+  );
   const jowar_Destination = deficit.filter(
+    (item) => item.Commodity === "Jowar"
+  );
+  const jowar_InlineDestination = deficitInline.filter(
     (item) => item.Commodity === "Jowar"
   );
 
   const bajra_Origin = surplus.filter((item) => item.Commodity === "Bajra");
+  const bajra_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Bajra"
+  );
   const bajra_Destination = deficit.filter(
+    (item) => item.Commodity === "Bajra"
+  );
+  const bajra_InlineDestination = deficitInline.filter(
     (item) => item.Commodity === "Bajra"
   );
 
   const maize_Origin = surplus.filter((item) => item.Commodity === "Maize");
+  const maize_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Maize"
+  );
   const maize_Destination = deficit.filter(
+    (item) => item.Commodity === "Maize"
+  );
+  const maize_InlineDestination = deficitInline.filter(
     (item) => item.Commodity === "Maize"
   );
 
   const misc1_Origin = surplus.filter((item) => item.Commodity === "Misc1");
+  const misc1_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Misc1"
+  );
   const misc1_Destination = deficit.filter(
+    (item) => item.Commodity === "Misc1"
+  );
+  const misc1_InlineDestination = deficitInline.filter(
     (item) => item.Commodity === "Misc1"
   );
 
   const misc2_Origin = surplus.filter((item) => item.Commodity === "Misc2");
+  const misc2_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Misc2"
+  );
   const misc2_Destination = deficit.filter(
+    (item) => item.Commodity === "Misc2"
+  );
+  const misc2_InlineDestination = deficitInline.filter(
     (item) => item.Commodity === "Misc2"
   );
 
   const wheaturs_Origin = surplus.filter(
     (item) => item.Commodity === "Wheat(URS)"
   );
+  const wheaturs_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Wheat(URS)"
+  );
   const wheaturs_Destination = deficit.filter(
+    (item) => item.Commodity === "Wheat(URS)"
+  );
+  const wheaturs_InlineDestination = deficitInline.filter(
     (item) => item.Commodity === "Wheat(URS)"
   );
 
   const wheatfaq_Origin = surplus.filter(
     (item) => item.Commodity === "Wheat(FAQ)"
   );
+  const wheatfaq_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Wheat(FAQ)"
+  );
   const wheatfaq_Destination = deficit.filter(
+    (item) => item.Commodity === "Wheat(FAQ)"
+  );
+  const wheatfaq_InlineDestination = deficitInline.filter(
     (item) => item.Commodity === "Wheat(FAQ)"
   );
 
@@ -811,6 +907,102 @@ function Daily_Planner() {
       frk_Destination.reduce((total, item) => total + item.Value, 0) +
         frk_InlineDestination.reduce((total, item) => total + item.Value, 0)
     );
+
+    setRrcOriginValue(
+      rrc_Origin.reduce((total, item) => total + item.Value, 0) +
+        rrc_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRrcDestinationValue(
+      rrc_Destination.reduce((total, item) => total + item.Value, 0) +
+        rrc_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRagiOriginValue(
+      ragi_Origin.reduce((total, item) => total + item.Value, 0) +
+        ragi_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRagiDestinationValue(
+      ragi_Destination.reduce((total, item) => total + item.Value, 0) +
+        ragi_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setJowarOriginValue(
+      jowar_Origin.reduce((total, item) => total + item.Value, 0) +
+        jowar_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setJowarDestinationValue(
+      jowar_Destination.reduce((total, item) => total + item.Value, 0) +
+        jowar_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setBajraOriginValue(
+      bajra_Origin.reduce((total, item) => total + item.Value, 0) +
+        bajra_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setBajraDestinationValue(
+      bajra_Destination.reduce((total, item) => total + item.Value, 0) +
+        bajra_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMiazeOriginValue(
+      maize_Origin.reduce((total, item) => total + item.Value, 0) +
+        maize_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMiazeDestinationValue(
+      maize_Destination.reduce((total, item) => total + item.Value, 0) +
+        maize_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc1OriginValue(
+      misc1_Origin.reduce((total, item) => total + item.Value, 0) +
+        misc1_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc1DestinationValue(
+      misc1_Destination.reduce((total, item) => total + item.Value, 0) +
+        misc1_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc2OriginValue(
+      misc2_Origin.reduce((total, item) => total + item.Value, 0) +
+        misc2_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc2DestinationValue(
+      misc2_Destination.reduce((total, item) => total + item.Value, 0) +
+        misc2_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setWheatUrsOriginValue(
+      wheaturs_Origin.reduce((total, item) => total + item.Value, 0) +
+        wheaturs_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setWheatUrsDestinationValue(
+      wheaturs_Destination.reduce((total, item) => total + item.Value, 0) +
+        wheaturs_InlineDestination.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setWheatFaqOriginValue(
+      wheatfaq_Origin.reduce((total, item) => total + item.Value, 0) +
+        wheatfaq_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setWheatFaqDestinationValue(
+      wheatfaq_Destination.reduce((total, item) => total + item.Value, 0) +
+        wheatfaq_InlineDestination.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
   });
 
   const handleSolve = async () => {
@@ -884,31 +1076,51 @@ function Daily_Planner() {
       frkcgr_dest_inline: frk_cgr_InlineDestination,
 
       rrc_Origin: rrc_Origin,
+      rrc_InlineOrigin: rrc_InlineOrigin,
       rrc_Destination: rrc_Destination,
+      rrc_InlineDestination: rrc_InlineDestination,
 
       ragi_Origin: ragi_Origin,
+      ragi_InlineOrigin: ragi_InlineOrigin,
       ragi_Destination: ragi_Destination,
+      ragi_InlineDestination: ragi_InlineDestination,
 
       jowar_Origin: jowar_Origin,
+      jowar_InlineOrigin: jowar_InlineOrigin,
       jowar_Destination: jowar_Destination,
+      jowar_InlineDestination: jowar_InlineDestination,
 
       bajra_Origin: bajra_Origin,
+      bajra_InlineOrigin: bajra_InlineOrigin,
       bajra_Destination: bajra_Destination,
+      bajra_InlineDestination: bajra_InlineDestination,
 
       maize_Origin: maize_Origin,
+      maize_InlineOrigin: maize_InlineOrigin,
       maize_Destination: maize_Destination,
+      maize_InlineDestination: maize_InlineDestination,
 
       misc1_Origin: misc1_Origin,
+      misc1_InlineOrigin: misc1_InlineOrigin,
       misc1_Destination: misc1_Destination,
+      misc1_InlineDestination: misc1_InlineDestination,
 
       misc2_Origin: misc2_Origin,
+      misc2_InlineOrigin: misc2_InlineOrigin,
       misc2_Destination: misc2_Destination,
+      misc2_InlineDestination: misc2_InlineDestination,
 
       wheaturs_Origin: wheaturs_Origin,
+      wheaturs_InlineOrigin: wheaturs_InlineOrigin,
       wheaturs_Destination: wheaturs_Destination,
+      wheaturs_InlineDestination: wheaturs_InlineDestination,
 
       wheatfaq_Origin: wheatfaq_Origin,
+      wheatfaq_InlineOrigin: wheatfaq_InlineOrigin,
       wheatfaq_Destination: wheatfaq_Destination,
+      wheatfaq_InlineDestination: wheatfaq_InlineDestination,
+
+      // TEFDdata: TEFDdata,
     };
 
     try {
@@ -968,77 +1180,6 @@ function Daily_Planner() {
       });
   };
 
-  const handleDropdownChange = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOption(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions(dropdownOptions);
-    setSubOptions(dropdownOptions);
-  };
-
-  const handleDropdownChange2 = async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedOption2(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
-    }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions2(dropdownOptions);
-  };
-
   const exportToPDF = () => {
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
@@ -1072,14 +1213,6 @@ function Daily_Planner() {
 
   const formatData = (item) => {
     return `From: ${item.From}\nFrom State: ${item["From State"]}\nTo: ${item.To}\nTo State: ${item["To State"]}\nCommodity: ${item.Commodity}`;
-  };
-
-  const handleSubDropdownChange1 = (e) => {
-    setSubOption1(e.target.value);
-  };
-
-  const handleSubDropdownChange2 = (e) => {
-    setSubOption2(e.target.value);
   };
 
   const handleDropdownChange_fixed = async (e) => {
@@ -1273,17 +1406,17 @@ function Daily_Planner() {
     setFrk(frkData);
     setFrk_cgr(frkcgrData);
     setw_cgr(wcgrData);
-    setRrc(rrc)
-    setRagi(ragi)
-    setBajra(bajra)
-    setJowar(jowar)
-    setMaize(maize)
-    setWheat_faq(wheat_faq)
-    setWheat_urs(wheat_urs)
-    setMisc1(misc1)
-    setMisc2(misc2)
+    setRrc(rrc);
+    setRagi(ragi);
+    setBajra(bajra);
+    setJowar(jowar);
+    setMaize(maize);
+    setWheat_faq(wheat_faq);
+    setWheat_urs(wheat_urs);
+    setMisc1(misc1);
+    setMisc2(misc2);
   };
-  
+
   const exportToExcel1 = () => {
     if (Total_result == null) {
       // Commented out the alert statement
@@ -3603,6 +3736,780 @@ function Daily_Planner() {
                             )}
                           </div>
                         )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {rrc !== null && rrc.length > 0 ? (
+                              <div>
+                                <div>RRC</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {rrc.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {ragi !== null && ragi.length > 0 ? (
+                              <div>
+                                <div>Ragi</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {ragi.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {jowar !== null && jowar.length > 0 ? (
+                              <div>
+                                <div>Jowar</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {jowar.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {bajra !== null && bajra.length > 0 ? (
+                              <div>
+                                <div>Bajra</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {bajra.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {maize !== null && maize.length > 0 ? (
+                              <div>
+                                <div>Maize</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {maize.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {wheat_urs !== null && wheat_urs.length > 0 ? (
+                              <div>
+                                <div>Wheat(URS)</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {wheat_urs.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {wheat_faq !== null && wheat_faq.length > 0 ? (
+                              <div>
+                                <div>Wheat(FAQ)</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {wheat_faq.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {misc1 !== null && misc1.length > 0 ? (
+                              <div>
+                                <div>Misc1</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {misc1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                            {misc2 !== null && misc2.length > 0 ? (
+                              <div>
+                                <div>Misc2</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {misc2.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -3731,6 +4638,111 @@ function Daily_Planner() {
               {frkDestinationValue > 0 ? (
                 <div>{`Destination Value of Wheat+FRK is ${frkDestinationValue}`}</div>
               ) : null}
+              {rrcOriginValue > 0 ? (
+                <div
+                  style={{
+                    color: rrcDestinationValue > rrcOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of RRC is ${rrcOriginValue}`}</div>
+              ) : null}
+              {rrcDestinationValue > 0 ? (
+                <div>{`Destination Value of RRC is ${rrcDestinationValue}`}</div>
+              ) : null}
+              {ragiOriginValue > 0 ? (
+                <div
+                  style={{
+                    color: ragiDestinationValue > ragiOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of Ragi is ${ragiOriginValue}`}</div>
+              ) : null}
+              {ragiDestinationValue > 0 ? (
+                <div>{`Destination Value of Ragi is ${ragiDestinationValue}`}</div>
+              ) : null}
+              {jowarOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      jowarDestinationValue > jowarOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of Jowar is ${jowarOriginValue}`}</div>
+              ) : null}
+              {jowarDestinationValue > 0 ? (
+                <div>{`Destination Value of Jowar is ${jowarDestinationValue}`}</div>
+              ) : null}
+              {bajraOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      bajraDestinationValue > bajraOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of Bajra is ${bajraOriginValue}`}</div>
+              ) : null}
+              {bajraDestinationValue > 0 ? (
+                <div>{`Destination Value of Bajra is ${bajraDestinationValue}`}</div>
+              ) : null}
+              {maizeOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      maizeDestinationValue > maizeOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of Maize is ${maizeOriginValue}`}</div>
+              ) : null}
+              {maizeDestinationValue > 0 ? (
+                <div>{`Destination Value of Maize is ${maizeDestinationValue}`}</div>
+              ) : null}
+
+              {wheatUrsOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      wheatUrsDestinationValue > wheatUrsOriginValue
+                        ? "red"
+                        : "",
+                  }}
+                >{`Supply Value of Wheat(URS) is ${wheatUrsOriginValue}`}</div>
+              ) : null}
+              {wheatUrsDestinationValue > 0 ? (
+                <div>{`Destination Value of Wheat(URS) is ${wheatUrsDestinationValue}`}</div>
+              ) : null}
+              {wheatFaqOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      wheatFaqDestinationValue > wheatFaqOriginValue
+                        ? "red"
+                        : "",
+                  }}
+                >{`Supply Value of Wheat(FAQ) is ${wheatFaqOriginValue}`}</div>
+              ) : null}
+              {wheatFaqDestinationValue > 0 ? (
+                <div>{`Destination Value of Wheat(FAQ) is ${wheatFaqDestinationValue}`}</div>
+              ) : null}
+
+              {misc1OriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      misc1DestinationValue > misc1OriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of Misc1 is ${misc1OriginValue}`}</div>
+              ) : null}
+              {misc1DestinationValue > 0 ? (
+                <div>{`Destination Value of Misc1 is ${misc1DestinationValue}`}</div>
+              ) : null}
+
+              {misc2OriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      misc2DestinationValue > misc2OriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of Misc2 is ${misc2OriginValue}`}</div>
+              ) : null}
+              {misc2DestinationValue > 0 ? (
+                <div>{`Destination Value of Misc2 is ${misc2DestinationValue}`}</div>
+              ) : null}
+
               {isLoading ? (
                 <div
                   style={{
