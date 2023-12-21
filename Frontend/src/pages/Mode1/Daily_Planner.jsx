@@ -1549,6 +1549,32 @@ function Daily_Planner() {
           }));
           setDeficit(updatedDeficit);
 
+          const updatedSurplusInline = data.inlineSourceResponse.map(
+            (item) => ({
+              Sno: Math.floor(Math.random() * 500) + 1,
+              origin_railhead: item.sourceRailHead,
+              origin_state: item.sourceState,
+              destination_railhead: item.sourceInlineRailHead,
+              destination_state: item.sourceState,
+              Value: 1,
+              Commodity: item.commodity,
+            })
+          );
+          setSurplusInline(updatedSurplusInline);
+
+          const updatedDeficitInline = data.inlineDestinationResponse.map(
+            (item) => ({
+              Sno: Math.floor(Math.random() * 500) + 1,
+              origin_railhead: item.destinationRailHead,
+              origin_state: item.destinationState,
+              destination_railhead: item.destinationInlineRailHead,
+              destination_state: item.destinationState,
+              Value: 1,
+              Commodity: item.commodity,
+            })
+          );
+          setDeficitInline(updatedDeficitInline);
+
           setDisableAfterImport(true);
         }
       })
