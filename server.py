@@ -1962,13 +1962,15 @@ def Daily_Planner():
             confirmed_railhead_commodities = []
 
             fetched_data = request.get_json()
-            print(fetched_data)
+            # print(fetched_data)
 
             blocked_data = fetched_data['block_data']
             confirmed_data = fetched_data['confirmed_data']
             # Scenerio = fetched_data["Scenerio"]   
             TEFD_fetched = fetched_data['TEFD']
             # TEFDdata = fetched_data['TEFDdata']
+            # df = pd.DataFrame(TEFD_fetched)
+            # print(df)
             rra_origin = fetched_data["rice_origin"]
             rra_dest = fetched_data["rice_destination"]
             wheat_origin = fetched_data["wheat_origin"]
@@ -3205,6 +3207,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            # Cost = []
 
             for i in source_wheat:
                 for j in dest_wheat:
@@ -3222,33 +3225,19 @@ def Daily_Planner():
             for i in range(len(From)):
                 for wheat in wheat_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
-                        From_state.append(wheat["origin_state"]) 
-            
-            
-            for key in dest_wheat.keys():
-                for wheat in wheat_dest_inline:
-                    if key == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
-                    elif key == wheat["origin_railhead"]:
-                        To_state.append(wheat["origin_state"])  
-                       
-
-            for key in dest_wheat.keys():
-                for wheat in wheat_dest_inline:
-                    if key == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
-                    elif key == wheat["origin_railhead"]:
-                        To_state.append(wheat["origin_state"])  
+                        From_state.append(wheat["origin_state"])
+   
                        
             for i in range (len(To)): 
                 for wheat in wheat_dest: 
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
-                      
+
             for i in range (len(To)): 
                 for wheat in wheat_dest_inline: 
-                    if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"] :
+                    if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
                         To_state.append(wheat["origin_state"])
+                      
 
             # for i in range(len(confirmed_org_rhcode)):
             #     org = str(confirmed_org_rhcode[i])
@@ -3264,18 +3253,23 @@ def Daily_Planner():
             #         To_state.append(dest_state)
             #         commodity.append("Wheat")
             #         values.append(val)
+            
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
 
             df_wheat["SourceRailHead"] = From
             df_wheat["SourceState"] = From_state
             df_wheat["DestinationRailHead"] = To
             df_wheat["DestinationState"] = To_state
             df_wheat["Commodity"] = commodity
+            # df_wheat["Cost"] = Cost
             df_wheat["Values"] = values
 
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["DestinationRailHead"])):
                     if (i == df_wheat.iloc[j]["DestinationRailHead"] or dest_wheat_inline[i] == df_wheat.iloc[j]["DestinationRailHead"]):
                         df_wheat.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheat_inline[i])
+            print(df_wheat)
 
             df_rra = pd.DataFrame()
             From = []
@@ -3284,6 +3278,7 @@ def Daily_Planner():
             commodity = []
             From_state_rra = []
             To_state_rra = []
+            # Cost = []
 
             for i in source_rra:
                 for j in dest_rra:
@@ -3292,27 +3287,29 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_rra[(i, j)].value())
                         commodity.append("RRA")
-                        
-            for i in range(len(From)):
-                for rra in rra_origin_inline:
-                    if From[i] == rra["origin_railhead"] or From[i] == rra["destination_railhead"] :
-                        From_state_rra.append(rra["origin_state"])
-            
-            for i in range (len(To)): 
-                for rra in rra_dest_inline: 
-                    if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"] :
-                        To_state_rra.append(rra["origin_state"]) 
 
             for i in range(len(From)):
                 for rra in rra_origin:
                     if From[i] == rra["origin_railhead"]:
                         From_state_rra.append(rra["origin_state"])
-
+            
+            for i in range(len(From)):
+                for rra in rra_origin_inline:
+                    if From[i] == rra["origin_railhead"] or From[i] == rra["destination_railhead"] :
+                        From_state_rra.append(rra["origin_state"])
+  
             for i in range (len(To)): 
                 for rra in rra_dest: 
                     if To[i] == rra["origin_railhead"]:
                         To_state_rra.append(rra["origin_state"]) 
 
+            for i in range (len(To)): 
+                for rra in rra_dest_inline: 
+                    if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"] :
+                        To_state_rra.append(rra["origin_state"]) 
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
 
             # for i in range(len(confirmed_org_rhcode)):
             #     org = str(confirmed_org_rhcode[i])
@@ -3333,6 +3330,7 @@ def Daily_Planner():
             df_rra["DestinationRailHead"] = To
             df_rra["DestinationState"] = To_state_rra
             df_rra["Commodity"] = commodity
+            # df_rra["Cost"] = Cost
             df_rra["Values"] = values
            
             for i in dest_rra_inline.keys():
@@ -3347,6 +3345,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            # Cost = []
             
             for i in source_coarseGrain:
                 for j in dest_coarseGrain:
@@ -3375,12 +3374,16 @@ def Daily_Planner():
                 for coarseGrain in coarseGrain_dest: 
                     if To[i] == coarseGrain["origin_railhead"]:
                         To_state.append(coarseGrain["origin_state"])
+                        
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
 
             df_CoarseGrain["SourceRailHead"] = From
             df_CoarseGrain["SourceState"] = From_state
             df_CoarseGrain["DestinationRailHead"] = To
             df_CoarseGrain["DestinationState"] = To_state
             df_CoarseGrain["Commodity"] = commodity
+            # df_CoarseGrain["Cost"] = Cost
             df_CoarseGrain["Values"] = values
             
             for i in dest_coarseGrain_inline.keys():
@@ -3395,6 +3398,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            # Cost = []
             
             for i in source_frkrra:
                 for j in dest_frkrra:
@@ -3423,12 +3427,16 @@ def Daily_Planner():
                 for frkrra in frkrra_dest_inline: 
                     if To[i] == frkrra["origin_railhead"] or To[i] == frkrra["destination_railhead"]:
                         To_state.append(frkrra["origin_state"])
-             
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
             df_frkrra["SourceRailHead"] = From
             df_frkrra["SourceState"] = From_state
             df_frkrra["DestinationRailHead"] = To
             df_frkrra["DestinationState"] = To_state
             df_frkrra["Commodity"] = commodity
+            # df_frkrra["Cost"] = Cost
             df_frkrra["Values"] = values
 
             for i in dest_frkrra_inline.keys():
@@ -3443,6 +3451,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            # Cost = []
             
             for i in source_frkbr:
                 for j in dest_frkbr:
@@ -3471,12 +3480,16 @@ def Daily_Planner():
                 for frkbr in frkbr_dest_inline: 
                     if To[i] == frkbr["origin_railhead"] or To[i] == frkbr["destination_railhead"]:
                         To_state.append(frkbr["origin_state"])
+            
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
 
             df_frkbr["SourceRailHead"] = From
             df_frkbr["SourceState"] = From_state
             df_frkbr["DestinationRailHead"] = To
             df_frkbr["DestinationState"] = To_state
             df_frkbr["Commodity"] = commodity
+            # df_frkbr["Cost"] = Cost
             df_frkbr["Values"] = values
 
             for i in dest_frkbr_inline.keys():
@@ -3491,6 +3504,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            # Cost = []
             
             for i in source_frk:
                 for j in dest_frk:
@@ -3520,11 +3534,15 @@ def Daily_Planner():
                     if To[i] == frk["origin_railhead"] or To[i] == frk["destination_railhead"] :
                         To_state.append(frk["origin_state"])
 
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
             df_frk["SourceRailHead"] = From
             df_frk["SourceState"] = From_state
             df_frk["DestinationRailHead"] = To
             df_frk["DestinationState"] = To_state
             df_frk["Commodity"] = commodity
+            # df_frk["Cost"] = Cost
             df_frk["Values"] = values
 
             for i in dest_frk_inline.keys():
@@ -3539,6 +3557,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            # Cost = []
             
             for i in source_frkcgr:
                 for j in dest_frkcgr:
@@ -3568,12 +3587,16 @@ def Daily_Planner():
                     if To[i] == frkcgr["origin_railhead"] or To[i] == frkcgr["destination_railhead"]:
                         To_state.append(frkcgr["origin_state"])
 
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
             df_frkcgr["SourceRailHead"] = From
             df_frkcgr["SourceState"] = From_state
             df_frkcgr["DestinationRailHead"] = To
             df_frkcgr["DestinationState"] = To_state
             df_frkcgr["Commodity"] = commodity
             df_frkcgr["Values"] = values
+            # df_frkcgr["Cost"] = Cost
 
             for i in dest_frkcgr_inline.keys():
                 for j in range(len(df_frkcgr["DestinationRailHead"])):
@@ -3587,6 +3610,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            # Cost = []
             
             for i in source_wcgr:
                 for j in dest_wcgr:
@@ -3616,12 +3640,16 @@ def Daily_Planner():
                     if To[i] == wcgr["origin_railhead"] or To[i] == wcgr["destination_railhead"]:
                         To_state.append(wcgr["origin_state"])
 
-            df_wcgr["SourceRailHead"] = From
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            df_wcgr["SourceRailHead"] = From 
             df_wcgr["SourceState"] = From_state
             df_wcgr["DestinationRailHead"] = To
             df_wcgr["DestinationState"] = To_state
             df_wcgr["Commodity"] = commodity
             df_wcgr["Values"] = values
+            # df_wcgr["Cost"] = Cost
 
             for i in dest_wcgr_inline.keys():
                 for j in range(len(df_wcgr["DestinationRailHead"])):

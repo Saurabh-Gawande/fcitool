@@ -129,7 +129,7 @@ function Daily_Planner() {
   const [misc2DestinationValue, setMisc2DestinationValue] = useState();
 
   const [frkDestinationValue, setfrkDestinationValue] = useState();
-  const [excelfiledata, setExcelFileData] = useState();
+  const [excelfiledata, setExcelFileData] = useState(null);
   const [railheadData, setRailheadData] = useState();
   const [rrc, setRrc] = useState(false);
   const [ragi, setRagi] = useState(false);
@@ -140,6 +140,7 @@ function Daily_Planner() {
   const [wheat_faq, setWheat_faq] = useState(false);
   const [misc1, setMisc1] = useState(false);
   const [misc2, setMisc2] = useState(false);
+  const [disableAfterImport, setDisableAfterImport] = useState(false);
   // ---------------------------------------------------------------------------------------
   useEffect(() => {
     try {
@@ -164,7 +165,7 @@ function Daily_Planner() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=TEFD_TC"
+          `https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=${TEFD}`
         );
 
         if (!response.ok) {
@@ -172,15 +173,15 @@ function Daily_Planner() {
         }
 
         const result = await response.json();
-        set_TEFDdata(result);
         console.log(result);
+        set_TEFDdata(result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [TEFD]);
 
   const processSheetData = (workbook, sheetIndices) => {
     const jsonData = [];
@@ -475,15 +476,19 @@ function Daily_Planner() {
   };
 
   const handleDeleteRow_surplus__source = (row, index) => {
-    const updatedSurplus = [...surplus];
-    updatedSurplus.splice(index, 1);
-    setSurplus(updatedSurplus);
+    if (!disableAfterImport) {
+      const updatedSurplus = [...surplus];
+      updatedSurplus.splice(index, 1);
+      setSurplus(updatedSurplus);
+    }
   };
 
   const handleDeleteRow_deficit__dest = (row, index) => {
-    const updatedDeficit = [...deficit];
-    updatedDeficit.splice(index, 1);
-    setDeficit(updatedDeficit);
+    if (!disableAfterImport) {
+      const updatedDeficit = [...deficit];
+      updatedDeficit.splice(index, 1);
+      setDeficit(updatedDeficit);
+    }
   };
   const handleDeleteRowInline_deficit__dest = (index) => {
     const updatedSurplusInline = [...surplusInline];
@@ -1120,7 +1125,7 @@ function Daily_Planner() {
       wheatfaq_Destination: wheatfaq_Destination,
       wheatfaq_InlineDestination: wheatfaq_InlineDestination,
 
-      // TEFDdata: TEFDdata,
+      TEFDdata: TEFDdata,
     };
 
     try {
@@ -1183,27 +1188,40 @@ function Daily_Planner() {
   const exportToPDF = () => {
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
-      fetchReservationId_Total_result();
+      // fetchReservationId_Total_result();
     } else {
+      console.log(Total_result);
       const pdfDoc = new jsPDF();
       const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
 
       Object.entries(Total_result).forEach(([column, data]) => {
         const parsedData = JSON.parse(data);
-
+        console.log(column);
         pdfDoc.addPage();
         pdfDoc.text(`Column: ${column}`, 10, 10);
 
-        // Extract headers and rows from parsedData
-        const headers = Object.keys(parsedData[0]);
-        const rows = parsedData.map((item) => Object.values(item));
+        // // Extract headers and rows from parsedData
+        // const headers = Object.keys(parsedData[0]);
+        // const rows = parsedData.map((item) => Object.values(item));
+        // console.log({ headers });
+        // console.log({ rows });
 
-        // Auto-generate the table using autotable
-        pdfDoc.autoTable({
-          head: [headers],
-          body: rows,
-          startY: 20,
-          margin: { top: 20 },
+        // // // Auto-generate the table using autotable
+        // pdfDoc.autoTable({
+        //   head: [headers],
+        //   body: [rows],
+        //   startY: 20,
+        //   margin: { top: 20 },
+        // });
+        let yPos = 20;
+        parsedData.forEach((item) => {
+          console.log(item);
+          const formattedData = formatData(item);
+          pdfDoc.text(formattedData, 10, yPos, { maxWidth: 180 });
+          yPos +=
+            pdfDoc.splitTextToSize(formattedData, { maxWidth: 180 }).length *
+              10 +
+            5;
         });
       });
 
@@ -1212,7 +1230,7 @@ function Daily_Planner() {
   };
 
   const formatData = (item) => {
-    return `From: ${item.From}\nFrom State: ${item["From State"]}\nTo: ${item.To}\nTo State: ${item["To State"]}\nCommodity: ${item.Commodity}`;
+    return `From: ${item.SourceState}\nFrom State: ${item.SourceRailHead}\nTo: ${item.DestinationState}\nTo State: ${item.DestinationRailHead}\nCommodity: ${item.Commodity}`;
   };
 
   const handleDropdownChange_fixed = async (e) => {
@@ -1447,14 +1465,30 @@ function Daily_Planner() {
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
       saveAs(excelBlob, filenameWithDateTime);
-      setExcelFileData(excelBlob);
     }
   };
 
-  const uploadFile = (fileName) => {
+  const uploadFile = async () => {
+    const workbook = XLSX.utils.book_new();
+    Object.entries(Total_result).forEach(([column, data]) => {
+      const parsedData = JSON.parse(data);
+      const worksheet = XLSX.utils.json_to_sheet(parsedData);
+      XLSX.utils.book_append_sheet(workbook, worksheet, column);
+    });
+    const excelBuffer = XLSX.write(workbook, {
+      type: "array",
+      bookType: "xlsx",
+    });
+    const excelBlob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    setExcelFileData(excelBlob);
+  };
+
+  useEffect(() => {
     if (excelfiledata) {
       const formData = new FormData();
-      fileName = "Daily_Movement_results_Scenario.xlsx";
+      const fileName = "Daily_Movement_results_Scenario.xlsx";
       formData.append("file", excelfiledata, fileName);
 
       fetch(
@@ -1476,16 +1510,8 @@ function Daily_Planner() {
         .catch((error) => {
           console.error("An error occurred during file upload:", error);
         });
-    } else {
-      window.alert("Invalid file format. Please select a valid file.");
     }
-  };
-  // console.log(sessionStorage.getItem("state"));
-
-  // useEffect(() => {
-  //   setState(sessionStorage.getItem("state"));
-  //   // console.log(state);
-  // }, []);
+  }, [excelfiledata]);
 
   const fetchData = (event) => {
     event.preventDefault();
@@ -1522,6 +1548,8 @@ function Daily_Planner() {
             Commodity: item.commodity,
           }));
           setDeficit(updatedDeficit);
+
+          setDisableAfterImport(true);
         }
       })
       .catch((error) => {
@@ -1675,10 +1703,10 @@ function Daily_Planner() {
                         style={{ marginLeft: "547px" }}
                       >
                         <option>Select Matrix System</option>
-                        <option value="NON-TEFD">Non-TEFD</option>
                         <option value="TEFD">TEFD</option>
-                        <option value="Non-TEFD+TC">Non-TEFD + TC</option>
-                        <option value="TEFD+TC">TEFD + TC</option>
+                        <option value="Non_TEFD">Non-TEFD</option>
+                        <option value="Non_TEFD_TC">Non-TEFD + TC</option>
+                        <option value="TEFD_TC">TEFD + TC</option>
                       </select>
                     </label>
 
@@ -1810,7 +1838,8 @@ function Daily_Planner() {
                             surplusRailhead === undefined ||
                             surplusRailhead === "" ||
                             surplusCommodity === undefined ||
-                            surplusCommodity === ""
+                            surplusCommodity === "" ||
+                            disableAfterImport
                           }
                           style={{
                             backgroundColor: "orange",
@@ -1994,7 +2023,8 @@ function Daily_Planner() {
                             deficitRailhead === undefined ||
                             deficitRailhead === "" ||
                             deficitCommodity === undefined ||
-                            deficitCommodity === ""
+                            deficitCommodity === "" ||
+                            disableAfterImport
                           }
                         >
                           Add
@@ -2221,6 +2251,7 @@ function Daily_Planner() {
                             width: 70,
                             height: 40,
                           }}
+                          disabled={disableAfterImport}
                         >
                           Add
                         </button>
@@ -2460,6 +2491,7 @@ function Daily_Planner() {
                             width: 70,
                             height: 40,
                           }}
+                          disabled={disableAfterImport}
                         >
                           Add
                         </button>
@@ -3045,8 +3077,9 @@ function Daily_Planner() {
                           style={{ color: "white", marginLeft: "15px" }}
                           className="btn btn-danger dropdown-toggle"
                           onClick={uploadFile}
+                          // disabled={!disableAfterImport}
                         >
-                          Import Plan
+                          Export Plan
                         </button>
                         {showMessage && (
                           <div style={{ marginTop: 15, marginLeft: 20 }}>
@@ -3190,6 +3223,14 @@ function Daily_Planner() {
                                       >
                                         commodity
                                       </th>
+                                      {/* <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Cost (Rs/MT)
+                                      </th> */}
                                       <th
                                         style={{
                                           padding: "10px",
@@ -3209,6 +3250,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
+                                        {/* <td>{item.Cost}</td> */}
                                         <td>{item.Values}</td>
                                       </tr>
                                     ))}
