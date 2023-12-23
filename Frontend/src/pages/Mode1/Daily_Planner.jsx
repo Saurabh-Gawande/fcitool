@@ -387,6 +387,8 @@ function Daily_Planner() {
         Commodity: surplusInlineCommodity1,
       },
     ]);
+    setSurplusInlineRailhead1("");
+    setSurplusInlineRailhead2("");
   };
 
   const AddDeficitInline = async (e) => {
@@ -403,6 +405,8 @@ function Daily_Planner() {
         Commodity: deficitInlineCommodity,
       },
     ]);
+    setDeficitInlineRailhead1("");
+    setDeficitInlineRailhead2("");
   };
 
   const AddSurplus = (e) => {
@@ -491,14 +495,18 @@ function Daily_Planner() {
     }
   };
   const handleDeleteRowInline_deficit__dest = (index) => {
-    const updatedSurplusInline = [...surplusInline];
-    updatedSurplusInline.splice(index, 1);
-    setSurplusInline(updatedSurplusInline);
+    if (!disableAfterImport) {
+      const updatedSurplusInline = [...surplusInline];
+      updatedSurplusInline.splice(index, 1);
+      setSurplusInline(updatedSurplusInline);
+    }
   };
   const handleDeleteRow_deficitInline__dest = (index) => {
-    const updatedDeficitInline = [...deficitInline];
-    updatedDeficitInline.splice(index, 1);
-    setDeficitInline(updatedDeficitInline);
+    if (!disableAfterImport) {
+      const updatedDeficitInline = [...deficitInline];
+      updatedDeficitInline.splice(index, 1);
+      setDeficitInline(updatedDeficitInline);
+    }
   };
 
   const handleFileUpload = () => {
@@ -1457,7 +1465,7 @@ function Daily_Planner() {
 
       const currentDate = new Date();
       const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed, so we add 1
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
       const day = String(currentDate.getDate()).padStart(2, "0");
       const hours = String(currentDate.getHours()).padStart(2, "0");
       const minutes = String(currentDate.getMinutes()).padStart(2, "0");
@@ -1531,49 +1539,57 @@ function Daily_Planner() {
       .then((data) => {
         if (data) {
           console.log("Get data from Portal:", data.result);
-          const updatedSurplus = data.sourceResponse.map((item) => ({
-            Sno: Math.floor(Math.random() * 500) + 1,
-            origin_railhead: item.sourceRailHead,
-            origin_state: item.sourceState,
-            Value: item.value,
-            Commodity: item.commodity,
-          }));
-          setSurplus(updatedSurplus);
-
-          const updatedDeficit = data.destinationResponse.map((item) => ({
-            Sno: Math.floor(Math.random() * 500) + 1,
-            origin_railhead: item.destinationRailHead,
-            origin_state: item.destinationState,
-            Value: item.value,
-            Commodity: item.commodity,
-          }));
-          setDeficit(updatedDeficit);
-
-          const updatedSurplusInline = data.inlineSourceResponse.map(
-            (item) => ({
+          if (sourceResponse) {
+            const updatedSurplus = data.sourceResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
               origin_railhead: item.sourceRailHead,
               origin_state: item.sourceState,
-              destination_railhead: item.sourceInlineRailHead,
-              destination_state: item.sourceState,
-              Value: 1,
+              Value: item.value,
               Commodity: item.commodity,
-            })
-          );
-          setSurplusInline(updatedSurplusInline);
+            }));
+            setSurplus(updatedSurplus);
+          }
 
-          const updatedDeficitInline = data.inlineDestinationResponse.map(
-            (item) => ({
+          if (destinationResponse) {
+            const updatedDeficit = data.destinationResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
               origin_railhead: item.destinationRailHead,
               origin_state: item.destinationState,
-              destination_railhead: item.destinationInlineRailHead,
-              destination_state: item.destinationState,
-              Value: 1,
+              Value: item.value,
               Commodity: item.commodity,
-            })
-          );
-          setDeficitInline(updatedDeficitInline);
+            }));
+            setDeficit(updatedDeficit);
+          }
+
+          if (data.inlineSourceResponse) {
+            const updatedSurplusInline = data.inlineSourceResponse.map(
+              (item) => ({
+                Sno: Math.floor(Math.random() * 500) + 1,
+                origin_railhead: item.sourceRailHead,
+                origin_state: item.sourceState,
+                destination_railhead: item.sourceInlineRailHead,
+                destination_state: item.sourceState,
+                Value: 1,
+                Commodity: item.commodity,
+              })
+            );
+            setSurplusInline(updatedSurplusInline);
+          }
+
+          if (data.inlineDestinationResponse) {
+            const updatedDeficitInline = data.inlineDestinationResponse.map(
+              (item) => ({
+                Sno: Math.floor(Math.random() * 500) + 1,
+                origin_railhead: item.destinationRailHead,
+                origin_state: item.destinationState,
+                destination_railhead: item.destinationInlineRailHead,
+                destination_state: item.destinationState,
+                Value: 1,
+                Commodity: item.commodity,
+              })
+            );
+            setDeficitInline(updatedDeficitInline);
+          }
 
           setDisableAfterImport(true);
         }
@@ -2277,7 +2293,19 @@ function Daily_Planner() {
                             width: 70,
                             height: 40,
                           }}
-                          disabled={disableAfterImport}
+                          disabled={
+                            surplusInlineState1 === undefined ||
+                            surplusInlineState1 === "default" ||
+                            surplusInlineState2 === undefined ||
+                            surplusInlineState2 === "default" ||
+                            surplusInlineRailhead1 === undefined ||
+                            surplusInlineRailhead1 === "" ||
+                            surplusInlineRailhead2 === undefined ||
+                            surplusInlineRailhead2 === "" ||
+                            surplusInlineCommodity1 === undefined ||
+                            surplusInlineCommodity1 === "" ||
+                            disableAfterImport
+                          }
                         >
                           Add
                         </button>
@@ -2296,44 +2324,37 @@ function Daily_Planner() {
                           </tr>
                         </thead>
                         <tbody>
-                          {surplusInline
-                            // .filter((_, index) => index % 2 === 0)
-                            .map((row, index) => {
-                              // const nextRow = surplusInline[index + 1];
-                              return (
-                                <tr key={index}>
-                                  <td>{index}</td>
-                                  <td>{row.origin_railhead}</td>
-                                  <td>{row.origin_state}</td>
-                                  <td>{row.destination_railhead}</td>
-                                  <td>{row.destination_state}</td>
-                                  {/* <td>
-                                    {nextRow ? nextRow.origin_railhead : ""}
-                                  </td>
-                                  <td>{nextRow ? nextRow.origin_state : ""}</td> */}
-                                  <td>{row.Value}</td>
-                                  <td>{row.Commodity}</td>
-                                  <td>
-                                    <span
-                                      style={{
-                                        cursor: "pointer",
-                                        color: "#ff0000",
-                                        fontSize: "1.2rem",
-                                      }}
-                                      onClick={() =>
-                                        handleDeleteRowInline_deficit__dest(
-                                          row,
-                                          index
-                                        )
-                                      }
-                                      title="Delete"
-                                    >
-                                      &times;
-                                    </span>
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                          {surplusInline.map((row, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>{index}</td>
+                                <td>{row.origin_railhead}</td>
+                                <td>{row.origin_state}</td>
+                                <td>{row.destination_railhead}</td>
+                                <td>{row.destination_state}</td>
+                                <td>{row.Value}</td>
+                                <td>{row.Commodity}</td>
+                                <td>
+                                  <span
+                                    style={{
+                                      cursor: "pointer",
+                                      color: "#ff0000",
+                                      fontSize: "1.2rem",
+                                    }}
+                                    onClick={() =>
+                                      handleDeleteRowInline_deficit__dest(
+                                        row,
+                                        index
+                                      )
+                                    }
+                                    title="Delete"
+                                  >
+                                    &times;
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
 
@@ -2517,7 +2538,19 @@ function Daily_Planner() {
                             width: 70,
                             height: 40,
                           }}
-                          disabled={disableAfterImport}
+                          disabled={
+                            deficitInlineState1 === undefined ||
+                            deficitInlineState1 === "default" ||
+                            deficitInlineState2 === undefined ||
+                            deficitInlineState2 === "default" ||
+                            deficitInlineRailhead1 === undefined ||
+                            deficitInlineRailhead1 === "" ||
+                            deficitInlineRailhead2 === undefined ||
+                            deficitInlineRailhead2 === "" ||
+                            deficitInlineCommodity === undefined ||
+                            deficitInlineCommodity === "" ||
+                            disableAfterImport
+                          }
                         >
                           Add
                         </button>
@@ -2536,187 +2569,41 @@ function Daily_Planner() {
                           </tr>
                         </thead>
                         <tbody>
-                          {deficitInline
-                            // .filter((_, index) => index % 2 === 0)
-                            .map((row, index) => {
-                              // const nextRow = deficitInline[index + 1];
-                              return (
-                                <tr key={index}>
-                                  <td>{index}</td>
-                                  <td>{row.origin_railhead}</td>
-                                  <td>{row.origin_state}</td>
-                                  <td>{row.destination_railhead}</td>
-                                  <td>{row.destination_state}</td>
-
-                                  {/* <td>
-                                    {nextRow ? nextRow.origin_railhead : ""}
-                                  </td>
-                                  <td>{nextRow ? nextRow.origin_state : ""}</td> */}
-                                  <td>{row.Value}</td>
-                                  <td>{row.Commodity}</td>
-                                  <td>
-                                    <span
-                                      style={{
-                                        cursor: "pointer",
-                                        color: "#ff0000",
-                                        fontSize: "1.2rem",
-                                      }}
-                                      onClick={() =>
-                                        handleDeleteRow_deficitInline__dest(
-                                          row,
-                                          index
-                                        )
-                                      }
-                                      title="Delete"
-                                    >
-                                      &times;
-                                    </span>
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                          {deficitInline.map((row, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>{index}</td>
+                                <td>{row.origin_railhead}</td>
+                                <td>{row.origin_state}</td>
+                                <td>{row.destination_railhead}</td>
+                                <td>{row.destination_state}</td>
+                                <td>{row.Value}</td>
+                                <td>{row.Commodity}</td>
+                                <td>
+                                  <span
+                                    style={{
+                                      cursor: "pointer",
+                                      color: "#ff0000",
+                                      fontSize: "1.2rem",
+                                    }}
+                                    onClick={() =>
+                                      handleDeleteRow_deficitInline__dest(
+                                        row,
+                                        index
+                                      )
+                                    }
+                                    title="Delete"
+                                  >
+                                    &times;
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
                     {/* ----------------------------------------------------------------------------------------- */}
-                    <br />
-                    {/* <p style={{ margin: 2, padding: 0 }}>
-                      <strong
-                        style={{
-                          color: "#9d0921",
-                          fontSize: "20px",
-                          marginLeft: "15px",
-                        }}
-                      >
-                        For Route Blocking:
-                      </strong>
-                    </p>
-                    <div
-                      style={{
-                        display: "flex",
-                        marginLeft: "20px",
-                        width: 1170,
-                      }}
-                    >
-                      <div>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Select Origin State
-                        </strong>
-                        <select
-                          style={{ width: "200px", padding: "5px" }}
-                          onChange={handleDropdownChange}
-                          value={selectedOption}
-                        >
-                          <option value="default">Select Origin State</option>
-                          <option value="Andhra Pradesh">Andhra Pradesh</option>
-                          <option value="Bihar">Bihar</option>
-                          <option value="Chattisgarh">Chattisgarh</option>
-                          <option value="Goa">Goa</option>
-                          <option value="Gujarat">Gujarat</option>
-                          <option value="Haryana">Haryana</option>
-                          <option value="Jammu & Kashmir">
-                            Jammu & Kashmir
-                          </option>
-                          <option value="Jharkhand">Jharkhand</option>
-                          <option value="Karnataka">Karnataka</option>
-                          <option value="Kerala">Kerala</option>
-                          <option value="MP">Madhya Pradesh</option>
-                          <option value="Maharashtra">Maharashtra</option>
-                          <option value="NE">North East</option>
-                          <option value="Odisha">Odisha</option>
-                          <option value="Punjab">Punjab</option>
-                          <option value="Rajasthan">Rajasthan</option>
-                          <option value="Tamil Nadu">Tamil Nadu</option>
-                          <option value="Telangana">Telangana</option>
-                          <option value="UP">Uttar Pradesh</option>
-                          <option value="Uttarakhand">Uttarakhand</option>
-                          <option value="West Bengal">West Bengal</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Select Origin Railhead
-                        </strong>
-                        <select
-                          style={{ width: "200px", padding: "5px" }}
-                          onChange={handleSubDropdownChange1}
-                          value={subOption1}
-                        >
-                          {subOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Select Destination State
-                        </strong>
-                        <select
-                          style={{ width: "200px", padding: "5px" }}
-                          onChange={handleDropdownChange2}
-                          value={selectedOption2}
-                        >
-                          <option value="default">
-                            Select Destination State
-                          </option>
-                          <option value="Andhra Pradesh">Andhra Pradesh</option>
-                          <option value="Bihar">Bihar</option>
-                          <option value="Chattisgarh">Chattisgarh</option>
-                          <option value="Goa">Goa</option>
-                          <option value="Gujarat">Gujarat</option>
-                          <option value="Haryana">Haryana</option>
-                          <option value="Jammu & Kashmir">
-                            Jammu & Kashmir
-                          </option>
-                          <option value="Jharkhand">Jharkhand</option>
-                          <option value="Karnataka">Karnataka</option>
-                          <option value="Kerala">Kerala</option>
-                          <option value="MP">Madhya Pradesh</option>
-                          <option value="Maharashtra">Maharashtra</option>
-                          <option value="NE">North East</option>
-                          <option value="Odisha">Odisha</option>
-                          <option value="Punjab">Punjab</option>
-                          <option value="Rajasthan">Rajasthan</option>
-                          <option value="Tamil Nadu">Tamil Nadu</option>
-                          <option value="Telangana">Telangana</option>
-                          <option value="UP">Uttar Pradesh</option>
-                          <option value="Uttarakhand">Uttarakhand</option>
-                          <option value="West Bengal">West Bengal</option>
-                        </select>
-                      </div>
-                      <div>
-                        <strong style={{ fontSize: "16px", padding: "5px" }}>
-                          Select Destination Railhead
-                        </strong>
-                        <select
-                          style={{ width: "200px", padding: "5px" }}
-                          onChange={handleSubDropdownChange2}
-                          value={subOption2}
-                        >
-                          {subOptions2.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div onClick={addConstraint}>
-                        <button
-                          style={{
-                            textAlign: "center",
-                            backgroundColor: "orange",
-                            width: 70,
-                            height: 40,
-                            alignItems: "center",
-                          }}
-                        >
-                          Add
-                        </button>
-                      </div>
-                    </div> */}
                     <br />
                     {!solutionSolved && block_data.length !== 0 && (
                       <div>
@@ -2739,25 +2626,8 @@ function Daily_Planner() {
                                 Delete
                               </th>
                             </tr>
-                            {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
                           </thead>
                           <tbody>
-                            {/* <tr style={{ margin: "auto" }}>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
-                    </tr> */}
                             {block_data.map((item) => (
                               <tr key={item.id}>
                                 <td>{item.origin_state}</td>
@@ -2897,8 +2767,6 @@ function Daily_Planner() {
                           <option value="West Bengal">West Bengal</option>
                         </select>
                       </div>
-                      {/* </label> */}
-                      {/* <label htmlFor="deficit_railhead"> */}
                       <div>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Select Destination Railhead
@@ -2983,25 +2851,8 @@ function Daily_Planner() {
                                 Delete
                               </th>
                             </tr>
-                            {/* <tr  style={{ padding: "10px", width: "100%" , textAlign:'center'}}>
-                      <div style={{textAlign:'center', width:'100%'}}>Routes Block</div></tr> */}
                           </thead>
                           <tbody>
-                            {/* <tr style={{ margin: "auto" }}>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Origin Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination State
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>
-                        Destination Railhead
-                      </th>
-                      <th style={{ padding: "10px", width: "15%" }}>Delete</th>
-                    </tr> */}
                             {fixed_data.map((item) => (
                               <tr key={item.id}>
                                 <td>{item.origin_state}</td>
@@ -3065,12 +2916,6 @@ function Daily_Planner() {
                     </div>
                   </div>
                   <br />
-                  <br />
-                  {/* <div>
-              <br/>
-                    <DynamicTable/>
-                  </div> */}
-                  <br />
 
                   {solutionSolved && (
                     <div>
@@ -3103,12 +2948,18 @@ function Daily_Planner() {
                           style={{ color: "white", marginLeft: "15px" }}
                           className="btn btn-danger dropdown-toggle"
                           onClick={uploadFile}
-                          // disabled={!disableAfterImport}
+                          disabled={!disableAfterImport}
                         >
                           Export Plan
                         </button>
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {riceData !== null && riceData.length > 0 ? (
                               <div>
                                 <div>RRA</div>
@@ -3194,7 +3045,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {wheatData !== null && wheatData.length > 0 ? (
                               <div>
                                 <div>Wheat</div>
@@ -3289,7 +3146,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {coarseGrain !== null && coarseGrain.length > 0 ? (
                               <div>
                                 <div>Coarse Grain</div>
@@ -3375,7 +3238,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {frk_rra !== null && frk_rra.length > 0 ? (
                               <div>
                                 <div>frk rra</div>
@@ -3461,7 +3330,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {frk_br !== null && frk_br.length > 0 ? (
                               <div>
                                 <div>Frk Br</div>
@@ -3547,7 +3422,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {frk !== null && frk.length > 0 ? (
                               <div>
                                 <div>Wheat+FRK</div>
@@ -3633,7 +3514,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {frk_cgr !== null && frk_cgr.length > 0 ? (
                               <div>
                                 <div>frk cgr</div>
@@ -3719,7 +3606,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {w_cgr !== null && w_cgr.length > 0 ? (
                               <div>
                                 <div>wheat+cgr</div>
@@ -3805,7 +3698,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {rrc !== null && rrc.length > 0 ? (
                               <div>
                                 <div>RRC</div>
@@ -3891,7 +3790,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {ragi !== null && ragi.length > 0 ? (
                               <div>
                                 <div>Ragi</div>
@@ -3977,7 +3882,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {jowar !== null && jowar.length > 0 ? (
                               <div>
                                 <div>Jowar</div>
@@ -4063,7 +3974,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {bajra !== null && bajra.length > 0 ? (
                               <div>
                                 <div>Bajra</div>
@@ -4149,7 +4066,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {maize !== null && maize.length > 0 ? (
                               <div>
                                 <div>Maize</div>
@@ -4235,7 +4158,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {wheat_urs !== null && wheat_urs.length > 0 ? (
                               <div>
                                 <div>Wheat(URS)</div>
@@ -4321,7 +4250,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {wheat_faq !== null && wheat_faq.length > 0 ? (
                               <div>
                                 <div>Wheat(FAQ)</div>
@@ -4407,7 +4342,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {misc1 !== null && misc1.length > 0 ? (
                               <div>
                                 <div>Misc1</div>
@@ -4493,7 +4434,13 @@ function Daily_Planner() {
                           </div>
                         )}
                         {showMessage && (
-                          <div style={{ marginTop: 15, marginLeft: 20 }}>
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
                             {misc2 !== null && misc2.length > 0 ? (
                               <div>
                                 <div>Misc2</div>
