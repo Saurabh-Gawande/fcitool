@@ -1539,7 +1539,8 @@ function Daily_Planner() {
       .then((data) => {
         if (data) {
           console.log("Get data from Portal:", data.result);
-          if (sourceResponse) {
+          
+          if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
               origin_railhead: item.sourceRailHead,
@@ -1550,7 +1551,7 @@ function Daily_Planner() {
             setSurplus(updatedSurplus);
           }
 
-          if (destinationResponse) {
+          if (data.destinationResponse) {
             const updatedDeficit = data.destinationResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
               origin_railhead: item.destinationRailHead,
