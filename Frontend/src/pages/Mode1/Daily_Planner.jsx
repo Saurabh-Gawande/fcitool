@@ -173,7 +173,6 @@ function Daily_Planner() {
         }
 
         const result = await response.json();
-        console.log(result);
         set_TEFDdata(result);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -260,117 +259,63 @@ function Daily_Planner() {
   const handleSurplusInlineState1Change = async (e) => {
     const selectedValue = e.target.value;
     setSurplusInlineState1(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
+
+    if (railheadData.response && railheadData.response.length > 0) {
+      const filteredRailheads = railheadData.response.filter(
+        (region) => region.region === selectedValue
+      );
+
+      const uniqueRailheadCodes = [
+        ...new Set(filteredRailheads.map((region) => region.railheadCode)),
+      ];
+
+      setTotalSurplusInlineRailhead1(uniqueRailheadCodes);
     }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    dropdownOptions.unshift(dropdownOptions_default);
-    setTotalSurplusInlineRailhead1(dropdownOptions);
   };
 
   const handleDeficitInlineState1Change = async (e) => {
     const selectedValue = e.target.value;
     setDeficitInlineState1(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
+    if (railheadData.response && railheadData.response.length > 0) {
+      const filteredRailheads = railheadData.response.filter(
+        (region) => region.region === selectedValue
+      );
+
+      const uniqueRailheadCodes = [
+        ...new Set(filteredRailheads.map((region) => region.railheadCode)),
+      ];
+      setTotalDeficitInlineRailhead1(uniqueRailheadCodes);
     }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    dropdownOptions.unshift(dropdownOptions_default);
-    setTotalDeficitInlineRailhead1(dropdownOptions);
   };
 
   const handleSurplusInlineState2Change = async (e) => {
     const selectedValue = e.target.value;
     setSurplusInlineState2(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
+    if (railheadData.response && railheadData.response.length > 0) {
+      const filteredRailheads = railheadData.response.filter(
+        (region) => region.region === selectedValue
+      );
+
+      const uniqueRailheadCodes = [
+        ...new Set(filteredRailheads.map((region) => region.railheadCode)),
+      ];
+      setTotalSurplusInlineRailhead2(uniqueRailheadCodes);
     }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    dropdownOptions.unshift(dropdownOptions_default);
-    setTotalSurplusInlineRailhead2(dropdownOptions);
   };
 
   const handleDeficitInlineState2Change = async (e) => {
     const selectedValue = e.target.value;
     setDeficitInlineState2(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
+    if (railheadData.response && railheadData.response.length > 0) {
+      const filteredRailheads = railheadData.response.filter(
+        (region) => region.region === selectedValue
+      );
+
+      const uniqueRailheadCodes = [
+        ...new Set(filteredRailheads.map((region) => region.railheadCode)),
+      ];
+      setTotalDeficitInlineRailhead2(uniqueRailheadCodes);
     }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    dropdownOptions.unshift(dropdownOptions_default);
-    setTotalDeficitInlineRailhead2(dropdownOptions);
   };
 
   const AddSurplusInline = async (e) => {
@@ -1196,49 +1141,42 @@ function Daily_Planner() {
   const exportToPDF = () => {
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
-      // fetchReservationId_Total_result();
     } else {
-      console.log(Total_result);
       const pdfDoc = new jsPDF();
       const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
 
-      Object.entries(Total_result).forEach(([column, data]) => {
+      Object.entries(Total_result).forEach(([column, data], index) => {
         const parsedData = JSON.parse(data);
-        console.log(column);
-        pdfDoc.addPage();
-        pdfDoc.text(`Column: ${column}`, 10, 10);
 
-        // // Extract headers and rows from parsedData
-        // const headers = Object.keys(parsedData[0]);
-        // const rows = parsedData.map((item) => Object.values(item));
-        // console.log({ headers });
-        // console.log({ rows });
+        if (index !== 0 && parsedData && parsedData.length > 0) {
+          pdfDoc.addPage();
+        }
 
-        // // // Auto-generate the table using autotable
-        // pdfDoc.autoTable({
-        //   head: [headers],
-        //   body: [rows],
-        //   startY: 20,
-        //   margin: { top: 20 },
-        // });
-        let yPos = 20;
-        parsedData.forEach((item) => {
-          console.log(item);
-          const formattedData = formatData(item);
-          pdfDoc.text(formattedData, 10, yPos, { maxWidth: 180 });
-          yPos +=
-            pdfDoc.splitTextToSize(formattedData, { maxWidth: 180 }).length *
-              10 +
-            5;
+        const headers = [
+          "SourceState",
+          "SourceRailHead",
+          "DestinationState",
+          "DestinationRailHead",
+          "Commodity",
+        ];
+        const rows = parsedData.map((item) => [
+          item.SourceState,
+          item.SourceRailHead,
+          item.DestinationState,
+          item.DestinationRailHead,
+          item.Commodity,
+        ]);
+
+        pdfDoc.autoTable({
+          head: [headers],
+          body: rows,
+          startY: 20,
+          margin: { top: 20 },
         });
       });
 
       pdfDoc.save(`Railhead_data_${timestamp}.pdf`);
     }
-  };
-
-  const formatData = (item) => {
-    return `From: ${item.SourceState}\nFrom State: ${item.SourceRailHead}\nTo: ${item.DestinationState}\nTo State: ${item.DestinationRailHead}\nCommodity: ${item.Commodity}`;
   };
 
   const handleDropdownChange_fixed = async (e) => {
@@ -1539,7 +1477,7 @@ function Daily_Planner() {
       .then((data) => {
         if (data) {
           console.log("Get data from Portal:", data.result);
-          
+
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
@@ -2142,32 +2080,25 @@ function Daily_Planner() {
                             onChange={handleSurplusInlineState1Change}
                             value={surplusInlineState1}
                           >
-                            <option value="default">Select Inline State</option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
+                            <option value="">Select Railhead State</option>
+                            {railheadData &&
+                            railheadData.response.length > 0 ? (
+                              [
+                                ...new Set(
+                                  railheadData.response.map(
+                                    (region) => region.region
+                                  )
+                                ),
+                              ].map((region) => (
+                                <option key={region} value={region}>
+                                  {region}
+                                </option>
+                              ))
+                            ) : (
+                              <option value="" disabled>
+                                Loading...
+                              </option>
+                            )}
                           </select>
                         </div>
                         <div
@@ -2183,9 +2114,10 @@ function Daily_Planner() {
                             }
                             value={surplusInlineRailhead1}
                           >
+                            <option value="">Select Inline Railhead</option>
                             {totalSurplusInlineRailhead1.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
+                              <option key={option} value={option}>
+                                {option}
                               </option>
                             ))}
                           </select>
@@ -2201,32 +2133,25 @@ function Daily_Planner() {
                             onChange={handleSurplusInlineState2Change}
                             value={surplusInlineState2}
                           >
-                            <option value="default">Select Inline State</option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
+                            <option value="">Select Railhead State</option>
+                            {railheadData &&
+                            railheadData.response.length > 0 ? (
+                              [
+                                ...new Set(
+                                  railheadData.response.map(
+                                    (region) => region.region
+                                  )
+                                ),
+                              ].map((region) => (
+                                <option key={region} value={region}>
+                                  {region}
+                                </option>
+                              ))
+                            ) : (
+                              <option value="" disabled>
+                                Loading...
+                              </option>
+                            )}
                           </select>
                         </div>
                         <div
@@ -2242,9 +2167,11 @@ function Daily_Planner() {
                             }
                             value={surplusInlineRailhead2}
                           >
+                            <option value="">Select Inline Railhead</option>
+
                             {totalSurplusInlineRailhead2.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
+                              <option key={option} value={option}>
+                                {option}
                               </option>
                             ))}
                           </select>
@@ -2271,7 +2198,6 @@ function Daily_Planner() {
                             <option value="Wheat">Wheat</option>
                             <option value="Wheat(URS)">Wheat(URS)</option>
                             <option value="Wheat(FAQ)">Wheat(FAQ)</option>
-                            <option value="Wheat_faq">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
@@ -2282,7 +2208,7 @@ function Daily_Planner() {
                             <option value="Jowar">Jowar</option>
                             <option value="Ragi">Ragi</option>
                             <option value="Bajra">Bajra</option>
-                            <option value="Maize">Maize</option>{" "}
+                            <option value="Maize">Maize</option>
                             <option value="Misc1">Misc1</option>
                             <option value="Misc2">Misc2</option>
                           </select>
@@ -2388,32 +2314,25 @@ function Daily_Planner() {
                             onChange={handleDeficitInlineState1Change}
                             value={deficitInlineState1}
                           >
-                            <option value="default">Select Inline State</option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
+                            <option value="">Select Railhead State</option>
+                            {railheadData &&
+                            railheadData.response.length > 0 ? (
+                              [
+                                ...new Set(
+                                  railheadData.response.map(
+                                    (region) => region.region
+                                  )
+                                ),
+                              ].map((region) => (
+                                <option key={region} value={region}>
+                                  {region}
+                                </option>
+                              ))
+                            ) : (
+                              <option value="" disabled>
+                                Loading...
+                              </option>
+                            )}
                           </select>
                         </div>
                         <div
@@ -2429,9 +2348,11 @@ function Daily_Planner() {
                             }
                             value={deficitInlineRailhead1}
                           >
+                            <option value="">Select Inline Railhead</option>
+
                             {totalDeficitInlineRailhead1.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
+                              <option key={option} value={option}>
+                                {option}
                               </option>
                             ))}
                           </select>
@@ -2447,32 +2368,25 @@ function Daily_Planner() {
                             onChange={handleDeficitInlineState2Change}
                             value={deficitInlineState2}
                           >
-                            <option value="default">Select Inline State</option>
-                            <option value="Andhra Pradesh">
-                              Andhra Pradesh
-                            </option>
-                            <option value="Bihar">Bihar</option>
-                            <option value="Chattisgarh">Chattisgarh</option>
-                            <option value="Goa">Goa</option>
-                            <option value="Gujarat">Gujarat</option>
-                            <option value="Haryana">Haryana</option>
-                            <option value="Jammu & Kashmir">
-                              Jammu & Kashmir
-                            </option>
-                            <option value="Jharkhand">Jharkhand</option>
-                            <option value="Karnataka">Karnataka</option>
-                            <option value="Kerala">Kerala</option>
-                            <option value="MP">Madhya Pradesh</option>
-                            <option value="Maharashtra">Maharashtra</option>
-                            <option value="NE">North East</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Rajasthan">Rajasthan</option>
-                            <option value="Tamil Nadu">Tamil Nadu</option>
-                            <option value="Telangana">Telangana</option>
-                            <option value="UP">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>
+                            <option value="">Select Railhead State</option>
+                            {railheadData &&
+                            railheadData.response.length > 0 ? (
+                              [
+                                ...new Set(
+                                  railheadData.response.map(
+                                    (region) => region.region
+                                  )
+                                ),
+                              ].map((region) => (
+                                <option key={region} value={region}>
+                                  {region}
+                                </option>
+                              ))
+                            ) : (
+                              <option value="" disabled>
+                                Loading...
+                              </option>
+                            )}
                           </select>
                         </div>
                         <div
@@ -2488,9 +2402,11 @@ function Daily_Planner() {
                             }
                             value={deficitInlineRailhead2}
                           >
+                            <option value="">Select Inline Railhead</option>
+
                             {totalDeficitInlineRailhead2.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
+                              <option key={option} value={option}>
+                                {option}
                               </option>
                             ))}
                           </select>

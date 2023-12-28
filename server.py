@@ -1968,9 +1968,12 @@ def Daily_Planner():
             confirmed_data = fetched_data['confirmed_data']
             # Scenerio = fetched_data["Scenerio"]   
             TEFD_fetched = fetched_data['TEFD']
-            # TEFDdata = fetched_data['TEFDdata']
+            TEFDdata = fetched_data['TEFDdata']
             # df = pd.DataFrame(TEFD_fetched)
-            # print(df)
+            df1 = pd.DataFrame(TEFDdata["data"]["codes"])
+            df2 = pd.DataFrame(TEFDdata["data"]["columnData"])
+            # rail_cost = pd.concat([df1, df2], axis=1)
+            # print(rail_cost)
             rra_origin = fetched_data["rice_origin"]
             rra_dest = fetched_data["rice_destination"]
             wheat_origin = fetched_data["wheat_origin"]
@@ -2065,6 +2068,7 @@ def Daily_Planner():
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
+            # print(rail_cost)
             distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
             # # states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
             # # states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
@@ -3248,7 +3252,7 @@ def Daily_Planner():
             #     val = confirmed_railhead_value[i]
             #     if Commodity == 'WHEAT':
             #         From.append(org)
-            #         From_state.append(org_state)https://fcitooltest.callippus.in/Daily_Planner
+            #         From_state.append(org_state)
             #         To.append(dest)
             #         To_state.append(dest_state)
             #         commodity.append("Wheat")
@@ -3269,7 +3273,11 @@ def Daily_Planner():
                 for j in range(len(df_wheat["DestinationRailHead"])):
                     if (i == df_wheat.iloc[j]["DestinationRailHead"] or dest_wheat_inline[i] == df_wheat.iloc[j]["DestinationRailHead"]):
                         df_wheat.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheat_inline[i])
-            print(df_wheat)
+
+            for i in source_wheat_inline.keys():
+                for j in range(len(df_wheat["SourceRailHead"])):
+                    if (i == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i] == df_wheat.iloc[j]["SourceRailHead"]):
+                        df_wheat.loc[j, 'SourceRailHead'] = (i + '+' + source_wheat_inline[i])
 
             df_rra = pd.DataFrame()
             From = []
@@ -3338,6 +3346,11 @@ def Daily_Planner():
                     if (i == df_rra.iloc[j]["DestinationRailHead"] or dest_rra_inline[i] == df_rra.iloc[j]["DestinationRailHead"]):
                         df_rra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rra_inline[i])
 
+            for i in source_rra_inline.keys():
+                for j in range(len(df_rra["SourceRailHead"])):
+                    if (i == df_rra.iloc[j]["SourceRailHead"] or source_rra_inline[i] == df_rra.iloc[j]["SourceRailHead"]):
+                        df_rra.loc[j, 'SourceRailHead'] = (i + '+' + source_rra_inline[i])
+
             df_CoarseGrain = pd.DataFrame()
             From = []
             To = []
@@ -3390,6 +3403,11 @@ def Daily_Planner():
                 for j in range(len(df_CoarseGrain["DestinationRailHead"])):
                     if (i == df_CoarseGrain.iloc[j]["DestinationRailHead"] or dest_coarseGrain_inline[i] == df_CoarseGrain.iloc[j]["DestinationRailHead"]):
                         df_CoarseGrain.loc[j, 'DestinationRailHead'] = (i + '+' + dest_coarseGrain_inline[i])
+
+            for i in source_coarseGrain_inline.keys():
+                for j in range(len(df_CoarseGrain["SourceRailHead"])):
+                    if (i == df_CoarseGrain.iloc[j]["SourceRailHead"] or source_coarseGrain_inline[i] == df_CoarseGrain.iloc[j]["SourceRailHead"]):
+                        df_CoarseGrain.loc[j, 'SourceRailHead'] = (i + '+' + source_coarseGrain_inline[i])
 
             df_frkrra = pd.DataFrame()
             From = []
@@ -3444,6 +3462,11 @@ def Daily_Planner():
                     if (i == df_frkrra.iloc[j]["DestinationRailHead"] or dest_frkrra_inline[i] == df_frkrra.iloc[j]["DestinationRailHead"]):
                         df_frkrra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkrra_inline[i])
 
+            for i in source_frkrra_inline.keys():
+                for j in range(len(df_frkrra["SourceRailHead"])):
+                    if (i == df_frkrra.iloc[j]["SourceRailHead"] or source_frkrra_inline[i] == df_frkrra.iloc[j]["SourceRailHead"]):
+                        df_frkrra.loc[j, 'SourceRailHead'] = (i + '+' + source_frkrra_inline[i])
+
             df_frkbr = pd.DataFrame()
             From = []
             To = []
@@ -3496,6 +3519,11 @@ def Daily_Planner():
                 for j in range(len(df_frkbr["DestinationRailHead"])):
                     if (i == df_frkbr.iloc[j]["DestinationRailHead"] or dest_frkbr_inline[i] == df_frkbr.iloc[j]["DestinationRailHead"]):
                         df_frkbr.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkbr_inline[i])
+
+            for i in source_frkbr_inline.keys():
+                for j in range(len(df_frkbr["SourceRailHead"])):
+                    if (i == df_frkbr.iloc[j]["SourceRailHead"] or source_frkbr_inline[i] == df_frkbr.iloc[j]["SourceRailHead"]):
+                        df_frkbr.loc[j, 'SourceRailHead'] = (i + '+' + source_frkbr_inline[i])
 
             df_frk = pd.DataFrame()
             From = []
@@ -3550,6 +3578,11 @@ def Daily_Planner():
                     if (i == df_frk.iloc[j]["DestinationRailHead"] or dest_frk_inline[i] == df_frk.iloc[j]["DestinationRailHead"]):
                         df_frk.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frk_inline[i])
 
+            for i in source_frk_inline.keys():
+                for j in range(len(df_frk["SourceRailHead"])):
+                    if (i == df_frk.iloc[j]["SourceRailHead"] or source_frk_inline[i] == df_frk.iloc[j]["SourceRailHead"]):
+                        df_frk.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_inline[i])
+
             df_frkcgr = pd.DataFrame()
             From = []
             To = []
@@ -3602,6 +3635,11 @@ def Daily_Planner():
                 for j in range(len(df_frkcgr["DestinationRailHead"])):
                     if (i == df_frkcgr.iloc[j]["DestinationRailHead"] or dest_frkcgr_inline[i] == df_frkcgr.iloc[j]["DestinationRailHead"]):
                         df_frkcgr.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkcgr_inline[i])
+
+            for i in source_frkcgr_inline.keys():
+                for j in range(len(df_frkcgr["SourceRailHead"])):
+                    if (i == df_frkcgr.iloc[j]["SourceRailHead"] or source_frkcgr_inline[i] == df_frkcgr.iloc[j]["SourceRailHead"]):
+                        df_frkcgr.loc[j, 'SourceRailHead'] = (i + '+' + source_frkcgr_inline[i])
 
             df_wcgr = pd.DataFrame()
             From = []
@@ -3656,6 +3694,11 @@ def Daily_Planner():
                     if (i == df_wcgr.iloc[j]["DestinationRailHead"] or dest_wcgr_inline[i] == df_wcgr.iloc[j]["DestinationRailHead"]):
                         df_wcgr.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wcgr_inline[i])
 
+            for i in source_wcgr_inline.keys():
+                for j in range(len(df_wcgr["SourceRailHead"])):
+                    if (i == df_wcgr.iloc[j]["SourceRailHead"] or source_wcgr_inline[i] == df_wcgr.iloc[j]["SourceRailHead"]):
+                        df_wcgr.loc[j, 'SourceRailHead'] = (i + '+' + source_wcgr_inline[i])
+
             df_rrc = pd.DataFrame()
             From = []
             To = []
@@ -3703,6 +3746,11 @@ def Daily_Planner():
                 for j in range(len(df_rrc["DestinationRailHead"])):
                     if (i == df_rrc.iloc[j]["DestinationRailHead"] or dest_rrc_inline[i] == df_rrc.iloc[j]["DestinationRailHead"]):
                         df_rrc.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rrc_inline[i])
+
+            for i in source_rrc_inline.keys():
+                for j in range(len(df_rrc["SourceRailHead"])):
+                    if (i == df_rrc.iloc[j]["SourceRailHead"] or source_rrc_inline[i] == df_rrc.iloc[j]["SourceRailHead"]):
+                        df_rrc.loc[j, 'SourceRailHead'] = (i + '+' + source_rrc_inline[i])
 
             df_ragi = pd.DataFrame()
             From = []
@@ -3752,6 +3800,11 @@ def Daily_Planner():
                     if (i == df_ragi.iloc[j]["DestinationRailHead"] or dest_ragi_inline[i] == df_ragi.iloc[j]["DestinationRailHead"]):
                         df_ragi.loc[j, 'DestinationRailHead'] = (i + '+' + dest_ragi_inline[i])
 
+            for i in source_ragi_inline.keys():
+                for j in range(len(df_ragi["SourceRailHead"])):
+                    if (i == df_ragi.iloc[j]["SourceRailHead"] or source_ragi_inline[i] == df_ragi.iloc[j]["SourceRailHead"]):
+                        df_ragi.loc[j, 'SourceRailHead'] = (i + '+' + source_ragi_inline[i])
+
             df_jowar = pd.DataFrame()
             From = []
             To = []
@@ -3799,6 +3852,11 @@ def Daily_Planner():
                 for j in range(len(df_jowar["DestinationRailHead"])):
                     if (i == df_jowar.iloc[j]["DestinationRailHead"] or dest_jowar_inline[i] == df_jowar.iloc[j]["DestinationRailHead"]):
                         df_jowar.loc[j, 'DestinationRailHead'] = (i + '+' + dest_jowar_inline[i])
+
+            for i in source_jowar_inline.keys():
+                for j in range(len(df_jowar["SourceRailHead"])):
+                    if (i == df_jowar.iloc[j]["SourceRailHead"] or source_jowar_inline[i] == df_jowar.iloc[j]["SourceRailHead"]):
+                        df_jowar.loc[j, 'SourceRailHead'] = (i + '+' + source_jowar_inline[i])
 
             df_bajra = pd.DataFrame()
             From = []
@@ -3848,6 +3906,11 @@ def Daily_Planner():
                     if (i == df_bajra.iloc[j]["DestinationRailHead"] or dest_bajra_inline[i] == df_bajra.iloc[j]["DestinationRailHead"]):
                         df_bajra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_bajra_inline[i])
 
+            for i in source_bajra_inline.keys():
+                for j in range(len(df_bajra["SourceRailHead"])):
+                    if (i == df_bajra.iloc[j]["SourceRailHead"] or source_bajra_inline[i] == df_bajra.iloc[j]["SourceRailHead"]):
+                        df_bajra.loc[j, 'SourceRailHead'] = (i + '+' + source_bajra_inline[i])
+
             df_maize = pd.DataFrame()
             From = []
             To = []
@@ -3896,6 +3959,11 @@ def Daily_Planner():
                     if (i == df_maize.iloc[j]["DestinationRailHead"] or dest_maize_inline[i] == df_maize.iloc[j]["DestinationRailHead"]):
                         df_maize.loc[j, 'DestinationRailHead'] = (i + '+' + dest_maize_inline[i])
 
+            for i in source_maize_inline.keys():
+                for j in range(len(df_maize["SourceRailHead"])):
+                    if (i == df_maize.iloc[j]["SourceRailHead"] or source_maize_inline[i] == df_maize.iloc[j]["SourceRailHead"]):
+                        df_maize.loc[j, 'SourceRailHead'] = (i + '+' + source_maize_inline[i])
+
             df_misc1 = pd.DataFrame()
             From = []
             To = []
@@ -3943,6 +4011,11 @@ def Daily_Planner():
                 for j in range(len(df_misc1["DestinationRailHead"])):
                     if (i == df_misc1.iloc[j]["DestinationRailHead"] or dest_misc1_inline[i] == df_misc1.iloc[j]["DestinationRailHead"]):
                         df_misc1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc1_inline[i])
+
+            for i in source_misc1_inline.keys():
+                for j in range(len(df_misc1["SourceRailHead"])):
+                    if (i == df_misc1.iloc[j]["SourceRailHead"] or source_misc1_inline[i] == df_misc1.iloc[j]["SourceRailHead"]):
+                        df_misc1.loc[j, 'SourceRailHead'] = (i + '+' + source_misc1_inline[i])
                         
             df_misc2 = pd.DataFrame()
             From = []
@@ -3992,6 +4065,11 @@ def Daily_Planner():
                     if (i == df_misc2.iloc[j]["DestinationRailHead"] or dest_misc2_inline[i] == df_misc2.iloc[j]["DestinationRailHead"]):
                         df_misc2.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc2_inline[i])
 
+            for i in source_misc2_inline.keys():
+                for j in range(len(df_misc2["SourceRailHead"])):
+                    if (i == df_misc2.iloc[j]["SourceRailHead"] or source_misc2_inline[i] == df_misc2.iloc[j]["SourceRailHead"]):
+                        df_misc2.loc[j, 'SourceRailHead'] = (i + '+' + source_misc2_inline[i])
+
             df_wheaturs = pd.DataFrame()
             From = []
             To = []
@@ -4040,6 +4118,11 @@ def Daily_Planner():
                     if (i == df_wheaturs.iloc[j]["DestinationRailHead"] or dest_wheaturs_inline[i] == df_wheaturs.iloc[j]["DestinationRailHead"]):
                         df_wheaturs.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheaturs_inline[i])
 
+            for i in source_wheaturs_inline.keys():
+                for j in range(len(df_wheaturs["SourceRailHead"])):
+                    if (i == df_wheaturs.iloc[j]["SourceRailHead"] or source_wheaturs_inline[i] == df_wheaturs.iloc[j]["SourceRailHead"]):
+                        df_wheaturs.loc[j, 'SourceRailHead'] = (i + '+' + source_wheaturs_inline[i])
+
             df_wheatfaq = pd.DataFrame()
             From = []
             To = []
@@ -4087,6 +4170,11 @@ def Daily_Planner():
                 for j in range(len(df_wheatfaq["DestinationRailHead"])):
                     if (i == df_wheatfaq.iloc[j]["DestinationRailHead"] or dest_wheatfaq_inline[i] == df_wheatfaq.iloc[j]["DestinationRailHead"]):
                         df_wheatfaq.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheatfaq_inline[i])
+
+            for i in source_wheatfaq_inline.keys():
+                for j in range(len(df_wheatfaq["SourceRailHead"])):
+                    if (i == df_wheatfaq.iloc[j]["SourceRailHead"] or source_wheatfaq_inline[i] == df_wheatfaq.iloc[j]["SourceRailHead"]):
+                        df_wheatfaq.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatfaq_inline[i])
 
             data1["rra"] = df_rra
             data1["wheat"] = df_wheat
