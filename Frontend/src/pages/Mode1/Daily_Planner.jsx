@@ -8,7 +8,6 @@ import "jspdf-autotable";
 import "./Daily_Planner.css";
 
 function Daily_Planner() {
-  //---------------------------------------------------------------------------------------------
   const [surplus, setSurplus] = useState([]);
   const [surplusInline, setSurplusInline] = useState([]);
   const [deficit, setDeficit] = useState([]);
@@ -45,20 +44,12 @@ function Daily_Planner() {
   const [totalDeficitInlineRailhead2, setTotalDeficitInlineRailhead2] =
     useState([]);
   const [deficitInlineCommodity, setDeficitInlineCommodity] = useState();
-  //----------------------------------------------------------------------------------------------------------
+
   const ProjectIp = config.serverUrl;
   const [block_data, setBlockdata] = useState([]);
-  // const [block_data2, setBlockdata2] = useState([]);
-  // const [block_dataWheat2, setBlockdataWheat2] = useState([]);
-  const [block_data3, setBlockdata3] = useState([]);
-  const [block_dataWheat3, setBlockdataWheat3] = useState([]);
-  const [rice_destination, setRiceDestination] = useState([]);
-  const [wheat_destination, setWheatDestination] = useState([]);
   const [fixed_data, setFixeddata] = useState([]);
   const [selectedOption, setSelectedOption] = useState("default");
-  const [subOptions, setSubOptions] = useState([]);
   const [selectedOption2, setSelectedOption2] = useState("default");
-  const [subOptions2, setSubOptions2] = useState([]);
   const [subOption1, setSubOption1] = useState("");
   const [subOption2, setSubOption2] = useState("");
   const [selectedOption_fixed, setSelectedOption_fixed] = useState("default");
@@ -91,6 +82,8 @@ function Daily_Planner() {
   const [frk_br, setFrk_br] = useState(false);
   const [frk_cgr, setFrk_cgr] = useState(false);
   const [w_cgr, setw_cgr] = useState(false);
+  const [wheat_rra, setWheat_rra] = useState(false);
+  const [frkPlusRRA, setFkrPlusRRA] = useState(false);
   const [riceOriginvalue, setRiceOriginValue] = useState();
   const [riceDestinationValue, setRiceDestinationValue] = useState();
   const [wheatOriginValue, setWheatOriginValue] = useState();
@@ -117,6 +110,8 @@ function Daily_Planner() {
   const [wheatFaqOriginValue, setWheatFaqOriginValue] = useState();
   const [misc1OriginValue, setMisc1OriginValue] = useState();
   const [misc2OriginValue, setMisc2OriginValue] = useState();
+  const [frk_rraOriginValue, setfrk_rraOriginValue] = useState();
+  const [wheat_rraOriginValue, setwheat_rraOriginValue] = useState();
 
   const [rrcDestinationValue, setRrcDestinationValue] = useState();
   const [ragiDestinationValue, setRagiDestinationValue] = useState();
@@ -127,6 +122,8 @@ function Daily_Planner() {
   const [wheatFaqDestinationValue, setWheatFaqDestinationValue] = useState();
   const [misc1DestinationValue, setMisc1DestinationValue] = useState();
   const [misc2DestinationValue, setMisc2DestinationValue] = useState();
+  const [frk_rraDestinationValue, setfrk_rraDestinationValue] = useState();
+  const [wheat_rraDestinationValue, setwheat_rraDestinationValue] = useState();
 
   const [frkDestinationValue, setfrkDestinationValue] = useState();
   const [excelfiledata, setExcelFileData] = useState(null);
@@ -141,7 +138,7 @@ function Daily_Planner() {
   const [misc1, setMisc1] = useState(false);
   const [misc2, setMisc2] = useState(false);
   const [disableAfterImport, setDisableAfterImport] = useState(false);
-  // ---------------------------------------------------------------------------------------
+
   useEffect(() => {
     try {
       fetch(
@@ -162,7 +159,7 @@ function Daily_Planner() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTftdData = async () => {
       try {
         const response = await fetch(
           `https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=${TEFD}`
@@ -171,7 +168,6 @@ function Daily_Planner() {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
         const result = await response.json();
         set_TEFDdata(result);
       } catch (error) {
@@ -179,7 +175,7 @@ function Daily_Planner() {
       }
     };
 
-    fetchData();
+    fetchTftdData();
   }, [TEFD]);
 
   const processSheetData = (workbook, sheetIndices) => {
@@ -418,8 +414,6 @@ function Daily_Planner() {
     setDeficitCommodity("");
   };
 
-  //---------------------------------------------------------------------------------------------------
-
   const handleFileChange_ = (event) => {
     setSelectedFile(event.target.files[0]);
   };
@@ -481,116 +475,6 @@ function Daily_Planner() {
     updatedData[sheetName][rowIndex][columnIndex] = newValue;
     setExcelData(updatedData);
   };
-
-  // const getCommodityData = async () => {
-  //   // setUpdateExcel(false);
-  //   const response = await fetch(ProjectIp + "/getDataTemplate");
-  //   const arrayBuffer = await response.arrayBuffer();
-  //   const data = new Uint8Array(arrayBuffer);
-  //   const workbook = XLSX.read(data, { type: "array" });
-  //   const waitForSheetToLoad = (sheetName, maxAttempts = 10) => {
-  //     return new Promise((resolve, reject) => {
-  //       let attempts = 0;
-
-  //       const checkSheet = () => {
-  //         if (workbook.Sheets[sheetName]) {
-  //           resolve(workbook.Sheets[sheetName]);
-  //         } else {
-  //           attempts++;
-  //           if (attempts >= maxAttempts) {
-  //             reject(new Error(`Sheet "${sheetName}" not found in workbook.`));
-  //           } else {
-  //             setTimeout(checkSheet, 500); // Check every 500 milliseconds (adjust as needed)
-  //           }
-  //         }
-  //       };
-
-  //       checkSheet();
-  //     });
-  //   };
-
-  //   try {
-  //     const def_sheet_rice = "Deficit_rice";
-  //     const surplus_sheet_rice = "Surplus_rice";
-  //     const deficitSheetRice = await waitForSheetToLoad(def_sheet_rice);
-  //     const surplusSheetRice = await waitForSheetToLoad(surplus_sheet_rice);
-  //     const deficit_data_rice = XLSX.utils.sheet_to_json(deficitSheetRice, {
-  //       header: 1,
-  //     });
-  //     const surplus_data_rice = XLSX.utils.sheet_to_json(surplusSheetRice, {
-  //       header: 1,
-  //     });
-  //     const def_10_rice = [...deficit_data_rice.slice(1, 10)];
-  //     const sur_10_rice = [...surplus_data_rice.slice(1, 10)];
-  //     setBlockdata3([]);
-  //     setRiceDestination([]);
-  //     for (let i = 0; i < sur_10_rice.length; i++) {
-  //       setBlockdata3((data) => [
-  //         ...data,
-  //         {
-  //           origin_state: sur_10_rice[i][1],
-  //           origin_railhead: sur_10_rice[i][0],
-  //           origin_value: sur_10_rice[i][2],
-  //           id: Date.now() + i.toString(),
-  //         },
-  //       ]);
-  //     }
-  //     for (let i = 0; i < def_10_rice.length; i++) {
-  //       setRiceDestination((data) => [
-  //         ...data,
-  //         {
-  //           origin_state: def_10_rice[i][1],
-  //           origin_railhead: def_10_rice[i][0],
-  //           origin_value: def_10_rice[i][2],
-  //           id: Date.now() + i.toString(),
-  //         },
-  //       ]);
-  //     }
-
-  //     const def_sheet_wheat = "Deficit_wheat";
-  //     const surplus_sheet_wheat = "Surplus_wheat";
-  //     const deficitSheetWheat = await waitForSheetToLoad(def_sheet_wheat);
-  //     const surplusSheetWheat = await waitForSheetToLoad(surplus_sheet_wheat);
-  //     const deficit_data_wheat = XLSX.utils.sheet_to_json(deficitSheetWheat, {
-  //       header: 1,
-  //     });
-  //     const surplus_data_wheat = XLSX.utils.sheet_to_json(surplusSheetWheat, {
-  //       header: 1,
-  //     });
-  //     const def_10_wheat = [...deficit_data_wheat.slice(1, 10)];
-  //     const sur_10_wheat = [...surplus_data_wheat.slice(1, 10)];
-  //     setBlockdataWheat3([]);
-  //     setWheatDestination([]);
-  //     for (let i = 0; i < sur_10_wheat.length; i++) {
-  //       setBlockdataWheat3((data) => [
-  //         ...data,
-  //         {
-  //           origin_state: sur_10_wheat[i][1],
-  //           origin_railhead: sur_10_wheat[i][0],
-  //           origin_value: sur_10_wheat[i][2],
-  //           id: Date.now() + i.toString(),
-  //         },
-  //       ]);
-  //     }
-  //     for (let i = 0; i < def_10_wheat.length; i++) {
-  //       setWheatDestination((data) => [
-  //         ...data,
-  //         {
-  //           origin_state: def_10_wheat[i][1],
-  //           origin_railhead: def_10_wheat[i][0],
-  //           origin_value: def_10_wheat[i][2],
-  //           id: Date.now() + i,
-  //         },
-  //       ]);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getCommodityData();
-  // }, []);
 
   const riceOrigin = surplus.filter((item) => item.Commodity === "RRA");
   const block_data2 = surplusInline.filter((item) => item.Commodity === "RRA");
@@ -783,6 +667,30 @@ function Daily_Planner() {
     (item) => item.Commodity === "Wheat(FAQ)"
   );
 
+  const wheat_rra_Origin = surplus.filter(
+    (item) => item.Commodity === "Wheat+RRA"
+  );
+  const wheat_rra_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Wheat+RRA"
+  );
+  const wheat_rra_Destination = deficit.filter(
+    (item) => item.Commodity === "Wheat+RRA"
+  );
+  const wheat_rra_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "Wheat+RRA"
+  );
+
+  const frk_rra_Origin = surplus.filter((item) => item.Commodity === "FRK+RRA");
+  const frk_rra_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "FRK+RRA"
+  );
+  const frk_rra_Destination = deficit.filter(
+    (item) => item.Commodity === "FRK+RRA"
+  );
+  const frk_rra_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "FRK+RRA"
+  );
+
   useEffect(() => {
     setRiceOriginValue(
       riceOrigin.reduce((total, item) => total + item.Value, 0) +
@@ -961,6 +869,29 @@ function Daily_Planner() {
           0
         )
     );
+
+    setwheat_rraOriginValue(
+      wheat_rra_Origin.reduce((total, item) => total + item.Value, 0) +
+        wheat_rra_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setwheat_rraDestinationValue(
+      wheat_rra_Destination.reduce((total, item) => total + item.Value, 0) +
+        wheat_rra_InlineDestination.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setfrk_rraOriginValue(
+      frk_rra_Origin.reduce((total, item) => total + item.Value, 0) +
+        frk_rra_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrk_rraDestinationValue(
+      frk_rra_Destination.reduce((total, item) => total + item.Value, 0) +
+        frk_rra_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
   });
 
   const handleSolve = async () => {
@@ -974,7 +905,9 @@ function Daily_Planner() {
       frkcgrOriginValue < frkcgrDestinationValue ||
       wcgrOriginValue < wcgrDestinationValue ||
       frkrraOriginValue < frkrraDestinationValue ||
-      frkbrOriginValue < frkbrDestinationValue
+      frkbrOriginValue < frkbrDestinationValue ||
+      wheat_rraOriginValue < wheat_rraDestinationValue ||
+      frk_rraOriginValue < frk_rraDestinationValue
     ) {
       alert("Destination indents more than Supply indents Please check");
       setIsLoading(false);
@@ -1078,6 +1011,16 @@ function Daily_Planner() {
       wheatfaq_Destination: wheatfaq_Destination,
       wheatfaq_InlineDestination: wheatfaq_InlineDestination,
 
+      wheat_rra_Origin: wheat_rra_Origin,
+      wheat_rra_Destination: wheat_rra_Destination,
+      wheat_rra_InlineOrigin: wheat_rra_InlineOrigin,
+      wheat_rra_InlineDestination: wheat_rra_InlineDestination,
+
+      frk_rra_Origin: frk_rra_Origin,
+      frk_rra_Destination: frk_rra_Destination,
+      frk_rra_InlineOrigin: frk_rra_InlineOrigin,
+      frk_rra_InlineDestination: frk_rra_InlineDestination,
+
       TEFDdata: TEFDdata,
     };
 
@@ -1176,6 +1119,10 @@ function Daily_Planner() {
       });
 
       pdfDoc.save(`Railhead_data_${timestamp}.pdf`);
+      setProgress((prev) => [
+        ...prev,
+        "Downloaded Raihead detail Plan in Pdf format",
+      ]);
     }
   };
 
@@ -1209,7 +1156,6 @@ function Daily_Planner() {
       }
     }
     dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
     dropdownOptions.unshift(dropdownOptions_default);
     setSubOptions_fixed(dropdownOptions);
   };
@@ -1268,39 +1214,6 @@ function Daily_Planner() {
     setDownloadMessage(false);
   };
 
-  const addConstraint = (e) => {
-    e.preventDefault();
-    if (selectedOption && subOption1 && selectedOption2 && subOption2) {
-      // Check if origin and destination railheads are the same
-      if (subOption1 === subOption2) {
-        alert("Origin and destination railheads cannot be the same.");
-        return; // Do not proceed further
-      }
-
-      setBlockdata((data) => [
-        ...data,
-        {
-          origin_state: selectedOption,
-          origin_railhead: subOption1,
-          destination_state: selectedOption2,
-          destination_railhead: subOption2,
-          id: Date.now(),
-        },
-      ]);
-
-      // Reset options and suboptions
-      setSelectedOption("default");
-      setSelectedOption2("default");
-      setSubOptions([]);
-      setSubOptions2([]);
-
-      setProgress((prev) => [
-        ...prev,
-        `Route from ${subOption1} to ${subOption2} has been blocked`,
-      ]);
-    }
-  };
-
   const addConstraint_fixed = (e) => {
     e.preventDefault();
     if (
@@ -1330,7 +1243,6 @@ function Daily_Planner() {
         },
       ]);
 
-      // Reset options and suboptions
       setSelectedOption_fixed("default");
       setSelectedOption2_fixed("default");
       setSubOptions_fixed([]);
@@ -1350,7 +1262,7 @@ function Daily_Planner() {
     const coarseGrainData = JSON.parse(Total_result?.coarse_grain ?? 0);
     const frk_rraData = JSON.parse(Total_result?.frk_rra ?? 0);
     const frk_brData = JSON.parse(Total_result?.frk_br ?? 0);
-    const frkData = JSON.parse(Total_result?.frk ?? 0);
+    const frkData = JSON.parse(Total_result?.wheat_frk ?? 0);
     const frkcgrData = JSON.parse(Total_result?.frkcgr ?? 0);
     const wcgrData = JSON.parse(Total_result?.wcgr ?? 0);
     const rrc = JSON.parse(Total_result?.rrc ?? 0);
@@ -1362,6 +1274,8 @@ function Daily_Planner() {
     const wheat_urs = JSON.parse(Total_result?.wheat_urs ?? 0);
     const misc1 = JSON.parse(Total_result?.misc1 ?? 0);
     const misc2 = JSON.parse(Total_result?.misc2 ?? 0);
+    const wheat_rra = JSON.parse(Total_result?.wheat_rra ?? 0);
+    const frkPlusRRA = JSON.parse(Total_result?.frkPlusRRA ?? 0);
     setRiceData(riceData);
     setWheatData(wheatData);
     setCoarseGrain(coarseGrainData);
@@ -1379,6 +1293,8 @@ function Daily_Planner() {
     setWheat_urs(wheat_urs);
     setMisc1(misc1);
     setMisc2(misc2);
+    setWheat_rra(wheat_rra);
+    setFkrPlusRRA(frkPlusRRA);
   };
 
   const exportToExcel1 = () => {
@@ -1411,6 +1327,10 @@ function Daily_Planner() {
       const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
       const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
       saveAs(excelBlob, filenameWithDateTime);
+      setProgress((prev) => [
+        ...prev,
+        "Downloaded Raihead detail Plan in excel",
+      ]);
     }
   };
 
@@ -1448,6 +1368,10 @@ function Daily_Planner() {
           if (response.ok) {
             // File upload was successful
             window.alert("File uploaded successfully!");
+            setProgress((prev) => [
+              ...prev,
+              "Successfully exported the plan to portal",
+            ]);
           } else {
             // File upload failed
             window.alert("File upload failed. Please try again.");
@@ -1476,7 +1400,10 @@ function Daily_Planner() {
       })
       .then((data) => {
         if (data) {
-          console.log("Get data from Portal:", data.result);
+          setProgress((prev) => [
+            ...prev,
+            "Successfully imported data from portal",
+          ]);
 
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
@@ -1690,9 +1617,8 @@ function Daily_Planner() {
                         <option value="TEFD_TC">TEFD + TC</option>
                       </select>
                     </label>
-
                     <br />
-                    {/* ------------------------------------------------------------------------------------------------- */}
+
                     <div>
                       <div
                         style={{
@@ -1782,6 +1708,8 @@ function Daily_Planner() {
                             <option value="Wheat(URS)">Wheat(URS)</option>
                             <option value="Wheat(FAQ)">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
+                            <option value="Wheat+RRA">Wheat+RRA</option>
+                            <option value="FRK+RRA">FRK+RRA</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
                             <option value="Coarse Grains">Coarse Grains</option>
@@ -1962,6 +1890,8 @@ function Daily_Planner() {
                             <option value="Wheat(URS)">Wheat(URS)</option>
                             <option value="Wheat(FAQ)">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
+                            <option value="Wheat+RRA">Wheat+RRA</option>
+                            <option value="FRK+RRA">FRK+RRA</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
                             <option value="Coarse Grains">Coarse Grains</option>
@@ -2199,6 +2129,8 @@ function Daily_Planner() {
                             <option value="Wheat(URS)">Wheat(URS)</option>
                             <option value="Wheat(FAQ)">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
+                            <option value="Wheat+RRA">Wheat+RRA</option>
+                            <option value="FRK+RRA">FRK+RRA</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
                             <option value="Coarse Grains">Coarse Grains</option>
@@ -2434,6 +2366,8 @@ function Daily_Planner() {
                             <option value="Wheat(URS)">Wheat(URS)</option>
                             <option value="Wheat(FAQ)">Wheat(FAQ)</option>
                             <option value="Wheat+FRK">Wheat+FRK</option>
+                            <option value="Wheat+RRA">Wheat+RRA</option>
+                            <option value="FRK+RRA">FRK+RRA</option>
                             <option value="FRK RRA">FRK RRA</option>
                             <option value="FRK BR">FRK BR</option>
                             <option value="Coarse Grains">Coarse Grains</option>
@@ -4442,6 +4376,190 @@ function Daily_Planner() {
                             )}
                           </div>
                         )}
+                        {showMessage && (
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
+                            {wheat_rra !== null && wheat_rra.length > 0 ? (
+                              <div>
+                                <div>Wheat+RRA</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {wheat_rra.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+                        {showMessage && (
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
+                            {frkPlusRRA !== null && frkPlusRRA.length > 0 ? (
+                              <div>
+                                <div>FRK+RRA</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        values
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {frkPlusRRA.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Values}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -4472,6 +4590,8 @@ function Daily_Planner() {
               flexDirection: "column",
               border: "2px dashed black",
               marginTop: 15,
+              maxHeight: "100vh",
+              overflowY: "auto",
             }}
             id="console_"
           >
@@ -4675,10 +4795,39 @@ function Daily_Planner() {
                 <div>{`Destination Value of Misc2 is ${misc2DestinationValue}`}</div>
               ) : null}
 
+              {wheat_rraOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      wheat_rraDestinationValue > wheat_rraOriginValue
+                        ? "red"
+                        : "",
+                  }}
+                >{`Supply Value of Wheat+RRA is ${wheat_rraOriginValue}`}</div>
+              ) : null}
+              {wheat_rraDestinationValue > 0 ? (
+                <div>{`Destination Value of Wheat+RRA is ${wheat_rraDestinationValue}`}</div>
+              ) : null}
+
+              {frk_rraOriginValue > 0 ? (
+                <div
+                  style={{
+                    color:
+                      frk_rraDestinationValue > frk_rraOriginValue ? "red" : "",
+                  }}
+                >{`Supply Value of FRK+RRA is ${frk_rraOriginValue}`}</div>
+              ) : null}
+              {frk_rraDestinationValue > 0 ? (
+                <div>{`Destination Value of FRK+RRA is ${frk_rraDestinationValue}`}</div>
+              ) : null}
+
+              {progress.map((progress) => (
+                <div>{progress}</div>
+              ))}
               {isLoading ? (
                 <div
                   style={{
-                    width: 200,
+                    width: 100,
                     display: "grid",
                     gridTemplateColumns: "1fr auto",
                     alignItems: "end",
