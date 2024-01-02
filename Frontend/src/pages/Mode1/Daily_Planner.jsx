@@ -1130,72 +1130,33 @@ function Daily_Planner() {
   };
 
   const handleDropdownChange_fixed = async (e) => {
-    const selectedValue_fixed = e.target.value;
-    setSelectedOption_fixed(selectedValue_fixed);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
+    const selectedValue = e.target.value;
+    setSelectedOption_fixed(selectedValue);
+    if (railheadData.response && railheadData.response.length > 0) {
+      const filteredRailheads = railheadData.response.filter(
+        (region) => region.region === selectedValue
+      );
 
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue_fixed.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
+      const uniqueRailheadCodes = [
+        ...new Set(filteredRailheads.map((region) => region.railheadCode)),
+      ];
+      setSubOptions_fixed(uniqueRailheadCodes);
     }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions_fixed(dropdownOptions);
   };
 
   const handleDropdownChange2_fixed = async (e) => {
     const selectedValue = e.target.value;
     setSelectedOption2_fixed(selectedValue);
-    const response = await fetch("/data/Updated_railhead_list.xlsx");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
+    if (railheadData.response && railheadData.response.length > 0) {
+      const filteredRailheads = railheadData.response.filter(
+        (region) => region.region === selectedValue
+      );
 
-    const workbook = XLSX.read(data, { type: "array" });
-
-    // Assuming the Excel file has only one sheet
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-
-    // Parse the sheet data into JSON format
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    let dropdownOptions = [];
-    let dropdownOptions_default = {
-      value: "",
-      label: "Please select Railhead",
-    };
-    for (let i = 0; i < jsonData.length; i++) {
-      if (
-        jsonData[i][1] &&
-        jsonData[i][1].trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      ) {
-        dropdownOptions.push({ value: jsonData[i][0], label: jsonData[i][0] });
-      }
+      const uniqueRailheadCodes = [
+        ...new Set(filteredRailheads.map((region) => region.railheadCode)),
+      ];
+      setSubOptions2_fixed(uniqueRailheadCodes);
     }
-    dropdownOptions.sort((a, b) => a.label.localeCompare(b.label));
-    // dropdownOptions=dropdownOptions_default+dropdownOptions;
-    dropdownOptions.unshift(dropdownOptions_default);
-    setSubOptions2_fixed(dropdownOptions);
   };
 
   const handleSubDropdownChange1_fixed = (e) => {
@@ -2457,7 +2418,6 @@ function Daily_Planner() {
                         </tbody>
                       </table>
                     </div>
-                    {/* ----------------------------------------------------------------------------------------- */}
                     <br />
                     {!solutionSolved && block_data.length !== 0 && (
                       <div>
@@ -2538,34 +2498,27 @@ function Daily_Planner() {
                           onChange={handleDropdownChange_fixed}
                           value={selectedOption_fixed}
                         >
-                          <option value="default">Select Origin State</option>
-                          <option value="Andhra Pradesh">Andhra Pradesh</option>
-                          <option value="Bihar">Bihar</option>
-                          <option value="Chattisgarh">Chattisgarh</option>
-                          <option value="Goa">Goa</option>
-                          <option value="Gujarat">Gujarat</option>
-                          <option value="Haryana">Haryana</option>
-                          <option value="Jammu & Kashmir">
-                            Jammu & Kashmir
-                          </option>
-                          <option value="Jharkhand">Jharkhand</option>
-                          <option value="Karnataka">Karnataka</option>
-                          <option value="Kerala">Kerala</option>
-                          <option value="MP">Madhya Pradesh</option>
-                          <option value="Maharashtra">Maharashtra</option>
-                          <option value="NE">North East</option>
-                          <option value="Odisha">Odisha</option>
-                          <option value="Punjab">Punjab</option>
-                          <option value="Rajasthan">Rajasthan</option>
-                          <option value="Tamil Nadu">Tamil Nadu</option>
-                          <option value="Telangana">Telangana</option>
-                          <option value="UP">Uttar Pradesh</option>
-                          <option value="Uttarakhand">Uttarakhand</option>
-                          <option value="West Bengal">West Bengal</option>
+                          <option value="">Select Railhead State</option>
+                          {railheadData && railheadData.response.length > 0 ? (
+                            [
+                              ...new Set(
+                                railheadData.response.map(
+                                  (region) => region.region
+                                )
+                              ),
+                            ].map((region) => (
+                              <option key={region} value={region}>
+                                {region}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled>
+                              Loading...
+                            </option>
+                          )}
                         </select>
                       </div>
-                      {/* </label> */}
-                      {/* <label htmlFor="origin_railhead"> */}
+
                       <div>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Select Origin Railhead
@@ -2575,9 +2528,10 @@ function Daily_Planner() {
                           onChange={handleSubDropdownChange1_fixed}
                           value={subOption1_fixed}
                         >
+                          <option value="">Select origin railhead</option>
                           {subOptions_fixed.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
+                            <option key={option} value={option}>
+                              {option}
                             </option>
                           ))}
                         </select>
@@ -2593,32 +2547,24 @@ function Daily_Planner() {
                           onChange={handleDropdownChange2_fixed}
                           value={selectedOption2_fixed}
                         >
-                          <option value="default">
-                            Select Destination State
-                          </option>
-                          <option value="Andhra Pradesh">Andhra Pradesh</option>
-                          <option value="Bihar">Bihar</option>
-                          <option value="Chattisgarh">Chattisgarh</option>
-                          <option value="Goa">Goa</option>
-                          <option value="Gujarat">Gujarat</option>
-                          <option value="Haryana">Haryana</option>
-                          <option value="Jammu & Kashmir">
-                            Jammu & Kashmir
-                          </option>
-                          <option value="Jharkhand">Jharkhand</option>
-                          <option value="Karnataka">Karnataka</option>
-                          <option value="Kerala">Kerala</option>
-                          <option value="MP">Madhya Pradesh</option>
-                          <option value="Maharashtra">Maharashtra</option>
-                          <option value="NE">North East</option>
-                          <option value="Odisha">Odisha</option>
-                          <option value="Punjab">Punjab</option>
-                          <option value="Rajasthan">Rajasthan</option>
-                          <option value="Tamil Nadu">Tamil Nadu</option>
-                          <option value="Telangana">Telangana</option>
-                          <option value="UP">Uttar Pradesh</option>
-                          <option value="Uttarakhand">Uttarakhand</option>
-                          <option value="West Bengal">West Bengal</option>
+                          <option value="">Select Railhead State</option>
+                          {railheadData && railheadData.response.length > 0 ? (
+                            [
+                              ...new Set(
+                                railheadData.response.map(
+                                  (region) => region.region
+                                )
+                              ),
+                            ].map((region) => (
+                              <option key={region} value={region}>
+                                {region}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled>
+                              Loading...
+                            </option>
+                          )}
                         </select>
                       </div>
                       <div>
@@ -2630,14 +2576,14 @@ function Daily_Planner() {
                           onChange={handleSubDropdownChange2_fixed}
                           value={subOption2_fixed}
                         >
+                          <option value="">Select origin railhead</option>
                           {subOptions2_fixed.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
+                            <option key={option} value={option}>
+                              {option}
                             </option>
                           ))}
                         </select>
                       </div>
-                      {/* </label> */}
                     </div>
                     <div
                       style={{
@@ -2655,12 +2601,28 @@ function Daily_Planner() {
                         style={{
                           marginLeft: "40px",
                           width: "200px",
-                          padding: "5px",
                         }}
                       >
                         <option value="">Select Commodity</option>
-                        <option value="RICE">Rice</option>
-                        <option value="WHEAT">Wheat</option>
+                        <option value="RRA">RRA</option>
+                        <option value="Wheat">Wheat</option>
+                        <option value="Wheat(URS)">Wheat(URS)</option>
+                        <option value="Wheat(FAQ)">Wheat(FAQ)</option>
+                        <option value="Wheat+FRK">Wheat+FRK</option>
+                        <option value="Wheat+RRA">Wheat+RRA</option>
+                        <option value="FRK+RRA">FRK+RRA</option>
+                        <option value="FRK RRA">FRK RRA</option>
+                        <option value="FRK BR">FRK BR</option>
+                        <option value="Coarse Grains">Coarse Grains</option>
+                        <option value="Wheat+CGR">Wheat+CGR</option>
+                        <option value="FRK+CGR">FRK+CGR</option>
+                        <option value="RRC">RRC</option>
+                        <option value="Ragi">Ragi</option>
+                        <option value="Jowar">Jowar</option>
+                        <option value="Bajra">Bajra</option>
+                        <option value="Maize">Maize</option>
+                        <option value="Misc1">Misc1</option>
+                        <option value="Misc2">Misc2</option>
                       </select>
 
                       <div onClick={addConstraint_fixed}>
