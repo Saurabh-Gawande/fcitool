@@ -1046,6 +1046,7 @@ function Daily_Planner() {
       setDownloadMessage(true);
     }
     document.getElementById("toggle").checked = false;
+    setProgress((prev) => [...prev, "Successfully generated daily plan"]);
   };
 
   const fetchReservationId_Total_result = () => {
@@ -1085,43 +1086,45 @@ function Daily_Planner() {
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
     } else {
-      const pdfDoc = new jsPDF();
+      const pdfDoc = new jsPDF("p", "mm", "a4");
       const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+
+      let startY = 10;
 
       Object.entries(Total_result).forEach(([column, data], index) => {
         const parsedData = JSON.parse(data);
 
-        if (index !== 0 && parsedData && parsedData.length > 0) {
-          pdfDoc.addPage();
+        if (parsedData && parsedData.length > 0) {
+          const headers = [
+            "SourceState",
+            "SourceRailHead",
+            "DestinationState",
+            "DestinationRailHead",
+            "Commodity",
+            "Value",
+          ];
+          const rows = parsedData.map((item) => [
+            item.SourceState,
+            item.SourceRailHead,
+            item.DestinationState,
+            item.DestinationRailHead,
+            item.Commodity,
+            item.Values,
+          ]);
+
+          pdfDoc.autoTable({
+            head: [headers],
+            body: rows,
+          });
+
+          startY = pdfDoc.lastAutoTable.finalY + 10;
         }
-
-        const headers = [
-          "SourceState",
-          "SourceRailHead",
-          "DestinationState",
-          "DestinationRailHead",
-          "Commodity",
-        ];
-        const rows = parsedData.map((item) => [
-          item.SourceState,
-          item.SourceRailHead,
-          item.DestinationState,
-          item.DestinationRailHead,
-          item.Commodity,
-        ]);
-
-        pdfDoc.autoTable({
-          head: [headers],
-          body: rows,
-          startY: 20,
-          margin: { top: 20 },
-        });
       });
 
       pdfDoc.save(`Railhead_data_${timestamp}.pdf`);
       setProgress((prev) => [
         ...prev,
-        "Downloaded Raihead detail Plan in Pdf format",
+        "Downloaded Railhead detail Plan in Pdf format",
       ]);
     }
   };
@@ -4590,7 +4593,7 @@ function Daily_Planner() {
               flexDirection: "column",
               border: "2px dashed black",
               marginTop: 15,
-              maxHeight: "100vh",
+              maxHeight: "110vh",
               overflowY: "auto",
             }}
             id="console_"
@@ -4827,10 +4830,10 @@ function Daily_Planner() {
               {isLoading ? (
                 <div
                   style={{
+                    width: "fit-content",
+                    display: "flex",
+                    alignItems: "center",
                     width: 100,
-                    display: "grid",
-                    gridTemplateColumns: "1fr auto",
-                    alignItems: "end",
                   }}
                 >
                   Processing
@@ -4838,10 +4841,8 @@ function Daily_Planner() {
                     className="container"
                     style={{
                       display: "flex",
-                      flexDirection: "row",
-                      marginLeft: -10,
-                      marginBottom: 4,
-                      gap: 1,
+                      gap: "2px",
+                      marginLeft: "-13px",
                     }}
                   >
                     <div className="dot"></div>
