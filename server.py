@@ -1971,7 +1971,7 @@ def Daily_Planner():
 
             blocked_data = fetched_data['block_data']
             confirmed_data = fetched_data['confirmed_data']
-            # Scenerio = fetched_data["Scenerio"]   
+            print(confirmed_data)
             TEFD_fetched = fetched_data['TEFD']
             TEFDdata = fetched_data['TEFDdata']
             # df = pd.DataFrame(TEFD_fetched)
@@ -3375,33 +3375,35 @@ def Daily_Planner():
                 for wheat in wheat_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
-   
-                       
-            for i in range (len(To)): 
-                for wheat in wheat_dest: 
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheat_dest:
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheat_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break    
 
-            for i in range (len(To)): 
-                for wheat in wheat_dest_inline: 
-                    if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
-                      
-
-            # for i in range(len(confirmed_org_rhcode)):
-            #     org = str(confirmed_org_rhcode[i])
-            #     org_state = str(confirmed_org_state[i])
-            #     dest = str(confirmed_dest_rhcode[i])
-            #     dest_state = str(confirmed_dest_state[i])
-            #     Commodity = confirmed_railhead_commodities[i]
-            #     val = confirmed_railhead_value[i]
-            #     if Commodity == 'WHEAT':
-            #         From.append(org)
-            #         From_state.append(org_state)
-            #         To.append(dest)
-            #         To_state.append(dest_state)
-            #         commodity.append("Wheat")
-            #         values.append(val)
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat")
+                    values.append(val)
             
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
@@ -3451,33 +3453,38 @@ def Daily_Planner():
                     if From[i] == rra["origin_railhead"] or From[i] == rra["destination_railhead"] :
                         From_state_rra.append(rra["origin_state"])
   
-            for i in range (len(To)): 
-                for rra in rra_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for rra in rra_dest:
                     if To[i] == rra["origin_railhead"]:
-                        To_state_rra.append(rra["origin_state"]) 
-
-            for i in range (len(To)): 
-                for rra in rra_dest_inline: 
-                    if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"] :
-                        To_state_rra.append(rra["origin_state"]) 
-
+                        To_state_rra.append(rra["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for rra in rra_dest_inline:
+                        if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"]:
+                            To_state_rra.append(rra["origin_state"])
+                            found_state = True
+                            break
+           
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+         
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = float(confirmed_railhead_value[i])
+                if Commodity == 'RRA':
+                    From.append(org)
+                    From_state_rra.append(org_state)
+                    To.append(dest)
+                    To_state_rra.append(dest_state)
+                    commodity.append("RRA")
+                    values.append(val)
 
-            # for i in range(len(confirmed_org_rhcode)):
-            #     org = str(confirmed_org_rhcode[i])
-            #     org_state = str(confirmed_org_state[i])
-            #     dest = str(confirmed_dest_rhcode[i])
-            #     dest_state = str(confirmed_dest_state[i])
-            #     Commodity = confirmed_railhead_commodities[i]
-            #     val = float(confirmed_railhead_value[i])
-            #     if Commodity == 'RICE':
-            #         From.append(org)
-            #         From_state_rra.append(org_state)
-            #         To.append(dest)
-            #         To_state_rra.append(dest_state)
-            #         commodity.append("Rice")
-            #         values.append(val)
             df_rra["SourceRailHead"] = From
             df_rra["SourceState"] = From_state_rra
             df_rra["DestinationRailHead"] = To
@@ -3522,19 +3529,38 @@ def Daily_Planner():
                 for coarseGrain in coarseGrain_origin_inline:
                     if From[i] == coarseGrain["origin_railhead"] or From[i] == coarseGrain["destination_railhead"] :
                         From_state.append(coarseGrain["origin_state"])
-            
-            for i in range (len(To)): 
-                for coarseGrain in coarseGrain_dest_inline: 
-                    if To[i] == coarseGrain["origin_railhead"] or To[i] == coarseGrain["destination_railhead"] :
-                        To_state.append(coarseGrain["origin_state"]) 
 
-            for i in range (len(To)): 
-                for coarseGrain in coarseGrain_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for coarseGrain in coarseGrain_dest:
                     if To[i] == coarseGrain["origin_railhead"]:
                         To_state.append(coarseGrain["origin_state"])
-                        
+                        found_state = True
+                        break
+                if not found_state:
+                    for coarseGrain in coarseGrain_dest_inline:
+                        if To[i] == coarseGrain["origin_railhead"] or To[i] == coarseGrain["destination_railhead"]:
+                            To_state.append(coarseGrain["origin_state"])
+                            found_state = True
+                            break   
+
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Coarse Grains':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Coarse Grains")
+                    values.append(val)
 
             df_CoarseGrain["SourceRailHead"] = From
             df_CoarseGrain["SourceState"] = From_state
@@ -3581,18 +3607,37 @@ def Daily_Planner():
                     if From[i] == frkrra["origin_railhead"] or From[i] == frkrra["destination_railhead"]:
                         From_state.append(frkrra["origin_state"])
 
-            for i in range (len(To)): 
-                for frkrra in frkrra_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for frkrra in frkrra_dest:
                     if To[i] == frkrra["origin_railhead"]:
                         To_state.append(frkrra["origin_state"])
-
-            for i in range (len(To)): 
-                for frkrra in frkrra_dest_inline: 
-                    if To[i] == frkrra["origin_railhead"] or To[i] == frkrra["destination_railhead"]:
-                        To_state.append(frkrra["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkrra in frkrra_dest_inline:
+                        if To[i] == frkrra["origin_railhead"] or To[i] == frkrra["destination_railhead"]:
+                            To_state.append(frkrra["origin_state"])
+                            found_state = True
+                            break   
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'FRK RRA':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK RRA")
+                    values.append(val)
 
             df_frkrra["SourceRailHead"] = From
             df_frkrra["SourceState"] = From_state
@@ -3638,19 +3683,38 @@ def Daily_Planner():
                 for frkbr in frkbr_origin_inline:
                     if From[i] == frkbr["origin_railhead"] or From[i] == frkbr["destination_railhead"]:
                         From_state.append(frkbr["origin_state"])
-
-            for i in range (len(To)): 
-                for frkbr in frkbr_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for frkbr in frkbr_dest:
                     if To[i] == frkbr["origin_railhead"]:
                         To_state.append(frkbr["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkbr in frkbr_dest_inline:
+                        if To[i] == frkbr["origin_railhead"] or To[i] == frkbr["destination_railhead"]:
+                            To_state.append(frkbr["origin_state"])
+                            found_state = True
+                            break   
 
-            for i in range (len(To)): 
-                for frkbr in frkbr_dest_inline: 
-                    if To[i] == frkbr["origin_railhead"] or To[i] == frkbr["destination_railhead"]:
-                        To_state.append(frkbr["origin_state"])
-            
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'FRK BR':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK BR")
+                    values.append(val)
 
             df_frkbr["SourceRailHead"] = From
             df_frkbr["SourceState"] = From_state
@@ -3697,18 +3761,37 @@ def Daily_Planner():
                     if From[i] == frk["origin_railhead"] or From[i] == frk["destination_railhead"]:
                         From_state.append(frk["origin_state"])
 
-            for i in range (len(To)): 
-                for frk in frk_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for frk in frk_dest:
                     if To[i] == frk["origin_railhead"]:
                         To_state.append(frk["origin_state"])
-
-            for i in range (len(To)): 
-                for frk in frk_dest_inline: 
-                    if To[i] == frk["origin_railhead"] or To[i] == frk["destination_railhead"] :
-                        To_state.append(frk["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frk in frk_dest_inline:
+                        if To[i] == frk["origin_railhead"] or To[i] == frk["destination_railhead"]:
+                            To_state.append(frk["origin_state"])
+                            found_state = True
+                            break   
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat+FRK':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat+FRK")
+                    values.append(val)
 
             df_frk["SourceRailHead"] = From
             df_frk["SourceState"] = From_state
@@ -3754,19 +3837,38 @@ def Daily_Planner():
                 for frkcgr in frkcgr_origin_inline:
                     if From[i] == frkcgr["origin_railhead"] or From[i] == frkcgr["destination_railhead"] :
                         From_state.append(frkcgr["origin_state"])
-
-            for i in range (len(To)): 
-                for frkcgr in frkcgr_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for frkcgr in frkcgr_dest:
                     if To[i] == frkcgr["origin_railhead"]:
                         To_state.append(frkcgr["origin_state"])
-
-            for i in range (len(To)): 
-                for frkcgr in frkcgr_dest_inline: 
-                    if To[i] == frkcgr["origin_railhead"] or To[i] == frkcgr["destination_railhead"]:
-                        To_state.append(frkcgr["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkcgr in frkcgr_dest_inline:
+                        if To[i] == frkcgr["origin_railhead"] or To[i] == frkcgr["destination_railhead"]:
+                            To_state.append(frkcgr["origin_state"])
+                            found_state = True
+                            break   
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'FRK+CGR':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK+CGR")
+                    values.append(val)
 
             df_frkcgr["SourceRailHead"] = From
             df_frkcgr["SourceState"] = From_state
@@ -3812,19 +3914,38 @@ def Daily_Planner():
                 for wcgr in wcgr_origin_inline:
                     if From[i] == wcgr["origin_railhead"] or From[i] == wcgr["destination_railhead"]:
                         From_state.append(wcgr["origin_state"])
-
-            for i in range (len(To)): 
-                for wcgr in wcgr_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for wcgr in wcgr_dest:
                     if To[i] == wcgr["origin_railhead"]:
                         To_state.append(wcgr["origin_state"])
-
-            for i in range (len(To)): 
-                for wcgr in wcgr_dest_inline: 
-                    if To[i] == wcgr["origin_railhead"] or To[i] == wcgr["destination_railhead"]:
-                        To_state.append(wcgr["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wcgr in wcgr_dest_inline:
+                        if To[i] == wcgr["origin_railhead"] or To[i] == wcgr["destination_railhead"]:
+                            To_state.append(wcgr["origin_state"])
+                            found_state = True
+                            break   
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat+CGR':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat+CGR")
+                    values.append(val)
 
             df_wcgr["SourceRailHead"] = From 
             df_wcgr["SourceState"] = From_state
@@ -3869,16 +3990,35 @@ def Daily_Planner():
                 for rrc in rrc_origin_inline:
                     if From[i] == rrc["origin_railhead"] or From[i] == rrc["destination_railhead"]:
                         From_state.append(rrc["origin_state"])
-
-            for i in range (len(To)): 
-                for rrc in rrc_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for rrc in rrc_dest:
                     if To[i] == rrc["origin_railhead"]:
                         To_state.append(rrc["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for rrc in rrc_dest_inline:
+                        if To[i] == rrc["origin_railhead"] or To[i] == rrc["destination_railhead"]:
+                            To_state.append(rrc["origin_state"])
+                            found_state = True
+                            break   
 
-            for i in range (len(To)): 
-                for rrc in rrc_dest_inline: 
-                    if To[i] == rrc["origin_railhead"] or To[i] == rrc["destination_railhead"]:
-                        To_state.append(rrc["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'RRC':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("RRC")
+                    values.append(val)
 
             df_rrc["SourceRailHead"] = From
             df_rrc["SourceState"] = From_state
@@ -3923,15 +4063,34 @@ def Daily_Planner():
                     if From[i] == ragi["origin_railhead"] or From[i] == ragi["destination_railhead"]:
                         From_state.append(ragi["origin_state"])
 
-            for i in range (len(To)): 
-                for ragi in ragi_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for ragi in ragi_dest:
                     if To[i] == ragi["origin_railhead"]:
                         To_state.append(ragi["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for ragi in ragi_dest_inline:
+                        if To[i] == ragi["origin_railhead"] or To[i] == ragi["destination_railhead"]:
+                            To_state.append(ragi["origin_state"])
+                            found_state = True
+                            break   
 
-            for i in range (len(To)): 
-                for ragi in ragi_dest_inline: 
-                    if To[i] == ragi["origin_railhead"] or To[i] == ragi["destination_railhead"]:
-                        To_state.append(ragi["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Ragi':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Ragi")
+                    values.append(val)
 
             df_ragi["SourceRailHead"] = From
             df_ragi["SourceState"] = From_state
@@ -3976,15 +4135,34 @@ def Daily_Planner():
                     if From[i] == jowar["origin_railhead"] or From[i] == jowar["destination_railhead"]:
                         From_state.append(jowar["origin_state"])
 
-            for i in range (len(To)): 
-                for jowar in jowar_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for jowar in jowar_dest:
                     if To[i] == jowar["origin_railhead"]:
                         To_state.append(jowar["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for jowar in jowar_dest_inline:
+                        if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
+                            To_state.append(jowar["origin_state"])
+                            found_state = True
+                            break  
 
-            for i in range (len(To)): 
-                for jowar in jowar_dest_inline: 
-                    if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
-                        To_state.append(jowar["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Jowar':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Jowar")
+                    values.append(val)
 
             df_jowar["SourceRailHead"] = From
             df_jowar["SourceState"] = From_state
@@ -4029,15 +4207,34 @@ def Daily_Planner():
                     if From[i] == bajra["origin_railhead"] or From[i] == bajra["destination_railhead"]:
                         From_state.append(bajra["origin_state"])
 
-            for i in range (len(To)): 
-                for bajra in bajra_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for bajra in bajra_dest:
                     if To[i] == bajra["origin_railhead"]:
                         To_state.append(bajra["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for bajra in bajra_dest_inline:
+                        if To[i] == bajra["origin_railhead"] or To[i] == bajra["destination_railhead"]:
+                            To_state.append(bajra["origin_state"])
+                            found_state = True
+                            break  
 
-            for i in range (len(To)): 
-                for bajra in bajra_dest_inline: 
-                    if To[i] == bajra["origin_railhead"] or To[i] == bajra["destination_railhead"]:
-                        To_state.append(bajra["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Bajra':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Bajra")
+                    values.append(val)
 
             df_bajra["SourceRailHead"] = From
             df_bajra["SourceState"] = From_state
@@ -4082,15 +4279,34 @@ def Daily_Planner():
                     if From[i] == maize["origin_railhead"] or From[i] == maize["destination_railhead"]:
                         From_state.append(maize["origin_state"])
 
-            for i in range (len(To)): 
-                for maize in maize_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for maize in maize_dest:
                     if To[i] == maize["origin_railhead"]:
                         To_state.append(maize["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for maize in maize_dest_inline:
+                        if To[i] == maize["origin_railhead"] or To[i] == maize["destination_railhead"]:
+                            To_state.append(maize["origin_state"])
+                            found_state = True
+                            break   
 
-            for i in range (len(To)): 
-                for maize in maize_dest_inline: 
-                    if To[i] == maize["origin_railhead"] or To[i] == maize["destination_railhead"]:
-                        To_state.append(maize["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Maize':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Maize")
+                    values.append(val)
 
             df_maize["SourceRailHead"] = From
             df_maize["SourceState"] = From_state
@@ -4134,16 +4350,35 @@ def Daily_Planner():
                 for misc1 in misc1_origin_inline:
                     if From[i] == misc1["origin_railhead"] or From[i] == misc1["destination_railhead"]:
                         From_state.append(misc1["origin_state"])
-
-            for i in range (len(To)): 
-                for misc1 in misc1_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc1_dest:
                     if To[i] == misc1["origin_railhead"]:
                         To_state.append(misc1["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc1 in misc1_dest_inline:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_state.append(misc1["origin_state"])
+                            found_state = True
+                            break   
 
-            for i in range (len(To)): 
-                for misc1 in misc1_dest_inline: 
-                    if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"] :
-                        To_state.append(misc1["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Misc1':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Misc1")
+                    values.append(val)
 
             df_misc1["SourceRailHead"] = From
             df_misc1["SourceState"] = From_state
@@ -4188,15 +4423,34 @@ def Daily_Planner():
                     if From[i] == misc2["origin_railhead"] or From[i] == misc2["destination_railhead"]  :
                         From_state.append(misc2["origin_state"])
 
-            for i in range (len(To)): 
-                for misc2 in misc2_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for misc2 in misc2_dest:
                     if To[i] == misc2["origin_railhead"]:
                         To_state.append(misc2["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc2 in misc2_dest_inline:
+                        if To[i] == misc2["origin_railhead"] or To[i] == misc2["destination_railhead"]:
+                            To_state.append(misc2["origin_state"])
+                            found_state = True
+                            break   
 
-            for i in range (len(To)): 
-                for misc2 in misc2_dest_inline: 
-                    if To[i] == misc2["origin_railhead"] or To[i] == misc2["destination_railhead"]:
-                        To_state.append(misc2["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Misc2':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Misc2")
+                    values.append(val)
 
             df_misc2["SourceRailHead"] = From
             df_misc2["SourceState"] = From_state
@@ -4240,16 +4494,35 @@ def Daily_Planner():
                 for wheat in wheaturs_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
-
-            for i in range (len(To)): 
-                for wheat in wheaturs_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheaturs_dest:
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheaturs_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break   
 
-            for i in range (len(To)): 
-                for wheat in wheaturs_dest_inline: 
-                    if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat(URS)':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat(URS)")
+                    values.append(val)
 
             df_wheaturs["SourceRailHead"] = From
             df_wheaturs["SourceState"] = From_state
@@ -4294,15 +4567,34 @@ def Daily_Planner():
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
 
-            for i in range (len(To)): 
-                for wheat in wheatfaq_dest: 
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatfaq_dest:
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheatfaq_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
 
-            for i in range (len(To)): 
-                for wheat in wheatfaq_dest_inline: 
-                    if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat(FAQ)':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat(FAQ)")
+                    values.append(val)
 
             df_wheatfaq["SourceRailHead"] = From
             df_wheatfaq["SourceState"] = From_state
@@ -4346,16 +4638,35 @@ def Daily_Planner():
                 for wheat in wheatrra_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
-
-            for i in range (len(To)): 
-                for wheat in wheatrra_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatrra_dest:
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheatrra_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
 
-            for i in range (len(To)): 
-                for wheat in wheatrra_dest_inline: 
-                    if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat+RRA':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat+RRA")
+                    values.append(val)
 
             df_wheatrra["SourceRailHead"] = From
             df_wheatrra["SourceState"] = From_state
@@ -4399,16 +4710,35 @@ def Daily_Planner():
                 for wheat in frk_rra_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
-
-            for i in range (len(To)): 
-                for wheat in frk_rra_dest: 
+            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in frk_rra_dest:
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in frk_rra_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
 
-            for i in range (len(To)): 
-                for wheat in frk_rra_dest_inline: 
-                    if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
-                        To_state.append(wheat["origin_state"])
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'FRK+RRA':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK+RRA")
+                    values.append(val)
 
             df_frk_rra["SourceRailHead"] = From
             df_frk_rra["SourceState"] = From_state
@@ -4426,8 +4756,6 @@ def Daily_Planner():
                 for j in range(len(df_frk_rra["SourceRailHead"])):
                     if (i == df_frk_rra.iloc[j]["SourceRailHead"] or source_frk_rra_inline[i] == df_frk_rra.iloc[j]["SourceRailHead"]):
                         df_frk_rra.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_rra_inline[i])
-            print(df_frk_rra)
-            print(df_wheatrra)
 
             data1["rra"] = df_rra
             data1["wheat"] = df_wheat

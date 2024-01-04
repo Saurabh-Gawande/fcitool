@@ -138,6 +138,16 @@ function Daily_Planner() {
   const [misc1, setMisc1] = useState(false);
   const [misc2, setMisc2] = useState(false);
   const [disableAfterImport, setDisableAfterImport] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const handleCloseModal = (e) => {
+    if (e.target.className === "modal-overlay") {
+      closeModal();
+    }
+  };
 
   useEffect(() => {
     try {
@@ -907,9 +917,19 @@ function Daily_Planner() {
       frkrraOriginValue < frkrraDestinationValue ||
       frkbrOriginValue < frkbrDestinationValue ||
       wheat_rraOriginValue < wheat_rraDestinationValue ||
-      frk_rraOriginValue < frk_rraDestinationValue
+      frk_rraOriginValue < frk_rraDestinationValue ||
+      rrcOriginValue < rrcDestinationValue ||
+      ragiOriginValue < ragiDestinationValue ||
+      jowarOriginValue < jowarDestinationValue ||
+      bajraOriginValue < bajraDestinationValue ||
+      maizeOriginValue < maizeDestinationValue ||
+      misc1OriginValue < misc1DestinationValue ||
+      misc2OriginValue < misc2DestinationValue ||
+      wheatUrsOriginValue < wheatUrsDestinationValue ||
+      wheatFaqOriginValue < wheatFaqDestinationValue
     ) {
-      alert("Destination indents more than Supply indents Please check");
+      // alert("Destination indents more than Supply indents Please check");
+      setShowModal(true);
       setIsLoading(false);
       document.getElementById("toggle").checked = false;
       return;
@@ -1159,14 +1179,6 @@ function Daily_Planner() {
     }
   };
 
-  const handleSubDropdownChange1_fixed = (e) => {
-    setSubOption1_fixed(e.target.value);
-  };
-
-  const handleSubDropdownChange2_fixed = (e) => {
-    setSubOption2_fixed(e.target.value);
-  };
-
   const handleDeleteRow = (e) => {
     let block_data_ = block_data.filter((item) => item["id"] !== e);
     setBlockdata(block_data_);
@@ -1186,9 +1198,7 @@ function Daily_Planner() {
       selectedOption2_fixed &&
       subOption2_fixed &&
       commodity_fixed
-      // && value_fixed
     ) {
-      // Check if origin and destination railheads are the same
       if (subOption1_fixed === subOption2_fixed) {
         alert("Origin and destination railheads cannot be the same.");
         return;
@@ -1202,15 +1212,13 @@ function Daily_Planner() {
           destination_state: selectedOption2_fixed,
           destination_railhead: subOption2_fixed,
           commodity: commodity_fixed,
-          value: value_fixed,
+          value: 1,
           id: Date.now(),
         },
       ]);
 
-      setSelectedOption_fixed("default");
-      setSelectedOption2_fixed("default");
-      setSubOptions_fixed([]);
-      setSubOptions2_fixed([]);
+      setSubOption1_fixed("");
+      setSubOption2_fixed("");
 
       setProgress((prev) => [
         ...prev,
@@ -1472,6 +1480,49 @@ function Daily_Planner() {
             <li className="active">Daily plan</li>
           </ul>
 
+          {showModal ? (
+            <div className="modal-overlay" onClick={handleCloseModal}>
+              <div className="modal-content">
+                <span className="close-btn" onClick={closeModal}>
+                  &times;
+                </span>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  <h2>Alert</h2>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    Destination indents more than Supply indents Please check.
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "end",
+                    padding: "5px 2px",
+                  }}
+                >
+                  <button
+                    onClick={closeModal}
+                    type="button"
+                    class="btn btn-danger"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
           <div className="page-content-wrap">
             <div className="row">
               <div className="col-md-12">
@@ -1582,13 +1633,23 @@ function Daily_Planner() {
                       </select>
                     </label>
                     <br />
-
+                    <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
+                      <strong
+                        style={{
+                          color: "#9d0921",
+                          fontSize: "20px",
+                          marginLeft: "15px",
+                        }}
+                      >
+                        For Origin:
+                      </strong>
+                    </p>
                     <div>
                       <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          width: "60vw",
+                          width: "65vw",
                         }}
                       >
                         <div
@@ -1652,15 +1713,11 @@ function Daily_Planner() {
                         <div
                           style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <strong
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                          >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Commodity
                           </strong>
                           <select
+                            style={{ width: "170px", padding: "5px" }}
                             value={surplusCommodity}
                             onChange={(e) => {
                               setSurplusCommodity(e.target.value);
@@ -1724,51 +1781,66 @@ function Daily_Planner() {
                         </button>
                       </div>
                       <br />
-                      <div>Surplus</div>
-                      <table style={{ width: "60vw" }}>
-                        <thead>
-                          <tr>
-                            <th>Sno</th>
-                            <th>Railhead</th>
-                            <th>State</th>
-                            <th>Value</th>
-                            <th>Commodity</th>
-                            <th>Delete</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {surplus.map((row, index) => (
-                            <tr key={index}>
-                              <td>{index}</td>
-                              <td>{row.origin_railhead}</td>
-                              <td>{row.origin_state}</td>
-                              <td>{row.Value}</td>
-                              <td>{row.Commodity}</td>
-                              <td>
-                                <span
-                                  style={{
-                                    cursor: "pointer",
-                                    color: "#ff0000",
-                                    fontSize: "1.2rem",
-                                  }}
-                                  onClick={() =>
-                                    handleDeleteRow_surplus__source(row, index)
-                                  }
-                                  title="Delete"
-                                >
-                                  &times;
-                                </span>
-                              </td>
+                      {surplus.length !== 0 && (
+                        <table style={{ width: "65vw" }}>
+                          <thead>
+                            <tr>
+                              <th>Sno</th>
+                              <th>Railhead</th>
+                              <th>State</th>
+                              <th>Value</th>
+                              <th>Commodity</th>
+                              <th>Delete</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                      <br />
+                          </thead>
+                          <tbody>
+                            {surplus.map((row, index) => (
+                              <tr key={index}>
+                                <td>{index}</td>
+                                <td>{row.origin_railhead}</td>
+                                <td>{row.origin_state}</td>
+                                <td>{row.Value}</td>
+                                <td>{row.Commodity}</td>
+                                <td>
+                                  <span
+                                    style={{
+                                      cursor: "pointer",
+                                      color: "#ff0000",
+                                      fontSize: "1.2rem",
+                                    }}
+                                    onClick={() =>
+                                      handleDeleteRow_surplus__source(
+                                        row,
+                                        index
+                                      )
+                                    }
+                                    title="Delete"
+                                  >
+                                    &times;
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+
+                      <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
+                        <strong
+                          style={{
+                            color: "#9d0921",
+                            fontSize: "20px",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          For Destination:
+                        </strong>
+                      </p>
                       <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          width: "60vw",
+                          width: "65vw",
                         }}
                       >
                         <div
@@ -1834,15 +1906,11 @@ function Daily_Planner() {
                         <div
                           style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <strong
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                          >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Commodity
                           </strong>
                           <select
+                            style={{ width: "170px", padding: "5px" }}
                             value={deficitCommodity}
                             onChange={(e) => {
                               setDeficitCommodity(e.target.value);
@@ -1906,45 +1974,46 @@ function Daily_Planner() {
                         </button>
                       </div>
                       <br />
-                      <div>Deficit</div>
-                      <table style={{ width: "60vw" }}>
-                        <thead>
-                          <tr>
-                            <th>Sno</th>
-                            <th>Railhead</th>
-                            <th>State</th>
-                            <th>Value</th>
-                            <th>Commodity</th>
-                            <th>Delete</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {deficit.map((row, index) => (
-                            <tr key={index}>
-                              <td>{index}</td>
-                              <td>{row.origin_railhead}</td>
-                              <td>{row.origin_state}</td>
-                              <td>{row.Value}</td>
-                              <td>{row.Commodity}</td>
-                              <td>
-                                <span
-                                  style={{
-                                    cursor: "pointer",
-                                    color: "#ff0000",
-                                    fontSize: "1.2rem",
-                                  }}
-                                  onClick={() =>
-                                    handleDeleteRow_deficit__dest(row, index)
-                                  }
-                                  title="Delete"
-                                >
-                                  &times;
-                                </span>
-                              </td>
+                      {deficit.length !== 0 && (
+                        <table style={{ width: "65vw" }}>
+                          <thead>
+                            <tr>
+                              <th>Sno</th>
+                              <th>Railhead</th>
+                              <th>State</th>
+                              <th>Value</th>
+                              <th>Commodity</th>
+                              <th>Delete</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {deficit.map((row, index) => (
+                              <tr key={index}>
+                                <td>{index}</td>
+                                <td>{row.origin_railhead}</td>
+                                <td>{row.origin_state}</td>
+                                <td>{row.Value}</td>
+                                <td>{row.Commodity}</td>
+                                <td>
+                                  <span
+                                    style={{
+                                      cursor: "pointer",
+                                      color: "#ff0000",
+                                      fontSize: "1.2rem",
+                                    }}
+                                    onClick={() =>
+                                      handleDeleteRow_deficit__dest(row, index)
+                                    }
+                                    title="Delete"
+                                  >
+                                    &times;
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
                       <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
                         <strong
                           style={{
@@ -1960,7 +2029,7 @@ function Daily_Planner() {
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          width: "60vw",
+                          width: "65vw",
                         }}
                       >
                         <div
@@ -1970,7 +2039,7 @@ function Daily_Planner() {
                             Select Inline State
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={handleSurplusInlineState1Change}
                             value={surplusInlineState1}
                           >
@@ -2002,7 +2071,7 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={(e) =>
                               setSurplusInlineRailhead1(e.target.value)
                             }
@@ -2023,7 +2092,7 @@ function Daily_Planner() {
                             Select Inline State
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={handleSurplusInlineState2Change}
                             value={surplusInlineState2}
                           >
@@ -2055,7 +2124,7 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={(e) =>
                               setSurplusInlineRailhead2(e.target.value)
                             }
@@ -2073,16 +2142,12 @@ function Daily_Planner() {
                         <div
                           style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <strong
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                          >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Commodity
                           </strong>
                           <select
                             value={surplusInlineCommodity1}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={(e) => {
                               setSurplusInlineCommodity1(e.target.value);
                             }}
@@ -2133,53 +2198,55 @@ function Daily_Planner() {
                           Add
                         </button>
                       </div>
-                      <table style={{ width: "60vw", marginTop: 20 }}>
-                        <thead>
-                          <tr>
-                            <th>Sno</th>
-                            <th>Railhead</th>
-                            <th>State</th>
-                            <th>Railhead</th>
-                            <th>State</th>
-                            <th>Value</th>
-                            <th>Commodity</th>
-                            <th>Delete</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {surplusInline.map((row, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{index}</td>
-                                <td>{row.origin_railhead}</td>
-                                <td>{row.origin_state}</td>
-                                <td>{row.destination_railhead}</td>
-                                <td>{row.destination_state}</td>
-                                <td>{row.Value}</td>
-                                <td>{row.Commodity}</td>
-                                <td>
-                                  <span
-                                    style={{
-                                      cursor: "pointer",
-                                      color: "#ff0000",
-                                      fontSize: "1.2rem",
-                                    }}
-                                    onClick={() =>
-                                      handleDeleteRowInline_deficit__dest(
-                                        row,
-                                        index
-                                      )
-                                    }
-                                    title="Delete"
-                                  >
-                                    &times;
-                                  </span>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                      {surplusInline.length > 0 && (
+                        <table style={{ width: "65vw", marginTop: 20 }}>
+                          <thead>
+                            <tr>
+                              <th>Sno</th>
+                              <th>Railhead</th>
+                              <th>State</th>
+                              <th>Railhead</th>
+                              <th>State</th>
+                              <th>Value</th>
+                              <th>Commodity</th>
+                              <th>Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {surplusInline.map((row, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td>{index}</td>
+                                  <td>{row.origin_railhead}</td>
+                                  <td>{row.origin_state}</td>
+                                  <td>{row.destination_railhead}</td>
+                                  <td>{row.destination_state}</td>
+                                  <td>{row.Value}</td>
+                                  <td>{row.Commodity}</td>
+                                  <td>
+                                    <span
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#ff0000",
+                                        fontSize: "1.2rem",
+                                      }}
+                                      onClick={() =>
+                                        handleDeleteRowInline_deficit__dest(
+                                          row,
+                                          index
+                                        )
+                                      }
+                                      title="Delete"
+                                    >
+                                      &times;
+                                    </span>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      )}
 
                       <p style={{ margin: 2, padding: 0, marginTop: 20 }}>
                         <strong
@@ -2196,7 +2263,7 @@ function Daily_Planner() {
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          width: "60vw",
+                          width: "65vw",
                         }}
                       >
                         <div
@@ -2206,7 +2273,7 @@ function Daily_Planner() {
                             Select Inline State
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={handleDeficitInlineState1Change}
                             value={deficitInlineState1}
                           >
@@ -2238,7 +2305,7 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={(e) =>
                               setDeficitInlineRailhead1(e.target.value)
                             }
@@ -2260,7 +2327,7 @@ function Daily_Planner() {
                             Select Inline State
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={handleDeficitInlineState2Change}
                             value={deficitInlineState2}
                           >
@@ -2292,7 +2359,7 @@ function Daily_Planner() {
                             Select Inline Railhead
                           </strong>
                           <select
-                            style={{ width: "200px", padding: "5px" }}
+                            style={{ width: "170px", padding: "5px" }}
                             onChange={(e) =>
                               setDeficitInlineRailhead2(e.target.value)
                             }
@@ -2310,15 +2377,11 @@ function Daily_Planner() {
                         <div
                           style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <strong
-                            style={{
-                              width: "200px",
-                              padding: "5px",
-                            }}
-                          >
+                          <strong style={{ fontSize: "16px", padding: "5px" }}>
                             Select Commodity
                           </strong>
                           <select
+                            style={{ width: "170px", padding: "5px" }}
                             value={deficitInlineCommodity}
                             onChange={(e) => {
                               setDeficitInlineCommodity(e.target.value);
@@ -2370,104 +2433,56 @@ function Daily_Planner() {
                           Add
                         </button>
                       </div>
-                      <table style={{ width: "60vw", marginTop: 20 }}>
-                        <thead>
-                          <tr>
-                            <th>Sno</th>
-                            <th>Railhead</th>
-                            <th>State</th>
-                            <th>Railhead</th>
-                            <th>State</th>
-                            <th>Value</th>
-                            <th>Commodity</th>
-                            <th>Delete</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {deficitInline.map((row, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{index}</td>
-                                <td>{row.origin_railhead}</td>
-                                <td>{row.origin_state}</td>
-                                <td>{row.destination_railhead}</td>
-                                <td>{row.destination_state}</td>
-                                <td>{row.Value}</td>
-                                <td>{row.Commodity}</td>
-                                <td>
-                                  <span
-                                    style={{
-                                      cursor: "pointer",
-                                      color: "#ff0000",
-                                      fontSize: "1.2rem",
-                                    }}
-                                    onClick={() =>
-                                      handleDeleteRow_deficitInline__dest(
-                                        row,
-                                        index
-                                      )
-                                    }
-                                    title="Delete"
-                                  >
-                                    &times;
-                                  </span>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                    <br />
-                    {!solutionSolved && block_data.length !== 0 && (
-                      <div>
-                        <table>
+                      {deficitInline.length > 0 && (
+                        <table style={{ width: "65vw", marginTop: 20 }}>
                           <thead>
-                            <tr style={{ margin: "auto" }}>
-                              <th style={{ padding: "10px", width: "238px" }}>
-                                Origin State
-                              </th>
-                              <th style={{ padding: "10px", width: "238px" }}>
-                                Origin Railhead
-                              </th>
-                              <th style={{ padding: "10px", width: "238px" }}>
-                                Destination State
-                              </th>
-                              <th style={{ padding: "10px", width: "238px" }}>
-                                Destination Railhead
-                              </th>
-                              <th style={{ padding: "10px", width: "236px" }}>
-                                Delete
-                              </th>
+                            <tr>
+                              <th>Sno</th>
+                              <th>Railhead</th>
+                              <th>State</th>
+                              <th>Railhead</th>
+                              <th>State</th>
+                              <th>Value</th>
+                              <th>Commodity</th>
+                              <th>Delete</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {block_data.map((item) => (
-                              <tr key={item.id}>
-                                <td>{item.origin_state}</td>
-                                <td>{item.origin_railhead}</td>
-                                <td>{item.destination_state}</td>
-                                <td>{item.destination_railhead}</td>
-                                <td>
-                                  <span
-                                    style={{
-                                      cursor: "pointer",
-                                      color: "#ff0000",
-                                      fontSize: "1.2rem",
-                                    }}
-                                    onClick={() => handleDeleteRow(item.id)}
-                                    title="Delete"
-                                  >
-                                    &times;
-                                  </span>
-                                </td>
-                              </tr>
-                            ))}
+                            {deficitInline.map((row, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td>{index}</td>
+                                  <td>{row.origin_railhead}</td>
+                                  <td>{row.origin_state}</td>
+                                  <td>{row.destination_railhead}</td>
+                                  <td>{row.destination_state}</td>
+                                  <td>{row.Value}</td>
+                                  <td>{row.Commodity}</td>
+                                  <td>
+                                    <span
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#ff0000",
+                                        fontSize: "1.2rem",
+                                      }}
+                                      onClick={() =>
+                                        handleDeleteRow_deficitInline__dest(
+                                          row,
+                                          index
+                                        )
+                                      }
+                                      title="Delete"
+                                    >
+                                      &times;
+                                    </span>
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
-                      </div>
-                    )}
-                    <br />
+                      )}
+                    </div>
                     <br />
                     <p style={{ margin: 0, padding: 0 }}>
                       <strong
@@ -2484,11 +2499,10 @@ function Daily_Planner() {
                     <div
                       style={{
                         display: "flex",
-                        marginLeft: "20px",
+                        // marginLeft: "20px",
                         width: 1030,
                       }}
                     >
-                      {/* <label htmlFor="origin_state"> */}
                       <div>
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Select Origin State
@@ -2524,8 +2538,8 @@ function Daily_Planner() {
                           Select Origin Railhead
                         </strong>
                         <select
-                          style={{ width: "200px", padding: "5px" }}
-                          onChange={handleSubDropdownChange1_fixed}
+                          style={{ width: "170px", padding: "5px" }}
+                          onChange={(e) => setSubOption1_fixed(e.target.value)}
                           value={subOption1_fixed}
                         >
                           <option value="">Select origin railhead</option>
@@ -2536,14 +2550,12 @@ function Daily_Planner() {
                           ))}
                         </select>
                       </div>
-                      {/* </label> */}
                       <div>
-                        {/* <label htmlFor="deficit_state"> */}
                         <strong style={{ fontSize: "16px", padding: "5px" }}>
                           Select Destination State
                         </strong>
                         <select
-                          style={{ width: "200px", padding: "5px" }}
+                          style={{ width: "170px", padding: "5px" }}
                           onChange={handleDropdownChange2_fixed}
                           value={selectedOption2_fixed}
                         >
@@ -2572,8 +2584,8 @@ function Daily_Planner() {
                           Select Destination Railhead
                         </strong>
                         <select
-                          style={{ width: "200px", padding: "5px" }}
-                          onChange={handleSubDropdownChange2_fixed}
+                          style={{ width: "170px", padding: "5px" }}
+                          onChange={(e) => setSubOption2_fixed(e.target.value)}
                           value={subOption2_fixed}
                         >
                           <option value="">Select origin railhead</option>
@@ -2598,10 +2610,7 @@ function Daily_Planner() {
                       <select
                         value={commodity_fixed}
                         onChange={(e) => setCommodity_fixed(e.target.value)}
-                        style={{
-                          marginLeft: "40px",
-                          width: "200px",
-                        }}
+                        style={{ width: "170px", padding: "5px" }}
                       >
                         <option value="">Select Commodity</option>
                         <option value="RRA">RRA</option>
@@ -2625,24 +2634,25 @@ function Daily_Planner() {
                         <option value="Misc2">Misc2</option>
                       </select>
 
-                      <div onClick={addConstraint_fixed}>
+                      <div>
                         <button
                           style={{
                             textAlign: "center",
                             backgroundColor: "orange",
                             width: 70,
                             height: 40,
-                            marginLeft: 713,
+                            marginLeft: "43.2vw",
                           }}
+                          onClick={addConstraint_fixed}
                         >
                           Add
                         </button>
                       </div>
                     </div>
                     <br />
-                    {!solutionSolved && fixed_data.length !== 0 && (
+                    {fixed_data.length !== 0 && (
                       <div>
-                        <table>
+                        <table style={{ width: "65vw" }}>
                           <thead>
                             <tr style={{ margin: "auto" }}>
                               <th style={{ padding: "10px", width: "15%" }}>
@@ -2660,9 +2670,9 @@ function Daily_Planner() {
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Commodity
                               </th>
-                              {/* <th style={{ padding: "10px", width: "15%" }}>
+                              <th style={{ padding: "10px", width: "15%" }}>
                                 Value
-                              </th> */}
+                              </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Delete
                               </th>
@@ -2676,7 +2686,7 @@ function Daily_Planner() {
                                 <td>{item.destination_state}</td>
                                 <td>{item.destination_railhead}</td>
                                 <td>{item.commodity}</td>
-                                {/* <td>{item.value}</td> */}
+                                <td>{item.value}</td>
                                 <td>
                                   <span
                                     style={{
@@ -4578,7 +4588,8 @@ function Daily_Planner() {
               {riceDestinationValue > 0 ? (
                 <div>{`Destination Value of RRA is ${riceDestinationValue}`}</div>
               ) : null}
-              {wheatOriginValue > 0 ? (
+
+              {wheatOriginValue > 0 || wheatDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4589,7 +4600,8 @@ function Daily_Planner() {
               {wheatDestinationValue > 0 ? (
                 <div>{`Destination Value of Wheat is ${wheatDestinationValue}`}</div>
               ) : null}
-              {coarseGrainOriginValue > 0 ? (
+
+              {coarseGrainOriginValue > 0 || coarseGrainDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4602,7 +4614,8 @@ function Daily_Planner() {
               {coarseGrainDestinationValue > 0 ? (
                 <div>{`Destination Value of Coarse Grain is ${coarseGrainDestinationValue}`}</div>
               ) : null}
-              {frkrraOriginValue > 0 ? (
+
+              {frkrraOriginValue > 0 || frkrraDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4613,7 +4626,8 @@ function Daily_Planner() {
               {frkrraDestinationValue > 0 ? (
                 <div>{`Destination Value of FRK RRA is ${frkrraDestinationValue}`}</div>
               ) : null}
-              {frkbrOriginValue > 0 ? (
+
+              {frkbrOriginValue > 0 || frkbrDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4624,7 +4638,8 @@ function Daily_Planner() {
               {frkbrDestinationValue > 0 ? (
                 <div>{`Destination Value of FRK BR is ${frkbrDestinationValue}`}</div>
               ) : null}
-              {wcgrOriginValue > 0 ? (
+
+              {wcgrOriginValue > 0 || wcgrDestinationValue > 0 ? (
                 <div
                   style={{
                     color: wcgrDestinationValue > wcgrOriginValue ? "red" : "",
@@ -4634,7 +4649,8 @@ function Daily_Planner() {
               {wcgrDestinationValue > 0 ? (
                 <div>{`Destination Value of W+CGR is ${wcgrDestinationValue}`}</div>
               ) : null}
-              {frkcgrOriginValue > 0 ? (
+
+              {frkcgrOriginValue > 0 || frkcgrDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4645,7 +4661,8 @@ function Daily_Planner() {
               {frkcgrDestinationValue > 0 ? (
                 <div>{`Destination Value of FRK+CGR is ${frkcgrDestinationValue}`}</div>
               ) : null}
-              {frkOriginValue > 0 ? (
+
+              {frkOriginValue > 0 || frkDestinationValue > 0 ? (
                 <div
                   style={{
                     color: frkDestinationValue > frkOriginValue ? "red" : "",
@@ -4655,7 +4672,8 @@ function Daily_Planner() {
               {frkDestinationValue > 0 ? (
                 <div>{`Destination Value of Wheat+FRK is ${frkDestinationValue}`}</div>
               ) : null}
-              {rrcOriginValue > 0 ? (
+
+              {rrcOriginValue > 0 || rrcDestinationValue > 0 ? (
                 <div
                   style={{
                     color: rrcDestinationValue > rrcOriginValue ? "red" : "",
@@ -4665,7 +4683,8 @@ function Daily_Planner() {
               {rrcDestinationValue > 0 ? (
                 <div>{`Destination Value of RRC is ${rrcDestinationValue}`}</div>
               ) : null}
-              {ragiOriginValue > 0 ? (
+
+              {ragiOriginValue > 0 || ragiDestinationValue > 0 ? (
                 <div
                   style={{
                     color: ragiDestinationValue > ragiOriginValue ? "red" : "",
@@ -4675,7 +4694,8 @@ function Daily_Planner() {
               {ragiDestinationValue > 0 ? (
                 <div>{`Destination Value of Ragi is ${ragiDestinationValue}`}</div>
               ) : null}
-              {jowarOriginValue > 0 ? (
+
+              {jowarOriginValue > 0 || jowarDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4686,7 +4706,8 @@ function Daily_Planner() {
               {jowarDestinationValue > 0 ? (
                 <div>{`Destination Value of Jowar is ${jowarDestinationValue}`}</div>
               ) : null}
-              {bajraOriginValue > 0 ? (
+
+              {bajraOriginValue > 0 || bajraDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4697,7 +4718,8 @@ function Daily_Planner() {
               {bajraDestinationValue > 0 ? (
                 <div>{`Destination Value of Bajra is ${bajraDestinationValue}`}</div>
               ) : null}
-              {maizeOriginValue > 0 ? (
+
+              {maizeOriginValue > 0 || maizeDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4709,7 +4731,7 @@ function Daily_Planner() {
                 <div>{`Destination Value of Maize is ${maizeDestinationValue}`}</div>
               ) : null}
 
-              {wheatUrsOriginValue > 0 ? (
+              {wheatUrsOriginValue > 0 || wheatUrsDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4722,7 +4744,8 @@ function Daily_Planner() {
               {wheatUrsDestinationValue > 0 ? (
                 <div>{`Destination Value of Wheat(URS) is ${wheatUrsDestinationValue}`}</div>
               ) : null}
-              {wheatFaqOriginValue > 0 ? (
+
+              {wheatFaqOriginValue > 0 || wheatFaqDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4736,7 +4759,7 @@ function Daily_Planner() {
                 <div>{`Destination Value of Wheat(FAQ) is ${wheatFaqDestinationValue}`}</div>
               ) : null}
 
-              {misc1OriginValue > 0 ? (
+              {misc1OriginValue > 0 || misc1DestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4748,7 +4771,7 @@ function Daily_Planner() {
                 <div>{`Destination Value of Misc1 is ${misc1DestinationValue}`}</div>
               ) : null}
 
-              {misc2OriginValue > 0 ? (
+              {misc2OriginValue > 0 || misc2DestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4760,7 +4783,7 @@ function Daily_Planner() {
                 <div>{`Destination Value of Misc2 is ${misc2DestinationValue}`}</div>
               ) : null}
 
-              {wheat_rraOriginValue > 0 ? (
+              {wheat_rraOriginValue > 0 || wheat_rraDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
@@ -4774,7 +4797,7 @@ function Daily_Planner() {
                 <div>{`Destination Value of Wheat+RRA is ${wheat_rraDestinationValue}`}</div>
               ) : null}
 
-              {frk_rraOriginValue > 0 ? (
+              {frk_rraOriginValue > 0 || frk_rraDestinationValue > 0 ? (
                 <div
                   style={{
                     color:
