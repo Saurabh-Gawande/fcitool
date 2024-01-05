@@ -59,7 +59,6 @@ function Daily_Planner() {
   const [subOption1_fixed, setSubOption1_fixed] = useState("");
   const [subOption2_fixed, setSubOption2_fixed] = useState("");
   const [commodity_fixed, setCommodity_fixed] = useState("");
-  const [value_fixed, setValue_fixed] = useState("");
   const [TEFD, set_TEFD] = useState("");
   const [TEFDdata, set_TEFDdata] = useState();
   const [solutionSolved, setSolutionSolved] = useState(false);
@@ -139,6 +138,7 @@ function Daily_Planner() {
   const [misc2, setMisc2] = useState(false);
   const [disableAfterImport, setDisableAfterImport] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [modalValue, setModalValue] = useState("");
 
   const closeModal = () => {
     setShowModal(false);
@@ -164,7 +164,6 @@ function Daily_Planner() {
         });
     } catch (error) {
       console.error("Error during login:", error);
-      window.alert("An error occurred during login. Please try again later.");
     }
   }, []);
 
@@ -476,7 +475,8 @@ function Daily_Planner() {
 
       reader.readAsArrayBuffer(selectedFile);
     } else {
-      alert("Please select a file before uploading.");
+      setModalValue("Please select a file before uploading.");
+      setShowModal(true);
     }
   };
 
@@ -906,6 +906,7 @@ function Daily_Planner() {
 
   const handleSolve = async () => {
     setShowMessage(false);
+    setSolutionSolved(false);
     setDownloadMessage(false);
     if (
       riceOriginvalue < riceDestinationValue ||
@@ -928,7 +929,9 @@ function Daily_Planner() {
       wheatUrsOriginValue < wheatUrsDestinationValue ||
       wheatFaqOriginValue < wheatFaqDestinationValue
     ) {
-      // alert("Destination indents more than Supply indents Please check");
+      setModalValue(
+        "Destination indents more than Supply indents Please check."
+      );
       setShowModal(true);
       setIsLoading(false);
       document.getElementById("toggle").checked = false;
@@ -1500,9 +1503,10 @@ function Daily_Planner() {
                       display: "flex",
                       justifyContent: "center",
                       textAlign: "center",
+                      padding: "5px",
                     }}
                   >
-                    Destination indents more than Supply indents Please check.
+                    {modalValue}
                   </div>
                 </div>
                 <div
@@ -1824,8 +1828,7 @@ function Daily_Planner() {
                           </tbody>
                         </table>
                       )}
-
-                      <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
+                      <p style={{ margin: 2, padding: 0, marginTop: 12 }}>
                         <strong
                           style={{
                             color: "#9d0921",
@@ -2014,7 +2017,7 @@ function Daily_Planner() {
                           </tbody>
                         </table>
                       )}
-                      <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
+                      <p style={{ margin: 2, padding: 0, marginTop: 12 }}>
                         <strong
                           style={{
                             color: "#9d0921",
@@ -2248,7 +2251,7 @@ function Daily_Planner() {
                         </table>
                       )}
 
-                      <p style={{ margin: 2, padding: 0, marginTop: 20 }}>
+                      <p style={{ margin: 2, padding: 0, marginTop: 30 }}>
                         <strong
                           style={{
                             color: "#9d0921",
@@ -2742,7 +2745,7 @@ function Daily_Planner() {
                     </div>
                   </div>
                   <br />
-
+                  <br />
                   {solutionSolved && (
                     <div>
                       <div>
