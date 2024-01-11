@@ -1110,9 +1110,27 @@ function Daily_Planner() {
       window.alert("Fetching Result, Please Wait");
     } else {
       const pdfDoc = new jsPDF("p", "mm", "a4");
-      const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+      const currentDateUTC = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000;
+      const currentDateIST = new Date(currentDateUTC.getTime() + istOffset);
 
-      let startY = 10;
+      const year = currentDateIST.getUTCFullYear();
+      const month = String(currentDateIST.getUTCMonth() + 1).padStart(2, "0");
+      const date = String(currentDateIST.getUTCDate()).padStart(2, "0");
+      const hours = String(currentDateIST.getUTCHours()).padStart(2, "0");
+      const minutes = String(currentDateIST.getUTCMinutes()).padStart(2, "0");
+      const seconds = String(currentDateIST.getUTCSeconds()).padStart(2, "0");
+
+      const timestamp = `${year}/${month}/${date} |  Time: ${hours}:${minutes}:${seconds}`;
+
+      pdfDoc.setFontSize(10);
+      pdfDoc.text(
+        `Region: ${sessionStorage.getItem("region")}  |  Date: ${timestamp}`,
+        10,
+        10
+      );
+
+      let startY = 25; // Initial startY value
 
       Object.entries(Total_result).forEach(([column, data], index) => {
         const parsedData = JSON.parse(data);
@@ -1124,7 +1142,7 @@ function Daily_Planner() {
             "DestinationState",
             "DestinationRailHead",
             "Commodity",
-            "Value",
+            "Rakes",
           ];
           const rows = parsedData.map((item) => [
             item.SourceState,
@@ -1132,15 +1150,16 @@ function Daily_Planner() {
             item.DestinationState,
             item.DestinationRailHead,
             item.Commodity,
-            item.Values,
+            item.Rakes,
           ]);
 
           pdfDoc.autoTable({
             head: [headers],
             body: rows,
+            // startY: startY,
           });
 
-          startY = pdfDoc.lastAutoTable.finalY + 10;
+          startY = pdfDoc.lastAutoTable.finalY + 20; // Set startY for next content
         }
       });
 
@@ -1274,16 +1293,37 @@ function Daily_Planner() {
 
   const exportToExcel1 = () => {
     if (Total_result == null) {
-      // Commented out the alert statement
       window.alert("Fetching Result, Please Wait");
       fetchReservationId_Total_result();
     } else {
+      const currentDateUTC = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000;
+      const currentDateIST = new Date(currentDateUTC.getTime() + istOffset);
+      const dateAndTime = currentDateIST
+        .toISOString()
+        .replace(/[:.]/g, "-")
+        .split(".")[0];
+      const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
+
       const workbook = XLSX.utils.book_new();
+      const allData = {};
       Object.entries(Total_result).forEach(([column, data]) => {
         const parsedData = JSON.parse(data);
-        const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, column);
+        if (Array.isArray(parsedData) && parsedData.length > 0) {
+          allData[column] = parsedData;
+        }
       });
+
+      const combinedData = [];
+      Object.values(allData).forEach((data) => {
+        combinedData.push(...data);
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(combinedData, {
+        header: Object.keys(combinedData[0]),
+      });
+      XLSX.utils.book_append_sheet(workbook, worksheet, "RH_RH_tags");
+
       const excelBuffer = XLSX.write(workbook, {
         type: "array",
         bookType: "xlsx",
@@ -1292,15 +1332,6 @@ function Daily_Planner() {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
 
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-      const day = String(currentDate.getDate()).padStart(2, "0");
-      const hours = String(currentDate.getHours()).padStart(2, "0");
-      const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-      const seconds = String(currentDate.getSeconds()).padStart(2, "0");
-      const dateAndTime = `${year}/${month}/${day}T${hours}/${minutes}/${seconds}`;
-      const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
       saveAs(excelBlob, filenameWithDateTime);
       setProgress((prev) => [
         ...prev,
@@ -1341,14 +1372,12 @@ function Daily_Planner() {
       )
         .then((response) => {
           if (response.ok) {
-            // File upload was successful
             window.alert("File uploaded successfully!");
             setProgress((prev) => [
               ...prev,
               "Successfully exported the plan to portal",
             ]);
           } else {
-            // File upload failed
             window.alert("File upload failed. Please try again.");
           }
         })
@@ -2751,7 +2780,7 @@ function Daily_Planner() {
                       <div>
                         <button
                           style={{ color: "white", marginLeft: "15px" }}
-                          className="btn btn-danger dropdown-toggle"
+                          className="btn btn-success dropdown-toggle"
                           onClick={() => exportToExcel1()}
                         >
                           <i className="fa fa-bars"></i>
@@ -2760,7 +2789,7 @@ function Daily_Planner() {
 
                         <button
                           style={{ color: "white", marginLeft: "15px" }}
-                          className="btn btn-danger dropdown-toggle"
+                          className="btn btn-success dropdown-toggle"
                           onClick={viewGrid}
                         >
                           View Railhead Detailed Plan
@@ -2768,14 +2797,14 @@ function Daily_Planner() {
 
                         <button
                           style={{ color: "white", marginLeft: "15px" }}
-                          className="btn btn-danger dropdown-toggle"
+                          className="btn btn-success dropdown-toggle"
                           onClick={exportToPDF}
                         >
                           Download PDF
                         </button>
                         <button
                           style={{ color: "white", marginLeft: "15px" }}
-                          className="btn btn-danger dropdown-toggle"
+                          className="btn btn-success dropdown-toggle"
                           onClick={uploadFile}
                           disabled={!disableAfterImport}
                         >
@@ -2849,7 +2878,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -2862,7 +2891,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -2949,7 +2978,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -2963,7 +2992,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         {/* <td>{item.Cost}</td> */}
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3042,7 +3071,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3055,7 +3084,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3134,7 +3163,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3147,7 +3176,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3226,7 +3255,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3239,7 +3268,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3318,7 +3347,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3331,7 +3360,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3410,7 +3439,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3423,7 +3452,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3502,7 +3531,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3515,7 +3544,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3594,7 +3623,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3607,7 +3636,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3686,7 +3715,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3699,7 +3728,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3778,7 +3807,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3791,7 +3820,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3870,7 +3899,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3883,7 +3912,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -3962,7 +3991,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -3975,7 +4004,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -4054,7 +4083,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -4067,7 +4096,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -4146,7 +4175,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -4159,7 +4188,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -4238,7 +4267,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -4251,7 +4280,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -4330,7 +4359,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -4343,7 +4372,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -4422,7 +4451,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -4435,7 +4464,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -4514,7 +4543,7 @@ function Daily_Planner() {
                                           width: "350px",
                                         }}
                                       >
-                                        values
+                                        Rakes
                                       </th>
                                     </tr>
                                   </thead>
@@ -4527,7 +4556,7 @@ function Daily_Planner() {
                                         <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
-                                        <td>{item.Values}</td>
+                                        <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
                                   </tbody>
@@ -4582,234 +4611,360 @@ function Daily_Planner() {
               }}
             >
               {riceOriginvalue > 0 || riceDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color: riceDestinationValue > riceOriginvalue ? "red" : "",
-                  }}
-                >{`Supply Value of RRA is ${riceOriginvalue}`}</div>
-              ) : null}
-              {riceDestinationValue > 0 ? (
-                <div>{`Destination Value of RRA is ${riceDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        riceDestinationValue > riceOriginvalue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {riceOriginvalue}
+                  </p>
+                  <p>/</p>
+                  <p>{riceDestinationValue}</p>
+                </div>
               ) : null}
 
               {wheatOriginValue > 0 || wheatDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      wheatDestinationValue > wheatOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Wheat is ${wheatOriginValue}`}</div>
-              ) : null}
-              {wheatDestinationValue > 0 ? (
-                <div>{`Destination Value of Wheat is ${wheatDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Wheat (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheatDestinationValue > wheatOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheatOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{wheatDestinationValue}</p>
+                </div>
               ) : null}
 
               {coarseGrainOriginValue > 0 || coarseGrainDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      coarseGrainDestinationValue > coarseGrainOriginValue
-                        ? "red"
-                        : "",
-                  }}
-                >{`Supply Value of Coarse Grain is ${coarseGrainOriginValue}`}</div>
-              ) : null}
-              {coarseGrainDestinationValue > 0 ? (
-                <div>{`Destination Value of Coarse Grain is ${coarseGrainDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Coarse Grain (S/D) :
+                  <p
+                    style={{
+                      color:
+                        coarseGrainDestinationValue > coarseGrainOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {coarseGrainOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{coarseGrainDestinationValue}</p>
+                </div>
               ) : null}
 
               {frkrraOriginValue > 0 || frkrraDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      frkrraDestinationValue > frkrraOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of FRK RRA is ${frkrraOriginValue}`}</div>
-              ) : null}
-              {frkrraDestinationValue > 0 ? (
-                <div>{`Destination Value of FRK RRA is ${frkrraDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  FRK RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkrraDestinationValue > frkrraOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkrraOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{frkrraDestinationValue}</p>
+                </div>
               ) : null}
 
               {frkbrOriginValue > 0 || frkbrDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      frkbrDestinationValue > frkbrOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of FRK BR is ${frkbrOriginValue}`}</div>
-              ) : null}
-              {frkbrDestinationValue > 0 ? (
-                <div>{`Destination Value of FRK BR is ${frkbrDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  FRK BR (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkbrDestinationValue > frkbrOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkbrOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{frkbrDestinationValue}</p>
+                </div>
               ) : null}
 
               {wcgrOriginValue > 0 || wcgrDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color: wcgrDestinationValue > wcgrOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of W+CGR is ${wcgrOriginValue}`}</div>
-              ) : null}
-              {wcgrDestinationValue > 0 ? (
-                <div>{`Destination Value of W+CGR is ${wcgrDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Wheat+CGR (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wcgrDestinationValue > wcgrOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wcgrOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{wcgrDestinationValue}</p>
+                </div>
               ) : null}
 
               {frkcgrOriginValue > 0 || frkcgrDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      frkcgrDestinationValue > frkcgrOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of FRK+CGR is ${frkcgrOriginValue}`}</div>
-              ) : null}
-              {frkcgrDestinationValue > 0 ? (
-                <div>{`Destination Value of FRK+CGR is ${frkcgrDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  FRK+CGR (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkcgrDestinationValue > frkcgrOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkcgrOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{frkcgrDestinationValue}</p>
+                </div>
               ) : null}
 
               {frkOriginValue > 0 || frkDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color: frkDestinationValue > frkOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Wheat+FRK is ${frkOriginValue}`}</div>
-              ) : null}
-              {frkDestinationValue > 0 ? (
-                <div>{`Destination Value of Wheat+FRK is ${frkDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Wheat+FRK (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkDestinationValue > frkOriginValue ? "red" : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{frkDestinationValue}</p>
+                </div>
               ) : null}
 
               {rrcOriginValue > 0 || rrcDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color: rrcDestinationValue > rrcOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of RRC is ${rrcOriginValue}`}</div>
-              ) : null}
-              {rrcDestinationValue > 0 ? (
-                <div>{`Destination Value of RRC is ${rrcDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  RRC (S/D) :
+                  <p
+                    style={{
+                      color:
+                        rrcDestinationValue > rrcOriginValue ? "red" : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {rrcOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{rrcDestinationValue}</p>
+                </div>
               ) : null}
 
               {ragiOriginValue > 0 || ragiDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color: ragiDestinationValue > ragiOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Ragi is ${ragiOriginValue}`}</div>
-              ) : null}
-              {ragiDestinationValue > 0 ? (
-                <div>{`Destination Value of Ragi is ${ragiDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Ragi (S/D) :
+                  <p
+                    style={{
+                      color:
+                        ragiDestinationValue > ragiOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {ragiOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{ragiDestinationValue}</p>
+                </div>
               ) : null}
 
               {jowarOriginValue > 0 || jowarDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      jowarDestinationValue > jowarOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Jowar is ${jowarOriginValue}`}</div>
-              ) : null}
-              {jowarDestinationValue > 0 ? (
-                <div>{`Destination Value of Jowar is ${jowarDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Jowar (S/D) :
+                  <p
+                    style={{
+                      color:
+                        jowarDestinationValue > jowarOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {jowarOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{jowarDestinationValue}</p>
+                </div>
               ) : null}
 
               {bajraOriginValue > 0 || bajraDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      bajraDestinationValue > bajraOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Bajra is ${bajraOriginValue}`}</div>
-              ) : null}
-              {bajraDestinationValue > 0 ? (
-                <div>{`Destination Value of Bajra is ${bajraDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Bajra (S/D) :
+                  <p
+                    style={{
+                      color:
+                        bajraDestinationValue > bajraOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {bajraOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{bajraDestinationValue}</p>
+                </div>
               ) : null}
 
               {maizeOriginValue > 0 || maizeDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      maizeDestinationValue > maizeOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Maize is ${maizeOriginValue}`}</div>
-              ) : null}
-              {maizeDestinationValue > 0 ? (
-                <div>{`Destination Value of Maize is ${maizeDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Maize (S/D) :
+                  <p
+                    style={{
+                      color:
+                        maizeDestinationValue > maizeOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {maizeOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{maizeDestinationValue}</p>
+                </div>
               ) : null}
 
               {wheatUrsOriginValue > 0 || wheatUrsDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      wheatUrsDestinationValue > wheatUrsOriginValue
-                        ? "red"
-                        : "",
-                  }}
-                >{`Supply Value of Wheat(URS) is ${wheatUrsOriginValue}`}</div>
-              ) : null}
-              {wheatUrsDestinationValue > 0 ? (
-                <div>{`Destination Value of Wheat(URS) is ${wheatUrsDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Wheat(URS) (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheatUrsDestinationValue > wheatUrsOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheatUrsOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{wheatUrsDestinationValue}</p>
+                </div>
               ) : null}
 
               {wheatFaqOriginValue > 0 || wheatFaqDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      wheatFaqDestinationValue > wheatFaqOriginValue
-                        ? "red"
-                        : "",
-                  }}
-                >{`Supply Value of Wheat(FAQ) is ${wheatFaqOriginValue}`}</div>
-              ) : null}
-              {wheatFaqDestinationValue > 0 ? (
-                <div>{`Destination Value of Wheat(FAQ) is ${wheatFaqDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Wheat(FAQ) (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheatFaqDestinationValue > wheatFaqOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheatFaqOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{wheatFaqDestinationValue}</p>
+                </div>
               ) : null}
 
               {misc1OriginValue > 0 || misc1DestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      misc1DestinationValue > misc1OriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Misc1 is ${misc1OriginValue}`}</div>
-              ) : null}
-              {misc1DestinationValue > 0 ? (
-                <div>{`Destination Value of Misc1 is ${misc1DestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Misc 1 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc1DestinationValue > misc1OriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc1OriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{misc1DestinationValue}</p>
+                </div>
               ) : null}
 
               {misc2OriginValue > 0 || misc2DestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      misc2DestinationValue > misc2OriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of Misc2 is ${misc2OriginValue}`}</div>
-              ) : null}
-              {misc2DestinationValue > 0 ? (
-                <div>{`Destination Value of Misc2 is ${misc2DestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Misc 2 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc2DestinationValue > misc2OriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc2OriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{misc2DestinationValue}</p>
+                </div>
               ) : null}
 
               {wheat_rraOriginValue > 0 || wheat_rraDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      wheat_rraDestinationValue > wheat_rraOriginValue
-                        ? "red"
-                        : "",
-                  }}
-                >{`Supply Value of Wheat+RRA is ${wheat_rraOriginValue}`}</div>
-              ) : null}
-              {wheat_rraDestinationValue > 0 ? (
-                <div>{`Destination Value of Wheat+RRA is ${wheat_rraDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  Wheat+RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheat_rraDestinationValue > wheat_rraOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheat_rraOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{wheat_rraDestinationValue}</p>
+                </div>
               ) : null}
 
               {frk_rraOriginValue > 0 || frk_rraDestinationValue > 0 ? (
-                <div
-                  style={{
-                    color:
-                      frk_rraDestinationValue > frk_rraOriginValue ? "red" : "",
-                  }}
-                >{`Supply Value of FRK+RRA is ${frk_rraOriginValue}`}</div>
-              ) : null}
-              {frk_rraDestinationValue > 0 ? (
-                <div>{`Destination Value of FRK+RRA is ${frk_rraDestinationValue}`}</div>
+                <div style={{ display: "flex" }}>
+                  FRK+RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frk_rraDestinationValue > frk_rraOriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frk_rraOriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{frk_rraDestinationValue}</p>
+                </div>
               ) : null}
 
               {progress.map((progress) => (

@@ -24,46 +24,43 @@ function Monthly_Solution() {
   const [redState, setRedState] = useState([]);
   const [totalRiceSupplyCheck, setTotalRiceSupplyCheck] = useState("");
   const [demand, setDemand] = useState("");
-  const [type, setType] = useState("Non-FIFO");
+  // const [type, setType] = useState("Non-FIFO");
 
   const Consistency_Check_frontend = async () => {
     try {
       const response = await fetch(ProjectIp + "/Consistency_Check");
       const data = await response.json();
 
-      console.log(data);
       // Assuming data contains the RedState array and TotalRiceSupplyCheck value
       const redStateData = data["Red State"];
       setRedState(redStateData);
-      console.log(redStateData);
     } catch (error) {
       console.error("Error during consistency check:", error);
     }
   };
 
+  const handleFileChange = (e) => {
+    setFileSelected(e.target.files[0]);
 
-  const handleFileChange = (event) => {
-    setFileSelected(event.target.files.length > 0);
-    const files = document.getElementById("uploadFile").files;
-    const reader = new FileReader();
-    const file = files[0];
-    reader.onload = async (e) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
-      console.log(workbook);
-      const sheetsData = {};
-      workbook.SheetNames.forEach((sheetName) => {
-        const worksheet = workbook.Sheets[sheetName];
-        sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1,
-        });
-      });
+    // const files = document.getElementById("uploadFile").files;
+    // const reader = new FileReader();
+    // const file = files[0];
+    // reader.onload = async (e) => {
+    //   const data = new Uint8Array(e.target.result);
+    //   const workbook = XLSX.read(data, { type: "array" });
+    //   const sheetsData = {};
+    //   workbook.SheetNames.forEach((sheetName) => {
+    //     const worksheet = workbook.Sheets[sheetName];
+    //     sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
+    //       header: 1,
+    //     });
+    //   });
 
-      setExcelData(sheetsData);
-      setActiveSheetName(workbook.SheetNames[0]);
-    };
+    //   setExcelData(sheetsData);
+    //   setActiveSheetName(workbook.SheetNames[0]);
+    // };
 
-    reader.readAsArrayBuffer(file);
+    // reader.readAsArrayBuffer(file);
   };
 
   const handleUploadConfig = async () => {
@@ -73,11 +70,11 @@ function Monthly_Solution() {
     }
 
     try {
-      const files = document.getElementById("uploadFile").files;
+      // const files = document.getElementById("uploadFile").files;
       const formData = new FormData();
-      formData.append("uploadFile", files[0]);
+      formData.append("uploadFile", fileSelected);
 
-      const response = await fetch(ProjectIp + "/upload_Monthly_File_M01", {
+      const response = await fetch(ProjectIp + "/upload_Monthly_File", {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -95,9 +92,8 @@ function Monthly_Solution() {
           "Template file has been uploaded" + "<br/><br/>";
 
         alert("File Uploaded");
-        Consistency_Check_frontend();
+        // Consistency_Check_frontend();
       } else {
-        console.log(jsonResponse);
         alert("Error uploading file");
       }
     } catch (error) {
@@ -113,16 +109,16 @@ function Monthly_Solution() {
   };
 
   const handleSolve = async () => {
+    document.getElementById("toggle").checked = true;
     if (isLoading) return; // Prevent additional clicks while loading
     setIsLoading(true);
-    document.getElementById("toggle").checked = true;
     document.getElementById("console_").style.display = "block";
     document.getElementById("console_").innerHTML += "Processing..." + "<br/>";
     const payload = {
       r_s: r_s,
       r_d: r_d,
       TEFD: TEFD,
-      Type: type,
+      // Type: type,
     };
 
     try {
@@ -166,7 +162,6 @@ function Monthly_Solution() {
         const fetchedCost = data["Minimum Cost of Transportation"];
         const formattedCost = parseFloat(fetchedCost).toFixed(1);
         setCost(formattedCost);
-        console.log(formattedCost);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -191,26 +186,24 @@ function Monthly_Solution() {
   };
 
   const fetchReservationId_Revelant_result = () => {
-    var form = new FormData();
     fetch(ProjectIp + "/read_Relevant_Result", {
-      method: "POST",
+      method: "GET",
       credentials: "include",
-      body: form,
     })
       .then((response) => response.json())
       .then((data) => {
         const fetched_Relevant_Result = data;
+        console.log(data);
         set_Relevant_Result(fetched_Relevant_Result);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-  console.log({ Relevant_result });
-  console.log({ Total_result });
+  // console.log(Relevant_result);
+
   const exportToExcel1 = () => {
     fetchReservationId_Total_result();
-    console.log(fetchReservationId_Total_result);
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
     } else {
@@ -236,7 +229,6 @@ function Monthly_Solution() {
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
     const workbook = XLSX.read(data, { type: "array" });
-    console.log(workbook);
     const sheetsData = {};
     workbook.SheetNames.forEach((sheetName) => {
       const worksheet = workbook.Sheets[sheetName];
@@ -268,7 +260,6 @@ function Monthly_Solution() {
         },
         body: JSON.stringify(newWorkbook),
       });
-      console.log(newWorkbook);
       if (response.ok) {
         console.log("Data sent to backend successfully");
       } else {
@@ -294,7 +285,6 @@ function Monthly_Solution() {
   //       },
   //       body: JSON.stringify(modifiedExcel),
   //     });
-  //     // console.log(modifiedExcel)
 
   //     if (response.ok) {
   //       console.log('Data sent to backend successfully');
@@ -329,7 +319,10 @@ function Monthly_Solution() {
   };
 
   return (
-    <div className="page-container" style={{ backgroundColor: "#ebab44b0" }}>
+    <div
+      className="page-container"
+      style={{ backgroundColor: "#ebab44b0", height: "100vh" }}
+    >
       <Sidenav />
       <div
         className="page-content"
@@ -381,7 +374,7 @@ function Monthly_Solution() {
                   width: "45vw",
                 }}
               >
-                <div
+                {/* <div
                   style={{
                     fontSize: "20px",
                     fontWeight: "700",
@@ -389,13 +382,13 @@ function Monthly_Solution() {
                   }}
                 >
                   Type
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <select onChange={(e) => setType(e.target.value)}>
                     <option value="Non-FIFO">Non-FIFO</option>
                     <option value="FIFO">FIFO</option>
                   </select>
-                </div>
+                </div> */}
               </div>
               <div className="col-md-12">
                 <br />
@@ -432,7 +425,7 @@ function Monthly_Solution() {
                               name="uploadFile"
                               onChange={handleFileChange}
                               defaultValue=""
-                              required=""
+                              required
                             />
                           </div>
                           <span
@@ -458,8 +451,8 @@ function Monthly_Solution() {
                 </div>
                 <br />
                 <br />
-                <div style={{ display: "flex", marginLeft: "300px" }}>
-                  {/* {fileSelected && ( */}
+                {/* <div style={{ display: "flex", marginLeft: "300px" }}>
+                  {fileSelected && (
                   <div style={{ marginTop: "-20px" }}>
                     <button
                       style={{ padding: "5px" }}
@@ -468,7 +461,7 @@ function Monthly_Solution() {
                       Update Template
                     </button>
                   </div>
-                  {/* )} */}
+                   )} 
                   {updateExcel && (
                     <div style={{ marginLeft: "220px", marginTop: "-20px" }}>
                       <button
@@ -479,8 +472,8 @@ function Monthly_Solution() {
                       </button>
                     </div>
                   )}
-                </div>
-                {activeSheetName &&
+                </div> */}
+                {/* {activeSheetName &&
                   updateExcel &&
                   excelData[activeSheetName] && (
                     <div style={{ marginLeft: "20%" }}>
@@ -524,14 +517,14 @@ function Monthly_Solution() {
                         </tbody>
                       </table>
                     </div>
-                  )}
+                  )} */}
                 <div style={{ marginLeft: "15px" }}>
-                  <div style={{ fontSize: "20px", fontWeight: "700" }}>
+                  {/* <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
                     Configurations
-                  </div>
+                  </div> */}
                   <br />
-                  <form style={{ marginLeft: "50px" }}>
+                  {/* <form style={{ marginLeft: "50px" }}>
                     <label>
                       <strong
                         style={{
@@ -608,7 +601,7 @@ function Monthly_Solution() {
                     <br />
                     <br />
                     <br />
-                  </form>
+                  </form> */}
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
                     Optimal Plan
@@ -620,7 +613,7 @@ function Monthly_Solution() {
                       borderStyle: "solid",
                       borderColor: "#ebab44b0",
                     }}
-                    // onClick={handleSolve}
+                    onClick={handleSolve}
                   >
                     <div className="wrap__toggle--bluetooth">
                       <span style={{ textAlign: "center", fontWeight: "bold" }}>
@@ -657,7 +650,7 @@ function Monthly_Solution() {
                     <div>
                       <button
                         style={{ color: "white", marginLeft: "15px" }}
-                        className="btn btn-danger dropdown-toggle"
+                        className="btn btn-success dropdown-toggle"
                         onClick={() => exportToExcel2()}
                       >
                         <i className="fa fa-bars"></i> Download Railhead To
@@ -666,17 +659,15 @@ function Monthly_Solution() {
                       <br />
                       <br />
                       {/* <button
-                      style={{ color: "white", marginLeft: "15px" }}
-                      className="btn btn-danger dropdown-toggle"
-                      onClick={() => exportToExcel1()}
-                    >
-                      <i className="fa fa-bars"></i> Download State to State
-                      Detailed Plan
-                    </button> */}
+                        style={{ color: "white", marginLeft: "15px" }}
+                        className="btn btn-danger dropdown-toggle"
+                        onClick={() => exportToExcel1()}
+                      >
+                        <i className="fa fa-bars"></i> Download State to State
+                        Detailed Plan
+                      </button> */}
                     </div>
                   )}
-                  <br />
-                  <br />
                   <br />
                   <br />
                   <br />
@@ -690,7 +681,7 @@ function Monthly_Solution() {
         </div>
         <div style={{ backgroundColor: "#ebab44b0", width: "20%" }}>
           <br />
-          <div>
+          {/* <div>
             <div class="progress yellow">
               <span class="progress-left">
                 <span class="progress-bar"></span>
@@ -700,13 +691,13 @@ function Monthly_Solution() {
               </span>
               <div class="progress-value">Steps</div>
             </div>
-          </div>
+          </div> */}
           <span style={{ color: "black", fontSize: "32px", marginLeft: "5%" }}>
             Progress Bar
           </span>
           <div>
             {/* Rendering RedState */}
-            {redState.length > 0 && (
+            {/* {redState.length > 0 && (
               <div>
                 <h2>All States:</h2>
                 <ul>
@@ -715,7 +706,7 @@ function Monthly_Solution() {
                   ))}
                 </ul>
               </div>
-            )}
+            )} */}
 
             {/* Rendering Rice Supply Check */}
             {totalRiceSupplyCheck !== "" && (
