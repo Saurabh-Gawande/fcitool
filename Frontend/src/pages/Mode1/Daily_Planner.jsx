@@ -937,6 +937,212 @@ function Daily_Planner() {
       document.getElementById("toggle").checked = false;
       return;
     }
+
+    if (
+      block_data2.reduce((total, item) => total + item.Value, 0) > 0 &&
+      riceDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for RRA");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      block_dataWheat2.reduce((total, item) => total + item.Value, 0) > 0 &&
+      wheatDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Wheat");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      coarseGrainInlineOrigin.reduce((total, item) => total + item.Value, 0) >
+        0 &&
+      coarseGrainDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Coarse Grain");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      wheaturs_InlineOrigin.reduce((total, item) => total + item.Value, 0) >
+        0 &&
+      wheatUrsDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for wheat(URS)");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      wheatfaq_InlineOrigin.reduce((total, item) => total + item.Value, 0) >
+        0 &&
+      wheatFaqDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for wheat(FAQ)");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      frk_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      frkDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for wheat+FRK");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      wheat_rra_InlineOrigin.reduce((total, item) => total + item.Value, 0) >
+        0 &&
+      wheat_rraDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Wheat+RRA");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      frkrraInlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      frkrraDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for FRK RRA");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      frk_rra_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      frk_rraDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for FRK+RRA");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      frkBr_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      frkbrDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for FRK BR");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      w_cgr_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      wcgrDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Wheat+CGR");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      frk_cgr_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      frkcgrDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for FRK+CGR");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      rrc_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      rrcDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for RRC");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
+    if (
+      ragi_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      ragiDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Ragi");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      jowar_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      jowarDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Jowar");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      bajra_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      bajraDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Bajra");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      maize_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      maizeDestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Maize");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      misc1_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      misc1DestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Misc 1");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+    if (
+      misc2_InlineOrigin.reduce((total, item) => total + item.Value, 0) > 0 &&
+      misc2DestinationValue == 0
+    ) {
+      setModalValue("Please Add destination indents for Misc 2");
+      setShowModal(true);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      return;
+    }
+
     if (isLoading) return;
     setIsLoading(true);
 
@@ -1408,7 +1614,10 @@ function Daily_Planner() {
             ...prev,
             "Successfully imported data from portal",
           ]);
-
+          setModalValue(
+            "The add funtionality will not work when data is imported from portal"
+          );
+          setShowModal(true);
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
