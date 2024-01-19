@@ -1251,6 +1251,7 @@ function Daily_Planner() {
       frk_rra_InlineDestination: frk_rra_InlineDestination,
 
       TEFDdata: TEFDdata,
+      region: sessionStorage.getItem("region"),
     };
 
     try {
@@ -1277,7 +1278,7 @@ function Daily_Planner() {
     document.getElementById("toggle").checked = false;
     setProgress((prev) => [...prev, "Successfully generated daily plan"]);
   };
-
+  console.log(Total_result);
   const fetchReservationId_Total_result = () => {
     // var form = new FormData();
     fetch(ProjectIp + "/read_Daily_Planner_S1", {
@@ -1332,11 +1333,11 @@ function Daily_Planner() {
       pdfDoc.setFontSize(10);
       pdfDoc.text(
         `Region: ${sessionStorage.getItem("region")}  |  Date: ${timestamp}`,
-        10,
+        15,
         10
       );
 
-      let startY = 25; // Initial startY value
+      let startY = 5; // Initial startY value
 
       Object.entries(Total_result).forEach(([column, data], index) => {
         const parsedData = JSON.parse(data);
@@ -2988,7 +2989,7 @@ function Daily_Planner() {
                     <div>
                       <div>
                         <button
-                          style={{ color: "white", marginLeft: "15px" }}
+                          style={{ color: "black", marginLeft: "15px" }}
                           className="btn btn-success dropdown-toggle"
                           onClick={() => exportToExcel1()}
                         >
@@ -2997,26 +2998,29 @@ function Daily_Planner() {
                         </button>
 
                         <button
-                          style={{ color: "white", marginLeft: "15px" }}
+                          style={{ color: "black", marginLeft: "15px" }}
                           className="btn btn-success dropdown-toggle"
                           onClick={viewGrid}
                         >
+                          <i className="fa fa-bars"></i>
                           View Railhead Detailed Plan
                         </button>
 
                         <button
-                          style={{ color: "white", marginLeft: "15px" }}
+                          style={{ color: "black", marginLeft: "15px" }}
                           className="btn btn-success dropdown-toggle"
                           onClick={exportToPDF}
                         >
+                          <i className="fa fa-bars"></i>
                           Download PDF
                         </button>
                         <button
-                          style={{ color: "white", marginLeft: "15px" }}
+                          style={{ color: "black", marginLeft: "15px" }}
                           className="btn btn-success dropdown-toggle"
                           onClick={uploadFile}
                           disabled={!disableAfterImport}
                         >
+                          <i className="fa fa-bars"></i>
                           Export Plan
                         </button>
                         {showMessage && (

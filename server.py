@@ -87,29 +87,8 @@ def uploadDailyFile():
 
     return(json.dumps(json_object, indent = 1))
     
-
-@app.route("/read_Monthly_state_table",methods = ["POST","GET"])
-def read_Monthly_state_table():
-    if request.method == "POST":        
-        try: 
-            df1 = pd.read_excel('Output\\Monthly_State_To_State_Table.xlsx', sheet_name="r_wheat")
-            df2 = pd.read_excel('Output\\Monthly_State_To_State_Table.xlsx', sheet_name="r_rra")    
-            df3 = pd.read_excel('Output\\Monthly_State_To_State_Table.xlsx', sheet_name="r_frk_rra")    
-            df4 = pd.read_excel('Output\\Monthly_State_To_State_Table.xlsx', sheet_name="r_frk_br")    
-            json_data1 = df1.to_json(orient='records', indent=1)
-            json_data2 = df2.to_json(orient='records', indent=1)
-            json_data3 = df3.to_json(orient='records', indent=1)
-            json_data4 = df4.to_json(orient='records', indent=1)
-            json_data = {"Wheat": json_data1, "RRA": json_data2, "Frk_rra": json_data3, "Frk_br": json_data4 }
-        except:
-            json_data = json.dumps({"Status": 0}, indent=1)
-
-        json_object = json.dumps(json_data)
-        return json_object
-    else:
-        return ("Error")
         
-@app.route("/read_Relevant_Result",methods = ["POST","GET"])
+@app.route("/read_Relevant_Result",methods = ["GET"])
 def read_Relevant_Result():
     if request.method == "GET":        
         try: 
@@ -250,6 +229,7 @@ def read_Daily_Planner_S1():
              "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
              "frkPlusRRA": json_data19
              }
+             
         except:
             json_data = json.dumps({"Status": 0}, indent=1)
 
@@ -381,20 +361,6 @@ def Download_Template_to_add():
         return json_object
     else:
         return "error"
-
-
-
-    
-@app.route("/Monthly_readPickle",methods = ["POST","GET"])
-def Monthly_readPickle():
-    try:
-        dbfile = open('Output\\OutputPickle.pkl', 'rb')     
-        db = pickle.load(dbfile)
-        dbfile.close()
-    except:
-        db = {}
-        db["status"] = 0
-    return(json.dumps(db, indent = 1))
 
 
 @app.route("/Update_matrices",methods = ["POST"])
@@ -616,12 +582,6 @@ def Add_Railhead():
 
     return json.dumps(db, indent=1)
 
-@app.route('/getMonthlyExcelData')
-def get_monthly_excel_data():
-    Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
-    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
-    return send_file(excel_path, as_attachment=True)
-
 @app.route('/getDaily1ExcelData')
 def get_daily_scen1_excel_data():
     Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
@@ -639,104 +599,6 @@ def data_template():
     Monthly_Template_M1 = 'Input\\Data_template.xlsx'
     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
-
-@app.route("/Modify_Monthly_Template_M01", methods=["POST", "GET"])
-def Modify_Monthly_Template_M01():
-    try:
-        def try_float(value):
-            try:
-                return float(value)
-            except (ValueError, TypeError):
-                return value
-        fetched_data = request.get_json()
-        sheets = fetched_data['SheetNames']
-       
-
-        for sht in sheets:
-            if sht == 'Surplus_wheat':
-                columns = ['Railhead', 'State', 'Supply']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
-                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
-                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="Surplus_wheat", index=False)
-
-            elif sht == 'Deficit_wheat':
-                columns = ['Railhead', 'State', 'Demand', 'Capacity']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
-                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
-                Demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                Capacity = [try_float(sht_data[f'D{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': Demand, 'Capacity': Capacity})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="Deficit_wheat", index=False)
-
-            elif sht == 'Surplus_rice':
-                columns = ['Railhead', 'State', 'Supply']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
-                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
-                supply = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Supply': supply})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="Surplus_rice", index=False)
-
-            elif sht == 'Deficit_rice':
-                columns = ['Railhead', 'State', 'Demand']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                Railhead = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
-                state = [sht_data[f'B{i}']['v'] for i in range(3, length + 1)]
-                demand = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'Railhead': Railhead, 'State': state, 'Demand': demand})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="Deficit_rice", index=False)
-
-            elif sht == 'States_supply':
-                columns = ['State', 'Supply_wheat', 'Supply_rice']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                State = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
-                Supply_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                Supply_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'State': State, 'Supply_wheat': Supply_wheat, 'Supply_rice': Supply_rice})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="States_supply", index=False)
-
-            elif sht == 'States_allocation':
-                columns = ['States', 'Alloc_wheat', 'Alloc_rice', 'Capacity']
-                sht_data = fetched_data['Sheets'][sht]
-                length = len(sht_data) // len(columns)
-                States = [sht_data[f'A{i}']['v'] for i in range(3, length + 1)]
-                Alloc_wheat = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                Alloc_rice = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                Capacity = [try_float(sht_data[f'D{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-                df = pd.DataFrame({'States': States, 'Alloc_wheat': Alloc_wheat, 'Alloc_rice': Alloc_rice, 'Capacity': Capacity})
-                with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                    df.to_excel(writer, sheet_name="States_allocation", index=False)
-
-            # elif sht == 'Rail_cost_chart':
-            #     columns = ['From', 'To', 'Rate per Ton']
-            #     sht_data = fetched_data['Sheets'][sht]
-            #     length = len(sht_data) // len(columns)
-            #     From = [try_float(sht_data[f'A{i}']['v']) for i in range(3, length + 1)]
-            #     To = [try_float(sht_data[f'B{i}']['v']) for i in range(3, length + 1)]
-            #     Rate_per_Ton = [try_float(sht_data[f'C{i}']['v']) for i in range(3, length + 1)]  # Convert to float
-            #     df = pd.DataFrame({'From': From, 'To': To, 'Rate per Ton': Rate_per_Ton})
-            #     with pd.ExcelWriter("Input/Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            #         df.to_excel(writer, sheet_name="Rail_cost_chart", index=False)
-
-        db = {"status": 1, "message": "Railhead names and states added successfully"}
-    except Exception as e:
-        db = {"status": 0, "message": str(e)}
-
-    return json.dumps(db, indent=1)
 
 @app.route("/Modify_Daily_Template_S01", methods=["POST", "GET"])
 def Modify_Daily_Template_S01():
@@ -1001,11 +863,13 @@ def Monthly_Solution():
         try:
 
             data=pd.ExcelFile("Input//Input_template_Monthly_Planner.xlsx")
-            print(data)
+            # print(data)
             supply = pd.read_excel(data,sheet_name="Supply",index_col=1)
             demand = pd.read_excel(data,sheet_name="Demand",index_col=1)
             state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
-            rail_cost = pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
+            matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
+            rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
+            # rail_cost = pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
             prob=LpProblem("FCI_monthly_allocation",LpMinimize)
 
             commodity = ["w(urs)","w(faq)","r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
@@ -1013,11 +877,9 @@ def Monthly_Solution():
             
             for k in commodity:
                 supply[cmd_match[k]].sum()
-                print(cmd_match[k],":",supply[cmd_match[k]].sum())
 
             for k in commodity:
                 demand[cmd_match[k]].sum()
-                print(cmd_match[k],":",demand[cmd_match[k]].sum())
             
             for k in commodity:
                 if demand[cmd_match[k]].sum() <= supply[cmd_match[k]].sum():
@@ -1032,21 +894,21 @@ def Monthly_Solution():
  
             for i in supply.index:
                 for k in commodity:
-            #         prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
-            #         print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
                     prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
+                    # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
 
             for i in demand.index:
                 for k in commodity:
-                    #prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
-            #         prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i]
-            #         print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
                     prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
                     print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
             
-            prob.writeLP("FCI_monthly_allocation.lp")
-            prob.solve(CPLEX())
+            # prob.writeLP("FCI_monthly_allocation.lp")
+            prob.solve()
             #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
             print("Status:", LpStatus[prob.status])
             print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
@@ -1093,19 +955,19 @@ def Monthly_Solution():
             
             for k in commodity:
                 df_k[k]=Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum")
-                #print(Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum"))
+                print(Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum"))
 
             print(df_k["w(urs)"])
             
             excel_file="Output//Output_monthly_planner.xlsx"
 
-            with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
+            with pd.ExcelWriter(excel_file, engine="openpyxl") as writer:
                 for k in commodity:
-                    df_k[k].to_excel(writer,sheet_name=cmd_match[k],index=True)
-                rh_tag.to_excel(writer, sheet_name="RH_RH_tag",index=True)
+                    df_k[k].to_excel(writer,sheet_name=cmd_match[k],index=False)
+                rh_tag.to_excel(writer, sheet_name="RH_RH_tag",index=False)
             
         except Exception as e:
-            print(e)
+            # print(e)
             data1["status"] = 0
         json_data = json.dumps(data1)
         json_object = json.loads(json_data)
@@ -1153,80 +1015,6 @@ def Daily_Planner_Check():
         return ("error")
     
 
-@app.route("/Consistency_Check", methods=["POST", "GET"])
-def Consistency_Check():
-    data = {"Total Wheat supply Check": "", "Total Rice supply Check": "", "Red State": "", "status": "OK"}
-    if request.method == "POST" or request.method == "GET" :
-        try:
-            Wheat_supply = pd.read_excel("Input\\Monthly_Template_M1.xlsx", sheet_name="Surplus_wheat", index_col=0)
-            Wheat_demand = pd.read_excel("Input\\Monthly_Template_M1.xlsx", sheet_name="Deficit_wheat", index_col=0)
-            Rice_supply = pd.read_excel("Input\\Monthly_Template_M1.xlsx", sheet_name="Surplus_rice", index_col=0)
-            Rice_demand = pd.read_excel("Input\\Monthly_Template_M1.xlsx", sheet_name="Deficit_rice", index_col=0)
-
-            # Calculate total demand and supply for wheat and rice
-            Total_demand_w = Wheat_demand["Demand"].sum()
-            Total_supply_w = Wheat_supply["Supply"].sum()
-
-            Total_demand_r = Rice_demand["Demand"].sum()
-            Total_supply_r = Rice_supply["Supply"].sum()
-
-            if Total_supply_w < Total_demand_w:
-                data["Total Wheat supply Check"] = "Supply of Wheat is less than demand"
-
-            if Total_supply_r < Total_demand_r:
-                data["Total Rice supply Check"] = "Supply of Rice is less than demand"
-
-            # Initialize dictionaries for state capacity and demand
-            State_capacity = {}
-            State_demand = {}
-
-            # Calculate state capacity and demand for wheat
-            for i in range(len(Wheat_demand)):
-                state = Wheat_demand["State"][i]
-                capacity = Wheat_demand["Capacity"][i]
-                demand = Wheat_demand["Demand"][i]
-                
-                if state in State_capacity:
-                    State_capacity[state] += capacity
-                else:
-                    State_capacity[state] = capacity
-                    
-                if state in State_demand:
-                    State_demand[state] += demand
-                else:
-                    State_demand[state] = demand
-
-            # Calculate state demand for rice
-            for i in range(len(Rice_demand)):
-                state = Rice_demand["State"][i]
-                demand = Rice_demand["Demand"][i]
-                
-                if state in State_demand:
-                    State_demand[state] += demand
-                else:
-                    State_demand[state] = demand
-
-            # Identify states with insufficient capacity to meet demand
-            red_state = []
-
-            for state, value in State_capacity.items():
-                if state in State_demand and State_demand[state] > value:
-                    red_state.append(state)
-
-            data["Red State"] = red_state
-
-        except Exception as e:
-            error_message = str(e)  # Convert the error to a string
-            data["status"] = "error"  # Set status to indicate an error
-            data["error_message"] = error_message  # Include the error message in the response
-
-        return jsonify(data)
-    else:
-        data["status"] = "error"
-        return jsonify(data)
-
-
-
 @app.route("/Daily_Planner",methods = ["POST","GET"])
 def Daily_Planner():
     data1 = {}
@@ -1257,6 +1045,7 @@ def Daily_Planner():
             df2 = pd.DataFrame(TEFDdata["data"]["columnData"])
             # rail_cost = pd.concat([df1, df2], axis=1)
             # print(rail_cost)
+            region = fetched_data['region']
             rra_origin = fetched_data["rice_origin"]
             rra_dest = fetched_data["rice_destination"]
             wheat_origin = fetched_data["wheat_origin"]
@@ -2634,6 +2423,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             # Cost = []
 
             for i in source_wheat:
@@ -2642,6 +2432,7 @@ def Daily_Planner():
                         From.append(i)
                         To.append(j)
                         values.append(x_ij_wheat[(i, j)].value())
+                        Flag.append(region)
                         commodity.append("Wheat")
                         
             for i in range(len(From)):
@@ -2693,7 +2484,8 @@ def Daily_Planner():
             df_wheat["Commodity"] = commodity
             # df_wheat["Cost"] = Cost
             df_wheat["Rakes"] = values
-
+            df_wheat["Flag"] = Flag
+           
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["DestinationRailHead"])):
                     if (i == df_wheat.iloc[j]["DestinationRailHead"] or dest_wheat_inline[i] == df_wheat.iloc[j]["DestinationRailHead"]):
@@ -2711,6 +2503,7 @@ def Daily_Planner():
             commodity = []
             From_state_rra = []
             To_state_rra = []
+            Flag = []
             # Cost = []
 
             for i in source_rra:
@@ -2718,6 +2511,7 @@ def Daily_Planner():
                     if int(x_ij_rra[(i, j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_rra[(i, j)].value())
                         commodity.append("RRA")
 
@@ -2770,6 +2564,7 @@ def Daily_Planner():
             df_rra["Commodity"] = commodity
             # df_rra["Cost"] = Cost
             df_rra["Rakes"] = values
+            df_rra["Flag"] = Flag
            
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["DestinationRailHead"])):
@@ -2788,6 +2583,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag =[]
             # Cost = []
             
             for i in source_coarseGrain:
@@ -2795,6 +2591,7 @@ def Daily_Planner():
                     if int(x_ij_coarseGrain[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_coarseGrain[(i,j)].value())
                         commodity.append("Coarse Grains")
 
@@ -2847,6 +2644,7 @@ def Daily_Planner():
             df_CoarseGrain["Commodity"] = commodity
             # df_CoarseGrain["Cost"] = Cost
             df_CoarseGrain["Rakes"] = values
+            df_CoarseGrain["Flag"] = Flag
             
             for i in dest_coarseGrain_inline.keys():
                 for j in range(len(df_CoarseGrain["DestinationRailHead"])):
@@ -2865,6 +2663,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             # Cost = []
             
             for i in source_frkrra:
@@ -2872,6 +2671,7 @@ def Daily_Planner():
                     if int(x_ij_frkrra[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_frkrra[(i,j)].value())
                         commodity.append("FRK RRA")
 
@@ -2924,6 +2724,7 @@ def Daily_Planner():
             df_frkrra["Commodity"] = commodity
             # df_frkrra["Cost"] = Cost
             df_frkrra["Rakes"] = values
+            df_frkrra["Flag"]= Flag
 
             for i in dest_frkrra_inline.keys():
                 for j in range(len(df_frkrra["DestinationRailHead"])):
@@ -2942,6 +2743,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             # Cost = []
             
             for i in source_frkbr:
@@ -2949,6 +2751,7 @@ def Daily_Planner():
                     if int(x_ij_frk_br[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_frk_br[(i,j)].value())
                         commodity.append("FRK BR")
 
@@ -3001,6 +2804,7 @@ def Daily_Planner():
             df_frkbr["Commodity"] = commodity
             # df_frkbr["Cost"] = Cost
             df_frkbr["Rakes"] = values
+            df_frkbr["Flag"] = Flag
 
             for i in dest_frkbr_inline.keys():
                 for j in range(len(df_frkbr["DestinationRailHead"])):
@@ -3019,6 +2823,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             # Cost = []
             
             for i in source_frk:
@@ -3026,6 +2831,7 @@ def Daily_Planner():
                     if int(x_ij_frk[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_frk[(i,j)].value())
                         commodity.append("Wheat+FRK")
 
@@ -3078,6 +2884,7 @@ def Daily_Planner():
             df_frk["Commodity"] = commodity
             # df_frk["Cost"] = Cost
             df_frk["Rakes"] = values
+            df_frk["Flag"]= Flag
 
             for i in dest_frk_inline.keys():
                 for j in range(len(df_frk["DestinationRailHead"])):
@@ -3096,6 +2903,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             # Cost = []
             
             for i in source_frkcgr:
@@ -3103,6 +2911,7 @@ def Daily_Planner():
                     if int(x_ij_frkcgr[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_frkcgr[(i,j)].value())
                         commodity.append("FRK+CGR")
 
@@ -3154,6 +2963,7 @@ def Daily_Planner():
             df_frkcgr["DestinationState"] = To_state
             df_frkcgr["Commodity"] = commodity
             df_frkcgr["Rakes"] = values
+            df_frkcgr["Flag"]= Flag
             # df_frkcgr["Cost"] = Cost
 
             for i in dest_frkcgr_inline.keys():
@@ -3173,6 +2983,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flask = []
             # Cost = []
             
             for i in source_wcgr:
@@ -3180,6 +2991,7 @@ def Daily_Planner():
                     if int(x_ij_wcgr[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_wcgr[(i,j)].value())
                         commodity.append("Wheat+CGR")
 
@@ -3231,6 +3043,7 @@ def Daily_Planner():
             df_wcgr["DestinationState"] = To_state
             df_wcgr["Commodity"] = commodity
             df_wcgr["Rakes"] = values
+            df_wcgr["Flag"] = Flag
             # df_wcgr["Cost"] = Cost
 
             for i in dest_wcgr_inline.keys():
@@ -3250,12 +3063,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_rrc:
                 for j in dest_rrc:
                     if int(x_ij_rrc[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_rrc[(i,j)].value())
                         commodity.append("RRC")
 
@@ -3304,6 +3119,7 @@ def Daily_Planner():
             df_rrc["DestinationState"] = To_state
             df_rrc["Commodity"] = commodity
             df_rrc["Rakes"] = values
+            df_rrc["Flag"] = Flag
 
             for i in dest_rrc_inline.keys():
                 for j in range(len(df_rrc["DestinationRailHead"])):
@@ -3322,12 +3138,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_ragi:
                 for j in dest_ragi:
                     if int(x_ij_ragi[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_ragi[(i,j)].value())
                         commodity.append("Ragi")
 
@@ -3376,6 +3194,7 @@ def Daily_Planner():
             df_ragi["DestinationState"] = To_state
             df_ragi["Commodity"] = commodity
             df_ragi["Rakes"] = values
+            df_ragi["Flag"]= Flag
 
             for i in dest_ragi_inline.keys():
                 for j in range(len(df_ragi["DestinationRailHead"])):
@@ -3394,12 +3213,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_jowar:
                 for j in dest_jowar:
                     if int(x_ij_jowar[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_jowar[(i,j)].value())
                         commodity.append("Jowar")
 
@@ -3448,6 +3269,7 @@ def Daily_Planner():
             df_jowar["DestinationState"] = To_state
             df_jowar["Commodity"] = commodity
             df_jowar["Rakes"] = values
+            df_jowar["Flag"] = Flag
 
             for i in dest_jowar_inline.keys():
                 for j in range(len(df_jowar["DestinationRailHead"])):
@@ -3466,12 +3288,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_bajra:
                 for j in dest_bajra:
                     if int(x_ij_bajra[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_bajra[(i,j)].value())
                         commodity.append("Bajra")
 
@@ -3520,6 +3344,7 @@ def Daily_Planner():
             df_bajra["DestinationState"] = To_state
             df_bajra["Commodity"] = commodity
             df_bajra["Rakes"] = values
+            df_bajra["Flag"]= Flag
             
             for i in dest_bajra_inline.keys():
                 for j in range(len(df_bajra["DestinationRailHead"])):
@@ -3538,12 +3363,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_maize:
                 for j in dest_maize:
                     if int(x_ij_maize[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_maize[(i,j)].value())
                         commodity.append("Maize")
 
@@ -3592,6 +3419,7 @@ def Daily_Planner():
             df_maize["DestinationState"] = To_state
             df_maize["Commodity"] = commodity
             df_maize["Rakes"] = values
+            df_maize["Flag"]= Flag
             
             for i in dest_maize_inline.keys():
                 for j in range(len(df_maize["DestinationRailHead"])):
@@ -3610,12 +3438,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_misc1:
                 for j in dest_misc1:
                     if int(x_ij_misc1[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_misc1[(i,j)].value())
                         commodity.append("Misc1")
 
@@ -3664,6 +3494,7 @@ def Daily_Planner():
             df_misc1["DestinationState"] = To_state
             df_misc1["Commodity"] = commodity
             df_misc1["Rakes"] = values
+            df_misc1["Flag"] =Flag
             
             for i in dest_misc1_inline.keys():
                 for j in range(len(df_misc1["DestinationRailHead"])):
@@ -3682,12 +3513,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_misc2:
                 for j in dest_misc2:
                     if int(x_ij_misc2[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_misc2[(i,j)].value())
                         commodity.append("Misc2")
 
@@ -3736,6 +3569,7 @@ def Daily_Planner():
             df_misc2["DestinationState"] = To_state
             df_misc2["Commodity"] = commodity
             df_misc2["Rakes"] = values
+            df_misc2["Flag"] = Flag
             
             for i in dest_misc2_inline.keys():
                 for j in range(len(df_misc2["DestinationRailHead"])):
@@ -3754,12 +3588,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_wheaturs:
                 for j in dest_wheaturs:
                     if int(x_ij_wheaturs[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_wheaturs[(i,j)].value())
                         commodity.append("Wheat(URS)")
 
@@ -3808,6 +3644,7 @@ def Daily_Planner():
             df_wheaturs["DestinationState"] = To_state
             df_wheaturs["Commodity"] = commodity
             df_wheaturs["Rakes"] = values
+            df_wheaturs["Flag"] = Flag
             
             for i in dest_wheaturs_inline.keys():
                 for j in range(len(df_wheaturs["DestinationRailHead"])):
@@ -3826,12 +3663,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_wheatfaq:
                 for j in dest_wheatfaq:
                     if int(x_ij_wheatfaq[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_wheatfaq[(i,j)].value())
                         commodity.append("Wheat(FAQ)")
 
@@ -3880,6 +3719,7 @@ def Daily_Planner():
             df_wheatfaq["DestinationState"] = To_state
             df_wheatfaq["Commodity"] = commodity
             df_wheatfaq["Rakes"] = values
+            df_wheatfaq["Flag"]= Flag
             
             for i in dest_wheatfaq_inline.keys():
                 for j in range(len(df_wheatfaq["DestinationRailHead"])):
@@ -3898,6 +3738,7 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_wheatrra:
                 for j in dest_wheatrra:
@@ -3952,6 +3793,7 @@ def Daily_Planner():
             df_wheatrra["DestinationState"] = To_state
             df_wheatrra["Commodity"] = commodity
             df_wheatrra["Rakes"] = values
+            df_wheatrra["Flag"] = Flag
             
             for i in dest_wheatrra_inline.keys():
                 for j in range(len(df_wheatrra["DestinationRailHead"])):
@@ -3970,12 +3812,14 @@ def Daily_Planner():
             commodity = []
             From_state = []
             To_state = []
+            Flag = []
             
             for i in source_frk_rra:
                 for j in dest_frk_rra:
                     if int(x_ij_frk_rra[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
+                        Flag.append(region)
                         values.append(x_ij_frk_rra[(i,j)].value())
                         commodity.append("FRK+RRA")
 
@@ -4024,6 +3868,7 @@ def Daily_Planner():
             df_frk_rra["DestinationState"] = To_state
             df_frk_rra["Commodity"] = commodity
             df_frk_rra["Rakes"] = values
+            df_frk_rra["Flag"] = Flag
             
             for i in dest_frk_rra_inline.keys():
                 for j in range(len(df_frk_rra["DestinationRailHead"])):

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -9,68 +9,89 @@ import config from "../../config";
 function Monthly_Solution() {
   const ProjectIp = config.serverUrl;
   const [fileSelected, setFileSelected] = useState(false);
-  const [r_s, setr_s] = useState("");
-  const [r_d, setr_d] = useState("");
+  const [importedFile, setImportedFile] = useState(null);
   const [TEFD, set_TEFD] = useState("");
   const [solutionSolved, setSolutionSolved] = useState(false);
-  const [cost, setCost] = useState(null);
-  const [Total_result, set_Total_Result] = useState(null);
   const [Relevant_result, set_Relevant_Result] = useState(null);
-  const [excelData, setExcelData] = useState({});
-  const [activeSheetName, setActiveSheetName] = useState(null);
-  const [updateExcel, setUpdateExcel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  //
-  const [redState, setRedState] = useState([]);
-  const [totalRiceSupplyCheck, setTotalRiceSupplyCheck] = useState("");
-  const [demand, setDemand] = useState("");
-  // const [type, setType] = useState("Non-FIFO");
-
-  const Consistency_Check_frontend = async () => {
-    try {
-      const response = await fetch(ProjectIp + "/Consistency_Check");
-      const data = await response.json();
-
-      // Assuming data contains the RedState array and TotalRiceSupplyCheck value
-      const redStateData = data["Red State"];
-      setRedState(redStateData);
-    } catch (error) {
-      console.error("Error during consistency check:", error);
-    }
-  };
+  const [showMessage, setShowMessage] = useState(false);
+  const [Bajra, setBajra] = useState(false);
+  const [Jowar, setJowar] = useState(false);
+  const [Maize, setMaize] = useState(false);
+  const [Ragi, setRagi] = useState(false);
+  const [Misc1, setMisc1] = useState(false);
+  const [Misc2, setMisc2] = useState(false);
+  const [RRA, setRRA] = useState(false);
+  const [Wheat_faq, setWheat_faq] = useState(false);
+  const [Wheat_urs, setWheat_urs] = useState(false);
+  const [frk_br, setFrk_br] = useState(false);
+  const [frk_rra, setFrk_rra] = useState(false);
 
   const handleFileChange = (e) => {
     setFileSelected(e.target.files[0]);
-
-    // const files = document.getElementById("uploadFile").files;
-    // const reader = new FileReader();
-    // const file = files[0];
-    // reader.onload = async (e) => {
-    //   const data = new Uint8Array(e.target.result);
-    //   const workbook = XLSX.read(data, { type: "array" });
-    //   const sheetsData = {};
-    //   workbook.SheetNames.forEach((sheetName) => {
-    //     const worksheet = workbook.Sheets[sheetName];
-    //     sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
-    //       header: 1,
-    //     });
-    //   });
-
-    //   setExcelData(sheetsData);
-    //   setActiveSheetName(workbook.SheetNames[0]);
-    // };
-
-    // reader.readAsArrayBuffer(file);
   };
+
+  const ImportData = () => {
+    fetch(
+      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool"
+    )
+      .then((res) => res.blob())
+      .then(async (blob) => {
+        const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        setImportedFile(excelFile);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  useEffect(() => {
+    if (importedFile) {
+      const uploadFile = async () => {
+        try {
+          const formData = new FormData();
+          formData.append("uploadFile", importedFile);
+
+          const response = await fetch(ProjectIp + "/upload_Monthly_File", {
+            method: "POST",
+            credentials: "include",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const jsonResponse = await response.json();
+
+          if (jsonResponse.status === 1) {
+            document.getElementById("console_").style.display = "block";
+            document.getElementById("console_").innerHTML +=
+              "File Imported Successfully " + "<br/><br/>";
+
+            alert("File Uploaded");
+          } else {
+            alert("Error uploading file");
+          }
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          alert(
+            "An error occurred during file upload. Please try again later."
+          );
+        }
+      };
+      uploadFile();
+    }
+  }, [importedFile]);
 
   const handleUploadConfig = async () => {
     if (!fileSelected) {
       alert("Please Select The File First");
       return;
     }
-
     try {
-      // const files = document.getElementById("uploadFile").files;
       const formData = new FormData();
       formData.append("uploadFile", fileSelected);
 
@@ -92,7 +113,6 @@ function Monthly_Solution() {
           "Template file has been uploaded" + "<br/><br/>";
 
         alert("File Uploaded");
-        // Consistency_Check_frontend();
       } else {
         alert("Error uploading file");
       }
@@ -102,12 +122,6 @@ function Monthly_Solution() {
     }
   };
 
-  const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
-    const updatedData = { ...excelData };
-    updatedData[sheetName][rowIndex][columnIndex] = newValue;
-    setExcelData(updatedData);
-  };
-
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
     if (isLoading) return; // Prevent additional clicks while loading
@@ -115,10 +129,7 @@ function Monthly_Solution() {
     document.getElementById("console_").style.display = "block";
     document.getElementById("console_").innerHTML += "Processing..." + "<br/>";
     const payload = {
-      r_s: r_s,
-      r_d: r_d,
       TEFD: TEFD,
-      // Type: type,
     };
 
     try {
@@ -144,45 +155,10 @@ function Monthly_Solution() {
     document.getElementById("console_").innerHTML +=
       "Solution has been done" +
       "<br/> " +
-      "Click on ownload RH to RH Detailed plan" +
+      "Click on download RH to RH Detailed plan" +
       "<br/>";
 
     document.getElementById("toggle").checked = false;
-  };
-
-  const fetchReservationId_cost = () => {
-    var form = new FormData();
-    fetch(ProjectIp + "/Monthly_readPickle", {
-      method: "POST",
-      credentials: "include",
-      body: form,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const fetchedCost = data["Minimum Cost of Transportation"];
-        const formattedCost = parseFloat(fetchedCost).toFixed(1);
-        setCost(formattedCost);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const fetchReservationId_Total_result = () => {
-    var form = new FormData();
-    fetch(ProjectIp + "/read_Monthly_state_table", {
-      method: "POST",
-      credentials: "include",
-      body: form,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const fetched_Total_Result = data;
-        set_Total_Result(fetched_Total_Result);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
   };
 
   const fetchReservationId_Revelant_result = () => {
@@ -200,101 +176,22 @@ function Monthly_Solution() {
         console.error("Error:", error);
       });
   };
-  // console.log(Relevant_result);
 
-  const exportToExcel1 = () => {
-    fetchReservationId_Total_result();
-    if (Total_result == null) {
-      window.alert("Fetching Result, Please Wait");
-    } else {
-      const workbook = XLSX.utils.book_new();
-      Object.entries(Total_result).forEach(([column, data]) => {
-        const parsedData = JSON.parse(data);
-        const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, column);
-      });
-      const excelBuffer = XLSX.write(workbook, {
-        type: "array",
-        bookType: "xlsx",
-      });
-      const excelBlob = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      saveAs(excelBlob, "All_results.xlsx");
-    }
+  const viewGrid = () => {
+    setShowMessage(true);
+
+    setBajra(JSON.parse(Relevant_result?.Bajra ?? 0));
+    setJowar(JSON.parse(Relevant_result?.Jowar ?? 0));
+    setMaize(JSON.parse(Relevant_result?.Maize ?? 0));
+    setMisc1(JSON.parse(Relevant_result?.Misc1 ?? 0));
+    setMisc2(JSON.parse(Relevant_result?.Misc2 ?? 0));
+    setRRA(JSON.parse(Relevant_result?.RRA ?? 0));
+    setRagi(JSON.parse(Relevant_result?.Ragi ?? 0));
+    setWheat_faq(JSON.parse(Relevant_result?.Wheat_faq ?? 0));
+    setWheat_urs(JSON.parse(Relevant_result?.Wheat_urs ?? 0));
+    setFrk_br(JSON.parse(Relevant_result?.frk_br ?? 0));
+    setFrk_rra(JSON.parse(Relevant_result?.frk_rra ?? 0));
   };
-
-  const update_excel = async () => {
-    const response = await fetch(ProjectIp + "/getMonthlyExcelData");
-    const arrayBuffer = await response.arrayBuffer();
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetsData = {};
-    workbook.SheetNames.forEach((sheetName) => {
-      const worksheet = workbook.Sheets[sheetName];
-      sheetsData[sheetName] = XLSX.utils.sheet_to_json(worksheet, {
-        header: 1,
-      });
-    });
-
-    setExcelData(sheetsData);
-    setActiveSheetName(workbook.SheetNames[0]);
-    setUpdateExcel(true);
-    document.getElementById("console_").style.display = "block";
-    document.getElementById("console_").innerHTML +=
-      "Template has been updated" + "<br/>";
-  };
-
-  const save_excel = async () => {
-    const newWorkbook = XLSX.utils.book_new();
-    Object.keys(excelData).forEach((sheetName) => {
-      const worksheet = XLSX.utils.json_to_sheet(excelData[sheetName]);
-      XLSX.utils.book_append_sheet(newWorkbook, worksheet, sheetName);
-    });
-
-    try {
-      const response = await fetch(ProjectIp + "/Modify_Monthly_Template_M01", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newWorkbook),
-      });
-      if (response.ok) {
-        console.log("Data sent to backend successfully");
-      } else {
-        console.error("Failed to send data to backend");
-      }
-    } catch (error) {
-      console.error("Error sending data:", error);
-    }
-    document.getElementById("console_").style.display = "block";
-    document.getElementById("console_").innerHTML +=
-      "Template has been updated" + "<br/><br/>";
-    setUpdateExcel(false);
-  };
-
-  // Function to send JSON data to the backend
-  // const send_excel = async () => {
-  //   save_excel();
-  //   try {
-  //     const response = await fetch(ProjectIp + '/Modify_Monthly_Template_M01', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(modifiedExcel),
-  //     });
-
-  //     if (response.ok) {
-  //       console.log('Data sent to backend successfully');
-  //     } else {
-  //       console.error('Failed to send data to backend');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error sending data:', error);
-  //   }
-  // };
 
   const exportToExcel2 = async () => {
     if (Relevant_result === null) {
@@ -317,7 +214,7 @@ function Monthly_Solution() {
       saveAs(excelBlob, "Monthly_Movement_results.xlsx");
     }
   };
-
+  console.log(Relevant_result);
   return (
     <div
       className="page-container"
@@ -373,26 +270,25 @@ function Monthly_Solution() {
                   justifyContent: "space-between",
                   width: "45vw",
                 }}
-              >
-                {/* <div
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: "700",
-                    marginLeft: 20,
-                  }}
-                >
-                  Type
-                </div> */}
-                {/* <div>
-                  <select onChange={(e) => setType(e.target.value)}>
-                    <option value="Non-FIFO">Non-FIFO</option>
-                    <option value="FIFO">FIFO</option>
-                  </select>
-                </div> */}
-              </div>
+              ></div>
               <div className="col-md-12">
                 <br />
                 <div className="row" style={{ marginLeft: "15px" }}>
+                  <div
+                    style={{
+                      color: "white",
+                      display: "flex",
+                      width: "42vw",
+                      justifyContent: "end",
+                    }}
+                  >
+                    <button
+                      className="btn btn-danger dropdown-toggle"
+                      onClick={ImportData}
+                    >
+                      Import data
+                    </button>
+                  </div>
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
                     Template
@@ -450,74 +346,6 @@ function Monthly_Solution() {
                   </form>
                 </div>
                 <br />
-                <br />
-                {/* <div style={{ display: "flex", marginLeft: "300px" }}>
-                  {fileSelected && (
-                  <div style={{ marginTop: "-20px" }}>
-                    <button
-                      style={{ padding: "5px" }}
-                      onClick={() => update_excel()}
-                    >
-                      Update Template
-                    </button>
-                  </div>
-                   )} 
-                  {updateExcel && (
-                    <div style={{ marginLeft: "220px", marginTop: "-20px" }}>
-                      <button
-                        style={{ padding: "5px" }}
-                        onClick={() => save_excel()}
-                      >
-                        Save changes
-                      </button>
-                    </div>
-                  )}
-                </div> */}
-                {/* {activeSheetName &&
-                  updateExcel &&
-                  excelData[activeSheetName] && (
-                    <div style={{ marginLeft: "20%" }}>
-                      <select
-                        onChange={(e) => setActiveSheetName(e.target.value)}
-                        value={activeSheetName}
-                        style={{
-                          margin: "10px",
-                          padding: "3px",
-                          marginLeft: "20%",
-                        }}
-                      >
-                        {Object.keys(excelData).map((sheetName) => (
-                          <option key={sheetName} value={sheetName}>
-                            {sheetName}
-                          </option>
-                        ))}
-                      </select>
-                      <table>
-                        <tbody>
-                          {excelData[activeSheetName].map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                              {row.map((cellValue, columnIndex) => (
-                                <td key={columnIndex}>
-                                  <input
-                                    type="text"
-                                    value={cellValue}
-                                    onChange={(e) =>
-                                      handleCellChange(
-                                        activeSheetName,
-                                        rowIndex,
-                                        columnIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )} */}
                 <div style={{ marginLeft: "15px" }}>
                   {/* <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -556,51 +384,6 @@ function Monthly_Solution() {
                       </select>
                     </label>
                     <br />
-                    <br />
-                    <p style={{ margin: 0, padding: 0 }}>
-                      <strong
-                        style={{
-                          color: "#9d0921",
-                          fontSize: "20px",
-                          marginLeft: "15px",
-                          fontFamily: "Segoe UI",
-                        }}
-                      >
-                        For Maximum Number of Rakes
-                      </strong>
-                    </p>
-                    <label style={{ marginTop: "10px" }}>
-                      <strong style={{ fontSize: "16px", marginLeft: "15px" }}>
-                        Max number of rakes per railhead to be allowed from
-                        surplus states (Default Value is 25)
-                      </strong>
-                      <input
-                        type="number"
-                        value={r_s}
-                        onChange={(e) => {
-                          setr_s(e.target.value);
-                        }}
-                        style={{ marginLeft: "40px" }}
-                      />
-                    </label>
-                    <br />
-                    <label>
-                      <strong style={{ fontSize: "16px", marginLeft: "15px" }}>
-                        Max number of rakes per railhead to be allowed into
-                        deficit states (Default Value is 25)
-                      </strong>
-                      <input
-                        type="number"
-                        value={r_d}
-                        onChange={(e) => setr_d(e.target.value)}
-                        style={{ marginLeft: "53px" }}
-                      />
-                    </label>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
                   </form> */}
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
@@ -613,7 +396,6 @@ function Monthly_Solution() {
                       borderStyle: "solid",
                       borderColor: "#ebab44b0",
                     }}
-                    onClick={handleSolve}
                   >
                     <div className="wrap__toggle--bluetooth">
                       <span style={{ textAlign: "center", fontWeight: "bold" }}>
@@ -633,93 +415,136 @@ function Monthly_Solution() {
                     </div>
                   </div>
                   <br />
-
-                  <br />
-                  {solutionSolved && (
-                    <div>
-                      <p style={{ display: "inline", marginLeft: "18px" }}>
-                        <strong style={{ fontSize: "16px" }}>
-                          Optimal Cost of Transportation is INR{" "}
-                          <span style={{ color: "#FF0509" }}>{cost}</span> Lakhs
-                        </strong>
-                      </p>
-                    </div>
-                  )}
                   <br />
                   {solutionSolved && (
                     <div>
                       <button
-                        style={{ color: "white", marginLeft: "15px" }}
+                        style={{ color: "black", marginLeft: "15px" }}
                         className="btn btn-success dropdown-toggle"
                         onClick={() => exportToExcel2()}
                       >
                         <i className="fa fa-bars"></i> Download Railhead To
                         Railhead Detailed Plan
                       </button>
-                      <br />
-                      <br />
-                      {/* <button
-                        style={{ color: "white", marginLeft: "15px" }}
-                        className="btn btn-danger dropdown-toggle"
-                        onClick={() => exportToExcel1()}
+                      {/* <br />
+                      <br /> */}
+                      <button
+                        style={{ color: "black", marginLeft: "15px" }}
+                        className="btn btn-success dropdown-toggle"
+                        // onClick={viewGrid}
                       >
-                        <i className="fa fa-bars"></i> Download State to State
-                        Detailed Plan
-                      </button> */}
+                        <i className="fa fa-bars"></i>
+                        Export plan
+                      </button>
                     </div>
                   )}
-                  <br />
-                  <br />
                   <br />
                 </div>
               </div>
             </div>
             <br />
-            <br />
+            {/* {showMessage && (
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
+                            {Wheat_urs !== null && Wheat_urs.length > 0 ? (
+                              <div>
+                                <div>Wheat_urs</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        Rakes
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {Wheat_urs.map((item, index) => (
+                                      <tr key={item["Unnamed: 0"]}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.From_state}</td>
+                                        <td>{item.Bihar}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )} */}
             <br />
           </div>
         </div>
         <div style={{ backgroundColor: "#ebab44b0", width: "20%" }}>
           <br />
-          {/* <div>
-            <div class="progress yellow">
-              <span class="progress-left">
-                <span class="progress-bar"></span>
-              </span>
-              <span class="progress-right">
-                <span class="progress-bar"></span>
-              </span>
-              <div class="progress-value">Steps</div>
-            </div>
-          </div> */}
+
           <span style={{ color: "black", fontSize: "32px", marginLeft: "5%" }}>
             Progress Bar
           </span>
-          <div>
-            {/* Rendering RedState */}
-            {/* {redState.length > 0 && (
-              <div>
-                <h2>All States:</h2>
-                <ul>
-                  {redState.map((state, index) => (
-                    <li key={index}>{state}</li>
-                  ))}
-                </ul>
-              </div>
-            )} */}
 
-            {/* Rendering Rice Supply Check */}
-            {totalRiceSupplyCheck !== "" && (
-              <div>
-                <h2>Rice Supply Check:</h2>
-                {parseFloat(totalRiceSupplyCheck) < parseFloat(demand) ? (
-                  <p>Supply of Rice is less than Demand</p>
-                ) : (
-                  <p>Supply of Rice is sufficient</p>
-                )}
-              </div>
-            )}
-          </div>
           <div
             style={{
               margin: "10px",
