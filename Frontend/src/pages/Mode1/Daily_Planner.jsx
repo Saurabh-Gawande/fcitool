@@ -1642,7 +1642,7 @@ function Daily_Planner() {
               origin_state: item.sourceState,
               Value: item.value,
               Commodity: item.commodity,
-              // sourceDivision: item.sourceDivision,
+              sourceDivision: item.sourceDivision,
             }));
             setSurplus(updatedSurplus);
           }
@@ -1654,7 +1654,7 @@ function Daily_Planner() {
               origin_state: item.destinationState,
               Value: item.value,
               Commodity: item.commodity,
-              // destinationDivision: item.destinationDivision,
+              destinationDivision: item.destinationDivision,
             }));
             setDeficit(updatedDeficit);
           }
@@ -1669,6 +1669,7 @@ function Daily_Planner() {
                 destination_state: item.sourceState,
                 Value: 1,
                 Commodity: item.commodity,
+                sourceDivision: item.sourceDivision,
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -1684,6 +1685,7 @@ function Daily_Planner() {
                 destination_state: item.destinationState,
                 Value: 1,
                 Commodity: item.commodity,
+                destinationDivision: item.destinationDivision,
               })
             );
             setDeficitInline(updatedDeficitInline);

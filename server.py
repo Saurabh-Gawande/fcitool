@@ -2214,8 +2214,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
-            # From_divison = []
-            # To_divison = []
+            From_divison = []
+            To_divison = []
             # Cost = []
 
             for i in source_wheat:
@@ -2231,25 +2231,39 @@ def Daily_Planner():
                 for wheat in wheat_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
-                        # From_divison.append(wheat["sourceDivision"])
+                        From_divison.append(wheat["sourceDivision"])
 
             for i in range(len(From)):
                 for wheat in wheat_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
                 for wheat in wheat_dest:
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
-                        # To_divison.append(wheat["destinationDivision"])
                         found_state = True
                         break
                 if not found_state:
                     for wheat in wheat_dest_inline:
                         if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
                             To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheat_dest:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_divison.append(wheat["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheat_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_divison.append(wheat["destinationDivision"])
                             found_state = True
                             break    
 
@@ -2279,8 +2293,8 @@ def Daily_Planner():
             # df_wheat["Cost"] = Cost
             df_wheat["Rakes"] = values
             df_wheat["Flag"] = Flag
-            # df_wheat["sourceDivision"] = From_divison
-            # df_wheat["destinationDivision"] = To_divison
+            df_wheat["sourceDivision"] = From_divison
+            df_wheat["destinationDivision"] = To_divison
            
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["DestinationRailHead"])):
@@ -2291,7 +2305,7 @@ def Daily_Planner():
                 for j in range(len(df_wheat["SourceRailHead"])):
                     if (i == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i] == df_wheat.iloc[j]["SourceRailHead"]):
                         df_wheat.loc[j, 'SourceRailHead'] = (i + '+' + source_wheat_inline[i])
-            print(df_wheat)
+            
             df_rra = pd.DataFrame()
             From = []
             To = []
@@ -2300,6 +2314,8 @@ def Daily_Planner():
             From_state_rra = []
             To_state_rra = []
             Flag = []
+            From_divison = []
+            To_divison = []
             # Cost = []
 
             for i in source_rra:
@@ -2315,11 +2331,13 @@ def Daily_Planner():
                 for rra in rra_origin:
                     if From[i] == rra["origin_railhead"]:
                         From_state_rra.append(rra["origin_state"])
+                        From_divison.append(rra["sourceDivision"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline:
                     if From[i] == rra["origin_railhead"] or From[i] == rra["destination_railhead"] :
                         From_state_rra.append(rra["origin_state"])
+                        From_divison.append(rra["sourceDivision"])
   
             for i in range(len(To)):
                 found_state = False
@@ -2332,6 +2350,20 @@ def Daily_Planner():
                     for rra in rra_dest_inline:
                         if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"]:
                             To_state_rra.append(rra["origin_state"])
+                            found_state = True
+                            break
+
+            for i in range(len(To)):
+                found_state = False
+                for rra in rra_dest:
+                    if To[i] == rra["origin_railhead"]:
+                        To_divison.append(rra["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for rra in rra_dest_inline:
+                        if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"]:
+                            To_divison.append(rra["destinationDivision"])
                             found_state = True
                             break
            
@@ -2361,6 +2393,8 @@ def Daily_Planner():
             # df_rra["Cost"] = Cost
             df_rra["Rakes"] = values
             df_rra["Flag"] = Flag
+            df_rra["sourceDivision"] = From_divison
+            df_rra["destinationDivision"] = To_divison
            
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["DestinationRailHead"])):
@@ -2380,6 +2414,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag =[]
+            From_divison = []
+            To_divison = []
             # Cost = []
             
             for i in source_coarseGrain:
@@ -2395,11 +2431,13 @@ def Daily_Planner():
                 for coarseGrain in coarseGrain_origin:
                     if From[i] == coarseGrain["origin_railhead"]:
                         From_state.append(coarseGrain["origin_state"])
+                        From_divison.append(coarseGrain["sourceDivision"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline:
                     if From[i] == coarseGrain["origin_railhead"] or From[i] == coarseGrain["destination_railhead"] :
                         From_state.append(coarseGrain["origin_state"])
+                        From_divison.append(coarseGrain["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -2412,6 +2450,20 @@ def Daily_Planner():
                     for coarseGrain in coarseGrain_dest_inline:
                         if To[i] == coarseGrain["origin_railhead"] or To[i] == coarseGrain["destination_railhead"]:
                             To_state.append(coarseGrain["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for coarseGrain in coarseGrain_dest:
+                    if To[i] == coarseGrain["origin_railhead"]:
+                        To_divison.append(coarseGrain["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for coarseGrain in coarseGrain_dest_inline:
+                        if To[i] == coarseGrain["origin_railhead"] or To[i] == coarseGrain["destination_railhead"]:
+                            To_divison.append(coarseGrain["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2441,6 +2493,8 @@ def Daily_Planner():
             # df_CoarseGrain["Cost"] = Cost
             df_CoarseGrain["Rakes"] = values
             df_CoarseGrain["Flag"] = Flag
+            df_CoarseGrain["sourceDivision"] = From_divison
+            df_CoarseGrain["destinationDivision"] = To_divison
             
             for i in dest_coarseGrain_inline.keys():
                 for j in range(len(df_CoarseGrain["DestinationRailHead"])):
@@ -2460,6 +2514,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             # Cost = []
             
             for i in source_frkrra:
@@ -2475,11 +2531,13 @@ def Daily_Planner():
                 for frkrra in frkrra_origin:
                     if From[i] == frkrra["origin_railhead"]:
                         From_state.append(frkrra["origin_state"])
+                        From_divison.append(frkrra["sourceDivision"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline:
                     if From[i] == frkrra["origin_railhead"] or From[i] == frkrra["destination_railhead"]:
                         From_state.append(frkrra["origin_state"])
+                        From_divison.append(frkrra["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -2492,6 +2550,20 @@ def Daily_Planner():
                     for frkrra in frkrra_dest_inline:
                         if To[i] == frkrra["origin_railhead"] or To[i] == frkrra["destination_railhead"]:
                             To_state.append(frkrra["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for frkrra in frkrra_dest:
+                    if To[i] == frkrra["origin_railhead"]:
+                        To_divison.append(frkrra["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkrra in frkrra_dest_inline:
+                        if To[i] == frkrra["origin_railhead"] or To[i] == frkrra["destination_railhead"]:
+                            To_divison.append(frkrra["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2521,6 +2593,8 @@ def Daily_Planner():
             # df_frkrra["Cost"] = Cost
             df_frkrra["Rakes"] = values
             df_frkrra["Flag"]= Flag
+            df_frkrra["sourceDivision"] = From_divison
+            df_frkrra["destinationDivision"] = To_divison
 
             for i in dest_frkrra_inline.keys():
                 for j in range(len(df_frkrra["DestinationRailHead"])):
@@ -2540,6 +2614,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             # Cost = []
             
             for i in source_frkbr:
@@ -2555,11 +2631,13 @@ def Daily_Planner():
                 for frkbr in frkbr_origin:
                     if From[i] == frkbr["origin_railhead"]:
                         From_state.append(frkbr["origin_state"])
+                        From_divison.append(frkbr["sourceDivision"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline:
                     if From[i] == frkbr["origin_railhead"] or From[i] == frkbr["destination_railhead"]:
                         From_state.append(frkbr["origin_state"])
+                        From_divison.append(frkbr["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -2572,6 +2650,20 @@ def Daily_Planner():
                     for frkbr in frkbr_dest_inline:
                         if To[i] == frkbr["origin_railhead"] or To[i] == frkbr["destination_railhead"]:
                             To_state.append(frkbr["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for frkbr in frkbr_dest:
+                    if To[i] == frkbr["origin_railhead"]:
+                        To_divison.append(frkbr["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkbr in frkbr_dest_inline:
+                        if To[i] == frkbr["origin_railhead"] or To[i] == frkbr["destination_railhead"]:
+                            To_divison.append(frkbr["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2601,6 +2693,8 @@ def Daily_Planner():
             # df_frkbr["Cost"] = Cost
             df_frkbr["Rakes"] = values
             df_frkbr["Flag"] = Flag
+            df_frkbr["sourceDivision"] = From_divison
+            df_frkbr["destinationDivision"] = To_divison
 
             for i in dest_frkbr_inline.keys():
                 for j in range(len(df_frkbr["DestinationRailHead"])):
@@ -2620,6 +2714,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             # Cost = []
             
             for i in source_frk:
@@ -2635,11 +2731,13 @@ def Daily_Planner():
                 for frk in frk_origin:
                     if From[i] == frk["origin_railhead"]:
                         From_state.append(frk["origin_state"])
+                        From_divison.append(frk["sourceDivision"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline:
                     if From[i] == frk["origin_railhead"] or From[i] == frk["destination_railhead"]:
                         From_state.append(frk["origin_state"])
+                        From_divison.append(frk["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -2652,6 +2750,20 @@ def Daily_Planner():
                     for frk in frk_dest_inline:
                         if To[i] == frk["origin_railhead"] or To[i] == frk["destination_railhead"]:
                             To_state.append(frk["origin_state"])
+                            found_state = True
+                            break
+
+            for i in range(len(To)):
+                found_state = False
+                for frk in frk_dest:
+                    if To[i] == frk["origin_railhead"]:
+                        To_divison.append(frk["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frk in frk_dest_inline:
+                        if To[i] == frk["origin_railhead"] or To[i] == frk["destination_railhead"]:
+                            To_divison.append(frk["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2681,6 +2793,8 @@ def Daily_Planner():
             # df_frk["Cost"] = Cost
             df_frk["Rakes"] = values
             df_frk["Flag"]= Flag
+            df_frk["sourceDivision"] = From_divison
+            df_frk["destinationDivision"] = To_divison
 
             for i in dest_frk_inline.keys():
                 for j in range(len(df_frk["DestinationRailHead"])):
@@ -2700,6 +2814,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             # Cost = []
             
             for i in source_frkcgr:
@@ -2715,11 +2831,13 @@ def Daily_Planner():
                 for frkcgr in frkcgr_origin:
                     if From[i] == frkcgr["origin_railhead"]:
                         From_state.append(frkcgr["origin_state"])
+                        From_divison.append(frkcgr["sourceDivision"])
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin_inline:
                     if From[i] == frkcgr["origin_railhead"] or From[i] == frkcgr["destination_railhead"] :
                         From_state.append(frkcgr["origin_state"])
+                        From_divison.append(frkcgr["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -2732,6 +2850,20 @@ def Daily_Planner():
                     for frkcgr in frkcgr_dest_inline:
                         if To[i] == frkcgr["origin_railhead"] or To[i] == frkcgr["destination_railhead"]:
                             To_state.append(frkcgr["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for frkcgr in frkcgr_dest:
+                    if To[i] == frkcgr["origin_railhead"]:
+                        To_divison.append(frkcgr["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkcgr in frkcgr_dest_inline:
+                        if To[i] == frkcgr["origin_railhead"] or To[i] == frkcgr["destination_railhead"]:
+                            To_divison.append(frkcgr["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2760,6 +2892,8 @@ def Daily_Planner():
             df_frkcgr["Commodity"] = commodity
             df_frkcgr["Rakes"] = values
             df_frkcgr["Flag"]= Flag
+            df_frkcgr["sourceDivision"] = From_divison
+            df_frkcgr["destinationDivision"] = To_divison
             # df_frkcgr["Cost"] = Cost
 
             for i in dest_frkcgr_inline.keys():
@@ -2780,6 +2914,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             # Cost = []
             
             for i in source_wcgr:
@@ -2795,11 +2931,13 @@ def Daily_Planner():
                 for wcgr in wcgr_origin:
                     if From[i] == wcgr["origin_railhead"]:
                         From_state.append(wcgr["origin_state"])
+                        From_divison.append(wcgr["sourceDivision"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline:
                     if From[i] == wcgr["origin_railhead"] or From[i] == wcgr["destination_railhead"]:
                         From_state.append(wcgr["origin_state"])
+                        From_divison.append(wcgr["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -2812,6 +2950,20 @@ def Daily_Planner():
                     for wcgr in wcgr_dest_inline:
                         if To[i] == wcgr["origin_railhead"] or To[i] == wcgr["destination_railhead"]:
                             To_state.append(wcgr["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for wcgr in wcgr_dest:
+                    if To[i] == wcgr["origin_railhead"]:
+                        To_divison.append(wcgr["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wcgr in wcgr_dest_inline:
+                        if To[i] == wcgr["origin_railhead"] or To[i] == wcgr["destination_railhead"]:
+                            To_divison.append(wcgr["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2840,6 +2992,8 @@ def Daily_Planner():
             df_wcgr["Commodity"] = commodity
             df_wcgr["Rakes"] = values
             df_wcgr["Flag"] = Flag
+            df_wcgr["sourceDivision"] = From_divison
+            df_wcgr["destinationDivision"] = To_divison
             # df_wcgr["Cost"] = Cost
 
             for i in dest_wcgr_inline.keys():
@@ -2860,6 +3014,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_rrc:
                 for j in dest_rrc:
@@ -2874,11 +3030,13 @@ def Daily_Planner():
                 for rrc in rrc_origin:
                     if From[i] == rrc["origin_railhead"]:
                         From_state.append(rrc["origin_state"])
+                        From_divison.append(rrc["sourceDivision"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline:
                     if From[i] == rrc["origin_railhead"] or From[i] == rrc["destination_railhead"]:
                         From_state.append(rrc["origin_state"])
+                        From_divison.append(rrc["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -2891,6 +3049,20 @@ def Daily_Planner():
                     for rrc in rrc_dest_inline:
                         if To[i] == rrc["origin_railhead"] or To[i] == rrc["destination_railhead"]:
                             To_state.append(rrc["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for rrc in rrc_dest:
+                    if To[i] == rrc["origin_railhead"]:
+                        To_divison.append(rrc["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for rrc in rrc_dest_inline:
+                        if To[i] == rrc["origin_railhead"] or To[i] == rrc["destination_railhead"]:
+                            To_divison.append(rrc["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2916,6 +3088,8 @@ def Daily_Planner():
             df_rrc["Commodity"] = commodity
             df_rrc["Rakes"] = values
             df_rrc["Flag"] = Flag
+            df_rrc["sourceDivision"] = From_divison
+            df_rrc["destinationDivision"] = To_divison
 
             for i in dest_rrc_inline.keys():
                 for j in range(len(df_rrc["DestinationRailHead"])):
@@ -2935,6 +3109,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_ragi:
                 for j in dest_ragi:
@@ -2949,11 +3125,13 @@ def Daily_Planner():
                 for ragi in ragi_origin:
                     if From[i] == ragi["origin_railhead"]:
                         From_state.append(ragi["origin_state"])
+                        From_divison.append(ragi["sourceDivision"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline:
                     if From[i] == ragi["origin_railhead"] or From[i] == ragi["destination_railhead"]:
                         From_state.append(ragi["origin_state"])
+                        From_divison.append(ragi["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -2966,6 +3144,20 @@ def Daily_Planner():
                     for ragi in ragi_dest_inline:
                         if To[i] == ragi["origin_railhead"] or To[i] == ragi["destination_railhead"]:
                             To_state.append(ragi["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for ragi in ragi_dest:
+                    if To[i] == ragi["origin_railhead"]:
+                        To_divison.append(ragi["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for ragi in ragi_dest_inline:
+                        if To[i] == ragi["origin_railhead"] or To[i] == ragi["destination_railhead"]:
+                            To_divison.append(ragi["destinationDivision"])
                             found_state = True
                             break   
 
@@ -2991,6 +3183,8 @@ def Daily_Planner():
             df_ragi["Commodity"] = commodity
             df_ragi["Rakes"] = values
             df_ragi["Flag"]= Flag
+            df_ragi["sourceDivision"] = From_divison
+            df_ragi["destinationDivision"] = To_divison
 
             for i in dest_ragi_inline.keys():
                 for j in range(len(df_ragi["DestinationRailHead"])):
@@ -3010,6 +3204,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_jowar:
                 for j in dest_jowar:
@@ -3024,11 +3220,13 @@ def Daily_Planner():
                 for jowar in jowar_origin:
                     if From[i] == jowar["origin_railhead"]:
                         From_state.append(jowar["origin_state"])
+                        From_divison.append(jowar["sourceDivision"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline:
                     if From[i] == jowar["origin_railhead"] or From[i] == jowar["destination_railhead"]:
                         From_state.append(jowar["origin_state"])
+                        From_divison.append(jowar["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -3041,6 +3239,20 @@ def Daily_Planner():
                     for jowar in jowar_dest_inline:
                         if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
                             To_state.append(jowar["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for jowar in jowar_dest:
+                    if To[i] == jowar["origin_railhead"]:
+                        To_divison.append(jowar["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for jowar in jowar_dest_inline:
+                        if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
+                            To_divison.append(jowar["destinationDivision"])
                             found_state = True
                             break  
 
@@ -3066,6 +3278,8 @@ def Daily_Planner():
             df_jowar["Commodity"] = commodity
             df_jowar["Rakes"] = values
             df_jowar["Flag"] = Flag
+            df_jowar["sourceDivision"] = From_divison
+            df_jowar["destinationDivision"] = To_divison
 
             for i in dest_jowar_inline.keys():
                 for j in range(len(df_jowar["DestinationRailHead"])):
@@ -3085,6 +3299,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_bajra:
                 for j in dest_bajra:
@@ -3099,11 +3315,13 @@ def Daily_Planner():
                 for bajra in bajra_origin:
                     if From[i] == bajra["origin_railhead"]:
                         From_state.append(bajra["origin_state"])
+                        From_divison.append(bajra["sourceDivision"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline:
                     if From[i] == bajra["origin_railhead"] or From[i] == bajra["destination_railhead"]:
                         From_state.append(bajra["origin_state"])
+                        From_divison.append(bajra["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -3116,6 +3334,20 @@ def Daily_Planner():
                     for bajra in bajra_dest_inline:
                         if To[i] == bajra["origin_railhead"] or To[i] == bajra["destination_railhead"]:
                             To_state.append(bajra["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for bajra in bajra_dest:
+                    if To[i] == bajra["origin_railhead"]:
+                        To_divison.append(bajra["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for bajra in bajra_dest_inline:
+                        if To[i] == bajra["origin_railhead"] or To[i] == bajra["destination_railhead"]:
+                            To_divison.append(bajra["destinationDivision"])
                             found_state = True
                             break  
 
@@ -3141,6 +3373,8 @@ def Daily_Planner():
             df_bajra["Commodity"] = commodity
             df_bajra["Rakes"] = values
             df_bajra["Flag"]= Flag
+            df_bajra["sourceDivision"] = From_divison
+            df_bajra["destinationDivision"] = To_divison
             
             for i in dest_bajra_inline.keys():
                 for j in range(len(df_bajra["DestinationRailHead"])):
@@ -3160,6 +3394,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_maize:
                 for j in dest_maize:
@@ -3174,11 +3410,13 @@ def Daily_Planner():
                 for maize in maize_origin:
                     if From[i] == maize["origin_railhead"]:
                         From_state.append(maize["origin_state"])
+                        From_divison.append(maize["sourceDivision"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline:
                     if From[i] == maize["origin_railhead"] or From[i] == maize["destination_railhead"]:
                         From_state.append(maize["origin_state"])
+                        From_divison.append(maize["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -3191,6 +3429,20 @@ def Daily_Planner():
                     for maize in maize_dest_inline:
                         if To[i] == maize["origin_railhead"] or To[i] == maize["destination_railhead"]:
                             To_state.append(maize["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for maize in maize_dest:
+                    if To[i] == maize["origin_railhead"]:
+                        To_divison.append(maize["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for maize in maize_dest_inline:
+                        if To[i] == maize["origin_railhead"] or To[i] == maize["destination_railhead"]:
+                            To_divison.append(maize["destinationDivision"])
                             found_state = True
                             break   
 
@@ -3216,6 +3468,8 @@ def Daily_Planner():
             df_maize["Commodity"] = commodity
             df_maize["Rakes"] = values
             df_maize["Flag"]= Flag
+            df_maize["sourceDivision"] = From_divison
+            df_maize["destinationDivision"] = To_divison
             
             for i in dest_maize_inline.keys():
                 for j in range(len(df_maize["DestinationRailHead"])):
@@ -3235,6 +3489,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_misc1:
                 for j in dest_misc1:
@@ -3249,11 +3505,13 @@ def Daily_Planner():
                 for misc1 in misc1_origin:
                     if From[i] == misc1["origin_railhead"]:
                         From_state.append(misc1["origin_state"])
+                        From_divison.append(misc1["sourceDivision"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline:
                     if From[i] == misc1["origin_railhead"] or From[i] == misc1["destination_railhead"]:
                         From_state.append(misc1["origin_state"])
+                        From_divison.append(misc1["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -3266,6 +3524,20 @@ def Daily_Planner():
                     for misc1 in misc1_dest_inline:
                         if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
                             To_state.append(misc1["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc1_dest:
+                    if To[i] == misc1["origin_railhead"]:
+                        To_divison.append(misc1["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc1 in misc1_dest_inline:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_divison.append(misc1["destinationDivision"])
                             found_state = True
                             break   
 
@@ -3291,6 +3563,8 @@ def Daily_Planner():
             df_misc1["Commodity"] = commodity
             df_misc1["Rakes"] = values
             df_misc1["Flag"] =Flag
+            df_misc1["sourceDivision"] = From_divison
+            df_misc1["destinationDivision"] = To_divison
             
             for i in dest_misc1_inline.keys():
                 for j in range(len(df_misc1["DestinationRailHead"])):
@@ -3310,6 +3584,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_misc2:
                 for j in dest_misc2:
@@ -3324,11 +3600,13 @@ def Daily_Planner():
                 for misc2 in misc2_origin:
                     if From[i] == misc2["origin_railhead"]:
                         From_state.append(misc2["origin_state"])
+                        From_divison.append(misc2["sourceDivision"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline:
                     if From[i] == misc2["origin_railhead"] or From[i] == misc2["destination_railhead"]  :
                         From_state.append(misc2["origin_state"])
+                        From_divison.append(misc2["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -3341,6 +3619,20 @@ def Daily_Planner():
                     for misc2 in misc2_dest_inline:
                         if To[i] == misc2["origin_railhead"] or To[i] == misc2["destination_railhead"]:
                             To_state.append(misc2["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for misc2 in misc2_dest:
+                    if To[i] == misc2["origin_railhead"]:
+                        To_divison.append(misc2["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc2 in misc2_dest_inline:
+                        if To[i] == misc2["origin_railhead"] or To[i] == misc2["destination_railhead"]:
+                            To_divison.append(misc2["destinationDivision"])
                             found_state = True
                             break   
 
@@ -3366,6 +3658,8 @@ def Daily_Planner():
             df_misc2["Commodity"] = commodity
             df_misc2["Rakes"] = values
             df_misc2["Flag"] = Flag
+            df_misc2["sourceDivision"] = From_divison
+            df_misc2["destinationDivision"] = To_divison
             
             for i in dest_misc2_inline.keys():
                 for j in range(len(df_misc2["DestinationRailHead"])):
@@ -3385,6 +3679,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_wheaturs:
                 for j in dest_wheaturs:
@@ -3399,11 +3695,13 @@ def Daily_Planner():
                 for wheat in wheaturs_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
 
             for i in range(len(From)):
                 for wheat in wheaturs_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -3416,6 +3714,20 @@ def Daily_Planner():
                     for wheat in wheaturs_dest_inline:
                         if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
                             To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheaturs_dest:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_divison.append(wheat["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheaturs_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_divison.append(wheat["destinationDivision"])
                             found_state = True
                             break   
 
@@ -3441,6 +3753,8 @@ def Daily_Planner():
             df_wheaturs["Commodity"] = commodity
             df_wheaturs["Rakes"] = values
             df_wheaturs["Flag"] = Flag
+            df_wheaturs["sourceDivision"] = From_divison
+            df_wheaturs["destinationDivision"] = To_divison
             
             for i in dest_wheaturs_inline.keys():
                 for j in range(len(df_wheaturs["DestinationRailHead"])):
@@ -3460,6 +3774,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_wheatfaq:
                 for j in dest_wheatfaq:
@@ -3474,11 +3790,13 @@ def Daily_Planner():
                 for wheat in wheatfaq_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
 
             for i in range(len(From)):
                 for wheat in wheatfaq_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
 
             for i in range(len(To)):
                 found_state = False
@@ -3491,6 +3809,20 @@ def Daily_Planner():
                     for wheat in wheatfaq_dest_inline:
                         if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
                             To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatfaq_dest:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_divison.append(wheat["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheatfaq_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_divison.append(wheat["destinationDivision"])
                             found_state = True
                             break 
 
@@ -3516,6 +3848,8 @@ def Daily_Planner():
             df_wheatfaq["Commodity"] = commodity
             df_wheatfaq["Rakes"] = values
             df_wheatfaq["Flag"]= Flag
+            df_wheatfaq["sourceDivision"] = From_divison
+            df_wheatfaq["destinationDivision"] = To_divison
             
             for i in dest_wheatfaq_inline.keys():
                 for j in range(len(df_wheatfaq["DestinationRailHead"])):
@@ -3535,6 +3869,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_wheatrra:
                 for j in dest_wheatrra:
@@ -3549,11 +3885,13 @@ def Daily_Planner():
                 for wheat in wheatrra_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
 
             for i in range(len(From)):
                 for wheat in wheatrra_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -3566,6 +3904,20 @@ def Daily_Planner():
                     for wheat in wheatrra_dest_inline:
                         if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
                             To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
+                            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatrra_dest:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_divison.append(wheat["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheatrra_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_divison.append(wheat["destinationDivision"])
                             found_state = True
                             break 
 
@@ -3591,6 +3943,8 @@ def Daily_Planner():
             df_wheatrra["Commodity"] = commodity
             df_wheatrra["Rakes"] = values
             df_wheatrra["Flag"] = Flag
+            df_wheatrra["sourceDivision"] = From_divison
+            df_wheatrra["destinationDivision"] = To_divison
             
             for i in dest_wheatrra_inline.keys():
                 for j in range(len(df_wheatrra["DestinationRailHead"])):
@@ -3610,6 +3964,8 @@ def Daily_Planner():
             From_state = []
             To_state = []
             Flag = []
+            From_divison = []
+            To_divison = []
             
             for i in source_frk_rra:
                 for j in dest_frk_rra:
@@ -3624,11 +3980,13 @@ def Daily_Planner():
                 for wheat in frk_rra_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
 
             for i in range(len(From)):
                 for wheat in frk_rra_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
+                        From_divison.append(wheat["sourceDivision"])
             
             for i in range(len(To)):
                 found_state = False
@@ -3641,6 +3999,20 @@ def Daily_Planner():
                     for wheat in frk_rra_dest_inline:
                         if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
                             To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in frk_rra_dest:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_divison.append(wheat["destinationDivision"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in frk_rra_dest_inline:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_divison.append(wheat["destinationDivision"])
                             found_state = True
                             break 
 
@@ -3666,6 +4038,8 @@ def Daily_Planner():
             df_frk_rra["Commodity"] = commodity
             df_frk_rra["Rakes"] = values
             df_frk_rra["Flag"] = Flag
+            df_frk_rra["sourceDivision"] = From_divison
+            df_frk_rra["destinationDivision"] = To_divison
             
             for i in dest_frk_rra_inline.keys():
                 for j in range(len(df_frk_rra["DestinationRailHead"])):
