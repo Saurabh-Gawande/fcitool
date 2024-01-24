@@ -1562,7 +1562,8 @@ function Daily_Planner() {
       ]);
     }
   };
-
+  // console.log(JSON.parse(Total_result));\
+  console.log(Total_result);
   const uploadFile = async () => {
     const workbook = XLSX.utils.book_new();
     Object.entries(Total_result).forEach(([column, data]) => {
@@ -1670,6 +1671,7 @@ function Daily_Planner() {
                 Value: 1,
                 Commodity: item.commodity,
                 sourceDivision: item.sourceDivision,
+                inlineSourceDivision: item.inlineSourceDivision,
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -1686,6 +1688,7 @@ function Daily_Planner() {
                 Value: 1,
                 Commodity: item.commodity,
                 destinationDivision: item.destinationDivision,
+                inlineDestinationDivision: item.inlineDestinationDivision,
               })
             );
             setDeficitInline(updatedDeficitInline);
