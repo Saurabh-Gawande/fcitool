@@ -9,8 +9,10 @@ import config from "../../config";
 function Monthly_Solution() {
   const ProjectIp = config.serverUrl;
   const [fileSelected, setFileSelected] = useState(false);
-  const [importedFile, setImportedFile] = useState(null);
+  const [importedFile1, setImportedFile1] = useState(null);
+  const [importedFile2, setImportedFile2] = useState(null);
   const [TEFD, set_TEFD] = useState("");
+  const [type, set_type] = useState("");
   const [solutionSolved, setSolutionSolved] = useState(false);
   const [Relevant_result, set_Relevant_Result] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,45 +35,94 @@ function Monthly_Solution() {
 
   const ImportData = () => {
     fetch(
-      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool"
+      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
     )
       .then((res) => res.blob())
       .then(async (blob) => {
         const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
-        setImportedFile(excelFile);
+        setImportedFile1(excelFile);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+
+    fetch(
+      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward"
+    )
+      .then((res) => res.blob())
+      .then(async (blob) => {
+        const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        setImportedFile2(excelFile);
+        console.log(excelFile);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    set_type("Imported");
   };
 
   useEffect(() => {
-    if (importedFile) {
+    if (importedFile1) {
       const uploadFile = async () => {
         try {
-          const formData = new FormData();
-          formData.append("uploadFile", importedFile);
+          const formData1 = new FormData();
+          formData1.append("uploadFile1", importedFile1);
 
-          const response = await fetch(ProjectIp + "/upload_Monthly_File", {
-            method: "POST",
-            credentials: "include",
-            body: formData,
-          });
+          const response1 = await fetch(
+            ProjectIp + "/Import_Monthly_File_Invard",
+            {
+              method: "POST",
+              credentials: "include",
+              body: formData1,
+            }
+          );
 
-          if (!response.ok) {
+          if (!response1.ok) {
+            throw new Error("Network response was not ok");
+          }
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          alert(
+            "An error occurred during file upload. Please try again later."
+          );
+        }
+      };
+      uploadFile();
+    }
+  }, [importedFile1]);
+
+  useEffect(() => {
+    if (importedFile2) {
+      const uploadFile = async () => {
+        try {
+          const formData2 = new FormData();
+          formData2.append("uploadFile2", importedFile2);
+
+          const response2 = await fetch(
+            ProjectIp + "/Import_Monthly_File_Outward",
+            {
+              method: "POST",
+              credentials: "include",
+              body: formData2,
+            }
+          );
+
+          if (!response2.ok) {
             throw new Error("Network response was not ok");
           }
 
-          const jsonResponse = await response.json();
+          const jsonResponse2 = await response2.json();
 
-          if (jsonResponse.status === 1) {
+          if (jsonResponse2.status === 1) {
             document.getElementById("console_").style.display = "block";
             document.getElementById("console_").innerHTML +=
-              "File Imported Successfully " + "<br/><br/>";
+              "Data imported successfully" + "<br/><br/>";
 
-            alert("File Uploaded");
+            alert("Data imported successfully");
           } else {
             alert("Error uploading file");
           }
@@ -84,7 +135,7 @@ function Monthly_Solution() {
       };
       uploadFile();
     }
-  }, [importedFile]);
+  }, [importedFile2]);
 
   const handleUploadConfig = async () => {
     if (!fileSelected) {
@@ -92,6 +143,7 @@ function Monthly_Solution() {
       return;
     }
     try {
+      set_type("Uploaded");
       const formData = new FormData();
       formData.append("uploadFile", fileSelected);
 
@@ -124,12 +176,13 @@ function Monthly_Solution() {
 
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
-    if (isLoading) return; // Prevent additional clicks while loading
+    if (isLoading) return;
     setIsLoading(true);
     document.getElementById("console_").style.display = "block";
     document.getElementById("console_").innerHTML += "Processing..." + "<br/>";
     const payload = {
       TEFD: TEFD,
+      type: type,
     };
 
     try {
@@ -177,21 +230,21 @@ function Monthly_Solution() {
       });
   };
 
-  const viewGrid = () => {
-    setShowMessage(true);
+  // const viewGrid = () => {
+  //   setShowMessage(true);
 
-    setBajra(JSON.parse(Relevant_result?.Bajra ?? 0));
-    setJowar(JSON.parse(Relevant_result?.Jowar ?? 0));
-    setMaize(JSON.parse(Relevant_result?.Maize ?? 0));
-    setMisc1(JSON.parse(Relevant_result?.Misc1 ?? 0));
-    setMisc2(JSON.parse(Relevant_result?.Misc2 ?? 0));
-    setRRA(JSON.parse(Relevant_result?.RRA ?? 0));
-    setRagi(JSON.parse(Relevant_result?.Ragi ?? 0));
-    setWheat_faq(JSON.parse(Relevant_result?.Wheat_faq ?? 0));
-    setWheat_urs(JSON.parse(Relevant_result?.Wheat_urs ?? 0));
-    setFrk_br(JSON.parse(Relevant_result?.frk_br ?? 0));
-    setFrk_rra(JSON.parse(Relevant_result?.frk_rra ?? 0));
-  };
+  //   setBajra(JSON.parse(Relevant_result?.Bajra ?? 0));
+  //   setJowar(JSON.parse(Relevant_result?.Jowar ?? 0));
+  //   setMaize(JSON.parse(Relevant_result?.Maize ?? 0));
+  //   setMisc1(JSON.parse(Relevant_result?.Misc1 ?? 0));
+  //   setMisc2(JSON.parse(Relevant_result?.Misc2 ?? 0));
+  //   setRRA(JSON.parse(Relevant_result?.RRA ?? 0));
+  //   setRagi(JSON.parse(Relevant_result?.Ragi ?? 0));
+  //   setWheat_faq(JSON.parse(Relevant_result?.Wheat_faq ?? 0));
+  //   setWheat_urs(JSON.parse(Relevant_result?.Wheat_urs ?? 0));
+  //   setFrk_br(JSON.parse(Relevant_result?.frk_br ?? 0));
+  //   setFrk_rra(JSON.parse(Relevant_result?.frk_rra ?? 0));
+  // };
 
   const exportToExcel2 = async () => {
     if (Relevant_result === null) {
@@ -214,7 +267,7 @@ function Monthly_Solution() {
       saveAs(excelBlob, "Monthly_Movement_results.xlsx");
     }
   };
-  console.log(Relevant_result);
+
   return (
     <div
       className="page-container"
@@ -426,8 +479,7 @@ function Monthly_Solution() {
                         <i className="fa fa-bars"></i> Download Railhead To
                         Railhead Detailed Plan
                       </button>
-                      {/* <br />
-                      <br /> */}
+
                       <button
                         style={{ color: "black", marginLeft: "15px" }}
                         className="btn btn-success dropdown-toggle"

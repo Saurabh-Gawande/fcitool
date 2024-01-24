@@ -1526,8 +1526,24 @@ function Daily_Planner() {
         combinedData.push(...data);
       });
 
-      const worksheet = XLSX.utils.json_to_sheet(combinedData, {
-        header: Object.keys(combinedData[0]),
+      const selectedColumns = [
+        "SourceRailHead",
+        "SourceState",
+        "DestinationRailHead",
+        "DestinationState",
+        "Commodity",
+        "Rakes",
+      ];
+      const filteredData = combinedData.map((row) => {
+        const filteredRow = {};
+        selectedColumns.forEach((column) => {
+          filteredRow[column] = row[column];
+        });
+        return filteredRow;
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(filteredData, {
+        header: selectedColumns,
       });
       XLSX.utils.book_append_sheet(workbook, worksheet, "RH_RH_tags");
 
@@ -1626,6 +1642,7 @@ function Daily_Planner() {
               origin_state: item.sourceState,
               Value: item.value,
               Commodity: item.commodity,
+              // sourceDivision: item.sourceDivision,
             }));
             setSurplus(updatedSurplus);
           }
@@ -1637,6 +1654,7 @@ function Daily_Planner() {
               origin_state: item.destinationState,
               Value: item.value,
               Commodity: item.commodity,
+              // destinationDivision: item.destinationDivision,
             }));
             setDeficit(updatedDeficit);
           }
