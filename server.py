@@ -2303,6 +2303,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Wheat")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
             
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
@@ -2430,6 +2435,11 @@ def Daily_Planner():
                     To_state_rra.append(dest_state)
                     commodity.append("RRA")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_rra["SourceRailHead"] = From
             df_rra["SourceState"] = From_state_rra
@@ -2553,6 +2563,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Coarse Grains")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_CoarseGrain["SourceRailHead"] = From
             df_CoarseGrain["SourceState"] = From_state
@@ -2676,6 +2691,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("FRK RRA")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_frkrra["SourceRailHead"] = From
             df_frkrra["SourceState"] = From_state
@@ -2800,6 +2820,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("FRK BR")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_frkbr["SourceRailHead"] = From
             df_frkbr["SourceState"] = From_state
@@ -2924,6 +2949,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Wheat+FRK")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_frk["SourceRailHead"] = From
             df_frk["SourceState"] = From_state
@@ -3048,6 +3078,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("FRK+CGR")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_frkcgr["SourceRailHead"] = From
             df_frkcgr["SourceState"] = From_state
@@ -3172,6 +3207,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Wheat+CGR")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_wcgr["SourceRailHead"] = From 
             df_wcgr["SourceState"] = From_state
@@ -3292,6 +3332,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("RRC")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_rrc["SourceRailHead"] = From
             df_rrc["SourceState"] = From_state
@@ -3411,6 +3456,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Ragi")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_ragi["SourceRailHead"] = From
             df_ragi["SourceState"] = From_state
@@ -3530,6 +3580,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Jowar")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_jowar["SourceRailHead"] = From
             df_jowar["SourceState"] = From_state
@@ -3649,6 +3704,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Bajra")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_bajra["SourceRailHead"] = From
             df_bajra["SourceState"] = From_state
@@ -3768,6 +3828,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Maize")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_maize["SourceRailHead"] = From
             df_maize["SourceState"] = From_state
@@ -3887,6 +3952,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Misc1")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_misc1["SourceRailHead"] = From
             df_misc1["SourceState"] = From_state
@@ -4006,6 +4076,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Misc2")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_misc2["SourceRailHead"] = From
             df_misc2["SourceState"] = From_state
@@ -4125,6 +4200,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Wheat(URS)")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_wheaturs["SourceRailHead"] = From
             df_wheaturs["SourceState"] = From_state
@@ -4244,6 +4324,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Wheat(FAQ)")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_wheatfaq["SourceRailHead"] = From
             df_wheatfaq["SourceState"] = From_state
@@ -4363,6 +4448,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("Wheat+RRA")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_wheatrra["SourceRailHead"] = From
             df_wheatrra["SourceState"] = From_state
@@ -4482,6 +4572,11 @@ def Daily_Planner():
                     To_state.append(dest_state)
                     commodity.append("FRK+RRA")
                     values.append(val)
+                    Flag.append(region)
+                    From_divison.append("")
+                    To_divison.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
 
             df_frk_rra["SourceRailHead"] = From
             df_frk_rra["SourceState"] = From_state

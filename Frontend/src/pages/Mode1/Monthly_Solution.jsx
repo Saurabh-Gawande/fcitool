@@ -230,6 +230,15 @@ function Monthly_Solution() {
       });
   };
 
+  const ExportPlan = () => {
+    fetch(
+      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner",
+      {
+        method: "POST",
+        body: JSON.stringify({ name: "saurabh" }),
+      }
+    ).then((response) => response.json());
+  };
   // const viewGrid = () => {
   //   setShowMessage(true);
 
@@ -483,7 +492,7 @@ function Monthly_Solution() {
                       <button
                         style={{ color: "black", marginLeft: "15px" }}
                         className="btn btn-success dropdown-toggle"
-                        // onClick={viewGrid}
+                        onClick={ExportPlan}
                       >
                         <i className="fa fa-bars"></i>
                         Export plan
