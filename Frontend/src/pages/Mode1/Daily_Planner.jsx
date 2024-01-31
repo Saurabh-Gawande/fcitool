@@ -46,12 +46,7 @@ function Daily_Planner() {
   const [deficitInlineCommodity, setDeficitInlineCommodity] = useState();
 
   const ProjectIp = config.serverUrl;
-  const [block_data, setBlockdata] = useState([]);
   const [fixed_data, setFixeddata] = useState([]);
-  const [selectedOption, setSelectedOption] = useState("default");
-  const [selectedOption2, setSelectedOption2] = useState("default");
-  const [subOption1, setSubOption1] = useState("");
-  const [subOption2, setSubOption2] = useState("");
   const [selectedOption_fixed, setSelectedOption_fixed] = useState("default");
   const [subOptions_fixed, setSubOptions_fixed] = useState([]);
   const [selectedOption2_fixed, setSelectedOption2_fixed] = useState("default");
@@ -59,20 +54,15 @@ function Daily_Planner() {
   const [subOption1_fixed, setSubOption1_fixed] = useState("");
   const [subOption2_fixed, setSubOption2_fixed] = useState("");
   const [commodity_fixed, setCommodity_fixed] = useState("");
-  const [TEFD, set_TEFD] = useState("");
+  const [TEFD, set_TEFD] = useState(null);
   const [TEFDdata, set_TEFDdata] = useState();
   const [solutionSolved, setSolutionSolved] = useState(false);
   const [Total_result, set_Total_Result] = useState();
   const [Relevant_result, set_Relevant_Result] = useState(null);
-  const [excelData, setExcelData] = useState({});
-  const [activeSheetName, setActiveSheetName] = useState(null);
-  const [updateExcel, setUpdateExcel] = useState(false);
-  const [updateExcel2, setUpdateExcel2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [riceData, setRiceData] = useState(false);
   const [wheatData, setWheatData] = useState(false);
-  const [downloadMessage, setDownloadMessage] = useState(false);
   const [progress, setProgress] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [coarseGrain, setCoarseGrain] = useState(false);
@@ -140,6 +130,21 @@ function Daily_Planner() {
   const [showModal, setShowModal] = useState(false);
   const [modalValue, setModalValue] = useState("");
 
+  const regionValue = sessionStorage.getItem("region");
+
+  let updatedRegion;
+
+  if (
+    regionValue === "Punjab" ||
+    regionValue === "Haryana" ||
+    regionValue === "Uttarakhand"
+  ) {
+    updatedRegion = "ExNorth";
+  } else {
+    updatedRegion = regionValue;
+  }
+  console.log(updatedRegion);
+
   const closeModal = () => {
     setShowModal(false);
   };
@@ -163,12 +168,12 @@ function Daily_Planner() {
           setRailheadData(data);
         });
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during Fetching railhead:", error);
     }
   }, []);
 
   useEffect(() => {
-    const fetchTftdData = async () => {
+    const fetchTefdData = async () => {
       try {
         const response = await fetch(
           `https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=${TEFD}`
@@ -179,12 +184,26 @@ function Daily_Planner() {
         }
         const result = await response.json();
         set_TEFDdata(result);
+        try {
+          if (TEFD === null) {
+            return;
+          }
+          fetch(ProjectIp + "/rail_cost_matraix", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              credentials: "include",
+            },
+            body: JSON.stringify({ TEFDdata: result }),
+          });
+        } catch (error) {
+          console.error("file is not created for TEFD", error);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
-    fetchTftdData();
+    fetchTefdData();
   }, [TEFD]);
 
   const processSheetData = (workbook, sheetIndices) => {
@@ -478,12 +497,6 @@ function Daily_Planner() {
       setModalValue("Please select a file before uploading.");
       setShowModal(true);
     }
-  };
-
-  const handleCellChange = (sheetName, rowIndex, columnIndex, newValue) => {
-    const updatedData = { ...excelData };
-    updatedData[sheetName][rowIndex][columnIndex] = newValue;
-    setExcelData(updatedData);
   };
 
   const riceOrigin = surplus.filter((item) => item.Commodity === "RRA");
@@ -907,7 +920,6 @@ function Daily_Planner() {
   const handleSolve = async () => {
     setShowMessage(false);
     setSolutionSolved(false);
-    setDownloadMessage(false);
     if (
       riceOriginvalue < riceDestinationValue ||
       wheatOriginValue < wheatDestinationValue ||
@@ -1148,11 +1160,6 @@ function Daily_Planner() {
 
     const payload = {
       TEFD: TEFD,
-      origin_state: selectedOption, //blocking state1
-      org_rhcode: subOption1, //blocking railhead1
-      destination_state: selectedOption2, //blocking state2
-      dest_rhcode: subOption2, //blocking state2
-      block_data: block_data, //blocking all data
       confirmed_data: fixed_data, // fixing all data
 
       rice_origin: riceOrigin, // rice origin data
@@ -1251,7 +1258,7 @@ function Daily_Planner() {
       frk_rra_InlineDestination: frk_rra_InlineDestination,
 
       TEFDdata: TEFDdata,
-      region: sessionStorage.getItem("region"),
+      region: updatedRegion,
     };
 
     try {
@@ -1273,14 +1280,12 @@ function Daily_Planner() {
       console.error("Error sending inputs:", error);
     } finally {
       setIsLoading(false);
-      setDownloadMessage(true);
     }
     document.getElementById("toggle").checked = false;
     setProgress((prev) => [...prev, "Successfully generated daily plan"]);
   };
-  console.log(Total_result);
+
   const fetchReservationId_Total_result = () => {
-    // var form = new FormData();
     fetch(ProjectIp + "/read_Daily_Planner_S1", {
       method: "GET",
       credentials: "include",
@@ -1408,15 +1413,9 @@ function Daily_Planner() {
     }
   };
 
-  const handleDeleteRow = (e) => {
-    let block_data_ = block_data.filter((item) => item["id"] !== e);
-    setBlockdata(block_data_);
-    setDownloadMessage(false);
-  };
   const handleDeleteRow_fixed = (e) => {
     let fixed_data_ = fixed_data.filter((item) => item["id"] !== e);
     setFixeddata(fixed_data_);
-    setDownloadMessage(false);
   };
 
   const addConstraint_fixed = (e) => {
@@ -1562,8 +1561,7 @@ function Daily_Planner() {
       ]);
     }
   };
-  // console.log(JSON.parse(Total_result));\
-  console.log(Total_result);
+
   const uploadFile = async () => {
     const workbook = XLSX.utils.book_new();
     Object.entries(Total_result).forEach(([column, data]) => {
@@ -1803,51 +1801,6 @@ function Daily_Planner() {
                   </button>
                 </div>
                 <br />
-                {activeSheetName &&
-                  (updateExcel || updateExcel2) &&
-                  excelData[activeSheetName] && (
-                    <div style={{ marginLeft: "20%" }}>
-                      <select
-                        onChange={(e) => setActiveSheetName(e.target.value)}
-                        value={activeSheetName}
-                        style={{
-                          margin: "10px",
-                          padding: "3px",
-                          marginLeft: "20%",
-                        }}
-                      >
-                        {Object.keys(excelData).map((sheetName) => (
-                          <option key={sheetName} value={sheetName}>
-                            {sheetName}
-                          </option>
-                        ))}
-                      </select>
-                      <table>
-                        <tbody>
-                          {excelData[activeSheetName].map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                              {row.map((cellValue, columnIndex) => (
-                                <td key={columnIndex}>
-                                  <input
-                                    type="text"
-                                    value={cellValue}
-                                    onChange={(e) =>
-                                      handleCellChange(
-                                        activeSheetName,
-                                        rowIndex,
-                                        columnIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
                 <div
                   style={{
                     display: "flex",

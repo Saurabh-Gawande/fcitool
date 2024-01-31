@@ -28,11 +28,13 @@ function Monthly_Solution() {
   const [Wheat_urs, setWheat_urs] = useState(false);
   const [frk_br, setFrk_br] = useState(false);
   const [frk_rra, setFrk_rra] = useState(false);
+  const [excelfiledata, setExcelFileData] = useState();
 
   const handleFileChange = (e) => {
     setFileSelected(e.target.files[0]);
   };
 
+  //for import the data 
   const ImportData = () => {
     fetch(
       "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
@@ -57,7 +59,6 @@ function Monthly_Solution() {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
         setImportedFile2(excelFile);
-        console.log(excelFile);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -137,6 +138,7 @@ function Monthly_Solution() {
     }
   }, [importedFile2]);
 
+  // for uploading the data to the server
   const handleUploadConfig = async () => {
     if (!fileSelected) {
       alert("Please Select The File First");
@@ -174,6 +176,7 @@ function Monthly_Solution() {
     }
   };
 
+  // function for solving the monthly planner problem
   const handleSolve = async () => {
     document.getElementById("toggle").checked = true;
     if (isLoading) return;
@@ -222,7 +225,6 @@ function Monthly_Solution() {
       .then((response) => response.json())
       .then((data) => {
         const fetched_Relevant_Result = data;
-        console.log(data);
         set_Relevant_Result(fetched_Relevant_Result);
       })
       .catch((error) => {
@@ -231,29 +233,32 @@ function Monthly_Solution() {
   };
 
   const ExportPlan = () => {
+    const relevantData = Relevant_result["RH_RH_tag"];
     fetch(
       "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner",
       {
         method: "POST",
-        body: JSON.stringify({ name: "saurabh" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: relevantData,
       }
-    ).then((response) => response.json());
+    )
+      .then((response) => {
+        if (response.ok) {
+          window.alert("File uploaded successfully!");
+          // setProgress((prev) => [
+          //   ...prev,
+          //   "Successfully exported the plan to portal",
+          // ]);
+        } else {
+          window.alert("File upload failed. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("An error occurred during file upload:", error);
+      });
   };
-  // const viewGrid = () => {
-  //   setShowMessage(true);
-
-  //   setBajra(JSON.parse(Relevant_result?.Bajra ?? 0));
-  //   setJowar(JSON.parse(Relevant_result?.Jowar ?? 0));
-  //   setMaize(JSON.parse(Relevant_result?.Maize ?? 0));
-  //   setMisc1(JSON.parse(Relevant_result?.Misc1 ?? 0));
-  //   setMisc2(JSON.parse(Relevant_result?.Misc2 ?? 0));
-  //   setRRA(JSON.parse(Relevant_result?.RRA ?? 0));
-  //   setRagi(JSON.parse(Relevant_result?.Ragi ?? 0));
-  //   setWheat_faq(JSON.parse(Relevant_result?.Wheat_faq ?? 0));
-  //   setWheat_urs(JSON.parse(Relevant_result?.Wheat_urs ?? 0));
-  //   setFrk_br(JSON.parse(Relevant_result?.frk_br ?? 0));
-  //   setFrk_rra(JSON.parse(Relevant_result?.frk_rra ?? 0));
-  // };
 
   const exportToExcel2 = async () => {
     if (Relevant_result === null) {

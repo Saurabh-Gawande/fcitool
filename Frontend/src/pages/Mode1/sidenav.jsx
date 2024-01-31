@@ -2,10 +2,10 @@ import React from "react";
 
 function Sidenav() {
   return (
-    <div className="page-sidebar">
+    <div className="page-sidebar" style={{ width: "14vw" }}>
       <ul className="x-navigation" style={{ backgroundColor: "#ebab44b0" }}>
         <li className="xn-logo">
-          <a href="#">Admin Only</a>
+          <a href="#">{sessionStorage.getItem("region")}</a>
           <a href="#" className="x-navigation-control"></a>
         </li>
         <li className="xn-profile">
@@ -29,7 +29,6 @@ function Sidenav() {
           </a>
         </li>
         {sessionStorage.getItem("region") === "admin" ||
-        sessionStorage.getItem("region") === "admin" ||
         sessionStorage.getItem("region") === "H.P." ? (
           <li>
             <a href="/Monthly_Solution">
