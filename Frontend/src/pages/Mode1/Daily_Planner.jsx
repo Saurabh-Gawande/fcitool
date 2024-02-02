@@ -130,21 +130,6 @@ function Daily_Planner() {
   const [showModal, setShowModal] = useState(false);
   const [modalValue, setModalValue] = useState("");
 
-  const regionValue = sessionStorage.getItem("region");
-
-  let updatedRegion;
-
-  if (
-    regionValue === "Punjab" ||
-    regionValue === "Haryana" ||
-    regionValue === "Uttarakhand"
-  ) {
-    updatedRegion = "ExNorth";
-  } else {
-    updatedRegion = regionValue;
-  }
-  console.log(updatedRegion);
-
   const closeModal = () => {
     setShowModal(false);
   };
@@ -1258,7 +1243,7 @@ function Daily_Planner() {
       frk_rra_InlineDestination: frk_rra_InlineDestination,
 
       TEFDdata: TEFDdata,
-      region: updatedRegion,
+      region: sessionStorage.getItem("region"),
     };
 
     try {

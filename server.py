@@ -2249,6 +2249,7 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wheat[(i, j)].value())
                         commodity.append("Wheat")
+                        Flag.append(region)
 
             # for adding origin state and devision  
             for i in range(len(From)):
@@ -2256,7 +2257,6 @@ def Daily_Planner():
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
-                        Flag.append("ExNorth" if wheat["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else wheat["origin_state"])
 
             # for adding origin state and devision from inline
             for i in range(len(From)):
@@ -2387,13 +2387,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_rra[(i, j)].value())
                         commodity.append("RRA")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for rra in rra_origin:
                     if From[i] == rra["origin_railhead"]:
                         From_state_rra.append(rra["origin_state"])
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
-                        Flag.append("ExNorth" if rra["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else rra["origin_state"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline:
@@ -2516,13 +2516,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_coarseGrain[(i,j)].value())
                         commodity.append("Coarse Grains")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin:
                     if From[i] == coarseGrain["origin_railhead"]:
                         From_state.append(coarseGrain["origin_state"])
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
-                        Flag.append("ExNorth" if coarseGrain["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else coarseGrain["origin_state"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline:
@@ -2644,13 +2644,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_frkrra[(i,j)].value())
                         commodity.append("FRK RRA")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin:
                     if From[i] == frkrra["origin_railhead"]:
                         From_state.append(frkrra["origin_state"])
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
-                        Flag.append("ExNorth" if frkrra["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else frkrra["origin_state"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline:
@@ -2772,13 +2772,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_frk_br[(i,j)].value())
                         commodity.append("FRK BR")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin:
                     if From[i] == frkbr["origin_railhead"]:
                         From_state.append(frkbr["origin_state"])
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
-                        Flag.append("ExNorth" if frkbr["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else frkbr["origin_state"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline:
@@ -2901,13 +2901,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_frk[(i,j)].value())
                         commodity.append("Wheat+FRK")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for frk in frk_origin:
                     if From[i] == frk["origin_railhead"]:
                         From_state.append(frk["origin_state"])
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
-                        Flag.append("ExNorth" if frk["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else frk["origin_state"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline:
@@ -3030,13 +3030,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_frkcgr[(i,j)].value())
                         commodity.append("FRK+CGR")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin:
                     if From[i] == frkcgr["origin_railhead"]:
                         From_state.append(frkcgr["origin_state"])
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
-                        Flag.append("ExNorth" if frkcgr["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else frkcgr["origin_state"])
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin_inline:
@@ -3159,13 +3159,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wcgr[(i,j)].value())
                         commodity.append("Wheat+CGR")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin:
                     if From[i] == wcgr["origin_railhead"]:
                         From_state.append(wcgr["origin_state"])
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
-                        Flag.append("ExNorth" if wcgr["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else wcgr["origin_state"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline:
@@ -3287,13 +3287,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_rrc[(i,j)].value())
                         commodity.append("RRC")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for rrc in rrc_origin:
                     if From[i] == rrc["origin_railhead"]:
                         From_state.append(rrc["origin_state"])
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
-                        Flag.append("ExNorth" if rrc["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else rrc["origin_state"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline:
@@ -3411,13 +3411,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_ragi[(i,j)].value())
                         commodity.append("Ragi")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for ragi in ragi_origin:
                     if From[i] == ragi["origin_railhead"]:
                         From_state.append(ragi["origin_state"])
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
-                        Flag.append("ExNorth" if ragi["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else ragi["origin_state"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline:
@@ -3535,13 +3535,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_jowar[(i,j)].value())
                         commodity.append("Jowar")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for jowar in jowar_origin:
                     if From[i] == jowar["origin_railhead"]:
                         From_state.append(jowar["origin_state"])
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
-                        Flag.append("ExNorth" if jowar["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else jowar["origin_state"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline:
@@ -3659,13 +3659,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_bajra[(i,j)].value())
                         commodity.append("Bajra")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for bajra in bajra_origin:
                     if From[i] == bajra["origin_railhead"]:
                         From_state.append(bajra["origin_state"])
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
-                        Flag.append("ExNorth" if bajra["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else bajra["origin_state"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline:
@@ -3783,13 +3783,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_maize[(i,j)].value())
                         commodity.append("Maize")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for maize in maize_origin:
                     if From[i] == maize["origin_railhead"]:
                         From_state.append(maize["origin_state"])
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
-                        Flag.append("ExNorth" if maize["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else maize["origin_state"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline:
@@ -3907,13 +3907,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_misc1[(i,j)].value())
                         commodity.append("Misc1")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for misc1 in misc1_origin:
                     if From[i] == misc1["origin_railhead"]:
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
-                        Flag.append("ExNorth" if misc1["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else misc1["origin_state"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline:
@@ -4031,6 +4031,7 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_misc2[(i,j)].value())
                         commodity.append("Misc2")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for misc2 in misc2_origin:
@@ -4038,7 +4039,6 @@ def Daily_Planner():
                         From_state.append(misc2["origin_state"])
                         From_division.append(misc2["sourceDivision"])
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
-                        Flag.append("ExNorth" if misc2["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else misc2["origin_state"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline:
@@ -4157,13 +4157,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wheaturs[(i,j)].value())
                         commodity.append("Wheat(URS)")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for wheat in wheaturs_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
-                        Flag.append("ExNorth" if wheat["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else wheat["origin_state"])
 
             for i in range(len(From)):
                 for wheat in wheaturs_origin_inline:
@@ -4281,13 +4281,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wheatfaq[(i,j)].value())
                         commodity.append("Wheat(FAQ)")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for wheat in wheatfaq_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
-                        Flag.append("ExNorth" if wheat["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else wheat["origin_state"])
 
             for i in range(len(From)):
                 for wheat in wheatfaq_origin_inline:
@@ -4405,13 +4405,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_wheatrra[(i,j)].value())
                         commodity.append("Wheat+RRA")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for wheat in wheatrra_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
-                        Flag.append("ExNorth" if wheat["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else wheat["origin_state"])
 
             for i in range(len(From)):
                 for wheat in wheatrra_origin_inline:
@@ -4529,13 +4529,13 @@ def Daily_Planner():
                         To.append(j)
                         values.append(x_ij_frk_rra[(i,j)].value())
                         commodity.append("FRK+RRA")
+                        Flag.append(region)
 
             for i in range(len(From)):
                 for wheat in frk_rra_origin:
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
-                        Flag.append("ExNorth" if wheat["origin_state"] in ["Punjab", "Haryana", "Uttarakhand"] else wheat["origin_state"])
 
             for i in range(len(From)):
                 for wheat in frk_rra_origin_inline:

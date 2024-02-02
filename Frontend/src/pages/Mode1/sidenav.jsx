@@ -2,7 +2,7 @@ import React from "react";
 
 function Sidenav() {
   return (
-    <div className="page-sidebar" style={{ width: "14vw" }}>
+    <div className="page-sidebar">
       <ul className="x-navigation" style={{ backgroundColor: "#ebab44b0" }}>
         <li className="xn-logo">
           <a href="#">{sessionStorage.getItem("region")}</a>
