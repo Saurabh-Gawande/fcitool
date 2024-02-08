@@ -1354,7 +1354,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_wheat.keys():
+                for j in dest_wheat.keys() or dest_wheat_inline.keys():
                     List_A.append(i)
                     List_A.append(source_wheat_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1391,7 +1391,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_rra.keys():
+                for j in dest_rra.keys() or dest_rra_inline.keys():
                     List_A.append(i)
                     List_A.append(source_rra_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1406,7 +1406,6 @@ def Daily_Planner():
                 source_rra[i] = 1
             
             list_dest_rra = []
-
             for i in L10:
                 Value = {}
                 List_A = []
@@ -1428,7 +1427,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_coarseGrain.keys():
+                for j in dest_coarseGrain.keys() or dest_coarseGrain_inline.keys():
                     List_A.append(i)
                     List_A.append(source_coarseGrain_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1465,7 +1464,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_frkrra.keys():
+                for j in dest_frkrra.keys() or dest_frkrra_inline.keys():
                     List_A.append(i)
                     List_A.append(source_frkrra_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1502,7 +1501,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_frkbr.keys():
+                for j in dest_frkbr.keys() or dest_frkbr_inline.keys():
                     List_A.append(i)
                     List_A.append(source_frkbr_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1539,7 +1538,8 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_frk.keys():
+                print(dest_frk_inline)
+                for j in dest_frk.keys() or dest_frk_inline.keys():
                     List_A.append(i)
                     List_A.append(source_frk_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1576,7 +1576,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_wcgr.keys():
+                for j in dest_wcgr.keys() or dest_wcgr_inline.keys():
                     List_A.append(i)
                     List_A.append(source_wcgr_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1613,7 +1613,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_frkcgr.keys():
+                for j in dest_frkcgr.keys() or dest_frkcgr_inline.keys():
                     List_A.append(i)
                     List_A.append(source_frkcgr_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1651,7 +1651,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_rrc.keys():
+                for j in dest_rrc.keys() or dest_rrc_inline.keys():
                     List_A.append(i)
                     List_A.append(source_rrc_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1689,7 +1689,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_ragi.keys():
+                for j in dest_ragi.keys() or dest_ragi_inline.keys():
                     List_A.append(i)
                     List_A.append(source_ragi_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1727,7 +1727,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_jowar.keys():
+                for j in dest_jowar.keys() or dest_jowar_inline.keys():
                     List_A.append(i)
                     List_A.append(source_jowar_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1765,7 +1765,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_bajra.keys():
+                for j in dest_bajra.keys() or dest_bajra_inline.keys():
                     List_A.append(i)
                     List_A.append(source_bajra_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1803,7 +1803,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_maize.keys():
+                for j in dest_maize.keys() or dest_maize_inline.keys():
                     List_A.append(i)
                     List_A.append(source_maize_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1841,7 +1841,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_misc1.keys():
+                for j in dest_misc1.keys() or dest_misc1_inline.keys():
                     List_A.append(i)
                     List_A.append(source_misc1_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1879,7 +1879,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_misc2.keys():
+                for j in dest_misc2.keys() or dest_misc2_inline.keys():
                     List_A.append(i)
                     List_A.append(source_misc2_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1917,7 +1917,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_wheaturs.keys():
+                for j in dest_wheaturs.keys() or dest_wheaturs_inline.keys():
                     List_A.append(i)
                     List_A.append(source_wheaturs_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1955,7 +1955,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_wheatfaq.keys():
+                for j in dest_wheatfaq.keys() or dest_wheatfaq_inline.keys():
                     List_A.append(i)
                     List_A.append(source_wheatfaq_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -1993,7 +1993,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_wheatrra.keys():
+                for j in dest_wheatrra.keys() or dest_wheatrra_inline.keys():
                     List_A.append(i)
                     List_A.append(source_wheatrra_inline[i])
                     List_B.append(distance_rh[i][j])
@@ -2031,7 +2031,7 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                for j in dest_frk_rra.keys():
+                for j in dest_frk_rra.keys() or dest_frk_rra_inline.keys():
                     List_A.append(i)
                     List_A.append(source_frk_rra_inline[i])
                     List_B.append(distance_rh[i][j])
