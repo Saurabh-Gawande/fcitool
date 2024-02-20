@@ -58,6 +58,12 @@ function Sidenav() {
           </a>
         </li>
         <li>
+          <a href="/Reset_Password">
+            <span className="fa fa-train"></span>{" "}
+            <span className="xn-text">Change Password</span>
+          </a>
+        </li>
+        <li>
           <a href="/logout">
             <span className="fa fa-sign-out"></span>{" "}
             <span className="xn-text">Logout</span>

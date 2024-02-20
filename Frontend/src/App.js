@@ -12,6 +12,7 @@ import Alternate_Railhead_M02 from './pages/Mode2/Alternate_Railhead_M02';
 import Daily_Scheduler_M02 from './pages/Mode2/Daily_Scheduler_M02';
 import Daily_Planner from './pages/Mode1/Daily_Planner';
 import UserState from './Context/userState';
+import Reset_Password from './pages/Mode1/Reset_Password';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
     <Route path='/Alternate_Railhead_M02' element={<Alternate_Railhead_M02 />} />
     <Route path='/Daily_Scheduler_M02' element={<Daily_Scheduler_M02 />} />
     <Route path='/Daily_Planner' element={<Daily_Planner />} />
+    <Route path='/Reset_Password' element={<Reset_Password />} />
     </Routes>
   </UserState>
   </BrowserRouter>

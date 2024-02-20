@@ -333,7 +333,7 @@ function Template() {
           </li>
           <li className="active">Template</li>
         </ul>
-        <div className="page-content-wrap">
+        <div className="page-content-wrap" style={{height: "90vh"}}>
           <p style={{ marginLeft: "30px", fontWeight: "bold" }}>
             <h3>
               <strong>Download Updated Template</strong>
