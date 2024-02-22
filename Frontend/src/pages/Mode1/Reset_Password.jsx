@@ -8,6 +8,7 @@ function Reset_Password() {
     username: "",
     oldpassword: "",
     newpassword: "",
+    cnewpassword: "",
   });
 
   function onchange(e) {
@@ -25,11 +26,17 @@ function Reset_Password() {
   };
 
   const handleSubmit = () => {
-    const { username, oldpassword, newpassword } = credential;
+    const { username, oldpassword, newpassword, cnewpassword } = credential;
 
     if (newpassword.length < 6) {
       setShowModal(true);
       setModalValue("New password must be at least 6 characters long.");
+      return;
+    }
+
+    if (newpassword !== cnewpassword) {
+      setShowModal(true);
+      setModalValue("New Password does not match");
       return;
     }
 
@@ -139,7 +146,7 @@ function Reset_Password() {
                                     required
                                   />
                                   <label className="form-label" htmlFor="name">
-                                    username
+                                    Username
                                   </label>
                                 </div>
                               </div>
@@ -161,7 +168,7 @@ function Reset_Password() {
                                     required
                                   />
                                   <label className="form-label" htmlFor="email">
-                                    your old password
+                                    Old Password
                                   </label>
                                 </div>
                               </div>
@@ -183,7 +190,32 @@ function Reset_Password() {
                                     className="form-label"
                                     htmlFor="password"
                                   >
-                                    your new password
+                                    New Password
+                                  </label>
+                                </div>
+                              </div>
+
+                              <div className="d-flex flex-row align-items-center mb-4">
+                                <i
+                                  class="fa fa-check-square"
+                                  aria-hidden="true"
+                                ></i>
+                                <div className="form-outline flex-fill mb-0">
+                                  <input
+                                    type="password"
+                                    className="form-control "
+                                    id="cpassword"
+                                    value={credential.cnewpassword}
+                                    name="cnewpassword"
+                                    placeholder="Enter your new Password"
+                                    onChange={onchange}
+                                    required
+                                  />
+                                  <label
+                                    className="form-label"
+                                    htmlFor="password"
+                                  >
+                                    Confirm New Password
                                   </label>
                                 </div>
                               </div>
