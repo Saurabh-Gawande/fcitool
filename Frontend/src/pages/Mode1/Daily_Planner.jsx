@@ -99,6 +99,8 @@ function Daily_Planner() {
   const [wheatFaqOriginValue, setWheatFaqOriginValue] = useState();
   const [misc1OriginValue, setMisc1OriginValue] = useState();
   const [misc2OriginValue, setMisc2OriginValue] = useState();
+  const [misc3OriginValue, setMisc3OriginValue] = useState();
+  const [misc4OriginValue, setMisc4OriginValue] = useState();
   const [frk_rraOriginValue, setfrk_rraOriginValue] = useState();
   const [wheat_rraOriginValue, setwheat_rraOriginValue] = useState();
 
@@ -111,6 +113,8 @@ function Daily_Planner() {
   const [wheatFaqDestinationValue, setWheatFaqDestinationValue] = useState();
   const [misc1DestinationValue, setMisc1DestinationValue] = useState();
   const [misc2DestinationValue, setMisc2DestinationValue] = useState();
+  const [misc3DestinationValue, setMisc3DestinationValue] = useState();
+  const [misc4DestinationValue, setMisc4DestinationValue] = useState();
   const [frk_rraDestinationValue, setfrk_rraDestinationValue] = useState();
   const [wheat_rraDestinationValue, setwheat_rraDestinationValue] = useState();
 
@@ -126,6 +130,8 @@ function Daily_Planner() {
   const [wheat_faq, setWheat_faq] = useState(false);
   const [misc1, setMisc1] = useState(false);
   const [misc2, setMisc2] = useState(false);
+  const [misc3, setMisc3] = useState(false);
+  const [misc4, setMisc4] = useState(false);
   const [disableAfterImport, setDisableAfterImport] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalValue, setModalValue] = useState("");
@@ -699,6 +705,28 @@ function Daily_Planner() {
     (item) => item.Commodity === "FRK+RRA"
   );
 
+  const misc3_Origin = surplus.filter((item) => item.Commodity === "Misc3");
+  const misc3_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Misc3"
+  );
+  const misc3_Destination = deficit.filter(
+    (item) => item.Commodity === "Misc3"
+  );
+  const misc3_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "Misc3"
+  );
+
+  const misc4_Origin = surplus.filter((item) => item.Commodity === "Misc4");
+  const misc4_InlineOrigin = surplusInline.filter(
+    (item) => item.Commodity === "Misc4"
+  );
+  const misc4_Destination = deficit.filter(
+    (item) => item.Commodity === "Misc4"
+  );
+  const misc4_InlineDestination = deficitInline.filter(
+    (item) => item.Commodity === "Misc4"
+  );
+
   useEffect(() => {
     setRiceOriginValue(
       riceOrigin.reduce((total, item) => total + item.Value, 0) +
@@ -899,6 +927,26 @@ function Daily_Planner() {
     setfrk_rraDestinationValue(
       frk_rra_Destination.reduce((total, item) => total + item.Value, 0) +
         frk_rra_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc3OriginValue(
+      misc3_Origin.reduce((total, item) => total + item.Value, 0) +
+        misc3_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc3DestinationValue(
+      misc3_Destination.reduce((total, item) => total + item.Value, 0) +
+        misc3_InlineDestination.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc4OriginValue(
+      misc4_Origin.reduce((total, item) => total + item.Value, 0) +
+        misc4_InlineOrigin.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc4DestinationValue(
+      misc4_Destination.reduce((total, item) => total + item.Value, 0) +
+        misc4_InlineDestination.reduce((total, item) => total + item.Value, 0)
     );
   });
 
@@ -1242,6 +1290,16 @@ function Daily_Planner() {
       frk_rra_InlineOrigin: frk_rra_InlineOrigin,
       frk_rra_InlineDestination: frk_rra_InlineDestination,
 
+      misc3_Origin: misc3_Origin,
+      misc3_InlineOrigin: misc3_InlineOrigin,
+      misc3_Destination: misc3_Destination,
+      misc3_InlineDestination: misc3_InlineDestination,
+
+      misc4_Origin: misc4_Origin,
+      misc4_InlineOrigin: misc4_InlineOrigin,
+      misc4_Destination: misc4_Destination,
+      misc4_InlineDestination: misc4_InlineDestination,
+
       TEFDdata: TEFDdata,
       region: sessionStorage.getItem("region"),
     };
@@ -1461,6 +1519,8 @@ function Daily_Planner() {
     const misc2 = JSON.parse(Total_result?.misc2 ?? 0);
     const wheat_rra = JSON.parse(Total_result?.wheat_rra ?? 0);
     const frkPlusRRA = JSON.parse(Total_result?.frkPlusRRA ?? 0);
+    const misc3 = JSON.parse(Total_result?.misc3 ?? 0);
+    const misc4 = JSON.parse(Total_result?.misc4 ?? 0);
     setRiceData(riceData);
     setWheatData(wheatData);
     setCoarseGrain(coarseGrainData);
@@ -1480,6 +1540,8 @@ function Daily_Planner() {
     setMisc2(misc2);
     setWheat_rra(wheat_rra);
     setFkrPlusRRA(frkPlusRRA);
+    setMisc3(misc3);
+    setMisc4(misc4);
   };
 
   const exportToExcel1 = () => {
@@ -1776,7 +1838,7 @@ function Daily_Planner() {
             <div className="row">
               <div className="col-md-12">
                 <br />
-                <div style={{ marginLeft: "35%" }}>
+                {/* <div style={{ marginLeft: "35%" }}>
                   <input type="file" onChange={handleFileChange_} />
                   <button
                     style={{ margin: "5px", padding: "5px" }}
@@ -1784,7 +1846,7 @@ function Daily_Planner() {
                   >
                     Upload
                   </button>
-                </div>
+                </div> */}
                 <br />
                 <div
                   style={{
@@ -1947,6 +2009,8 @@ function Daily_Planner() {
                             <option value="Maize">Maize</option>
                             <option value="Misc1">Misc1</option>
                             <option value="Misc2">Misc2</option>
+                            <option value="Misc3">Misc3</option>
+                            <option value="Misc4">Misc4</option>
                           </select>
                         </div>
                         <div
@@ -1964,7 +2028,7 @@ function Daily_Planner() {
                             value={surplusValue}
                           />
                         </div>
-                        <button
+                        {/* <button
                           onClick={AddSurplus}
                           disabled={
                             surplusState === undefined ||
@@ -1982,7 +2046,7 @@ function Daily_Planner() {
                           }}
                         >
                           Add
-                        </button>
+                        </button> */}
                       </div>
                       <br />
                       {surplus.length !== 0 && (
@@ -1994,7 +2058,7 @@ function Daily_Planner() {
                               <th>State</th>
                               <th>Value</th>
                               <th>Commodity</th>
-                              <th>Delete</th>
+                              {/* <th>Delete</th> */}
                             </tr>
                           </thead>
                           <tbody>
@@ -2005,7 +2069,7 @@ function Daily_Planner() {
                                 <td>{row.origin_state}</td>
                                 <td>{row.Value}</td>
                                 <td>{row.Commodity}</td>
-                                <td>
+                                {/* <td>
                                   <span
                                     style={{
                                       cursor: "pointer",
@@ -2022,7 +2086,7 @@ function Daily_Planner() {
                                   >
                                     &times;
                                   </span>
-                                </td>
+                                </td> */}
                               </tr>
                             ))}
                           </tbody>
@@ -2139,6 +2203,8 @@ function Daily_Planner() {
                             <option value="Maize">Maize</option>
                             <option value="Misc1">Misc1</option>
                             <option value="Misc2">Misc2</option>
+                            <option value="Misc3">Misc3</option>
+                            <option value="Misc4">Misc4</option>
                           </select>
                         </div>
                         <div
@@ -2156,7 +2222,7 @@ function Daily_Planner() {
                             value={deficitValue}
                           />
                         </div>
-                        <button
+                        {/* <button
                           onClick={AddDeficit}
                           style={{
                             backgroundColor: "orange",
@@ -2174,7 +2240,7 @@ function Daily_Planner() {
                           }
                         >
                           Add
-                        </button>
+                        </button> */}
                       </div>
                       <br />
                       {deficit.length !== 0 && (
@@ -2186,7 +2252,7 @@ function Daily_Planner() {
                               <th>State</th>
                               <th>Value</th>
                               <th>Commodity</th>
-                              <th>Delete</th>
+                              {/* <th>Delete</th> */}
                             </tr>
                           </thead>
                           <tbody>
@@ -2197,7 +2263,7 @@ function Daily_Planner() {
                                 <td>{row.origin_state}</td>
                                 <td>{row.Value}</td>
                                 <td>{row.Commodity}</td>
-                                <td>
+                                {/* <td>
                                   <span
                                     style={{
                                       cursor: "pointer",
@@ -2211,7 +2277,7 @@ function Daily_Planner() {
                                   >
                                     &times;
                                   </span>
-                                </td>
+                                </td> */}
                               </tr>
                             ))}
                           </tbody>
@@ -2375,9 +2441,11 @@ function Daily_Planner() {
                             <option value="Maize">Maize</option>
                             <option value="Misc1">Misc1</option>
                             <option value="Misc2">Misc2</option>
+                            <option value="Misc3">Misc3</option>
+                            <option value="Misc4">Misc4</option>
                           </select>
                         </div>
-                        <button
+                        {/* <button
                           onClick={AddSurplusInline}
                           style={{
                             backgroundColor: "orange",
@@ -2399,7 +2467,7 @@ function Daily_Planner() {
                           }
                         >
                           Add
-                        </button>
+                        </button> */}
                       </div>
                       {surplusInline.length > 0 && (
                         <table style={{ width: "65vw", marginTop: 20 }}>
@@ -2412,7 +2480,7 @@ function Daily_Planner() {
                               <th>State</th>
                               <th>Value</th>
                               <th>Commodity</th>
-                              <th>Delete</th>
+                              {/* <th>Delete</th> */}
                             </tr>
                           </thead>
                           <tbody>
@@ -2426,7 +2494,7 @@ function Daily_Planner() {
                                   <td>{row.destination_state}</td>
                                   <td>{row.Value}</td>
                                   <td>{row.Commodity}</td>
-                                  <td>
+                                  {/* <td>
                                     <span
                                       style={{
                                         cursor: "pointer",
@@ -2443,7 +2511,7 @@ function Daily_Planner() {
                                     >
                                       &times;
                                     </span>
-                                  </td>
+                                  </td> */}
                                 </tr>
                               );
                             })}
@@ -2610,9 +2678,11 @@ function Daily_Planner() {
                             <option value="Maize">Maize</option>
                             <option value="Misc1">Misc1</option>
                             <option value="Misc2">Misc2</option>
+                            <option value="Misc3">Misc3</option>
+                            <option value="Misc4">Misc4</option>
                           </select>
                         </div>
-                        <button
+                        {/* <button
                           onClick={AddDeficitInline}
                           style={{
                             backgroundColor: "orange",
@@ -2634,7 +2704,7 @@ function Daily_Planner() {
                           }
                         >
                           Add
-                        </button>
+                        </button> */}
                       </div>
                       {deficitInline.length > 0 && (
                         <table style={{ width: "65vw", marginTop: 20 }}>
@@ -2647,7 +2717,7 @@ function Daily_Planner() {
                               <th>State</th>
                               <th>Value</th>
                               <th>Commodity</th>
-                              <th>Delete</th>
+                              {/* <th>Delete</th> */}
                             </tr>
                           </thead>
                           <tbody>
@@ -2661,7 +2731,7 @@ function Daily_Planner() {
                                   <td>{row.destination_state}</td>
                                   <td>{row.Value}</td>
                                   <td>{row.Commodity}</td>
-                                  <td>
+                                  {/* <td>
                                     <span
                                       style={{
                                         cursor: "pointer",
@@ -2678,7 +2748,7 @@ function Daily_Planner() {
                                     >
                                       &times;
                                     </span>
-                                  </td>
+                                  </td> */}
                                 </tr>
                               );
                             })}
@@ -2835,6 +2905,8 @@ function Daily_Planner() {
                         <option value="Maize">Maize</option>
                         <option value="Misc1">Misc1</option>
                         <option value="Misc2">Misc2</option>
+                        <option value="Misc3">Misc3</option>
+                        <option value="Misc4">Misc4</option>
                       </select>
 
                       <div>
@@ -4741,6 +4813,192 @@ function Daily_Planner() {
                             )}
                           </div>
                         )}
+
+                        {showMessage && (
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
+                            {misc3 !== null && misc3.length > 0 ? (
+                              <div>
+                                <div>Misc3</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        Rakes
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {misc3.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
+
+                        {showMessage && (
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
+                            {misc4 !== null && misc4.length > 0 ? (
+                              <div>
+                                <div>Misc4</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "350px",
+                                        }}
+                                      >
+                                        Rakes
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {misc4.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -5138,6 +5396,44 @@ function Daily_Planner() {
                   </p>
                   <p>/</p>
                   <p>{frk_rraDestinationValue}</p>
+                </div>
+              ) : null}
+
+              {misc3OriginValue > 0 || misc3DestinationValue > 0 ? (
+                <div style={{ display: "flex" }}>
+                  Misc 3 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc3DestinationValue > misc3OriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc3OriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{misc3DestinationValue}</p>
+                </div>
+              ) : null}
+
+              {misc4OriginValue > 0 || misc4DestinationValue > 0 ? (
+                <div style={{ display: "flex" }}>
+                  Misc 4 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc4DestinationValue > misc4OriginValue
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc4OriginValue}
+                  </p>
+                  <p>/</p>
+                  <p>{misc4DestinationValue}</p>
                 </div>
               ) : null}
 
