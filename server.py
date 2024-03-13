@@ -2398,8 +2398,6 @@ def Daily_Planner():
             To_division = []
             From_inlineDivision = []
             To_inlineDivision = []
-            # sourceId = []
-            # destinationId = []
             # Cost = []
 
             for i in source_wheat:
@@ -2417,14 +2415,12 @@ def Daily_Planner():
                     if From[i] == wheat["origin_railhead"]:
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
-                        # sourceId.append(wheat["sourceId"])
 
             # for adding origin state and devision from inline
             for i in range(len(From)):
                 for wheat in wheat_origin_inline:
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
-                        # sourceId.append(wheat["sourceId"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
 
             # To add inline division 
@@ -2444,7 +2440,6 @@ def Daily_Planner():
                 for wheat in wheat_dest_inline:
                     if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
-                        # destinationId.append(wheat["destinationId"])
                         found_division = True
                         break
                 if not found_division:
@@ -2456,7 +2451,6 @@ def Daily_Planner():
                 for wheat in wheat_dest:
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
-                        # destinationId.append(wheat["destinationId"])
                         found_state = True
                         break
                 if not found_state:
@@ -2517,8 +2511,7 @@ def Daily_Planner():
             df_wheat["DestinationDivision"] = To_division
             df_wheat["InlineSourceDivision"] = From_inlineDivision
             df_wheat["InlineDestinationDivision"] = To_inlineDivision
-            # df_wheat["sourceId"] = sourceId
-            # df_wheat["destinationId"] = destinationId
+           
             
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline.keys():
