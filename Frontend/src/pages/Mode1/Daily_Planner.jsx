@@ -1608,7 +1608,7 @@ function Daily_Planner() {
       ]);
     }
   };
-
+console.log(Total_result)
   const uploadFile = async () => {
     const workbook = XLSX.utils.book_new();
     Object.entries(Total_result).forEach(([column, data]) => {
@@ -1684,11 +1684,12 @@ function Daily_Planner() {
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
-              origin_railhead: item.sourceRailHead,
+              origin_railhead: item.sourceRailHead.split("_")[0],
               origin_state: item.sourceState,
               Value: item.value,
               Commodity: item.commodity,
               sourceDivision: item.sourceDivision,
+              // sourceId : item.sourceId
             }));
             setSurplus(updatedSurplus);
           }
@@ -1696,11 +1697,12 @@ function Daily_Planner() {
           if (data.destinationResponse) {
             const updatedDeficit = data.destinationResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
-              origin_railhead: item.destinationRailHead,
+              origin_railhead: item.destinationRailHead.split("_")[0],
               origin_state: item.destinationState,
               Value: item.value,
               Commodity: item.commodity,
               destinationDivision: item.destinationDivision,
+              // destinationId: item.destinationId
             }));
             setDeficit(updatedDeficit);
           }
@@ -1709,14 +1711,15 @@ function Daily_Planner() {
             const updatedSurplusInline = data.inlineSourceResponse.map(
               (item) => ({
                 Sno: Math.floor(Math.random() * 500) + 1,
-                origin_railhead: item.sourceRailHead,
+                origin_railhead: item.sourceRailHead.split("_")[0],
                 origin_state: item.sourceState,
-                destination_railhead: item.sourceInlineRailHead,
+                destination_railhead: item.sourceInlineRailHead.split("_")[0],
                 destination_state: item.sourceState,
                 Value: 1,
                 Commodity: item.commodity,
                 sourceDivision: item.sourceDivision,
                 inlineSourceDivision: item.inlineSourceDivision,
+                // sourceId: item.sourceId
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -1726,14 +1729,16 @@ function Daily_Planner() {
             const updatedDeficitInline = data.inlineDestinationResponse.map(
               (item) => ({
                 Sno: Math.floor(Math.random() * 500) + 1,
-                origin_railhead: item.destinationRailHead,
+                origin_railhead: item.destinationRailHead.split("_")[0],
                 origin_state: item.destinationState,
-                destination_railhead: item.destinationInlineRailHead,
+                destination_railhead:
+                  item.destinationInlineRailHead.split("_")[0],
                 destination_state: item.destinationState,
                 Value: 1,
                 Commodity: item.commodity,
                 destinationDivision: item.destinationDivision,
                 inlineDestinationDivision: item.inlineDestinationDivision,
+                // destinationId : item.destinationId
               })
             );
             setDeficitInline(updatedDeficitInline);
@@ -1826,7 +1831,7 @@ function Daily_Planner() {
                   <button
                     onClick={closeModal}
                     type="button"
-                    class="btn btn-danger"
+                    className="btn btn-danger"
                   >
                     Close
                   </button>

@@ -22,12 +22,12 @@ function Sidenav() {
             </div>
           </div>
         </li>
-        <li>
+        {/* <li>
           <a href="/home">
             <span className="fa fa-home"></span>{" "}
             <span className="xn-text">Home</span>
           </a>
-        </li>
+        </li> */}
         {sessionStorage.getItem("region") === "admin" ||
         sessionStorage.getItem("region") === "H.P." ? (
           <li>
@@ -45,30 +45,30 @@ function Sidenav() {
             </a>
           </li>
         )}
-        <li>
+        {/* <li>
           <a href="/Alternate_Railhead">
             <span className="fa fa-desktop"></span>{" "}
             <span className="xn-text">Alternate Railhead</span>
           </a>
-        </li>
-        <li>
+        </li> */}
+        {/* <li>
           <a href="/Template">
             <span className="fa fa-train"></span>{" "}
             <span className="xn-text">Templates</span>
           </a>
-        </li>
+        </li> */}
         <li>
           <a href="/Reset_Password">
             <span className="fa fa-train"></span>{" "}
             <span className="xn-text">Change Password</span>
           </a>
         </li>
-        <li>
+        {/* <li>
           <a href="/logout">
             <span className="fa fa-sign-out"></span>{" "}
             <span className="xn-text">Logout</span>
           </a>
-        </li>
+        </li> */}
       </ul>
     </div>
   );
