@@ -50,7 +50,7 @@ function Reset_Password() {
     }
 
     fetch(
-      `https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/UpdateToolUserPassword?username=${username}&oldpassword=${oldpassword}&newpassword=${newpassword}`,
+      `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/UpdateToolUserPassword?username=${username}&oldpassword=${oldpassword}&newpassword=${newpassword}`,
       {
         method: "POST",
       }

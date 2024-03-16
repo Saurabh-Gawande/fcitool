@@ -37,7 +37,7 @@ function Monthly_Solution() {
   //for import the data 
   const ImportData = () => {
     fetch(
-      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
+      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
     )
       .then((res) => res.blob())
       .then(async (blob) => {
@@ -51,7 +51,7 @@ function Monthly_Solution() {
       });
 
     fetch(
-      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward"
+      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward"
     )
       .then((res) => res.blob())
       .then(async (blob) => {
@@ -235,7 +235,7 @@ function Monthly_Solution() {
   const ExportPlan = () => {
     const relevantData = Relevant_result["RH_RH_tag"];
     fetch(
-      "https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner",
+      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner",
       {
         method: "POST",
         headers: {

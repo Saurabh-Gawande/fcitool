@@ -148,7 +148,7 @@ function Daily_Planner() {
   useEffect(() => {
     try {
       fetch(
-        `https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/RailHeadCodesforTool`
+        `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/RailHeadCodesforTool`
       )
         .then((response) => {
           if (response.status === 200) {
@@ -167,7 +167,7 @@ function Daily_Planner() {
     const fetchTefdData = async () => {
       try {
         const response = await fetch(
-          `https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=${TEFD}`
+          `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=${TEFD}`
         );
 
         if (!response.ok) {
@@ -1633,7 +1633,7 @@ console.log(Total_result)
       formData.append("file", excelfiledata, fileName);
 
       fetch(
-        "https://rakeplanner.callippus.co.uk/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile",
+        "https://test.rakeplanner.callippus.co.uk/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile",
         {
           method: "POST",
           body: formData,
@@ -1659,7 +1659,7 @@ console.log(Total_result)
   const fetchData = (event) => {
     event.preventDefault();
     fetch(
-      `https://rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region=${sessionStorage.getItem(
+      `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region=${sessionStorage.getItem(
         "region"
       )}`
     )
