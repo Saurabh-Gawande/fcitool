@@ -958,7 +958,7 @@ def Daily_Planner():
                 confirmed_org_state.append(confirmed_data[i]["origin_state"])
                 confirmed_dest_state.append(confirmed_data[i]["destination_state"])
                 confirmed_railhead_value.append(confirmed_data[i]["value"])
-                confirmed_railhead_commodities.append(confirmed_data[i]["commodity"])
+                confirmed_railhead_commodities.append(confirmed_data[i]["Commodity"])
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             matrices_data1 = pd.ExcelFile("Input\\Cost_matrix.xlsx")
             

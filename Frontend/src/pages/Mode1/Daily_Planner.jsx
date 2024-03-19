@@ -47,6 +47,7 @@ function Daily_Planner() {
 
   const ProjectIp = config.serverUrl;
   const [fixed_data, setFixeddata] = useState([]);
+  const [blocked_data, setBlockeddata] = useState([]);
   const [selectedOption_fixed, setSelectedOption_fixed] = useState("default");
   const [subOptions_fixed, setSubOptions_fixed] = useState([]);
   const [selectedOption2_fixed, setSelectedOption2_fixed] = useState("default");
@@ -1482,7 +1483,7 @@ function Daily_Planner() {
           origin_railhead: subOption1_fixed,
           destination_state: selectedOption2_fixed,
           destination_railhead: subOption2_fixed,
-          commodity: commodity_fixed,
+          Commodity: commodity_fixed,
           value: 1,
           id: Date.now(),
         },
@@ -1608,7 +1609,7 @@ function Daily_Planner() {
       ]);
     }
   };
-console.log(Total_result)
+
   const uploadFile = async () => {
     const workbook = XLSX.utils.book_new();
     Object.entries(Total_result).forEach(([column, data]) => {
@@ -1682,6 +1683,7 @@ console.log(Total_result)
           );
           setShowModal(true);
           if (data.sourceResponse) {
+            console.log(data);
             const updatedSurplus = data.sourceResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
               origin_railhead: item.sourceRailHead.split("_")[0],
@@ -1742,6 +1744,18 @@ console.log(Total_result)
               })
             );
             setDeficitInline(updatedDeficitInline);
+          }
+
+          if (data.routeFixing) {
+            const updatedRouteFixing = data.routeFixing.map((item) => ({
+              origin_railhead: item.sourceRailHead,
+              origin_state: item.sourceState,
+              destination_railhead: item.destinationRailHead,
+              destination_state: item.destinationState,
+              Commodity: item.sourceCommodity,
+              value: 1,
+            }));
+            setFixeddata(updatedRouteFixing);
           }
 
           setDisableAfterImport(true);
@@ -2965,7 +2979,7 @@ console.log(Total_result)
                                 <td>{item.origin_railhead}</td>
                                 <td>{item.destination_state}</td>
                                 <td>{item.destination_railhead}</td>
-                                <td>{item.commodity}</td>
+                                <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
                                 <td>
                                   <span
@@ -2988,7 +3002,148 @@ console.log(Total_result)
                         </table>
                       </div>
                     )}
-                    <br />
+
+                    <p style={{ margin: 2, padding: 0, marginTop: 2 }}>
+                      <strong
+                        style={{
+                          color: "#9d0921",
+                          fontSize: "20px",
+                          marginLeft: "15px",
+                        }}
+                      >
+                        For Blocking:
+                      </strong>
+                    </p>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "65vw",
+                      }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          Select Origin State
+                        </strong>
+                        <select
+                          style={{
+                            width: "200px",
+                            padding: "5px",
+                            marginRight: 25,
+                          }}
+                          onChange={handleSurplusStateChange}
+                          value={surplusState}
+                        >
+                          <option value="">Select Railhead State</option>
+                          {railheadData && railheadData.response.length > 0 ? (
+                            [
+                              ...new Set(
+                                railheadData.response.map(
+                                  (region) => region.region
+                                )
+                              ),
+                            ].map((region) => (
+                              <option key={region} value={region}>
+                                {region}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled>
+                              Loading...
+                            </option>
+                          )}
+                        </select>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          Select Origin Railhead
+                        </strong>
+                        <select
+                          style={{
+                            width: "200px",
+                            padding: "5px",
+                          }}
+                          onChange={(e) => setSurplusRailhead(e.target.value)}
+                          value={surplusRailhead}
+                        >
+                          <option value="">Select origin railhead</option>
+                          {totalSurplusRailhead.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          Select Commodity
+                        </strong>
+                        <select
+                          style={{ width: "170px", padding: "5px" }}
+                          value={surplusCommodity}
+                          onChange={(e) => {
+                            setSurplusCommodity(e.target.value);
+                          }}
+                        >
+                          <option value="">Select Commodity</option>
+                          <option value="RRA">RRA</option>
+                          <option value="Wheat">Wheat</option>
+                          <option value="Wheat(URS)">Wheat(URS)</option>
+                          <option value="Wheat(FAQ)">Wheat(FAQ)</option>
+                          <option value="Wheat+FRK">Wheat+FRK</option>
+                          <option value="Wheat+RRA">Wheat+RRA</option>
+                          <option value="FRK+RRA">FRK+RRA</option>
+                          <option value="FRK RRA">FRK RRA</option>
+                          <option value="FRK BR">FRK BR</option>
+                          <option value="Coarse Grains">Coarse Grains</option>
+                          <option value="Wheat+CGR">Wheat+CGR</option>
+                          <option value="FRK+CGR">FRK+CGR</option>
+                          <option value="RRC">RRC</option>
+                          <option value="Ragi">Ragi</option>
+                          <option value="Jowar">Jowar</option>
+                          <option value="Bajra">Bajra</option>
+                          <option value="Maize">Maize</option>
+                          <option value="Misc1">Misc1</option>
+                          <option value="Misc2">Misc2</option>
+                          <option value="Misc3">Misc3</option>
+                          <option value="Misc4">Misc4</option>
+                        </select>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          Enter Value:
+                        </strong>
+                        <input
+                          type="number"
+                          min={1}
+                          onChange={(e) =>
+                            setSurplusValue(parseInt(e.target.value))
+                          }
+                          value={surplusValue}
+                        />
+                      </div>
+                      {/* <button
+                          onClick={AddSurplus}
+                          disabled={
+                            surplusState === undefined ||
+                            surplusState === "default" ||
+                            surplusRailhead === undefined ||
+                            surplusRailhead === "" ||
+                            surplusCommodity === undefined ||
+                            surplusCommodity === "" ||
+                            disableAfterImport
+                          }
+                          style={{
+                            backgroundColor: "orange",
+                            width: 70,
+                            height: 40,
+                          }}
+                        >
+                          Add
+                        </button> */}
+                    </div>
+
                     <br />
                   </form>
 
