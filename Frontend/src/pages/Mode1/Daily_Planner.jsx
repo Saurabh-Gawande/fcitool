@@ -1195,6 +1195,7 @@ function Daily_Planner() {
     const payload = {
       TEFD: TEFD,
       confirmed_data: fixed_data, // fixing all data
+      blocked_data: blocked_data,
 
       rice_origin: riceOrigin, // rice origin data
       rice_destination: riceDestination, //rice destination data
@@ -1683,7 +1684,6 @@ function Daily_Planner() {
           );
           setShowModal(true);
           if (data.sourceResponse) {
-            console.log(data);
             const updatedSurplus = data.sourceResponse.map((item) => ({
               Sno: Math.floor(Math.random() * 500) + 1,
               origin_railhead: item.sourceRailHead.split("_")[0],
@@ -1691,7 +1691,7 @@ function Daily_Planner() {
               Value: item.value,
               Commodity: item.commodity,
               sourceDivision: item.sourceDivision,
-              // sourceId : item.sourceId
+              sourceId: item.sourceId,
             }));
             setSurplus(updatedSurplus);
           }
@@ -1704,7 +1704,7 @@ function Daily_Planner() {
               Value: item.value,
               Commodity: item.commodity,
               destinationDivision: item.destinationDivision,
-              // destinationId: item.destinationId
+              destinationId: item.destinationId,
             }));
             setDeficit(updatedDeficit);
           }
@@ -1721,7 +1721,7 @@ function Daily_Planner() {
                 Commodity: item.commodity,
                 sourceDivision: item.sourceDivision,
                 inlineSourceDivision: item.inlineSourceDivision,
-                // sourceId: item.sourceId
+                sourceId: item.sourceId,
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -1740,7 +1740,7 @@ function Daily_Planner() {
                 Commodity: item.commodity,
                 destinationDivision: item.destinationDivision,
                 inlineDestinationDivision: item.inlineDestinationDivision,
-                // destinationId : item.destinationId
+                destinationId: item.destinationId,
               })
             );
             setDeficitInline(updatedDeficitInline);
@@ -1756,6 +1756,18 @@ function Daily_Planner() {
               value: 1,
             }));
             setFixeddata(updatedRouteFixing);
+          }
+
+          if (data.routeBlocking) {
+            const updatedRouteBlocking = data.routeBlocking.map((item) => ({
+              origin_railhead: item.sourceRailHead,
+              origin_state: item.sourceState,
+              destination_railhead: item.destinationRailHead,
+              destination_state: item.destinationState,
+              Commodity: item.sourceCommodity,
+              value: 1,
+            }));
+            setBlockeddata(updatedRouteBlocking);
           }
 
           setDisableAfterImport(true);
@@ -3003,7 +3015,7 @@ function Daily_Planner() {
                       </div>
                     )}
 
-                    <p style={{ margin: 2, padding: 0, marginTop: 2 }}>
+                    <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
                       <strong
                         style={{
                           color: "#9d0921",
@@ -3143,7 +3155,65 @@ function Daily_Planner() {
                           Add
                         </button> */}
                     </div>
-
+                    <br />
+                    {blocked_data.length !== 0 && (
+                      <div>
+                        <table style={{ width: "65vw" }}>
+                          <thead>
+                            <tr style={{ margin: "auto" }}>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Origin State
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Origin Railhead
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Destination State
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Destination Railhead
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Commodity
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Value
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Delete
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {blocked_data.map((item) => (
+                              <tr key={item.id}>
+                                <td>{item.origin_state}</td>
+                                <td>{item.origin_railhead}</td>
+                                <td>{item.destination_state}</td>
+                                <td>{item.destination_railhead}</td>
+                                <td>{item.Commodity}</td>
+                                <td>{item.value}</td>
+                                <td>
+                                  <span
+                                    style={{
+                                      cursor: "pointer",
+                                      color: "#ff0000",
+                                      fontSize: "1.2rem",
+                                    }}
+                                    onClick={() =>
+                                      handleDeleteRow_fixed(item.id)
+                                    }
+                                    title="Delete"
+                                  >
+                                    &times;
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                     <br />
                   </form>
 
