@@ -491,241 +491,737 @@ function Daily_Planner() {
     }
   };
 
-  const riceOrigin = surplus.filter((item) => item.Commodity === "RRA");
-  const block_data2 = surplusInline.filter((item) => item.Commodity === "RRA");
+  const riceOrigin = surplus.filter(
+    (item) =>
+      item.Commodity === "RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
+  const block_data2 = surplusInline.filter(
+    (item) =>
+      item.Commodity === "RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
 
-  const riceDestination = deficit.filter((item) => item.Commodity === "RRA");
+  const riceDestination = deficit.filter(
+    (item) =>
+      item.Commodity === "RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const block_dataDest2 = deficitInline.filter(
-    (item) => item.Commodity === "RRA"
+    (item) =>
+      item.Commodity === "RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const wheatOrigin = surplus.filter((item) => item.Commodity === "Wheat");
+  const wheatOrigin = surplus.filter(
+    (item) =>
+      item.Commodity === "Wheat" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const block_dataWheat2 = surplusInline.filter(
-    (item) => item.Commodity === "Wheat"
+    (item) =>
+      item.Commodity === "Wheat" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const wheatDestination = deficit.filter((item) => item.Commodity === "Wheat");
+  const wheatDestination = deficit.filter(
+    (item) =>
+      item.Commodity === "Wheat" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
+
   const block_dataDestWheat2 = deficitInline.filter(
-    (item) => item.Commodity === "Wheat"
+    (item) =>
+      item.Commodity === "Wheat" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const coarseGrainOrigin = surplus.filter(
-    (item) => item.Commodity === "Coarse Grains"
+    (item) =>
+      item.Commodity === "Coarse Grains" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const coarseGrainInlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Coarse Grains"
+    (item) =>
+      item.Commodity === "Coarse Grains" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const coarseGrainDestination = deficit.filter(
-    (item) => item.Commodity === "Coarse Grains"
+    (item) =>
+      item.Commodity === "Coarse Grains" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const coarseGrainInlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Coarse Grains"
+    (item) =>
+      item.Commodity === "Coarse Grains" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const frkrraOrigin = surplus.filter((item) => item.Commodity === "FRK RRA");
+  const frkrraOrigin = surplus.filter(
+    (item) =>
+      item.Commodity === "FRK RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const frkrraInlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "FRK RRA"
+    (item) =>
+      item.Commodity === "FRK RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const frkrraDestination = deficit.filter(
-    (item) => item.Commodity === "FRK RRA"
+    (item) =>
+      item.Commodity === "FRK RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const frkrraInlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK RRA"
+    (item) =>
+      item.Commodity === "FRK RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const frkBr_Origin = surplus.filter((item) => item.Commodity === "FRK BR");
+  const frkBr_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "FRK BR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const frkBr_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "FRK BR"
+    (item) =>
+      item.Commodity === "FRK BR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const frkBr_Destination = deficit.filter(
-    (item) => item.Commodity === "FRK BR"
+    (item) =>
+      item.Commodity === "FRK BR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const frkBr_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK BR"
+    (item) =>
+      item.Commodity === "FRK BR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const frk_Origin = surplus.filter((item) => item.Commodity === "Wheat+FRK");
+  const frk_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Wheat+FRK" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const frk_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Wheat+FRK"
+    (item) =>
+      item.Commodity === "Wheat+FRK" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const frk_Destination = deficit.filter(
-    (item) => item.Commodity === "Wheat+FRK"
+    (item) =>
+      item.Commodity === "Wheat+FRK" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const frk_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Wheat+FRK"
+    (item) =>
+      item.Commodity === "Wheat+FRK" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const w_cgr_Origin = surplus.filter((item) => item.Commodity === "Wheat+CGR");
+  const w_cgr_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Wheat+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const w_cgr_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Wheat+CGR"
+    (item) =>
+      item.Commodity === "Wheat+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const w_cgr_Destination = deficit.filter(
-    (item) => item.Commodity === "Wheat+CGR"
+    (item) =>
+      item.Commodity === "Wheat+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const w_cgr_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Wheat+CGR"
+    (item) =>
+      item.Commodity === "Wheat+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const frk_cgr_Origin = surplus.filter((item) => item.Commodity === "FRK+CGR");
+  const frk_cgr_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "FRK+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const frk_cgr_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "FRK+CGR"
+    (item) =>
+      item.Commodity === "FRK+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const frk_cgr_Destination = deficit.filter(
-    (item) => item.Commodity === "FRK+CGR"
+    (item) =>
+      item.Commodity === "FRK+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const frk_cgr_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK+CGR"
+    (item) =>
+      item.Commodity === "FRK+CGR" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const rrc_Origin = surplus.filter((item) => item.Commodity === "RRC");
+  const rrc_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "RRC" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const rrc_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "RRC"
+    (item) =>
+      item.Commodity === "RRC" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
-  const rrc_Destination = deficit.filter((item) => item.Commodity === "RRC");
+  const rrc_Destination = deficit.filter(
+    (item) =>
+      item.Commodity === "RRC" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const rrc_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "RRC"
+    (item) =>
+      item.Commodity === "RRC" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const ragi_Origin = surplus.filter((item) => item.Commodity === "Ragi");
+  const ragi_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Ragi" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const ragi_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Ragi"
+    (item) =>
+      item.Commodity === "Ragi" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
-  const ragi_Destination = deficit.filter((item) => item.Commodity === "Ragi");
+  const ragi_Destination = deficit.filter(
+    (item) =>
+      item.Commodity === "Ragi" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const ragi_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Ragi"
+    (item) =>
+      item.Commodity === "Ragi" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const jowar_Origin = surplus.filter((item) => item.Commodity === "Jowar");
+  const jowar_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Jowar" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const jowar_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Jowar"
+    (item) =>
+      item.Commodity === "Jowar" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const jowar_Destination = deficit.filter(
-    (item) => item.Commodity === "Jowar"
+    (item) =>
+      item.Commodity === "Jowar" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const jowar_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Jowar"
+    (item) =>
+      item.Commodity === "Jowar" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const bajra_Origin = surplus.filter((item) => item.Commodity === "Bajra");
+  const bajra_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Bajra" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const bajra_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Bajra"
+    (item) =>
+      item.Commodity === "Bajra" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const bajra_Destination = deficit.filter(
-    (item) => item.Commodity === "Bajra"
+    (item) =>
+      item.Commodity === "Bajra" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const bajra_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Bajra"
+    (item) =>
+      item.Commodity === "Bajra" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const maize_Origin = surplus.filter((item) => item.Commodity === "Maize");
+  const maize_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Maize" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const maize_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Maize"
+    (item) =>
+      item.Commodity === "Maize" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const maize_Destination = deficit.filter(
-    (item) => item.Commodity === "Maize"
+    (item) =>
+      item.Commodity === "Maize" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const maize_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Maize"
+    (item) =>
+      item.Commodity === "Maize" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const misc1_Origin = surplus.filter((item) => item.Commodity === "Misc1");
+  const misc1_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Misc1" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const misc1_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Misc1"
+    (item) =>
+      item.Commodity === "Misc1" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc1_Destination = deficit.filter(
-    (item) => item.Commodity === "Misc1"
+    (item) =>
+      item.Commodity === "Misc1" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc1_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Misc1"
+    (item) =>
+      item.Commodity === "Misc1" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const misc2_Origin = surplus.filter((item) => item.Commodity === "Misc2");
+  const misc2_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Misc2" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const misc2_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Misc2"
+    (item) =>
+      item.Commodity === "Misc2" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc2_Destination = deficit.filter(
-    (item) => item.Commodity === "Misc2"
+    (item) =>
+      item.Commodity === "Misc2" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc2_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Misc2"
+    (item) =>
+      item.Commodity === "Misc2" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const wheaturs_Origin = surplus.filter(
-    (item) => item.Commodity === "Wheat(URS)"
+    (item) =>
+      item.Commodity === "Wheat(URS)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheaturs_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Wheat(URS)"
+    (item) =>
+      item.Commodity === "Wheat(URS)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheaturs_Destination = deficit.filter(
-    (item) => item.Commodity === "Wheat(URS)"
+    (item) =>
+      item.Commodity === "Wheat(URS)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheaturs_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Wheat(URS)"
+    (item) =>
+      item.Commodity === "Wheat(URS)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const wheatfaq_Origin = surplus.filter(
-    (item) => item.Commodity === "Wheat(FAQ)"
+    (item) =>
+      item.Commodity === "Wheat(FAQ)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheatfaq_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Wheat(FAQ)"
+    (item) =>
+      item.Commodity === "Wheat(FAQ)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheatfaq_Destination = deficit.filter(
-    (item) => item.Commodity === "Wheat(FAQ)"
+    (item) =>
+      item.Commodity === "Wheat(FAQ)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheatfaq_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Wheat(FAQ)"
+    (item) =>
+      item.Commodity === "Wheat(FAQ)" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
   const wheat_rra_Origin = surplus.filter(
-    (item) => item.Commodity === "Wheat+RRA"
+    (item) =>
+      item.Commodity === "Wheat+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheat_rra_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Wheat+RRA"
+    (item) =>
+      item.Commodity === "Wheat+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheat_rra_Destination = deficit.filter(
-    (item) => item.Commodity === "Wheat+RRA"
+    (item) =>
+      item.Commodity === "Wheat+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const wheat_rra_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Wheat+RRA"
+    (item) =>
+      item.Commodity === "Wheat+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const frk_rra_Origin = surplus.filter((item) => item.Commodity === "FRK+RRA");
+  const frk_rra_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "FRK+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const frk_rra_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "FRK+RRA"
+    (item) =>
+      item.Commodity === "FRK+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const frk_rra_Destination = deficit.filter(
-    (item) => item.Commodity === "FRK+RRA"
+    (item) =>
+      item.Commodity === "FRK+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const frk_rra_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "FRK+RRA"
+    (item) =>
+      item.Commodity === "FRK+RRA" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const misc3_Origin = surplus.filter((item) => item.Commodity === "Misc3");
+  const misc3_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Misc3" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const misc3_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Misc3"
+    (item) =>
+      item.Commodity === "Misc3" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc3_Destination = deficit.filter(
-    (item) => item.Commodity === "Misc3"
+    (item) =>
+      item.Commodity === "Misc3" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc3_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Misc3"
+    (item) =>
+      item.Commodity === "Misc3" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
 
-  const misc4_Origin = surplus.filter((item) => item.Commodity === "Misc4");
+  const misc4_Origin = surplus.filter(
+    (item) =>
+      item.Commodity === "Misc4" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
   const misc4_InlineOrigin = surplusInline.filter(
-    (item) => item.Commodity === "Misc4"
+    (item) =>
+      item.Commodity === "Misc4" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc4_Destination = deficit.filter(
-    (item) => item.Commodity === "Misc4"
+    (item) =>
+      item.Commodity === "Misc4" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
   );
   const misc4_InlineDestination = deficitInline.filter(
-    (item) => item.Commodity === "Misc4"
+    (item) =>
+      item.Commodity === "Misc4" &&
+      (item.rake === "42W/58W" || item.rake === "42W")
+  );
+
+  // for 58 wagon Rake
+  const riceOrigin1 = surplus.filter(
+    (item) => item.Commodity === "RRA" && item.rake === "58W"
+  );
+  const block_data21 = surplusInline.filter(
+    (item) => item.Commodity === "RRA" && item.rake === "58W"
+  );
+
+  const riceDestination1 = deficit.filter(
+    (item) => item.Commodity === "RRA" && item.rake === "58W"
+  );
+  const block_dataDest21 = deficitInline.filter(
+    (item) => item.Commodity === "RRA" && item.rake === "58W"
+  );
+
+  const wheatOrigin1 = surplus.filter(
+    (item) => item.Commodity === "Wheat" && item.rake === "58W"
+  );
+  const block_dataWheat21 = surplusInline.filter(
+    (item) => item.Commodity === "Wheat" && item.rake === "58W"
+  );
+
+  const wheatDestination1 = deficit.filter(
+    (item) => item.Commodity === "Wheat" && item.rake === "58W"
+  );
+
+  const block_dataDestWheat21 = deficitInline.filter(
+    (item) => item.Commodity === "Wheat" && item.rake === "58W"
+  );
+
+  const coarseGrainOrigin1 = surplus.filter(
+    (item) => item.Commodity === "Coarse Grains" && item.rake === "58W"
+  );
+  const coarseGrainInlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Coarse Grains" && item.rake === "58W"
+  );
+
+  const coarseGrainDestination1 = deficit.filter(
+    (item) => item.Commodity === "Coarse Grains" && item.rake === "58W"
+  );
+  const coarseGrainInlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Coarse Grains" && item.rake === "58W"
+  );
+
+  const frkrraOrigin1 = surplus.filter(
+    (item) => item.Commodity === "FRK RRA" && item.rake === "58W"
+  );
+  const frkrraInlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "FRK RRA" && item.rake === "58W"
+  );
+
+  const frkrraDestination1 = deficit.filter(
+    (item) => item.Commodity === "FRK RRA" && item.rake === "58W"
+  );
+  const frkrraInlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "FRK RRA" && item.rake === "58W"
+  );
+
+  const frkBr_Origin1 = surplus.filter(
+    (item) => item.Commodity === "FRK BR" && item.rake === "58W"
+  );
+  const frkBr_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "FRK BR" && item.rake === "58W"
+  );
+
+  const frkBr_Destination1 = deficit.filter(
+    (item) => item.Commodity === "FRK BR" && item.rake === "58W"
+  );
+  const frkBr_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "FRK BR" && item.rake === "58W"
+  );
+
+  const frk_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Wheat+FRK" && item.rake === "58W"
+  );
+  const frk_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Wheat+FRK" && item.rake === "58W"
+  );
+
+  const frk_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Wheat+FRK" && item.rake === "58W"
+  );
+  const frk_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Wheat+FRK" && item.rake === "58W"
+  );
+
+  const w_cgr_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Wheat+CGR" && item.rake === "58W"
+  );
+  const w_cgr_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Wheat+CGR" && item.rake === "58W"
+  );
+
+  const w_cgr_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Wheat+CGR" && item.rake === "58W"
+  );
+  const w_cgr_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Wheat+CGR" && item.rake === "58W"
+  );
+
+  const frk_cgr_Origin1 = surplus.filter(
+    (item) => item.Commodity === "FRK+CGR" && item.rake === "58W"
+  );
+  const frk_cgr_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "FRK+CGR" && item.rake === "58W"
+  );
+
+  const frk_cgr_Destination1 = deficit.filter(
+    (item) => item.Commodity === "FRK+CGR" && item.rake === "58W"
+  );
+  const frk_cgr_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "FRK+CGR" && item.rake === "58W"
+  );
+
+  const rrc_Origin1 = surplus.filter(
+    (item) => item.Commodity === "RRC" && item.rake === "58W"
+  );
+  const rrc_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "RRC" && item.rake === "58W"
+  );
+  const rrc_Destination1 = deficit.filter(
+    (item) => item.Commodity === "RRC" && item.rake === "58W"
+  );
+  const rrc_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "RRC" && item.rake === "58W"
+  );
+
+  const ragi_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Ragi" && item.rake === "58W"
+  );
+  const ragi_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Ragi" && item.rake === "58W"
+  );
+  const ragi_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Ragi" && item.rake === "58W"
+  );
+  const ragi_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Ragi" && item.rake === "58W"
+  );
+
+  const jowar_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Jowar" && item.rake === "58W"
+  );
+  const jowar_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Jowar" && item.rake === "58W"
+  );
+  const jowar_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Jowar" && item.rake === "58W"
+  );
+  const jowar_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Jowar" && item.rake === "58W"
+  );
+
+  const bajra_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Bajra" && item.rake === "58W"
+  );
+  const bajra_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Bajra" && item.rake === "58W"
+  );
+  const bajra_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Bajra" && item.rake === "58W"
+  );
+  const bajra_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Bajra" && item.rake === "58W"
+  );
+
+  const maize_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Maize" && item.rake === "58W"
+  );
+  const maize_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Maize" && item.rake === "58W"
+  );
+  const maize_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Maize" && item.rake === "58W"
+  );
+  const maize_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Maize" && item.rake === "58W"
+  );
+
+  const misc1_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Misc1" && item.rake === "58W"
+  );
+  const misc1_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Misc1" && item.rake === "58W"
+  );
+  const misc1_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Misc1" && item.rake === "58W"
+  );
+  const misc1_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Misc1" && item.rake === "58W"
+  );
+
+  const misc2_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Misc2" && item.rake === "58W"
+  );
+  const misc2_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Misc2" && item.rake === "58W"
+  );
+  const misc2_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Misc2" && item.rake === "58W"
+  );
+  const misc2_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Misc2" && item.rake === "58W"
+  );
+
+  const wheaturs_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Wheat(URS)" && item.rake === "58W"
+  );
+  const wheaturs_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Wheat(URS)" && item.rake === "58W"
+  );
+  const wheaturs_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Wheat(URS)" && item.rake === "58W"
+  );
+  const wheaturs_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Wheat(URS)" && item.rake === "58W"
+  );
+
+  const wheatfaq_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Wheat(FAQ)" && item.rake === "58W"
+  );
+  const wheatfaq_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Wheat(FAQ)" && item.rake === "58W"
+  );
+  const wheatfaq_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Wheat(FAQ)" && item.rake === "58W"
+  );
+  const wheatfaq_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Wheat(FAQ)" && item.rake === "58W"
+  );
+
+  const wheat_rra_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Wheat+RRA" && item.rake === "58W"
+  );
+  const wheat_rra_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Wheat+RRA" && item.rake === "58W"
+  );
+  const wheat_rra_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Wheat+RRA" && item.rake === "58W"
+  );
+  const wheat_rra_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Wheat+RRA" && item.rake === "58W"
+  );
+
+  const frk_rra_Origin1 = surplus.filter(
+    (item) => item.Commodity === "FRK+RRA" && item.rake === "58W"
+  );
+  const frk_rra_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "FRK+RRA" && item.rake === "58W"
+  );
+  const frk_rra_Destination1 = deficit.filter(
+    (item) => item.Commodity === "FRK+RRA" && item.rake === "58W"
+  );
+  const frk_rra_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "FRK+RRA" && item.rake === "58W"
+  );
+
+  const misc3_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Misc3" && item.rake === "58W"
+  );
+  const misc3_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Misc3" && item.rake === "58W"
+  );
+  const misc3_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Misc3" && item.rake === "58W"
+  );
+  const misc3_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Misc3" && item.rake === "58W"
+  );
+
+  const misc4_Origin1 = surplus.filter(
+    (item) => item.Commodity === "Misc4" && item.rake === "58W"
+  );
+  const misc4_InlineOrigin1 = surplusInline.filter(
+    (item) => item.Commodity === "Misc4" && item.rake === "58W"
+  );
+  const misc4_Destination1 = deficit.filter(
+    (item) => item.Commodity === "Misc4" && item.rake === "58W"
+  );
+  const misc4_InlineDestination1 = deficitInline.filter(
+    (item) => item.Commodity === "Misc4" && item.rake === "58W"
   );
 
   useEffect(() => {
@@ -1304,6 +1800,111 @@ function Daily_Planner() {
 
       TEFDdata: TEFDdata,
       region: sessionStorage.getItem("region"),
+
+      rice_origin1: riceOrigin1, // rice origin data
+      rice_destination1: riceDestination1, //rice destination data
+      rice_inline1: block_data21, //rice inline data
+      rice_dest_inline1: block_dataDest21, //rice destination inline data
+
+      wheat_origin1: wheatOrigin1, //origin wheat data
+      wheat_destination1: wheatDestination1, // wheat destination data
+      wheat_inline1: block_dataWheat21, //wheat inline data
+      wheat_dest_inline1: block_dataDestWheat21, //wheat destination inline data
+
+      coarseGrain_origin1: coarseGrainOrigin1,
+      coarseGrain_destination1: coarseGrainDestination1,
+      coarseGrain_inline1: coarseGrainInlineOrigin1,
+      coarseGrain_dest_inline1: coarseGrainInlineDestination1,
+
+      frkrra_origin1: frkrraOrigin1,
+      frkrra_destination1: frkrraDestination1,
+      frkrra_inline1: frkrraInlineOrigin1,
+      frkrra_dest_inline1: frkrraInlineDestination1,
+
+      frkbr_origin1: frkBr_Origin1,
+      frkbr_destination1: frkBr_Destination1,
+      frkbr_inline1: frkBr_InlineOrigin1,
+      frkbr_dest_inline1: frkBr_InlineDestination1,
+
+      frk_origin1: frk_Origin1,
+      frk_destination1: frk_Destination1,
+      frk_inline1: frk_InlineOrigin1,
+      frk_dest_inline1: frk_InlineDestination1,
+
+      wcgr_origin1: w_cgr_Origin1,
+      wcgr_destination1: w_cgr_Destination1,
+      wcgr_inline1: w_cgr_InlineOrigin1,
+      wcgr_dest_inline1: w_cgr_InlineDestination1,
+
+      frkcgr_origin1: frk_cgr_Origin1,
+      frkcgr_destination1: frk_cgr_Destination1,
+      frkcgr_inline1: frk_cgr_InlineOrigin1,
+      frkcgr_dest_inline1: frk_cgr_InlineDestination1,
+
+      rrc_Origin1: rrc_Origin1,
+      rrc_InlineOrigin1: rrc_InlineOrigin1,
+      rrc_Destination1: rrc_Destination1,
+      rrc_InlineDestination1: rrc_InlineDestination1,
+
+      ragi_Origin1: ragi_Origin1,
+      ragi_InlineOrigin1: ragi_InlineOrigin1,
+      ragi_Destination1: ragi_Destination1,
+      ragi_InlineDestination1: ragi_InlineDestination1,
+
+      jowar_Origin1: jowar_Origin1,
+      jowar_InlineOrigin1: jowar_InlineOrigin1,
+      jowar_Destination1: jowar_Destination1,
+      jowar_InlineDestination1: jowar_InlineDestination1,
+
+      bajra_Origin1: bajra_Origin1,
+      bajra_InlineOrigin1: bajra_InlineOrigin1,
+      bajra_Destination1: bajra_Destination1,
+      bajra_InlineDestination1: bajra_InlineDestination1,
+
+      maize_Origin1: maize_Origin1,
+      maize_InlineOrigin1: maize_InlineOrigin1,
+      maize_Destination1: maize_Destination1,
+      maize_InlineDestination1: maize_InlineDestination1,
+
+      misc1_Origin1: misc1_Origin1,
+      misc1_InlineOrigin1: misc1_InlineOrigin1,
+      misc1_Destination1: misc1_Destination1,
+      misc1_InlineDestination1: misc1_InlineDestination1,
+
+      misc2_Origin1: misc2_Origin1,
+      misc2_InlineOrigin1: misc2_InlineOrigin1,
+      misc2_Destination1: misc2_Destination1,
+      misc2_InlineDestination1: misc2_InlineDestination1,
+
+      wheaturs_Origin1: wheaturs_Origin1,
+      wheaturs_InlineOrigin1: wheaturs_InlineOrigin1,
+      wheaturs_Destination1: wheaturs_Destination1,
+      wheaturs_InlineDestination1: wheaturs_InlineDestination1,
+
+      wheatfaq_Origin1: wheatfaq_Origin1,
+      wheatfaq_InlineOrigin1: wheatfaq_InlineOrigin1,
+      wheatfaq_Destination1: wheatfaq_Destination1,
+      wheatfaq_InlineDestination1: wheatfaq_InlineDestination1,
+
+      wheat_rra_Origin1: wheat_rra_Origin1,
+      wheat_rra_Destination1: wheat_rra_Destination1,
+      wheat_rra_InlineOrigin1: wheat_rra_InlineOrigin1,
+      wheat_rra_InlineDestination1: wheat_rra_InlineDestination1,
+
+      frk_rra_Origin1: frk_rra_Origin1,
+      frk_rra_Destination1: frk_rra_Destination1,
+      frk_rra_InlineOrigin1: frk_rra_InlineOrigin1,
+      frk_rra_InlineDestination1: frk_rra_InlineDestination1,
+
+      misc3_Origin1: misc3_Origin1,
+      misc3_InlineOrigin1: misc3_InlineOrigin1,
+      misc3_Destination1: misc3_Destination1,
+      misc3_InlineDestination1: misc3_InlineDestination1,
+
+      misc4_Origin1: misc4_Origin1,
+      misc4_InlineOrigin1: misc4_InlineOrigin1,
+      misc4_Destination1: misc4_Destination1,
+      misc4_InlineDestination1: misc4_InlineDestination1,
     };
 
     try {
@@ -1692,6 +2293,7 @@ function Daily_Planner() {
               Commodity: item.commodity,
               sourceDivision: item.sourceDivision,
               sourceId: item.sourceId,
+              rake: item.rake,
             }));
             setSurplus(updatedSurplus);
           }
@@ -1705,6 +2307,7 @@ function Daily_Planner() {
               Commodity: item.commodity,
               destinationDivision: item.destinationDivision,
               destinationId: item.destinationId,
+              rake: item.rake,
             }));
             setDeficit(updatedDeficit);
           }
@@ -1722,6 +2325,7 @@ function Daily_Planner() {
                 sourceDivision: item.sourceDivision,
                 inlineSourceDivision: item.inlineSourceDivision,
                 sourceId: item.sourceId,
+                rake: item.rake,
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -1741,6 +2345,7 @@ function Daily_Planner() {
                 destinationDivision: item.destinationDivision,
                 inlineDestinationDivision: item.inlineDestinationDivision,
                 destinationId: item.destinationId,
+                rake: item.rake,
               })
             );
             setDeficitInline(updatedDeficitInline);
@@ -1753,7 +2358,8 @@ function Daily_Planner() {
               destination_railhead: item.destinationRailHead,
               destination_state: item.destinationState,
               Commodity: item.sourceCommodity,
-              value: 1,
+              value: item.sourceValue,
+              rake: item.rake,
             }));
             setFixeddata(updatedRouteFixing);
           }
@@ -1765,7 +2371,8 @@ function Daily_Planner() {
               destination_railhead: item.destinationRailHead,
               destination_state: item.destinationState,
               Commodity: item.sourceCommodity,
-              value: 1,
+              value: item.sourceValue,
+              rake: item.rake,
             }));
             setBlockeddata(updatedRouteBlocking);
           }
@@ -2085,10 +2692,12 @@ function Daily_Planner() {
                           <thead>
                             <tr>
                               <th>Sno</th>
+                              <th>Region</th>
+                              <th>Source</th>
                               <th>Railhead</th>
-                              <th>State</th>
-                              <th>Value</th>
                               <th>Commodity</th>
+                              <th>Rake preference</th>
+                              <th>Rakes</th>
                               {/* <th>Delete</th> */}
                             </tr>
                           </thead>
@@ -2096,10 +2705,12 @@ function Daily_Planner() {
                             {surplus.map((row, index) => (
                               <tr key={index}>
                                 <td>{index}</td>
-                                <td>{row.origin_railhead}</td>
                                 <td>{row.origin_state}</td>
-                                <td>{row.Value}</td>
+                                <td>{row.sourceDivision}</td>
+                                <td>{row.origin_railhead}</td>
                                 <td>{row.Commodity}</td>
+                                <td>{row.rake}</td>
+                                <td>{row.Value}</td>
                                 {/* <td>
                                   <span
                                     style={{
@@ -2279,10 +2890,12 @@ function Daily_Planner() {
                           <thead>
                             <tr>
                               <th>Sno</th>
+                              <th>Region</th>
+                              <th>Destination</th>
                               <th>Railhead</th>
-                              <th>State</th>
-                              <th>Value</th>
                               <th>Commodity</th>
+                              <th>Rake preference</th>
+                              <th>Rakes</th>
                               {/* <th>Delete</th> */}
                             </tr>
                           </thead>
@@ -2290,10 +2903,12 @@ function Daily_Planner() {
                             {deficit.map((row, index) => (
                               <tr key={index}>
                                 <td>{index}</td>
-                                <td>{row.origin_railhead}</td>
                                 <td>{row.origin_state}</td>
-                                <td>{row.Value}</td>
+                                <td>{row.destinationDivision}</td>
+                                <td>{row.origin_railhead}</td>
                                 <td>{row.Commodity}</td>
+                                <td>{row.rake}</td>
+                                <td>{row.Value}</td>
                                 {/* <td>
                                   <span
                                     style={{
@@ -2803,8 +3418,7 @@ function Daily_Planner() {
                     <div
                       style={{
                         display: "flex",
-                        // marginLeft: "20px",
-                        width: 1030,
+                        width: "65vw",
                       }}
                     >
                       <div>
@@ -2900,6 +3514,39 @@ function Daily_Planner() {
                           ))}
                         </select>
                       </div>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <strong style={{ fontSize: "16px", padding: "5px" }}>
+                          Select Commodity
+                        </strong>
+                        <select
+                          value={commodity_fixed}
+                          onChange={(e) => setCommodity_fixed(e.target.value)}
+                          style={{ width: "170px", padding: "5px" }}
+                        >
+                          <option value="">Select Commodity</option>
+                          <option value="RRA">RRA</option>
+                          <option value="Wheat">Wheat</option>
+                          <option value="Wheat(URS)">Wheat(URS)</option>
+                          <option value="Wheat(FAQ)">Wheat(FAQ)</option>
+                          <option value="Wheat+FRK">Wheat+FRK</option>
+                          <option value="Wheat+RRA">Wheat+RRA</option>
+                          <option value="FRK+RRA">FRK+RRA</option>
+                          <option value="FRK RRA">FRK RRA</option>
+                          <option value="FRK BR">FRK BR</option>
+                          <option value="Coarse Grains">Coarse Grains</option>
+                          <option value="Wheat+CGR">Wheat+CGR</option>
+                          <option value="FRK+CGR">FRK+CGR</option>
+                          <option value="RRC">RRC</option>
+                          <option value="Ragi">Ragi</option>
+                          <option value="Jowar">Jowar</option>
+                          <option value="Bajra">Bajra</option>
+                          <option value="Maize">Maize</option>
+                          <option value="Misc1">Misc1</option>
+                          <option value="Misc2">Misc2</option>
+                          <option value="Misc3">Misc3</option>
+                          <option value="Misc4">Misc4</option>
+                        </select>
+                      </div>
                     </div>
                     <div
                       style={{
@@ -2908,39 +3555,7 @@ function Daily_Planner() {
                         marginTop: "10px",
                       }}
                     >
-                      <strong style={{ fontSize: "16px", padding: "5px" }}>
-                        Select Commodity
-                      </strong>
-                      <select
-                        value={commodity_fixed}
-                        onChange={(e) => setCommodity_fixed(e.target.value)}
-                        style={{ width: "170px", padding: "5px" }}
-                      >
-                        <option value="">Select Commodity</option>
-                        <option value="RRA">RRA</option>
-                        <option value="Wheat">Wheat</option>
-                        <option value="Wheat(URS)">Wheat(URS)</option>
-                        <option value="Wheat(FAQ)">Wheat(FAQ)</option>
-                        <option value="Wheat+FRK">Wheat+FRK</option>
-                        <option value="Wheat+RRA">Wheat+RRA</option>
-                        <option value="FRK+RRA">FRK+RRA</option>
-                        <option value="FRK RRA">FRK RRA</option>
-                        <option value="FRK BR">FRK BR</option>
-                        <option value="Coarse Grains">Coarse Grains</option>
-                        <option value="Wheat+CGR">Wheat+CGR</option>
-                        <option value="FRK+CGR">FRK+CGR</option>
-                        <option value="RRC">RRC</option>
-                        <option value="Ragi">Ragi</option>
-                        <option value="Jowar">Jowar</option>
-                        <option value="Bajra">Bajra</option>
-                        <option value="Maize">Maize</option>
-                        <option value="Misc1">Misc1</option>
-                        <option value="Misc2">Misc2</option>
-                        <option value="Misc3">Misc3</option>
-                        <option value="Misc4">Misc4</option>
-                      </select>
-
-                      <div>
+                      {/* <div>
                         <button
                           style={{
                             textAlign: "center",
@@ -2953,7 +3568,7 @@ function Daily_Planner() {
                         >
                           Add
                         </button>
-                      </div>
+                      </div> */}
                     </div>
                     <br />
                     {fixed_data.length !== 0 && (
@@ -2979,9 +3594,9 @@ function Daily_Planner() {
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Value
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Delete
-                              </th>
+                              </th> */}
                             </tr>
                           </thead>
                           <tbody>
@@ -2993,7 +3608,7 @@ function Daily_Planner() {
                                 <td>{item.destination_railhead}</td>
                                 <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
-                                <td>
+                                {/* <td>
                                   <span
                                     style={{
                                       cursor: "pointer",
@@ -3007,7 +3622,7 @@ function Daily_Planner() {
                                   >
                                     &times;
                                   </span>
-                                </td>
+                                </td> */}
                               </tr>
                             ))}
                           </tbody>
@@ -3015,7 +3630,7 @@ function Daily_Planner() {
                       </div>
                     )}
 
-                    <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
+                    <p style={{ margin: 2, padding: 0, marginTop: 10 }}>
                       <strong
                         style={{
                           color: "#9d0921",
@@ -3023,7 +3638,7 @@ function Daily_Planner() {
                           marginLeft: "15px",
                         }}
                       >
-                        For Blocking:
+                        For Route Blocking:
                       </strong>
                     </p>
 
@@ -3179,9 +3794,9 @@ function Daily_Planner() {
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Value
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Delete
-                              </th>
+                              </th> */}
                             </tr>
                           </thead>
                           <tbody>
@@ -3193,7 +3808,7 @@ function Daily_Planner() {
                                 <td>{item.destination_railhead}</td>
                                 <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
-                                <td>
+                                {/* <td>
                                   <span
                                     style={{
                                       cursor: "pointer",
@@ -3207,7 +3822,7 @@ function Daily_Planner() {
                                   >
                                     &times;
                                   </span>
-                                </td>
+                                </td> */}
                               </tr>
                             ))}
                           </tbody>

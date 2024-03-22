@@ -2232,7 +2232,6 @@ def Daily_Planner():
             
             for i in range(len(blocked_org_rhcode)):
                 commodity = blocked_data[i]["Commodity"]
-                print(commodity)
                 if commodity == "Wheat":
                     prob += x_ij_wheat[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
                 elif commodity == "RRA":
@@ -2525,6 +2524,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
             
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
@@ -2667,6 +2668,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_rra["SourceRailHead"] = From
             df_rra["SourceState"] = From_state_rra
@@ -2803,6 +2806,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_CoarseGrain["SourceRailHead"] = From
             df_CoarseGrain["SourceState"] = From_state
@@ -2939,6 +2944,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_frkrra["SourceRailHead"] = From
             df_frkrra["SourceState"] = From_state
@@ -3076,6 +3083,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_frkbr["SourceRailHead"] = From
             df_frkbr["SourceState"] = From_state
@@ -3213,6 +3222,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_frk["SourceRailHead"] = From
             df_frk["SourceState"] = From_state
@@ -3350,6 +3361,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_frkcgr["SourceRailHead"] = From
             df_frkcgr["SourceState"] = From_state
@@ -3487,6 +3500,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_wcgr["SourceRailHead"] = From 
             df_wcgr["SourceState"] = From_state
@@ -3620,6 +3635,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_rrc["SourceRailHead"] = From
             df_rrc["SourceState"] = From_state
@@ -3752,6 +3769,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_ragi["SourceRailHead"] = From
             df_ragi["SourceState"] = From_state
@@ -3884,6 +3903,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_jowar["SourceRailHead"] = From
             df_jowar["SourceState"] = From_state
@@ -4016,6 +4037,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_bajra["SourceRailHead"] = From
             df_bajra["SourceState"] = From_state
@@ -4148,6 +4171,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_maize["SourceRailHead"] = From
             df_maize["SourceState"] = From_state
@@ -4280,6 +4305,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_misc1["SourceRailHead"] = From
             df_misc1["SourceState"] = From_state
@@ -4414,6 +4441,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_misc2["SourceRailHead"] = From
             df_misc2["SourceState"] = From_state
@@ -4546,6 +4575,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_wheaturs["SourceRailHead"] = From
             df_wheaturs["SourceState"] = From_state
@@ -4678,6 +4709,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_wheatfaq["SourceRailHead"] = From
             df_wheatfaq["SourceState"] = From_state
@@ -4810,6 +4843,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_wheatrra["SourceRailHead"] = From
             df_wheatrra["SourceState"] = From_state
@@ -4942,6 +4977,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_frk_rra["SourceRailHead"] = From
             df_frk_rra["SourceState"] = From_state
@@ -5074,6 +5111,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_misc3["SourceRailHead"] = From
             df_misc3["SourceState"] = From_state
@@ -5206,6 +5245,8 @@ def Daily_Planner():
                     To_division.append("")
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
 
             df_misc4["SourceRailHead"] = From
             df_misc4["SourceState"] = From_state
