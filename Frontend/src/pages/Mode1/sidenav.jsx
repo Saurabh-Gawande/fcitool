@@ -63,12 +63,12 @@ function Sidenav() {
             <span className="xn-text">Change Password</span>
           </a>
         </li>
-        {/* <li>
+        <li>
           <a href="/logout">
             <span className="fa fa-sign-out"></span>{" "}
             <span className="xn-text">Logout</span>
           </a>
-        </li> */}
+        </li>
       </ul>
     </div>
   );

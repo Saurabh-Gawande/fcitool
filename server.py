@@ -242,6 +242,7 @@ def read_Daily_Planner_S1():
             df19 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra")
             df20 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
             df21 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
+            df22 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_58w")
 
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
@@ -264,12 +265,13 @@ def read_Daily_Planner_S1():
             json_data19 = df19.to_json(orient='records', indent=1)
             json_data20 = df20.to_json(orient='records', indent=1)
             json_data21 = df21.to_json(orient='records', indent=1)
+            json_data22 = df22.to_json(orient='records', indent=1)
 
             json_data = {
              "rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "wheat_frk": json_data6,
              "frkcgr":json_data7 , "wcgr": json_data8, "wheat_urs": json_data9 , "wheat_faq": json_data10, "rrc": json_data11, "jowar": json_data12, 
              "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
-             "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21
+             "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22
              }
              
         except:
@@ -2404,11 +2406,1490 @@ def Daily_Planner():
             prob.writeLP("FCI_monthly_model_allocation_rr.lp")
             # prob.solve(CPLEX())
             prob.solve()
-            print("Status:", LpStatus[prob.status])
-            print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
-            print("Total Number of Variables:", len(prob.variables()))
-            print("Total Number of Constraints:", len(prob.constraints))
+            print("Status for 42w:", LpStatus[prob.status])
+            print("Minimum Cost of Transportation for 42w = Rs.", prob.objective.value(), "Lakh")
+            print("Total Number of Variables for 42w:", len(prob.variables()))
+            print("Total Number of Constraints for 42w:", len(prob.constraints))
+            
+            # for 58 wagon variable sepration
+            rra_origin1 = fetched_data["rice_origin1"]
+            rra_dest1 = fetched_data["rice_destination1"]
+            wheat_origin1 = fetched_data["wheat_origin1"]
+            wheat_dest1 = fetched_data["wheat_destination1"]
+            coarseGrain_origin1 = fetched_data["coarseGrain_origin1"]
+            coarseGrain_dest1 = fetched_data["coarseGrain_destination1"]
+            frkrra_origin1 = fetched_data["frkrra_origin1"]
+            frkrra_dest1 = fetched_data["frkrra_destination1"]
+            frkbr_origin1 = fetched_data["frkbr_origin1"]
+            frkbr_dest1 = fetched_data["frkbr_destination1"]
+            frk_origin1 = fetched_data["frk_origin1"]
+            frk_dest1 = fetched_data["frk_destination1"]
+            frkcgr_origin1 = fetched_data["frkcgr_origin1"]
+            frkcgr_dest1 = fetched_data["frkcgr_destination1"]
+            wcgr_origin1 = fetched_data["wcgr_origin1"]
+            wcgr_dest1 = fetched_data["wcgr_destination1"]
+            rrc_origin1 = fetched_data['rrc_Origin1']
+            rrc_dest1 = fetched_data["rrc_Destination1"]
+            ragi_origin1 = fetched_data['ragi_Origin1']
+            ragi_dest1 = fetched_data["ragi_Destination1"]
+            jowar_origin1 = fetched_data['jowar_Origin1']
+            jowar_dest1 = fetched_data['jowar_Destination1']
+            bajra_origin1 = fetched_data['bajra_Origin1']
+            bajra_dest1 = fetched_data['bajra_Destination1']
+            maize_origin1 = fetched_data['maize_Origin1']
+            maize_dest1 = fetched_data['maize_Destination1']
+            misc1_origin1 = fetched_data['misc1_Origin1']
+            misc1_dest1 = fetched_data['misc1_Destination1']
+            misc2_origin1 = fetched_data['misc2_Origin1']
+            misc2_dest1 = fetched_data['misc2_Destination1']
+            wheaturs_origin1 = fetched_data['wheaturs_Origin1']
+            wheaturs_dest1 = fetched_data['wheaturs_Destination1']
+            wheatfaq_origin1 = fetched_data['wheatfaq_Origin1']
+            wheatfaq_dest1 = fetched_data['wheatfaq_Destination1']
+            wheatrra_origin1 = fetched_data['wheat_rra_Origin1']
+            wheatrra_dest1 = fetched_data['wheat_rra_Destination1']
+            frk_rra_origin1 = fetched_data['frk_rra_Origin1']
+            frk_rra_dest1 = fetched_data['frk_rra_Destination1']
+            misc3_origin1 = fetched_data['misc3_Origin1']
+            misc3_dest1 = fetched_data['misc3_Destination1']
+            misc4_origin1 = fetched_data['misc4_Origin1']
+            misc4_dest1 = fetched_data['misc4_Destination1']
+            
+            rra_origin_inline1 = fetched_data["rice_inline1"]
+            rra_dest_inline1 = fetched_data["rice_dest_inline1"]
+            wheat_origin_inline1 = fetched_data["wheat_inline1"]
+            wheat_dest_inline1 = fetched_data["wheat_dest_inline1"]
+            coarseGrain_origin_inline1 = fetched_data["coarseGrain_inline1"]
+            coarseGrain_dest_inline1 = fetched_data["coarseGrain_dest_inline1"]
+            frk_origin_inline1 = fetched_data["frk_inline1"]
+            frk_dest_inline1 = fetched_data["frk_dest_inline1"]
+            frkrra_origin_inline1 = fetched_data["frkrra_inline1"]
+            frkrra_dest_inline1 = fetched_data["frkrra_dest_inline1"]
+            frkbr_origin_inline1 = fetched_data["frkbr_inline1"]
+            frkbr_dest_inline1 = fetched_data["frkbr_dest_inline1"]
+            wcgr_origin_inline1 = fetched_data["wcgr_inline1"]
+            wcgr_dest_inline1 = fetched_data["wcgr_dest_inline1"]
+            frkcgr_origin_inline1 = fetched_data["frkcgr_inline1"]
+            frkcgr_dest_inline1 = fetched_data["frkcgr_dest_inline1"]
+            rrc_origin_inline1 = fetched_data["rrc_InlineOrigin1"]
+            rrc_dest_inline1 = fetched_data["rrc_InlineDestination1"]
+            wheatrra_origin_inline1 = fetched_data["wheat_rra_InlineOrigin1"]
+            wheatrra_dest_inline1 = fetched_data["wheat_rra_InlineDestination1"]
+            ragi_origin_inline1 = fetched_data["ragi_InlineOrigin1"]
+            ragi_dest_inline1 = fetched_data["ragi_InlineDestination1"]
+            jowar_origin_inline1 = fetched_data["jowar_InlineOrigin1"]
+            jowar_dest_inline1 = fetched_data["jowar_InlineDestination1"]
+            bajra_origin_inline1 = fetched_data["bajra_InlineOrigin1"]
+            bajra_dest_inline1 = fetched_data["bajra_InlineDestination1"]
+            maize_origin_inline1 = fetched_data["maize_InlineOrigin1"]
+            maize_dest_inline1 = fetched_data["maize_InlineDestination1"]
+            misc1_origin_inline1 = fetched_data["misc1_InlineOrigin1"]
+            misc1_dest_inline1 = fetched_data["misc1_InlineDestination1"]
+            misc2_origin_inline1 = fetched_data["misc2_InlineOrigin1"]
+            misc2_dest_inline1 = fetched_data["misc2_InlineDestination1"]
+            wheaturs_origin_inline1 = fetched_data["wheaturs_InlineOrigin1"]
+            wheaturs_dest_inline1 = fetched_data["wheaturs_InlineDestination1"]
+            wheatfaq_origin_inline1 = fetched_data["wheatfaq_InlineOrigin1"]
+            wheatfaq_dest_inline1 = fetched_data["wheatfaq_InlineDestination1"]
+            frk_rra_origin_inline1 = fetched_data["frk_rra_InlineOrigin1"]
+            frk_rra_dest_inline1 = fetched_data["frk_rra_InlineDestination1"]
+            misc3_origin_inline1 = fetched_data["misc3_InlineOrigin1"]
+            misc3_dest_inline1 = fetched_data["misc3_InlineDestination1"]
+            misc4_origin_inline1 = fetched_data["misc4_InlineOrigin1"]
+            misc4_dest_inline1 = fetched_data["misc4_InlineDestination1"]
 
+            source_wheat1 = {}
+            for wheat in wheat_origin1:
+                if wheat["Value"] > 0:
+                    source_wheat1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheat1 = {}
+            for i in range(len(wheat_dest1)):
+                if int(wheat_dest1[i]["Value"]) > 0:
+                    dest_wheat1[wheat_dest1[i]["origin_railhead"]] = int(wheat_dest1[i]["Value"])
+            
+            source_rra1 = {}
+            for rra in rra_origin1:
+                if rra["Value"] > 0:
+                    source_rra1[rra["origin_railhead"]] = rra["Value"]
+
+            dest_rra1 = {}
+            for i in range(len(rra_dest1)):
+                if int(rra_dest1[i]["Value"]) > 0:
+                    dest_rra1[rra_dest1[i]["origin_railhead"]] = int(rra_dest1[i]["Value"]) 
+
+            source_coarseGrain1 = {}
+            for coarseGrain in coarseGrain_origin1:
+                if coarseGrain["Value"] > 0:
+                    source_coarseGrain1[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
+
+            dest_coarseGrain1 = {}
+            for coarseGrain in coarseGrain_dest1:
+                if coarseGrain["Value"] > 0:
+                    dest_coarseGrain1[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
+                     
+            source_frkrra1 = {}
+            for frkrra in frkrra_origin1:
+                if frkrra["Value"] > 0:
+                    source_frkrra1[frkrra["origin_railhead"]] = frkrra["Value"]
+
+            dest_frkrra1 = {}
+            for frkrra in frkrra_dest1:
+                if frkrra["Value"] > 0:
+                    dest_frkrra1[frkrra["origin_railhead"]] = frkrra["Value"]
+ 
+            source_frkbr1 = {}
+            for frkbr in frkbr_origin1:
+                if frkbr["Value"] > 0:
+                    source_frkbr1[frkbr["origin_railhead"]] = frkbr["Value"]
+
+            dest_frkbr1 = {}
+            for frkbr in  frkbr_dest1:
+                if frkbr["Value"] > 0:
+                    dest_frkbr1[frkbr["origin_railhead"]] = frkbr["Value"]
+
+            source_frk1 = {}
+            for frk in frk_origin1:
+                if frk["Value"] > 0:
+                    source_frk1[frk["origin_railhead"]] = frk["Value"]
+
+            dest_frk1 = {}
+            for frk in  frk_dest1:
+                if frk["Value"] > 0:
+                    dest_frk1[frk["origin_railhead"]] = frk["Value"]
+
+            source_frkcgr1 = {}
+            for frkcgr in frkcgr_origin1:
+                if frkcgr["Value"] > 0:
+                    source_frkcgr1[frkcgr["origin_railhead"]] = frkcgr["Value"]
+
+            dest_frkcgr1 = {}
+            for frkcgr in  frkcgr_dest1:
+                if frkcgr["Value"] > 0:
+                    dest_frkcgr1[frkcgr["origin_railhead"]] = frkcgr["Value"]
+
+            source_wcgr1 = {}
+            for wcgr in wcgr_origin1:
+                if wcgr["Value"] > 0:
+                    source_wcgr1[wcgr["origin_railhead"]] = wcgr["Value"]
+
+            dest_wcgr1 = {}
+            for wcgr in  wcgr_dest1:
+                if wcgr["Value"] > 0:
+                    dest_wcgr1[wcgr["origin_railhead"]] = wcgr["Value"]
+
+            source_rrc1 = {}
+            for rrc in rrc_origin1:
+                if rrc["Value"] > 0:
+                    source_rrc1[rrc["origin_railhead"]] = rrc["Value"]
+
+            dest_rrc1 = {}
+            for rrc in rrc_dest1:
+                if rrc["Value"] > 0:
+                    dest_rrc1[rrc["origin_railhead"]] = rrc["Value"]
+
+            source_ragi1 = {}
+            for ragi in ragi_origin1:
+                if ragi["Value"] > 0:
+                    source_ragi1[ragi["origin_railhead"]] = ragi["Value"]
+
+            dest_ragi1 = {}
+            for ragi in ragi_dest1:
+                if ragi["Value"] > 0:
+                    dest_ragi1[ragi["origin_railhead"]] = ragi["Value"]
+
+            source_jowar1 = {}
+            for jowar in jowar_origin1:
+                if jowar["Value"] > 0:
+                    source_jowar1[jowar["origin_railhead"]] = jowar["Value"]
+
+            dest_jowar1 = {}
+            for jowar in jowar_dest1:
+                if jowar["Value"] > 0:
+                    dest_jowar1[jowar["origin_railhead"]] = jowar["Value"]
+
+            source_bajra1 = {}
+            for bajra in bajra_origin1:
+                if bajra["Value"] > 0:
+                    source_bajra1[bajra["origin_railhead"]] = bajra["Value"]
+
+            dest_bajra1 = {}
+            for bajra in bajra_dest:
+                if bajra["Value"] > 0:
+                    dest_bajra1[bajra["origin_railhead"]] = bajra["Value"]
+
+            source_maize1 = {}
+            for maize in maize_origin1:
+                if maize["Value"] > 0:
+                    source_maize1[maize["origin_railhead"]] = maize["Value"]
+
+            dest_maize1 = {}
+            for maize in maize_dest1:
+                if maize["Value"] > 0:
+                    dest_maize1[maize["origin_railhead"]] = maize["Value"]
+
+            source_misc11 = {}
+            for misc1 in misc1_origin1:
+                if misc1["Value"] > 0:
+                    source_misc11[misc1["origin_railhead"]] = misc1["Value"]
+
+            dest_misc11 = {}
+            for misc1 in misc1_dest1:
+                if misc1["Value"] > 0:
+                    dest_misc11[misc1["origin_railhead"]] = misc1["Value"]
+
+            source_misc21 = {}
+            for misc2 in misc2_origin1:
+                if misc2["Value"] > 0:
+                    source_misc21[misc2["origin_railhead"]] = misc2["Value"]
+
+            dest_misc21 = {}
+            for misc2 in misc2_dest1:
+                if misc2["Value"] > 0:
+                    dest_misc21[misc2["origin_railhead"]] = misc2["Value"]
+
+            source_wheaturs1 = {}
+            for wheat in wheaturs_origin1:
+                if wheat["Value"] > 0:
+                    source_wheaturs1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheaturs1 = {}
+            for wheat in wheaturs_dest1:
+                if wheat["Value"] > 0:
+                    dest_wheaturs1[wheat["origin_railhead"]] = wheat["Value"]
+
+            source_wheatfaq1 = {}
+            for wheat in wheatfaq_origin1:
+                if wheat["Value"] > 0:
+                    source_wheatfaq1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheatfaq1 = {}
+            for wheat in wheatfaq_dest1:
+                if wheat["Value"] > 0:
+                    dest_wheatfaq1[wheat["origin_railhead"]] = wheat["Value"]
+
+            source_wheatrra1 = {}
+            for wheat in wheatrra_origin1:
+                if wheat["Value"] > 0:
+                    source_wheatrra1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheatrra1 = {}
+            for wheat in wheatrra_dest1:
+                if wheat["Value"] > 0:
+                    dest_wheatrra1[wheat["origin_railhead"]] = wheat["Value"]
+
+            source_frk_rra1 = {}
+            for wheat in frk_rra_origin1:
+                if wheat["Value"] > 0:
+                    source_frk_rra1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_frk_rra1 = {}
+            for wheat in frk_rra_dest1:
+                if wheat["Value"] > 0:
+                    dest_frk_rra1[wheat["origin_railhead"]] = wheat["Value"]
+            
+            source_misc31 = {}
+            for misc3 in misc3_origin1:
+                if misc3["Value"] > 0:
+                    source_misc31[misc3["origin_railhead"]] = misc3["Value"]
+
+            dest_misc31 = {}
+            for misc3 in misc3_dest1:
+                if misc3["Value"] > 0:
+                    dest_misc31[misc3["origin_railhead"]] = misc3["Value"]
+            
+            source_misc41 = {}
+            for misc4 in misc4_origin1:
+                if misc4["Value"] > 0:
+                    source_misc41[misc4["origin_railhead"]] = misc4["Value"]
+
+            dest_misc41 = {}
+            for misc4 in misc4_dest1:
+                if misc4["Value"] > 0:
+                    dest_misc41[misc4["origin_railhead"]] = misc4["Value"]
+            
+            source_wheat_inline1 = {}
+            for i in range(len(wheat_origin_inline1)):
+                source_wheat_inline1[wheat_origin_inline1[i]["origin_railhead"]] = wheat_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheat_inline1 = {}
+            for i in range(len(wheat_dest_inline1)):
+                dest_wheat_inline1[wheat_dest_inline1[i]["origin_railhead"]] = wheat_dest_inline1[i]["destination_railhead"]
+            
+            source_rra_inline1 = {}
+            for i in range(len(rra_origin_inline1)):
+                source_rra_inline1[rra_origin_inline1[i]["origin_railhead"]] = rra_origin_inline1[i]["destination_railhead"]
+
+            dest_rra_inline1 = {}
+            for i in range(len(rra_dest_inline1)):
+                dest_rra_inline1[rra_dest_inline1[i]["origin_railhead"]] = rra_dest_inline1[i]["destination_railhead"]
+
+            source_coarseGrain_inline1 = {}
+            for i in range(len(coarseGrain_origin_inline1)):
+                source_coarseGrain_inline1[coarseGrain_origin_inline1[i]["origin_railhead"]] = coarseGrain_origin_inline1[i]["destination_railhead"]
+            
+            dest_coarseGrain_inline1 = {}
+            for i in range(len(coarseGrain_dest_inline1)):
+                dest_coarseGrain_inline1[coarseGrain_dest_inline1[i]["origin_railhead"]] = coarseGrain_dest_inline1[i]["destination_railhead"]
+            
+            source_frkrra_inline1 = {}
+            for i in range(len(frkrra_origin_inline1)):
+                source_frkrra_inline1[frkrra_origin_inline1[i]["origin_railhead"]] = frkrra_origin_inline1[i]["destination_railhead"]
+            
+            dest_frkrra_inline1 = {}
+            for i in range(len(frkrra_dest_inline1)):
+                dest_frkrra_inline1[frkrra_dest_inline1[i]["origin_railhead"]] = frkrra_dest_inline1[i]["destination_railhead"]
+
+            source_frkbr_inline1 = {}
+            for i in range(len(frkbr_origin_inline1)):
+                source_frkbr_inline1[frkbr_origin_inline1[i]["origin_railhead"]] = frkbr_origin_inline1[i]["destination_railhead"]
+            
+            dest_frkbr_inline1 = {}
+            for i in range(len(frkbr_dest_inline1)):
+                dest_frkbr_inline1[frkbr_dest_inline1[i]["origin_railhead"]] = frkbr_dest_inline1[i]["destination_railhead"]
+
+            source_frk_inline1 = {}
+            for i in range(len(frk_origin_inline1)):
+                source_frk_inline1[frk_origin_inline1[i]["origin_railhead"]] = frk_origin_inline1[i]["destination_railhead"]
+            
+            dest_frk_inline1 = {}
+            for i in range(len(frk_dest_inline1)):
+                dest_frk_inline1[frk_dest_inline1[i]["origin_railhead"]] = frk_dest_inline1[i]["destination_railhead"]
+
+            source_frkcgr_inline1 = {}
+            for i in range(len(frkcgr_origin_inline1)):
+                source_frkcgr_inline1[frkcgr_origin_inline1[i]["origin_railhead"]] = frkcgr_origin_inline1[i]["destination_railhead"]
+            
+            dest_frkcgr_inline1 = {}
+            for i in range(len(frkcgr_dest_inline1)):
+                dest_frkcgr_inline1[frkcgr_dest_inline1[i]["origin_railhead"]] = frkcgr_dest_inline1[i]["destination_railhead"]
+
+            source_wcgr_inline1 = {}
+            for i in range(len(wcgr_origin_inline1)):
+                source_wcgr_inline1[wcgr_origin_inline1[i]["origin_railhead"]] = wcgr_origin_inline1[i]["destination_railhead"]
+            
+            dest_wcgr_inline1 = {}
+            for i in range(len(wcgr_dest_inline1)):
+                dest_wcgr_inline1[wcgr_dest_inline1[i]["origin_railhead"]] = wcgr_dest_inline1[i]["destination_railhead"]
+
+            source_rrc_inline1 = {}
+            for i in range(len(rrc_origin_inline1)):
+                source_rrc_inline1[rrc_origin_inline1[i]["origin_railhead"]] = rrc_origin_inline1[i]["destination_railhead"]
+            
+            dest_rrc_inline1 = {}
+            for i in range(len(rrc_dest_inline1)):
+                dest_rrc_inline1[rrc_dest_inline1[i]["origin_railhead"]] = rrc_dest_inline1[i]["destination_railhead"]
+                
+            source_ragi_inline1 = {}
+            for i in range(len(ragi_origin_inline1)):
+                source_ragi_inline1[ragi_origin_inline1[i]["origin_railhead"]] = ragi_origin_inline1[i]["destination_railhead"]
+            
+            dest_ragi_inline1 = {}
+            for i in range(len(ragi_dest_inline1)):
+                dest_ragi_inline1[ragi_dest_inline1[i]["origin_railhead"]] = ragi_dest_inline1[i]["destination_railhead"]
+
+            source_jowar_inline1 = {}
+            for i in range(len(jowar_origin_inline1)):
+                source_jowar_inline[jowar_origin_inline1[i]["origin_railhead"]] = jowar_origin_inline1[i]["destination_railhead"]
+            
+            dest_jowar_inline1 = {}
+            for i in range(len(jowar_dest_inline1)):
+                dest_jowar_inline1[jowar_dest_inline1[i]["origin_railhead"]] = jowar_dest_inline1[i]["destination_railhead"]
+
+            source_bajra_inline1 = {}
+            for i in range(len(bajra_origin_inline1)):
+                source_bajra_inline1[bajra_origin_inline1[i]["origin_railhead"]] = bajra_origin_inline1[i]["destination_railhead"]
+            
+            dest_bajra_inline1 = {}
+            for i in range(len(bajra_dest_inline1)):
+                dest_bajra_inline1[bajra_dest_inline1[i]["origin_railhead"]] = bajra_dest_inline1[i]["destination_railhead"]
+
+            source_maize_inline1 = {}
+            for i in range(len(maize_origin_inline1)):
+                source_maize_inline1[maize_origin_inline1[i]["origin_railhead"]] = maize_origin_inline1[i]["destination_railhead"]
+            
+            dest_maize_inline1 = {}
+            for i in range(len(maize_dest_inline1)):
+                dest_maize_inline1[maize_dest_inline[i]["origin_railhead"]] = maize_dest_inline1[i]["destination_railhead"]
+
+            source_misc1_inline1 = {}
+            for i in range(len(misc1_origin_inline1)):
+                source_misc1_inline1[misc1_origin_inline[i]["origin_railhead"]] = misc1_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc1_inline1 = {}
+            for i in range(len(misc1_dest_inline1)):
+                dest_misc1_inline1[misc1_dest_inline1[i]["origin_railhead"]] = misc1_dest_inline1[i]["destination_railhead"]
+
+            source_misc2_inline1 = {}
+            for i in range(len(misc2_origin_inline1)):
+                source_misc2_inline1[misc2_origin_inline1[i]["origin_railhead"]] = misc2_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc2_inline1 = {}
+            for i in range(len(misc2_dest_inline1)):
+                dest_misc2_inline1[misc2_dest_inline1[i]["origin_railhead"]] = misc2_dest_inline1[i]["destination_railhead"]
+
+            source_wheaturs_inline1 = {}
+            for i in range(len(wheaturs_origin_inline1)):
+                source_wheaturs_inline1[wheaturs_origin_inline1[i]["origin_railhead"]] = wheaturs_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheaturs_inline1 = {}
+            for i in range(len(wheaturs_dest_inline1)):
+                dest_wheaturs_inline1[wheaturs_dest_inline1[i]["origin_railhead"]] = wheaturs_dest_inline1[i]["destination_railhead"]
+
+            source_wheatfaq_inline1 = {}
+            for i in range(len(wheatfaq_origin_inline1)):
+                source_wheatfaq_inline1[wheatfaq_origin_inline1[i]["origin_railhead"]] = wheatfaq_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheatfaq_inline1 = {}
+            for i in range(len(wheatfaq_dest_inline1)):
+                dest_wheatfaq_inline1[wheatfaq_dest_inline1[i]["origin_railhead"]] = wheatfaq_dest_inline1[i]["destination_railhead"]
+
+            source_wheatrra_inline1 = {}
+            for i in range(len(wheatrra_origin_inline1)):
+                source_wheatrra_inline1[wheatrra_origin_inline1[i]["origin_railhead"]] = wheatrra_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheatrra_inline1 = {}
+            for i in range(len(wheatrra_dest_inline1)):
+                dest_wheatrra_inline1[wheatrra_dest_inline1[i]["origin_railhead"]] = wheatrra_dest_inline1[i]["destination_railhead"]
+
+            source_frk_rra_inline1 = {}
+            for i in range(len(frk_rra_origin_inline1)):
+                source_frk_rra_inline1[frk_rra_origin_inline1[i]["origin_railhead"]] = frk_rra_origin_inline1[i]["destination_railhead"]
+            
+            dest_frk_rra_inline1 = {}
+            for i in range(len(frk_rra_dest_inline1)):
+                dest_frk_rra_inline1[frk_rra_dest_inline1[i]["origin_railhead"]] = frk_rra_dest_inline1[i]["destination_railhead"]
+            
+            source_misc3_inline1 = {}
+            for i in range(len(misc3_origin_inline1)):
+                source_misc3_inline1[misc3_origin_inline1[i]["origin_railhead"]] = misc3_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc3_inline1 = {}
+            for i in range(len(misc3_dest_inline1)):
+                dest_misc3_inline1[misc3_dest_inline1[i]["origin_railhead"]] = misc3_dest_inline1[i]["destination_railhead"]
+            
+            source_misc4_inline1 = {}
+            for i in range(len(misc4_origin_inline1)):
+                source_misc4_inline1[misc4_origin_inline1[i]["origin_railhead"]] = misc4_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc4_inline1 = {}
+            for i in range(len(misc4_dest_inline1)):
+                dest_misc4_inline1[misc4_dest_inline1[i]["origin_railhead"]] = misc4_dest_inline1[i]["destination_railhead"]
+
+            L110 = list(source_wheat_inline1.keys())
+            L210 = list(source_rra_inline1.keys())
+            L310 = list(source_coarseGrain_inline1.keys())
+            L410 = list(source_frkrra_inline1.keys())
+            L51 = list(source_frkbr_inline1.keys())
+            L61 = list(source_frk_inline1.keys())
+            L71 = list(source_frkcgr_inline1.keys())
+            L81 = list(source_wcgr_inline1.keys())
+            L91 = list(dest_wheat_inline1.keys())
+            L101 = list(dest_rra_inline1.keys())
+            L111 = list(dest_coarseGrain_inline1.keys())
+            L121 = list(dest_frkrra_inline1.keys())
+            L131 = list(dest_frkbr_inline1.keys())
+            L141 = list(dest_frk_inline1.keys())
+            L151 = list(dest_frkcgr_inline1.keys())
+            L161 = list(dest_wcgr_inline1.keys())
+
+            L171= list(source_rrc_inline1.keys())
+            L181 = list(dest_rrc_inline1.keys())
+            L191 = list(source_ragi_inline1.keys())
+            L201 = list(dest_ragi_inline1.keys())
+            L211 = list(source_jowar_inline1.keys())
+            L221 = list(dest_jowar_inline1.keys())
+            L231 = list(source_bajra_inline1.keys())
+            L241 = list(dest_bajra_inline1.keys())
+            L251 = list(source_maize_inline1.keys())
+            L261 = list(dest_maize_inline1.keys())
+            L271 = list(source_misc1_inline1.keys())
+            L281 = list(dest_misc1_inline1.keys())
+            L291 = list(source_misc2_inline1.keys())
+            L301 = list(dest_misc2_inline1.keys())
+            L311 = list(source_wheaturs_inline1.keys())
+            L321 = list(dest_wheaturs_inline1.keys())
+            L331 = list(source_wheatfaq_inline1.keys())
+            L341 = list(dest_wheatfaq_inline1.keys())
+            L351 = list(source_wheatrra_inline1.keys())
+            L361 = list(dest_wheatrra_inline1.keys())
+            L371 = list(source_frk_rra_inline1.keys())
+            L381 = list(dest_frk_rra_inline1.keys())
+            L391 = list(source_misc3_inline1.keys())
+            L401 = list(dest_misc3_inline1.keys())
+            L411 = list(source_misc4_inline1.keys())
+            L421 = list(dest_misc4_inline1.keys())
+
+            list_src_wheat1 = []
+            for i in L110:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_wheat1.keys() or dest_wheat_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_wheat_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_wheat_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+                list_src_wheat1.append(Value[max(List_B)])
+
+            for i in list_src_wheat1:
+                source_wheat1[i] = 1
+
+            list_dest_wheat1 = []
+            for i in L91:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_wheat1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_wheat_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_wheat_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_wheat1.append(Value[max(List_B)])
+
+            for i in list_dest_wheat1:
+                dest_wheat1[i] = 1
+
+            list_src_rra1 = []
+            for i in L210:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_rra1.keys() or dest_rra_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_rra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_rra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_rra1.append(Value[max(List_B)])
+
+            for i in list_src_rra1:
+                source_rra1[i] = 1
+            
+            list_dest_rra1 = []
+            for i in L101:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_rra1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_rra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_rra_inline1[i]][j])
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+                list_dest_rra1.append(Value[max(List_B)])
+            
+            for i in list_dest_rra1:
+                dest_rra1[i] = 1
+
+            list_src_coarseGrain1 = []
+            for i in L310:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_coarseGrain1.keys() or dest_coarseGrain_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_coarseGrain_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_coarseGrain_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_coarseGrain1.append(Value[max(List_B)])
+
+            for i in list_src_coarseGrain1:
+                source_coarseGrain1[i] = 1
+            
+            list_dest_coarseGrain1 = []
+            for i in L111:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_coarseGrain1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_coarseGrain_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_coarseGrain_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+                list_dest_coarseGrain1.append(Value[max(List_B)])
+            
+            for i in list_dest_coarseGrain1:
+                dest_coarseGrain1[i] = 1
+
+            list_src_frkrra1 = []
+            for i in L410:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_frkrra1.keys() or dest_frkrra_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_frkrra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_frkrra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_frkrra1.append(Value[max(List_B)])
+
+            for i in list_src_frkrra1:
+                source_frkrra1[i] = 1
+            
+            list_dest_frkrra1 = []
+            for i in L121:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_frkrra1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_frkrra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_frkrra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+                list_dest_frkrra1.append(Value[max(List_B)])
+            
+            for i in list_dest_frkrra1:
+                dest_frkrra1[i] = 1
+
+            list_src_frkbr1 = []
+            for i in L5:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_frkbr1.keys() or dest_frkbr_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_frkbr_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_frkbr_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_frkbr1.append(Value[max(List_B)])
+
+            for i in list_src_frkbr1:
+                source_frkbr1[i] = 1
+            
+            list_dest_frkbr1 = []
+            for i in L131:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_frkbr1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_frkbr_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_frkbr_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+                list_dest_frkbr1.append(Value[max(List_B)])
+            
+            for i in list_dest_frkbr1:
+                dest_frkbr1[i] = 1
+
+            list_src_frk1 = []
+            for i in L61:
+                Value = {}
+                List_A = []
+                List_B = []
+                print(dest_frk_inline)
+                for j in dest_frk1.keys() or dest_frk_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_frk_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_frk_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_frk1.append(Value[max(List_B)])
+
+            for i in list_src_frk1:
+                source_frk1[i] = 1
+            
+            list_dest_frk1 = []
+            for i in L141:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_frk1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_frk_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_frk_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+                list_dest_frk1.append(Value[max(List_B)])
+            
+            for i in list_dest_frk1:
+                dest_frk1[i] = 1
+
+            list_src_wcgr1 = []
+            for i in L81:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_wcgr1.keys() or dest_wcgr_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_wcgr_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_wcgr_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_wcgr1.append(Value[max(List_B)])
+
+            for i in list_src_wcgr1:
+                source_wcgr1[i] = 1
+            
+            list_dest_wcgr1 = []
+            for i in L16:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_wcgr1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_wcgr_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_wcgr_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+                list_dest_wcgr1.append(Value[max(List_B)])
+            
+            for i in list_dest_wcgr1:
+                dest_wcgr1[i] = 1
+
+            list_src_frkcgr1 = []
+            for i in L71:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_frkcgr1.keys() or dest_frkcgr_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_frkcgr_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_frkcgr_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_frkcgr1.append(Value[max(List_B)])
+
+            for i in list_src_frkcgr1:
+                source_frkcgr1[i] = 1
+            
+            list_dest_frkcgr1 = []
+            for i in L151:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_frkcgr1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_frkcgr_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_frkcgr_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_frkcgr1.append(Value[max(List_B)])
+            
+            for i in list_dest_frkcgr1:
+                dest_frkcgr1[i] = 1
+
+            list_src_rrc1 = []
+            for i in L171:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_rrc1.keys() or dest_rrc_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_rrc_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_rrc_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_rrc1.append(Value[max(List_B)])
+
+            for i in list_src_rrc1:
+                source_rrc1[i] = 1
+            
+            list_dest_rrc1 = []
+            for i in L18:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_rrc1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_rrc_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_rrc_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_rrc1.append(Value[max(List_B)])
+            
+            for i in list_dest_rrc1:
+                dest_rrc1[i] = 1
+
+            list_src_ragi1 = []
+            for i in L191:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_ragi1.keys() or dest_ragi_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_ragi_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_ragi_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_ragi1.append(Value[max(List_B)])
+
+            for i in list_src_ragi1:
+                source_ragi1[i] = 1
+            
+            list_dest_ragi1 = []
+            for i in L201:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_ragi1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_ragi_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_ragi_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_ragi1.append(Value[max(List_B)])
+            
+            for i in list_dest_ragi1:
+                dest_ragi1[i] = 1
+
+            list_src_jowar1 = []
+            for i in L211:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_jowar1.keys() or dest_jowar_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_jowar_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_jowar_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_jowar1.append(Value[max(List_B)])
+
+            for i in list_src_jowar1:
+                source_jowar1[i] = 1
+            
+            list_dest_jowar1 = []
+            for i in L221:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_jowar1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_jowar_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_jowar_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_jowar1.append(Value[max(List_B)])
+            
+            for i in list_dest_jowar1:
+                dest_jowar1[i] = 1
+
+            list_src_bajra1 = []
+            for i in L231:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_bajra1.keys() or dest_bajra_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_bajra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_bajra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_bajra1.append(Value[max(List_B)])
+
+            for i in list_src_bajra1:
+                source_bajra1[i] = 1
+            
+            list_dest_bajra1 = []
+            for i in L241:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_bajra1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_bajra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_bajra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_bajra1.append(Value[max(List_B)])
+            
+            for i in list_dest_bajra1:
+                dest_bajra1[i] = 1
+
+            list_src_maize1 = []
+            for i in L251:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_maize1.keys() or dest_maize_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_maize_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_maize_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_maize1.append(Value[max(List_B)])
+
+            for i in list_src_maize1:
+                source_maize1[i] = 1
+            
+            list_dest_maize1 = []
+            for i in L261:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_maize1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_maize_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_maize_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_maize1.append(Value[max(List_B)])
+            
+            for i in list_dest_maize1:
+                dest_maize1[i] = 1
+
+            list_src_misc11 = []
+            for i in L271:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_misc11.keys() or dest_misc1_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_misc1_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_misc1_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_misc11.append(Value[max(List_B)])
+
+            for i in list_src_misc11:
+                source_misc11[i] = 1
+            
+            list_dest_misc11 = []
+            for i in L281:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_misc11.keys():
+                    List_A.append(i)
+                    List_A.append(dest_misc1_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_misc1_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_misc11.append(Value[max(List_B)])
+            
+            for i in list_dest_misc11:
+                dest_misc11[i] = 1
+
+            list_src_misc21 = []
+            for i in L291:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_misc21.keys() or dest_misc2_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_misc2_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_misc2_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_misc21.append(Value[max(List_B)])
+
+            for i in list_src_misc21:
+                source_misc21[i] = 1
+            
+            list_dest_misc21 = []
+            for i in L301:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_misc21.keys():
+                    List_A.append(i)
+                    List_A.append(dest_misc2_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_misc2_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_misc21.append(Value[max(List_B)])
+            
+            for i in list_dest_misc21:
+                dest_misc21[i] = 1
+
+            list_src_wheaturs1 = []
+            for i in L311:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_wheaturs1.keys() or dest_wheaturs_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_wheaturs_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_wheaturs_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_wheaturs1.append(Value[max(List_B)])
+
+            for i in list_src_wheaturs1:
+                source_wheaturs1[i] = 1
+            
+            list_dest_wheaturs1 = []
+            for i in L321:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_wheaturs1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_wheaturs_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_wheaturs_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_wheaturs1.append(Value[max(List_B)])
+            
+            for i in list_dest_wheaturs1:
+                dest_wheaturs1[i] = 1
+
+            list_src_wheatfaq1 = []
+            for i in L331:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_wheatfaq1.keys() or dest_wheatfaq_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_wheatfaq_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_wheatfaq_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_wheatfaq1.append(Value[max(List_B)])
+
+            for i in list_src_wheatfaq1:
+                source_wheatfaq1[i] = 1
+            
+            list_dest_wheatfaq1 = []
+            for i in L341:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_wheatfaq1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_wheatfaq_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_wheatfaq_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_wheatfaq1.append(Value[max(List_B)])
+            
+            for i in list_dest_wheatfaq1:
+                dest_wheatfaq1[i] = 1
+
+            list_src_wheatrra1 = []
+            for i in L351:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_wheatrra1.keys() or dest_wheatrra_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_wheatrra_inline[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_wheatrra_inline[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_wheatrra1.append(Value[max(List_B)])
+
+            for i in list_src_wheatrra1:
+                source_wheatrra1[i] = 1
+            
+            list_dest_wheatrra1 = []
+            for i in L361:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_wheatrra1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_wheatrra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_wheatrra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_wheatrra1.append(Value[max(List_B)])
+            
+            for i in list_dest_wheatrra1:
+                dest_wheatrra1[i] = 1
+
+            list_src_frk_rra1 = []
+            for i in L37:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_frk_rra1.keys() or dest_frk_rra_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_frk_rra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_frk_rra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_frk_rra1.append(Value[max(List_B)])
+
+            for i in list_src_frk_rra1:
+                source_frk_rra1[i] = 1
+            
+            list_dest_frk_rra1 = []
+            for i in L381:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_frk_rra1.keys():
+                    List_A.append(i)
+                    List_A.append(dest_frk_rra_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_frk_rra_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_frk_rra1.append(Value[max(List_B)])
+            
+            for i in list_dest_frk_rra1:
+                dest_frk_rra1[i] = 1
+            
+            list_src_misc31 = []
+            for i in L391:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_misc31.keys() or dest_misc3_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_misc3_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_misc3_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_misc31.append(Value[max(List_B)])
+
+            for i in list_src_misc31:
+                source_misc31[i] = 1
+            
+            list_dest_misc31 = []
+            for i in L401:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_misc31.keys():
+                    List_A.append(i)
+                    List_A.append(dest_misc3_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_misc3_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_misc31.append(Value[max(List_B)])
+            
+            for i in list_dest_misc31:
+                dest_misc31[i] = 1
+            
+            list_src_misc41 = []
+            for i in L411:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in dest_misc41.keys() or dest_misc4_inline1.keys():
+                    List_A.append(i)
+                    List_A.append(source_misc4_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[source_misc4_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_src_misc41.append(Value[max(List_B)])
+
+            for i in list_src_misc41:
+                source_misc41[i] = 1
+            
+            list_dest_misc41 = []
+            for i in L421:
+                Value = {}
+                List_A = []
+                List_B = []
+                for j in source_misc41.keys():
+                    List_A.append(i)
+                    List_A.append(dest_misc4_inline1[i])
+                    List_B.append(distance_rh[i][j])
+                    List_B.append(distance_rh[dest_misc4_inline1[i]][j])
+
+                for i in range(len(List_A)):
+                    Value[List_B[i]] = List_A[i]
+
+                list_dest_misc41.append(Value[max(List_B)])
+            
+            for i in list_dest_misc41:
+                dest_misc41[i] = 1
+            
+            x_ij_wheat1 = LpVariable.dicts("x_wheat1", [(i, j) for i in source_wheat1.keys() for j in dest_wheat1.keys()],lowBound = 0, cat="Integer")
+            x_ij_rra1 = LpVariable.dicts("x_rra1", [(i, j) for i in source_rra1.keys() for j in dest_rra1.keys()],lowBound = 0, cat="Integer")
+            x_ij_coarseGrain1 = LpVariable.dicts("x_coarsegrain1", [(i, j) for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()],lowBound = 0, cat="Integer")
+            x_ij_frkrra1 = LpVariable.dicts("x_frkrra1", [(i, j) for i in source_frkrra1.keys() for j in dest_frkrra1.keys()],lowBound = 0, cat="Integer")
+            x_ij_frk_br1 = LpVariable.dicts("x_frk_br1",[(i,j) for i in source_frkbr1.keys() for j in dest_frkbr1.keys()],lowBound = 0,cat="Integer")
+            x_ij_frk1 = LpVariable.dicts("x_frk1",[(i,j) for i in source_frk1.keys() for j in dest_frk1.keys()],lowBound = 0,cat="Integer")
+            x_ij_frkcgr1 = LpVariable.dicts("x_frkcgr1",[(i,j) for i in source_frkcgr1.keys() for j in dest_frkcgr1.keys()],lowBound = 0,cat="Integer")
+            x_ij_wcgr1 = LpVariable.dicts("x_wcgr1",[(i,j) for i in source_wcgr1.keys() for j in dest_wcgr1.keys()],lowBound = 0,cat="Integer")
+            x_ij_rrc1 = LpVariable.dicts("x_rrc1",[(i,j) for i in source_rrc1.keys() for j in dest_rrc1.keys()],lowBound = 0,cat="Integer")
+            x_ij_ragi1 = LpVariable.dicts("x_ragi1",[(i,j) for i in source_ragi1.keys() for j in dest_ragi1.keys()],lowBound = 0,cat="Integer")
+            x_ij_jowar1 = LpVariable.dicts("x_jowar1",[(i,j) for i in source_jowar1.keys() for j in dest_jowar1.keys()],lowBound = 0,cat="Integer")
+            x_ij_bajra1 = LpVariable.dicts("x_bajra1",[(i,j) for i in source_bajra1.keys() for j in dest_bajra1.keys()],lowBound = 0,cat="Integer")
+            x_ij_maize1 = LpVariable.dicts("x_maize1",[(i,j) for i in source_maize1.keys() for j in dest_maize1.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc11 = LpVariable.dicts("x_misc11",[(i,j) for i in source_misc11.keys() for j in dest_misc11.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc21 = LpVariable.dicts("x_misc21",[(i,j) for i in source_misc21.keys() for j in dest_misc21.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheaturs1 = LpVariable.dicts("x_wheaturs1",[(i,j) for i in source_wheaturs1.keys() for j in dest_wheaturs1.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheatfaq1 = LpVariable.dicts("x_wheatfaq1",[(i,j) for i in source_wheatfaq1.keys() for j in dest_wheatfaq1.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheatrra1 = LpVariable.dicts("x_wheatrra1",[(i,j) for i in source_wheatrra1.keys() for j in dest_wheatrra1.keys()],lowBound = 0,cat="Integer")
+            x_ij_frk_rra1 = LpVariable.dicts("x_frk_rra1",[(i,j) for i in source_frk_rra1.keys() for j in dest_frk_rra1.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc31 = LpVariable.dicts("x_misc31",[(i,j) for i in source_misc31.keys() for j in dest_misc31.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc41 = LpVariable.dicts("x_misc41",[(i,j) for i in source_misc41.keys() for j in dest_misc41.keys()],lowBound = 0,cat="Integer")
+            
+            prob += (
+                lpSum(x_ij_wheat1[(i, j)] * rail_cost.loc[i][j] for i in source_wheat1.keys() for j in dest_wheat1.keys()) +
+                lpSum(x_ij_rra1[(i, j)] * rail_cost.loc[i][j] for i in source_rra1.keys() for j in dest_rra1.keys()) +
+                lpSum(x_ij_coarseGrain1[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()) +
+                lpSum(x_ij_frkrra1[(i, j)] * rail_cost.loc1[i][j] for i in source_frkrra1.keys() for j in dest_frkrra1.keys()) +
+                lpSum(x_ij_frk_br1[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr1.keys() for j in dest_frkbr1.keys()) +
+                lpSum(x_ij_frk1[(i, j)] * rail_cost.loc[i][j] for i in source_frk1.keys() for j in dest_frk1.keys()) +
+                lpSum(x_ij_frkcgr1[(i, j)] * rail_cost1.loc[i][j] for i in source_frkcgr1.keys() for j in dest_frkcgr1.keys()) +
+                lpSum(x_ij_wcgr1[(i, j)] * rail_cost1.loc[i][j] for i in source_wcgr1.keys() for j in dest_wcgr1.keys()) +
+                lpSum(x_ij_rrc1[(i, j)] * rail_cost1.loc[i][j] for i in source_rrc1.keys() for j in dest_rrc1.keys()) +
+                lpSum(x_ij_ragi1[(i, j)] * rail_cost.loc[i][j] for i in source_ragi1.keys() for j in dest_ragi1.keys()) +
+                lpSum(x_ij_jowar1[(i, j)] * rail_cost.loc[i][j] for i in source_jowar1.keys() for j in dest_jowar1.keys()) +
+                lpSum(x_ij_bajra1[(i, j)] * rail_cost.loc[i][j] for i in source_bajra1.keys() for j in dest_bajra1.keys()) +
+                lpSum(x_ij_maize1[(i, j)] * rail_cost.loc[i][j] for i in source_maize1.keys() for j in dest_maize1.keys()) +
+                lpSum(x_ij_misc11[(i, j)] * rail_cost.loc[i][j] for i in source_misc11.keys() for j in dest_misc11.keys()) +
+                lpSum(x_ij_misc21[(i, j)] * rail_cost.loc[i][j] for i in source_misc21.keys() for j in dest_misc21.keys()) +
+                lpSum(x_ij_wheaturs1[(i, j)] * rail_cost.loc[i][j] for i in source_wheaturs1.keys() for j in dest_wheaturs1.keys()) +
+                lpSum(x_ij_wheatfaq1[(i, j)] * rail_cost.loc[i][j] for i in source_wheatfaq1.keys() for j in dest_wheatfaq1.keys()) +
+                lpSum(x_ij_wheatrra1[(i, j)] * rail_cost.loc[i][j] for i in source_wheatrra1.keys() for j in dest_wheatrra1.keys()) +
+                lpSum(x_ij_frk_rra1[(i, j)] * rail_cost.loc[i][j] for i in source_frk_rra1.keys() for j in dest_frk_rra1.keys()) +
+                lpSum(x_ij_misc31[(i, j)] * rail_cost.loc[i][j] for i in source_misc31.keys() for j in dest_misc31.keys()) +
+                lpSum(x_ij_misc41[(i, j)] * rail_cost.loc[i][j] for i in source_misc41.keys() for j in dest_misc41.keys()) 
+            )
+            
+            for i in source_wheat1.keys():
+                prob += lpSum(x_ij_wheat1[(i, j)] for j in dest_wheat1.keys()) <= source_wheat1[i]
+             
+            for i in dest_wheat1.keys():
+                prob += lpSum(x_ij_wheat1[(j, i)] for j in source_wheat1.keys()) >= dest_wheat1[i]
+
+            for i in source_rra1.keys():
+                prob += lpSum(x_ij_rra1[(i, j)] for j in dest_rra1.keys()) <= source_rra1[i]
+
+            for i in dest_rra1.keys():
+                prob += lpSum(x_ij_rra1[(j, i)] for j in source_rra1.keys()) >= dest_rra1[i]
+
+            for i in source_coarseGrain1.keys():
+                prob += lpSum(x_ij_coarseGrain1[(i, j)] for j in dest_coarseGrain1.keys()) <= source_coarseGrain1[i]
+
+            for i in dest_coarseGrain.keys():
+                prob += lpSum(x_ij_coarseGrain1[(j, i)] for j in source_coarseGrain1.keys()) >= dest_coarseGrain1[i]
+            
+            for i in source_frkrra1.keys():
+                prob += lpSum(x_ij_frkrra1[(i, j)] for j in dest_frkrra1.keys()) <= source_frkrra1[i]
+            
+            for i in dest_frkrra1.keys():
+                prob += lpSum(x_ij_frkrra1[(j, i)] for j in source_frkrra1.keys()) >= dest_frkrra1[i]
+
+            for i in source_frkbr1.keys():
+                prob += lpSum(x_ij_frk_br1[(i, j)] for j in dest_frkbr1.keys()) <= source_frkbr1[i]
+
+            for i in dest_frkbr1.keys():
+                prob += lpSum(x_ij_frk_br1[(j, i)] for j in source_frkbr1.keys()) >= dest_frkbr1[i] 
+
+            for i in source_frk1.keys():
+                prob += lpSum(x_ij_frk1[(i, j)] for j in dest_frk1.keys()) <= source_frk1[i]
+
+            for i in dest_frk.keys():
+                prob += lpSum(x_ij_frk1[(j, i)] for j in source_frk1.keys()) >= dest_frk1[i] 
+
+            for i in source_frkcgr.keys():
+                prob += lpSum(x_ij_frkcgr1[(i, j)] for j in dest_frkcgr1.keys()) <= source_frkcgr1[i]
+
+            for i in dest_frkcgr1.keys():
+                prob += lpSum(x_ij_frkcgr1[(j, i)] for j in source_frkcgr1.keys()) >= dest_frkcgr1[i] 
+
+            for i in source_wcgr1.keys():
+                prob += lpSum(x_ij_wcgr1[(i, j)] for j in dest_wcgr1.keys()) <= source_wcgr1[i]
+
+            for i in dest_wcgr1.keys():
+                prob += lpSum(x_ij_wcgr1[(j, i)] for j in source_wcgr1.keys()) >= dest_wcgr1[i] 
+
+            for i in source_rrc1.keys():
+                prob += lpSum(x_ij_rrc1[(i, j)] for j in dest_rrc1.keys()) <= source_rrc1[i]
+
+            for i in dest_rrc1.keys():
+                prob += lpSum(x_ij_rrc1[(j, i)] for j in source_rrc1.keys()) >= dest_rrc1[i] 
+
+            for i in source_ragi1.keys():
+                prob += lpSum(x_ij_ragi1[(i, j)] for j in dest_ragi1.keys()) <= source_ragi1[i]
+
+            for i in dest_ragi1.keys():
+                prob += lpSum(x_ij_ragi1[(j, i)] for j in source_ragi1.keys()) >= dest_ragi1[i] 
+                
+            for i in source_jowar1.keys():
+                prob += lpSum(x_ij_jowar1[(i, j)] for j in dest_jowar1.keys()) <= source_jowar1[i]
+
+            for i in dest_jowar1.keys():
+                prob += lpSum(x_ij_jowar[(j, i)] for j in source_jowar.keys()) >= dest_jowar[i] 
+
+            for i in source_bajra1.keys():
+                prob += lpSum(x_ij_bajra1[(i, j)] for j in dest_bajra.keys1()) <= source_bajra1[i]
+
+            for i in dest_bajra1.keys():
+                prob += lpSum(x_ij_bajra1[(j, i)] for j in source_bajra1.keys()) >= dest_bajra1[i] 
+
+            for i in source_maize1.keys():
+                prob += lpSum(x_ij_maize1[(i, j)] for j in dest_maize1.keys()) <= source_maize1[i]
+
+            for i in dest_maize1.keys():
+                prob += lpSum(x_ij_maize1[(j, i)] for j in source_maize1.keys()) >= dest_maize1[i] 
+
+            for i in source_misc11.keys():
+                prob += lpSum(x_ij_misc11[(i, j)] for j in dest_misc11.keys()) <= source_misc11[i]
+
+            for i in dest_misc11.keys():
+                prob += lpSum(x_ij_misc11[(j, i)] for j in source_misc11.keys()) >= dest_misc11[i] 
+
+            for i in source_misc21.keys():
+                prob += lpSum(x_ij_misc21[(i, j)] for j in dest_misc21.keys()) <= source_misc21[i]
+
+            for i in dest_misc21.keys():
+                prob += lpSum(x_ij_misc21[(j, i)] for j in source_misc21.keys()) >= dest_misc21[i] 
+
+            for i in source_wheaturs1.keys():
+                prob += lpSum(x_ij_wheaturs1[(i, j)] for j in dest_wheaturs1.keys()) <= source_wheaturs[i]
+
+            for i in dest_wheaturs1.keys():
+                prob += lpSum(x_ij_wheaturs1[(j, i)] for j in source_wheaturs1.keys()) >= dest_wheaturs[i] 
+
+            for i in source_wheatfaq1.keys():
+                prob += lpSum(x_ij_wheatfaq1[(i, j)] for j in dest_wheatfaq1.keys()) <= source_wheatfaq1[i]
+
+            for i in dest_wheatfaq1.keys():
+                prob += lpSum(x_ij_wheatfaq1[(j, i)] for j in source_wheatfaq1.keys()) >= dest_wheatfaq1[i] 
+
+            for i in source_wheatrra1.keys():
+                prob += lpSum(x_ij_wheatrra1[(i, j)] for j in dest_wheatrra1.keys()) <= source_wheatrra1[i]
+
+            for i in dest_wheatrra1.keys():
+                prob += lpSum(x_ij_wheatrra1[(j, i)] for j in source_wheatrra1.keys()) >= dest_wheatrra1[i] 
+
+            for i in source_frk_rra1.keys():
+                prob += lpSum(x_ij_frk_rra1[(i, j)] for j in dest_frk_rra1.keys()) <= source_frk_rra1[i]
+
+            for i in dest_frk_rra1.keys():
+                prob += lpSum(x_ij_frk_rra1[(j, i)] for j in source_frk_rra1.keys()) >= dest_frk_rra1[i] 
+            
+            for i in source_misc31.keys():
+                prob += lpSum(x_ij_misc31[(i, j)] for j in dest_misc31.keys()) <= source_misc31[i]
+
+            for i in dest_misc31.keys():
+                prob += lpSum(x_ij_misc31[(j, i)] for j in source_misc31.keys()) >= dest_misc31[i] 
+            
+            for i in source_misc41.keys():
+                prob += lpSum(x_ij_misc41[(i, j)] for j in dest_misc41.keys()) <= source_misc41[i]
+
+            for i in dest_misc41.keys():
+                prob += lpSum(x_ij_misc41[(j, i)] for j in source_misc41.keys()) >= dest_misc41[i] 
+
+            # prob.solve(CPLEX())
+            prob.solve()
+            print("Status for 58w:", LpStatus[prob.status])
+            print("Minimum Cost of Transportation for 58w= Rs.", prob.objective.value(), "Lakh")
+            print("Total Number of Variables for 58w:", len(prob.variables()))
+            print("Total Number of Constraints for 58w:", len(prob.constraints))
+            # dataframe for 42 wagon
             df_wheat = pd.DataFrame()
             From = []
             To = []
@@ -2424,6 +3905,8 @@ def Daily_Planner():
             sourceId = []
             destinationId = []
             # Cost = []
+            source_rake = []
+            destination_rake = []
 
             for i in source_wheat:
                 for j in dest_wheat:
@@ -2441,6 +3924,7 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
 
             # for adding origin state and devision from inline
             for i in range(len(From)):
@@ -2448,6 +3932,7 @@ def Daily_Planner():
                     if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
                         From_state.append(wheat["origin_state"])
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
 
             # To add inline division 
@@ -2468,6 +3953,7 @@ def Daily_Planner():
                     if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         found_division = True
                         break
                 if not found_division:
@@ -2480,6 +3966,7 @@ def Daily_Planner():
                     if To[i] == wheat["origin_railhead"]:
                         To_state.append(wheat["origin_state"])
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         found_state = True
                         break
                 if not found_state:
@@ -2544,6 +4031,8 @@ def Daily_Planner():
             df_wheat["InlineDestinationDivision"] = To_inlineDivision
             df_wheat["sourceId"] = sourceId
             df_wheat["destinationId"] = destinationId
+            df_wheat["SourceRakeType"] = source_rake
+            df_wheat["DestinationRakeType"] = destination_rake
             
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline.keys():
@@ -2557,6 +4046,141 @@ def Daily_Planner():
                     if (i == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i] == df_wheat.iloc[j]["SourceRailHead"]):
                         df_wheat.loc[j, 'SourceRailHead'] = (i + '+' + source_wheat_inline[i])
             
+            df_wheat1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            # Cost = []
+            source_rake = []
+            destination_rake = []
+
+            for i in source_wheat1:
+                for j in dest_wheat1:
+                    if int(x_ij_wheat1[(i, j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wheat1[(i, j)].value())
+                        commodity.append("Wheat")
+                        Flag.append(region)
+
+            # for adding origin state and devision  
+            for i in range(len(From)):
+                for wheat in wheat_origin1:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+
+            # for adding origin state and devision from inline
+            for i in range(len(From)):
+                for wheat in wheat_origin_inline1:
+                    if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        sourceId.append(wheat["sourceId"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        source_rake.append(wheat["rake"])
+
+            # To add inline division 
+            for i in range(len(From)):
+                found_division = False
+                for wheat in wheat_origin_inline1:
+                    if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                        found_division = True
+                        break
+                if not found_division:
+                    From_inlineDivision.append("")  
+            
+            # To add inline destination division
+            for i in range(len(To)):
+                found_division = False
+                for wheat in wheat_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        found_division = True
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")  
+
+            # To add destination state  
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheat_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheat_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break   
+
+            # To add destination division
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheat_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheat_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                            found_state = True
+                            break   
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            df_wheat1["SourceRailHead"] = From
+            df_wheat1["SourceState"] = From_state
+            df_wheat1["DestinationRailHead"] = To
+            df_wheat1["DestinationState"] = To_state
+            df_wheat1["Commodity"] = commodity
+            # df_wheat["Cost"] = Cost
+            df_wheat1["Rakes"] = values
+            df_wheat1["Flag"] = Flag
+            df_wheat1["SourceDivision"] = From_division
+            df_wheat1["DestinationDivision"] = To_division
+            df_wheat1["InlineSourceDivision"] = From_inlineDivision
+            df_wheat1["InlineDestinationDivision"] = To_inlineDivision
+            df_wheat1["sourceId"] = sourceId
+            df_wheat1["destinationId"] = destinationId
+            df_wheat1["SourceRakeType"] = source_rake
+            df_wheat1["DestinationRakeType"] = destination_rake
+            
+            # to add value1 + value2 for dstination
+            for i in dest_wheat_inline1.keys():
+                for j in range(len(df_wheat1["DestinationRailHead"])):
+                    if (i == df_wheat1.iloc[j]["DestinationRailHead"] or dest_wheat_inline1[i] == df_wheat1.iloc[j]["DestinationRailHead"]):
+                        df_wheat1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheat_inline1[i])
+             
+             # to add value1 + value2 for origin
+            for i in source_wheat_inline1.keys():
+                for j in range(len(df_wheat1["SourceRailHead"])):
+                    if (i == df_wheat1.iloc[j]["SourceRailHead"] or source_wheat_inline1[i] == df_wheat1.iloc[j]["SourceRailHead"]):
+                        df_wheat1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheat_inline1[i])
+
             df_rra = pd.DataFrame()
             From = []
             To = []
@@ -2572,6 +4196,8 @@ def Daily_Planner():
             # Cost = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
 
             for i in source_rra:
                 for j in dest_rra:
@@ -2588,6 +4214,7 @@ def Daily_Planner():
                         From_state_rra.append(rra["origin_state"])
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
+                        source_rake.append(rra["rake"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline:
@@ -2595,6 +4222,7 @@ def Daily_Planner():
                         From_state_rra.append(rra["origin_state"])
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
+                        source_rake.append(rra["rake"])
   
             for i in range(len(To)):
                 found_state = False
@@ -2616,6 +4244,7 @@ def Daily_Planner():
                     if To[i] == rra["origin_railhead"]:
                         To_division.append(rra["destinationDivision"] if "destinationDivision" in rra else "")
                         destinationId.append(rra["destinationId"])
+                        destination_rake.append(rra["rake"])
                         found_state = True
                         break
                 if not found_state:
@@ -2641,6 +4270,7 @@ def Daily_Planner():
                     if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         found_division = True
                         break
                 if not found_division:
@@ -2685,6 +4315,8 @@ def Daily_Planner():
             df_rra["InlineDestinationDivision"] = To_inlineDivision
             df_rra["sourceId"] = sourceId
             df_rra["destinationId"] = destinationId
+            df_rra["SourceRakeType"] = source_rake
+            df_rra["DestinationRakeType"] = destination_rake
            
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["DestinationRailHead"])):
@@ -2695,6 +4327,153 @@ def Daily_Planner():
                 for j in range(len(df_rra["SourceRailHead"])):
                     if (i == df_rra.iloc[j]["SourceRailHead"] or source_rra_inline[i] == df_rra.iloc[j]["SourceRailHead"]):
                         df_rra.loc[j, 'SourceRailHead'] = (i + '+' + source_rra_inline[i])
+            
+            df_rra1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state_rra = []
+            To_state_rra = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            # Cost = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+
+            for i in source_rra1:
+                for j in dest_rra1:
+                    if int(x_ij_rra[(i, j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_rra[(i, j)].value())
+                        commodity.append("RRA")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for rra in rra_origin1:
+                    if From[i] == rra["origin_railhead"]:
+                        From_state_rra.append(rra["origin_state"])
+                        From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
+                        sourceId.append(rra["sourceId"])
+                        source_rake.append(rra["rake"])
+            
+            for i in range(len(From)):
+                for rra in rra_origin_inline1:
+                    if From[i] == rra["origin_railhead"] or From[i] == rra["destination_railhead"] :
+                        From_state_rra.append(rra["origin_state"])
+                        From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
+                        sourceId.append(rra["sourceId"])
+                        source_rake.append(rra["rake"])
+  
+            for i in range(len(To)):
+                found_state = False
+                for rra in rra_dest1:
+                    if To[i] == rra["origin_railhead"]:
+                        To_state_rra.append(rra["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for rra in rra_dest_inline1:
+                        if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"]:
+                            To_state_rra.append(rra["origin_state"])
+                            found_state = True
+                            break
+
+            for i in range(len(To)):
+                found_state = False
+                for rra in rra_dest1:
+                    if To[i] == rra["origin_railhead"]:
+                        To_division.append(rra["destinationDivision"] if "destinationDivision" in rra else "")
+                        destinationId.append(rra["destinationId"])
+                        destination_rake.append(rra["rake"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for rra in rra_dest_inline1:
+                        if To[i] == rra["origin_railhead"] or To[i] == rra["destination_railhead"]:
+                            To_division.append(rra["destinationDivision"] if "destinationDivision" in rra else "")
+                            found_state = True
+                            break
+
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in rra_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in rra_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        found_division = True
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+         
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = float(confirmed_railhead_value[i])
+                if Commodity == 'RRA':
+                    From.append(org)
+                    From_state_rra.append(org_state)
+                    To.append(dest)
+                    To_state_rra.append(dest_state)
+                    commodity.append("RRA")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append("")
+                    To_division.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
+
+            df_rra1["SourceRailHead"] = From
+            df_rra1["SourceState"] = From_state_rra
+            df_rra1["DestinationRailHead"] = To
+            df_rra1["DestinationState"] = To_state_rra
+            df_rra1["Commodity"] = commodity
+            # df_rra1["Cost"] = Cost
+            df_rra1["Rakes"] = values
+            df_rra1["Flag"] = Flag
+            df_rra1["SourceDivision"] = From_division
+            df_rra1["DestinationDivision"] = To_division
+            df_rra1["InlineSourceDivision"] = From_inlineDivision
+            df_rra1["InlineDestinationDivision"] = To_inlineDivision
+            df_rra1["sourceId"] = sourceId
+            df_rra1["destinationId"] = destinationId
+            df_rra1["SourceRakeType"] = source_rake
+            df_rra1["DestinationRakeType"] = destination_rake
+           
+            for i in dest_rra_inline1.keys():
+                for j in range(len(df_rra1["DestinationRailHead"])):
+                    if (i == df_rra1.iloc[j]["DestinationRailHead"] or dest_rra_inline1[i] == df_rra1.iloc[j]["DestinationRailHead"]):
+                        df_rra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rra_inline1[i])
+
+            for i in source_rra_inline1.keys():
+                for j in range(len(df_rra1["SourceRailHead"])):
+                    if (i == df_rra1.iloc[j]["SourceRailHead"] or source_rra_inline1[i] == df_rra1.iloc[j]["SourceRailHead"]):
+                        df_rra1.loc[j, 'SourceRailHead'] = (i + '+' + source_rra_inline1[i])
 
             df_CoarseGrain = pd.DataFrame()
             From = []
@@ -2711,6 +4490,8 @@ def Daily_Planner():
             # Cost = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_coarseGrain:
                 for j in dest_coarseGrain:
@@ -2727,6 +4508,7 @@ def Daily_Planner():
                         From_state.append(coarseGrain["origin_state"])
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
+                        source_rake.append(coarseGrain["rake"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline:
@@ -2734,6 +4516,7 @@ def Daily_Planner():
                         From_state.append(coarseGrain["origin_state"])
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
+                        source_rake.append(coarseGrain["rake"])
 
             for i in range(len(To)):
                 found_state = False
@@ -2741,6 +4524,7 @@ def Daily_Planner():
                     if To[i] == coarseGrain["origin_railhead"]:
                         To_state.append(coarseGrain["origin_state"])
                         destinationId.append(coarseGrain["destinationId"])
+                        destination_rake.append(coarseGrain["rake"])
                         found_state = True
                         break
                 if not found_state:
@@ -2782,6 +4566,7 @@ def Daily_Planner():
                     if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         found_division = True
                         break
                 if not found_division:
@@ -2823,6 +4608,8 @@ def Daily_Planner():
             df_CoarseGrain["InlineDestinationDivision"] = To_inlineDivision
             df_CoarseGrain["sourceId"] = sourceId
             df_CoarseGrain["destinationId"] = destinationId
+            df_CoarseGrain["SourceRakeType"] = source_rake
+            df_CoarseGrain["DestinationRakeType"] = destination_rake
             
             for i in dest_coarseGrain_inline.keys():
                 for j in range(len(df_CoarseGrain["DestinationRailHead"])):
@@ -2833,6 +4620,131 @@ def Daily_Planner():
                 for j in range(len(df_CoarseGrain["SourceRailHead"])):
                     if (i == df_CoarseGrain.iloc[j]["SourceRailHead"] or source_coarseGrain_inline[i] == df_CoarseGrain.iloc[j]["SourceRailHead"]):
                         df_CoarseGrain.loc[j, 'SourceRailHead'] = (i + '+' + source_coarseGrain_inline[i])
+            
+            df_CoarseGrain1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag =[]
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            # Cost = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_coarseGrain1:
+                for j in dest_coarseGrain1:
+                    if int(x_ij_coarseGrain1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_coarseGrain1[(i,j)].value())
+                        commodity.append("Coarse Grains")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for coarseGrain in coarseGrain_origin1:
+                    if From[i] == coarseGrain["origin_railhead"]:
+                        From_state.append(coarseGrain["origin_state"])
+                        From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
+                        sourceId.append(coarseGrain["sourceId"])
+                        source_rake.append(coarseGrain["rake"])
+                        
+            for i in range(len(From)):
+                for coarseGrain in coarseGrain_origin_inline1:
+                    if From[i] == coarseGrain["origin_railhead"] or From[i] == coarseGrain["destination_railhead"] :
+                        From_state.append(coarseGrain["origin_state"])
+                        From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
+                        sourceId.append(coarseGrain["sourceId"])
+                        source_rake.append(coarseGrain["rake"])
+
+            for i in range(len(To)):
+                found_state = False
+                for coarseGrain in coarseGrain_dest1:
+                    if To[i] == coarseGrain["origin_railhead"]:
+                        To_state.append(coarseGrain["origin_state"])
+                        destinationId.append(coarseGrain["destinationId"])
+                        destination_rake.append(coarseGrain["rake"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for coarseGrain in coarseGrain_dest_inline1:
+                        if To[i] == coarseGrain["origin_railhead"] or To[i] == coarseGrain["destination_railhead"]:
+                            To_state.append(coarseGrain["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for coarseGrain in coarseGrain_dest1:
+                    if To[i] == coarseGrain["origin_railhead"]:
+                        To_division.append(coarseGrain["destinationDivision"] if "destinationDivision" in coarseGrain else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for coarseGrain in coarseGrain_dest_inline1:
+                        if To[i] == coarseGrain["origin_railhead"] or To[i] == coarseGrain["destination_railhead"]:
+                            To_division.append(coarseGrain["destinationDivision"] if "destinationDivision" in coarseGrain else "")
+                            found_state = True
+                            break   
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in coarseGrain_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in coarseGrain_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        found_division = True
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_CoarseGrain1["SourceRailHead"] = From
+            df_CoarseGrain1["SourceState"] = From_state
+            df_CoarseGrain1["DestinationRailHead"] = To
+            df_CoarseGrain1["DestinationState"] = To_state
+            df_CoarseGrain1["Commodity"] = commodity
+            # df_CoarseGrain1["Cost"] = Cost
+            df_CoarseGrain1["Rakes"] = values
+            df_CoarseGrain1["Flag"] = Flag
+            df_CoarseGrain1["SourceDivision"] = From_division
+            df_CoarseGrain1["DestinationDivision"] = To_division
+            df_CoarseGrain1["InlineSourceDivision"] = From_inlineDivision
+            df_CoarseGrain1["InlineDestinationDivision"] = To_inlineDivision
+            df_CoarseGrain1["sourceId"] = sourceId
+            df_CoarseGrain1["destinationId"] = destinationId
+            df_CoarseGrain1["SourceRakeType"] = source_rake
+            df_CoarseGrain1["DestinationRakeType"] = destination_rake
+            
+            for i in dest_coarseGrain_inline1.keys():
+                for j in range(len(df_CoarseGrain1["DestinationRailHead"])):
+                    if (i == df_CoarseGrain1.iloc[j]["DestinationRailHead"] or dest_coarseGrain_inline1[i] == df_CoarseGrain1.iloc[j]["DestinationRailHead"]):
+                        df_CoarseGrain1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_coarseGrain_inline1[i])
+
+            for i in source_coarseGrain_inline1.keys():
+                for j in range(len(df_CoarseGrain1["SourceRailHead"])):
+                    if (i == df_CoarseGrain1.iloc[j]["SourceRailHead"] or source_coarseGrain_inline1[i] == df_CoarseGrain1.iloc[j]["SourceRailHead"]):
+                        df_CoarseGrain1.loc[j, 'SourceRailHead'] = (i + '+' + source_coarseGrain_inline1[i])
+
 
             df_frkrra = pd.DataFrame()
             From = []
@@ -2849,6 +4761,8 @@ def Daily_Planner():
             # Cost = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_frkrra:
                 for j in dest_frkrra:
@@ -2865,6 +4779,7 @@ def Daily_Planner():
                         From_state.append(frkrra["origin_state"])
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
+                        source_rake.append(frkrra["rake"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline:
@@ -2872,6 +4787,7 @@ def Daily_Planner():
                         From_state.append(frkrra["origin_state"])
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
+                        source_rake.append(frkrra["rake"])
 
             for i in range(len(To)):
                 found_state = False
@@ -2894,6 +4810,7 @@ def Daily_Planner():
                         To_division.append(frkrra["destinationDivision"] if "destinationDivision" in frkrra else "")
                         found_state = True
                         destinationId.append(frkrra["destinationId"])
+                        destination_rake.append(frkrra["rake"])
                         break
                 if not found_state:
                     for frkrra in frkrra_dest_inline:
@@ -2921,6 +4838,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -2961,6 +4879,8 @@ def Daily_Planner():
             df_frkrra["InlineDestinationDivision"] = To_inlineDivision
             df_frkrra["sourceId"] = sourceId
             df_frkrra["destinationId"] = destinationId
+            df_frkrra["SourceRakeType"] = source_rake
+            df_frkrra["DestinationRakeType"] = destination_rake
 
             for i in dest_frkrra_inline.keys():
                 for j in range(len(df_frkrra["DestinationRailHead"])):
@@ -2971,6 +4891,130 @@ def Daily_Planner():
                 for j in range(len(df_frkrra["SourceRailHead"])):
                     if (i == df_frkrra.iloc[j]["SourceRailHead"] or source_frkrra_inline[i] == df_frkrra.iloc[j]["SourceRailHead"]):
                         df_frkrra.loc[j, 'SourceRailHead'] = (i + '+' + source_frkrra_inline[i])
+            
+            df_frkrra1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            # Cost = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_frkrra1:
+                for j in dest_frkrra1:
+                    if int(x_ij_frkrra1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frkrra1[(i,j)].value())
+                        commodity.append("FRK RRA")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for frkrra in frkrra_origin1:
+                    if From[i] == frkrra["origin_railhead"]:
+                        From_state.append(frkrra["origin_state"])
+                        From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
+                        sourceId.append(frkrra["sourceId"])
+                        source_rake.append(frkrra["rake"])
+
+            for i in range(len(From)):
+                for frkrra in frkrra_origin_inline1:
+                    if From[i] == frkrra["origin_railhead"] or From[i] == frkrra["destination_railhead"]:
+                        From_state.append(frkrra["origin_state"])
+                        From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
+                        sourceId.append(frkrra["sourceId"])
+                        source_rake.append(frkrra["rake"])
+
+            for i in range(len(To)):
+                found_state = False
+                for frkrra in frkrra_dest1:
+                    if To[i] == frkrra["origin_railhead"]:
+                        To_state.append(frkrra["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkrra in frkrra_dest_inline1:
+                        if To[i] == frkrra["origin_railhead"] or To[i] == frkrra["destination_railhead"]:
+                            To_state.append(frkrra["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for frkrra in frkrra_dest1:
+                    if To[i] == frkrra["origin_railhead"]:
+                        To_division.append(frkrra["destinationDivision"] if "destinationDivision" in frkrra else "")
+                        found_state = True
+                        destinationId.append(frkrra["destinationId"])
+                        destination_rake.append(frkrra["rake"])
+                        break
+                if not found_state:
+                    for frkrra in frkrra_dest_inline1:
+                        if To[i] == frkrra["origin_railhead"] or To[i] == frkrra["destination_railhead"]:
+                            To_division.append(frkrra["destinationDivision"] if "destinationDivision" in frkrra else "")
+                            found_state = True
+                            break   
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in frkrra_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in frkrra_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_frkrra1["SourceRailHead"] = From
+            df_frkrra1["SourceState"] = From_state
+            df_frkrra1["DestinationRailHead"] = To
+            df_frkrra1["DestinationState"] = To_state
+            df_frkrra1["Commodity"] = commodity
+            # df_frkrra["Cost"] = Cost
+            df_frkrra1["Rakes"] = values
+            df_frkrra1["Flag"]= Flag
+            df_frkrra1["SourceDivision"] = From_division
+            df_frkrra1["DestinationDivision"] = To_division
+            df_frkrra1["InlineSourceDivision"] = From_inlineDivision
+            df_frkrra1["InlineDestinationDivision"] = To_inlineDivision
+            df_frkrra1["sourceId"] = sourceId
+            df_frkrra1["destinationId"] = destinationId
+            df_frkrra1["SourceRakeType"] = source_rake
+            df_frkrra1["DestinationRakeType"] = destination_rake
+
+            for i in dest_frkrra_inline1.keys():
+                for j in range(len(df_frkrra1["DestinationRailHead"])):
+                    if (i == df_frkrra1.iloc[j]["DestinationRailHead"] or dest_frkrra_inline1[i] == df_frkrra1.iloc[j]["DestinationRailHead"]):
+                        df_frkrra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkrra_inline1[i])
+
+            for i in source_frkrra_inline1.keys():
+                for j in range(len(df_frkrra["SourceRailHead"])):
+                    if (i == df_frkrra1.iloc[j]["SourceRailHead"] or source_frkrra_inline1[i] == df_frkrra1.iloc[j]["SourceRailHead"]):
+                        df_frkrra1.loc[j, 'SourceRailHead'] = (i + '+' + source_frkrra_inline1[i])
 
             df_frkbr = pd.DataFrame()
             From = []
@@ -2987,6 +5031,8 @@ def Daily_Planner():
             # Cost = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_frkbr:
                 for j in dest_frkbr:
@@ -3003,6 +5049,7 @@ def Daily_Planner():
                         From_state.append(frkbr["origin_state"])
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
+                        source_rake.append(frkbr["rake"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline:
@@ -3010,6 +5057,7 @@ def Daily_Planner():
                         From_state.append(frkbr["origin_state"])
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
+                        source_rake.append(frkbr["rake"])
             
             for i in range(len(To)):
                 found_state = False
@@ -3032,6 +5080,7 @@ def Daily_Planner():
                         To_division.append(frkbr["destinationDivision"] if "destinationDivision" in frkbr else "")
                         found_state = True
                         destinationId.append(frkbr["destinationId"])
+                        destination_rake.append(frkbr["rake"])
                         break
                 if not found_state:
                     for frkbr in frkbr_dest_inline:
@@ -3060,6 +5109,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -3100,6 +5150,8 @@ def Daily_Planner():
             df_frkbr["InlineDestinationDivision"] = To_inlineDivision
             df_frkbr["sourceId"] = sourceId
             df_frkbr["destinationId"] = destinationId
+            df_frkbr["SourceRakeType"] = source_rake
+            df_frkbr["DestinationRakeType"] = destination_rake
 
             for i in dest_frkbr_inline.keys():
                 for j in range(len(df_frkbr["DestinationRailHead"])):
@@ -3110,6 +5162,125 @@ def Daily_Planner():
                 for j in range(len(df_frkbr["SourceRailHead"])):
                     if (i == df_frkbr.iloc[j]["SourceRailHead"] or source_frkbr_inline[i] == df_frkbr.iloc[j]["SourceRailHead"]):
                         df_frkbr.loc[j, 'SourceRailHead'] = (i + '+' + source_frkbr_inline[i])
+     #still this point rake type is not added
+            df_frkbr1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            # Cost = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_frkbr1:
+                for j in dest_frkbr1:
+                    if int(x_ij_frk_br1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frk_br1[(i,j)].value())
+                        commodity.append("FRK BR")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for frkbr in frkbr_origin1:
+                    if From[i] == frkbr["origin_railhead"]:
+                        From_state.append(frkbr["origin_state"])
+                        From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
+                        sourceId.append(frkbr["sourceId"])
+
+            for i in range(len(From)):
+                for frkbr in frkbr_origin_inline1:
+                    if From[i] == frkbr["origin_railhead"] or From[i] == frkbr["destination_railhead"]:
+                        From_state.append(frkbr["origin_state"])
+                        From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
+                        sourceId.append(frkbr["sourceId"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for frkbr in frkbr_dest1:
+                    if To[i] == frkbr["origin_railhead"]:
+                        To_state.append(frkbr["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkbr in frkbr_dest_inline1:
+                        if To[i] == frkbr["origin_railhead"] or To[i] == frkbr["destination_railhead"]:
+                            To_state.append(frkbr["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for frkbr in frkbr_dest1:
+                    if To[i] == frkbr["origin_railhead"]:
+                        To_division.append(frkbr["destinationDivision"] if "destinationDivision" in frkbr else "")
+                        found_state = True
+                        destinationId.append(frkbr["destinationId"])
+                        break
+                if not found_state:
+                    for frkbr in frkbr_dest_inline1:
+                        if To[i] == frkbr["origin_railhead"] or To[i] == frkbr["destination_railhead"]:
+                            To_division.append(frkbr["destinationDivision"] if "destinationDivision" in frkbr else "")
+                            found_state = True
+                            break   
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in frkbr_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in frkbr_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_frkbr["SourceRailHead"] = From
+            df_frkbr["SourceState"] = From_state
+            df_frkbr["DestinationRailHead"] = To
+            df_frkbr["DestinationState"] = To_state
+            df_frkbr["Commodity"] = commodity
+            # df_frkbr["Cost"] = Cost
+            df_frkbr["Rakes"] = values
+            df_frkbr["Flag"] = Flag
+            df_frkbr["SourceDivision"] = From_division
+            df_frkbr["DestinationDivision"] = To_division
+            df_frkbr["InlineSourceDivision"] = From_inlineDivision
+            df_frkbr["InlineDestinationDivision"] = To_inlineDivision
+            df_frkbr["sourceId"] = sourceId
+            df_frkbr["destinationId"] = destinationId
+
+            for i in dest_frkbr_inline1.keys():
+                for j in range(len(df_frkbr1["DestinationRailHead"])):
+                    if (i == df_frkbr1.iloc[j]["DestinationRailHead"] or dest_frkbr_inline1[i] == df_frkbr1.iloc[j]["DestinationRailHead"]):
+                        df_frkbr1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkbr_inline1[i])
+
+            for i in source_frkbr_inline1.keys():
+                for j in range(len(df_frkbr1["SourceRailHead"])):
+                    if (i == df_frkbr1.iloc[j]["SourceRailHead"] or source_frkbr_inline[i] == df_frkbr1.iloc[j]["SourceRailHead"]):
+                        df_frkbr1.loc[j, 'SourceRailHead'] = (i + '+' + source_frkbr_inline[i])
 
             df_frk = pd.DataFrame()
             From = []
@@ -3126,6 +5297,8 @@ def Daily_Planner():
             # Cost = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_frk:
                 for j in dest_frk:
@@ -3249,6 +5422,125 @@ def Daily_Planner():
                 for j in range(len(df_frk["SourceRailHead"])):
                     if (i == df_frk.iloc[j]["SourceRailHead"] or source_frk_inline[i] == df_frk.iloc[j]["SourceRailHead"]):
                         df_frk.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_inline[i])
+            
+            df_frk1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            # Cost = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_frk1:
+                for j in dest_frk1:
+                    if int(x_ij_frk1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frk1[(i,j)].value())
+                        commodity.append("Wheat+FRK")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for frk in frk_origin1:
+                    if From[i] == frk["origin_railhead"]:
+                        From_state.append(frk["origin_state"])
+                        From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
+                        sourceId.append(frk["sourceId"])
+
+            for i in range(len(From)):
+                for frk in frk_origin_inline1:
+                    if From[i] == frk["origin_railhead"] or From[i] == frk["destination_railhead"]:
+                        From_state.append(frk["origin_state"])
+                        From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
+                        sourceId.append(frk["sourceId"])
+
+            for i in range(len(To)):
+                found_state = False
+                for frk in frk_dest1:
+                    if To[i] == frk["origin_railhead"]:
+                        To_state.append(frk["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frk in frk_dest_inline1:
+                        if To[i] == frk["origin_railhead"] or To[i] == frk["destination_railhead"]:
+                            To_state.append(frk["origin_state"])
+                            found_state = True
+                            break
+
+            for i in range(len(To)):
+                found_state = False
+                for frk in frk_dest1:
+                    if To[i] == frk["origin_railhead"]:
+                        To_division.append(frk["destinationDivision"] if "destinationDivision" in frk else "")
+                        found_state = True
+                        destinationId.append(frk["destinationId"])
+                        break
+                if not found_state:
+                    for frk in frk_dest_inline1:
+                        if To[i] == frk["origin_railhead"] or To[i] == frk["destination_railhead"]:
+                            To_division.append(frk["destinationDivision"] if "destinationDivision" in frk else "")
+                            found_state = True
+                            break   
+
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in frk_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in frk_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            df_frk1["SourceRailHead"] = From
+            df_frk1["SourceState"] = From_state
+            df_frk1["DestinationRailHead"] = To
+            df_frk1["DestinationState"] = To_state
+            df_frk1["Commodity"] = commodity
+            # df_frk["Cost"] = Cost
+            df_frk1["Rakes"] = values
+            df_frk1["Flag"]= Flag
+            df_frk1["SourceDivision"] = From_division
+            df_frk1["DestinationDivision"] = To_division
+            df_frk1["InlineSourceDivision"] = From_inlineDivision
+            df_frk1["InlineDestinationDivision"] = To_inlineDivision
+            df_frk1["sourceId"] = sourceId
+            df_frk1["destinationId"] = destinationId
+
+            for i in dest_frk_inline1.keys():
+                for j in range(len(df_frk1["DestinationRailHead"])):
+                    if (i == df_frk1.iloc[j]["DestinationRailHead"] or dest_frk_inline1[i] == df_frk1.iloc[j]["DestinationRailHead"]):
+                        df_frk1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frk_inline1[i])
+
+            for i in source_frk_inline1.keys():
+                for j in range(len(df_frk1["SourceRailHead"])):
+                    if (i == df_frk1.iloc[j]["SourceRailHead"] or source_frk_inline1[i] == df_frk1.iloc[j]["SourceRailHead"]):
+                        df_frk1.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_inline1[i])
 
             df_frkcgr = pd.DataFrame()
             From = []
@@ -3265,6 +5557,8 @@ def Daily_Planner():
             # Cost = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_frkcgr:
                 for j in dest_frkcgr:
@@ -3388,6 +5682,125 @@ def Daily_Planner():
                 for j in range(len(df_frkcgr["SourceRailHead"])):
                     if (i == df_frkcgr.iloc[j]["SourceRailHead"] or source_frkcgr_inline[i] == df_frkcgr.iloc[j]["SourceRailHead"]):
                         df_frkcgr.loc[j, 'SourceRailHead'] = (i + '+' + source_frkcgr_inline[i])
+            
+            df_frkcgr1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            # Cost = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_frkcgr1:
+                for j in dest_frkcgr1:
+                    if int(x_ij_frkcgr1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frkcgr1[(i,j)].value())
+                        commodity.append("FRK+CGR")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for frkcgr in frkcgr_origin1:
+                    if From[i] == frkcgr["origin_railhead"]:
+                        From_state.append(frkcgr["origin_state"])
+                        From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
+                        sourceId.append(frkcgr["sourceId"])
+
+            for i in range(len(From)):
+                for frkcgr in frkcgr_origin_inline1:
+                    if From[i] == frkcgr["origin_railhead"] or From[i] == frkcgr["destination_railhead"] :
+                        From_state.append(frkcgr["origin_state"])
+                        From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
+                        sourceId.append(frkcgr["sourceId"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for frkcgr in frkcgr_dest1:
+                    if To[i] == frkcgr["origin_railhead"]:
+                        To_state.append(frkcgr["origin_state"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for frkcgr in frkcgr_dest_inline1:
+                        if To[i] == frkcgr["origin_railhead"] or To[i] == frkcgr["destination_railhead"]:
+                            To_state.append(frkcgr["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for frkcgr in frkcgr_dest1:
+                    if To[i] == frkcgr["origin_railhead"]:
+                        To_division.append(frkcgr["destinationDivision"] if "destinationDivision" in frkcgr else "")
+                        found_state = True
+                        destinationId.append(frkcgr["destinationId"])
+                        break
+                if not found_state:
+                    for frkcgr in frkcgr_dest_inline1:
+                        if To[i] == frkcgr["origin_railhead"] or To[i] == frkcgr["destination_railhead"]:
+                            To_division.append(frkcgr["destinationDivision"] if "destinationDivision" in frkcgr else "")
+                            found_state = True
+                            break   
+
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in frkcgr_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in frkcgr_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            df_frkcgr1["SourceRailHead"] = From
+            df_frkcgr1["SourceState"] = From_state
+            df_frkcgr1["DestinationRailHead"] = To
+            df_frkcgr1["DestinationState"] = To_state
+            df_frkcgr1["Commodity"] = commodity
+            df_frkcgr1["Rakes"] = values
+            df_frkcgr1["Flag"]= Flag
+            df_frkcgr1["SourceDivision"] = From_division
+            df_frkcgr1["DestinationDivision"] = To_division
+            df_frkcgr1["InlineSourceDivision"] = From_inlineDivision
+            df_frkcgr1["InlineDestinationDivision"] = To_inlineDivision
+            # df_frkcgr1["Cost"] = Cost
+            df_frkcgr1["sourceId"] = sourceId
+            df_frkcgr1["destinationId"] = destinationId
+
+            for i in dest_frkcgr_inline1.keys():
+                for j in range(len(df_frkcgr1["DestinationRailHead"])):
+                    if (i == df_frkcgr1.iloc[j]["DestinationRailHead"] or dest_frkcgr_inline1[i] == df_frkcgr1.iloc[j]["DestinationRailHead"]):
+                        df_frkcgr1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkcgr_inline1[i])
+
+            for i in source_frkcgr_inline1.keys():
+                for j in range(len(df_frkcgr1["SourceRailHead"])):
+                    if (i == df_frkcgr1.iloc[j]["SourceRailHead"] or source_frkcgr_inline1[i] == df_frkcgr.iloc[j]["SourceRailHead"]):
+                        df_frkcgr1.loc[j, 'SourceRailHead'] = (i + '+' + source_frkcgr_inline1[i])
 
             df_wcgr = pd.DataFrame()
             From = []
@@ -3404,6 +5817,8 @@ def Daily_Planner():
             # Cost = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_wcgr:
                 for j in dest_wcgr:
@@ -3527,6 +5942,125 @@ def Daily_Planner():
                 for j in range(len(df_wcgr["SourceRailHead"])):
                     if (i == df_wcgr.iloc[j]["SourceRailHead"] or source_wcgr_inline[i] == df_wcgr.iloc[j]["SourceRailHead"]):
                         df_wcgr.loc[j, 'SourceRailHead'] = (i + '+' + source_wcgr_inline[i])
+            
+            df_wcgr1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            # Cost = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_wcgr1:
+                for j in dest_wcgr1:
+                    if int(x_ij_wcgr1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wcgr1[(i,j)].value())
+                        commodity.append("Wheat+CGR")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for wcgr in wcgr_origin1:
+                    if From[i] == wcgr["origin_railhead"]:
+                        From_state.append(wcgr["origin_state"])
+                        From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
+                        sourceId.append(wcgr["sourceId"])
+
+            for i in range(len(From)):
+                for wcgr in wcgr_origin_inline1:
+                    if From[i] == wcgr["origin_railhead"] or From[i] == wcgr["destination_railhead"]:
+                        From_state.append(wcgr["origin_state"])
+                        From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
+                        sourceId.append(wcgr["sourceId"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for wcgr in wcgr_dest1:
+                    if To[i] == wcgr["origin_railhead"]:
+                        To_state.append(wcgr["origin_state"])
+                        found_state = True
+                        destinationId.append(wcgr["destinationId"])
+                        break
+                if not found_state:
+                    for wcgr in wcgr_dest_inline1:
+                        if To[i] == wcgr["origin_railhead"] or To[i] == wcgr["destination_railhead"]:
+                            To_state.append(wcgr["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for wcgr in wcgr_dest1:
+                    if To[i] == wcgr["origin_railhead"]:
+                        To_division.append(wcgr["destinationDivision"] if "destinationDivision" in wcgr else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for wcgr in wcgr_dest_inline1:
+                        if To[i] == wcgr["origin_railhead"] or To[i] == wcgr["destination_railhead"]:
+                            To_division.append(wcgr["destinationDivision"] if "destinationDivision" in wcgr else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in wcgr_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in wcgr_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            # for from_station, to_station in zip(From, To):
+            #     Cost.append(rail_cost.loc[from_station][to_station])
+
+            df_wcgr1["SourceRailHead"] = From 
+            df_wcgr1["SourceState"] = From_state
+            df_wcgr1["DestinationRailHead"] = To
+            df_wcgr1["DestinationState"] = To_state
+            df_wcgr1["Commodity"] = commodity
+            df_wcgr1["Rakes"] = values
+            df_wcgr1["Flag"] = Flag
+            df_wcgr1["SourceDivision"] = From_division
+            df_wcgr1["DestinationDivision"] = To_division
+            df_wcgr1["InlineSourceDivision"] = From_inlineDivision
+            df_wcgr1["InlineDestinationDivision"] = To_inlineDivision
+            # df_wcgr1["Cost"] = Cost
+            df_wcgr1["sourceId"] = sourceId
+            df_wcgr1["destinationId"] = destinationId
+
+            for i in dest_wcgr_inline1.keys():
+                for j in range(len(df_wcgr1["DestinationRailHead"])):
+                    if (i == df_wcgr1.iloc[j]["DestinationRailHead"] or dest_wcgr_inline1[i] == df_wcgr1.iloc[j]["DestinationRailHead"]):
+                        df_wcgr1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wcgr_inline1[i])
+
+            for i in source_wcgr_inline1.keys():
+                for j in range(len(df_wcgr1["SourceRailHead"])):
+                    if (i == df_wcgr1.iloc[j]["SourceRailHead"] or source_wcgr_inline1[i] == df_wcgr1.iloc[j]["SourceRailHead"]):
+                        df_wcgr1.loc[j, 'SourceRailHead'] = (i + '+' + source_wcgr_inline1[i])
 
             df_rrc = pd.DataFrame()
             From = []
@@ -3542,6 +6076,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_rrc:
                 for j in dest_rrc:
@@ -3661,6 +6197,120 @@ def Daily_Planner():
                 for j in range(len(df_rrc["SourceRailHead"])):
                     if (i == df_rrc.iloc[j]["SourceRailHead"] or source_rrc_inline[i] == df_rrc.iloc[j]["SourceRailHead"]):
                         df_rrc.loc[j, 'SourceRailHead'] = (i + '+' + source_rrc_inline[i])
+            
+            df_rrc1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_rrc1:
+                for j in dest_rrc1:
+                    if int(x_ij_rrc1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_rrc1[(i,j)].value())
+                        commodity.append("RRC")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for rrc in rrc_origin1:
+                    if From[i] == rrc["origin_railhead"]:
+                        From_state.append(rrc["origin_state"])
+                        From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
+                        sourceId.append(rrc["sourceId"])
+
+            for i in range(len(From)):
+                for rrc in rrc_origin_inline1:
+                    if From[i] == rrc["origin_railhead"] or From[i] == rrc["destination_railhead"]:
+                        From_state.append(rrc["origin_state"])
+                        From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
+                        sourceId.append(rrc["sourceId"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for rrc in rrc_dest1:
+                    if To[i] == rrc["origin_railhead"]:
+                        To_state.append(rrc["origin_state"])
+                        destinationId.append(rrc["destinationId"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for rrc in rrc_dest_inline1:
+                        if To[i] == rrc["origin_railhead"] or To[i] == rrc["destination_railhead"]:
+                            To_state.append(rrc["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for rrc in rrc_dest1:
+                    if To[i] == rrc["origin_railhead"]:
+                        To_division.append(rrc["destinationDivision"] if "destinationDivision" in rrc else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for rrc in rrc_dest_inline1:
+                        if To[i] == rrc["origin_railhead"] or To[i] == rrc["destination_railhead"]:
+                            To_division.append(rrc["destinationDivision"] if "destinationDivision" in rrc else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in rrc_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in rrc_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_rrc1["SourceRailHead"] = From
+            df_rrc1["SourceState"] = From_state
+            df_rrc1["DestinationRailHead"] = To
+            df_rrc1["DestinationState"] = To_state
+            df_rrc1["Commodity"] = commodity
+            df_rrc1["Rakes"] = values
+            df_rrc1["Flag"] = Flag
+            df_rrc1["SourceDivision"] = From_division
+            df_rrc1["DestinationDivision"] = To_division
+            df_rrc1["InlineSourceDivision"] = From_inlineDivision
+            df_rrc1["InlineDestinationDivision"] = To_inlineDivision
+            df_rrc1["sourceId"] = sourceId
+            df_rrc1["destinationId"] = destinationId
+          
+            for i in dest_rrc_inline1.keys():
+                for j in range(len(df_rrc1["DestinationRailHead"])):
+                    if (i == df_rrc1.iloc[j]["DestinationRailHead"] or dest_rrc_inline1[i] == df_rrc1.iloc[j]["DestinationRailHead"]):
+                        df_rrc1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rrc_inline1[i])
+
+            for i in source_rrc_inline1.keys():
+                for j in range(len(df_rrc1["SourceRailHead"])):
+                    if (i == df_rrc1.iloc[j]["SourceRailHead"] or source_rrc_inline1[i] == df_rrc1.iloc[j]["SourceRailHead"]):
+                        df_rrc1.loc[j, 'SourceRailHead'] = (i + '+' + source_rrc_inline1[i])
 
             df_ragi = pd.DataFrame()
             From = []
@@ -3676,6 +6326,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_ragi:
                 for j in dest_ragi:
@@ -3795,6 +6447,121 @@ def Daily_Planner():
                 for j in range(len(df_ragi["SourceRailHead"])):
                     if (i == df_ragi.iloc[j]["SourceRailHead"] or source_ragi_inline[i] == df_ragi.iloc[j]["SourceRailHead"]):
                         df_ragi.loc[j, 'SourceRailHead'] = (i + '+' + source_ragi_inline[i])
+            
+            df_ragi1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_ragi1:
+                for j in dest_ragi1:
+                    if int(x_ij_ragi1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_ragi1[(i,j)].value())
+                        commodity.append("Ragi")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for ragi in ragi_origin1:
+                    if From[i] == ragi["origin_railhead"]:
+                        From_state.append(ragi["origin_state"])
+                        From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
+                        sourceId.append(ragi["sourceId"])
+
+            for i in range(len(From)):
+                for ragi in ragi_origin_inline1:
+                    if From[i] == ragi["origin_railhead"] or From[i] == ragi["destination_railhead"]:
+                        From_state.append(ragi["origin_state"])
+                        From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
+                        sourceId.append(ragi["sourceId"])
+
+            for i in range(len(To)):
+                found_state = False
+                for ragi in ragi_dest1:
+                    if To[i] == ragi["origin_railhead"]:
+                        To_state.append(ragi["origin_state"])
+                        found_state = True
+                        destinationId.append(ragi["destinationId"])
+                        break
+                if not found_state:
+                    for ragi in ragi_dest_inline1:
+                        if To[i] == ragi["origin_railhead"] or To[i] == ragi["destination_railhead"]:
+                            To_state.append(ragi["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for ragi in ragi_dest1:
+                    if To[i] == ragi["origin_railhead"]:
+                        To_division.append(ragi["destinationDivision"] if "destinationDivision" in ragi else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for ragi in ragi_dest_inline1:
+                        if To[i] == ragi["origin_railhead"] or To[i] == ragi["destination_railhead"]:
+                            To_division.append(ragi["destinationDivision"] if "destinationDivision" in ragi else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in ragi_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in ragi_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_ragi1["SourceRailHead"] = From
+            df_ragi1["SourceState"] = From_state
+            df_ragi1["DestinationRailHead"] = To
+            df_ragi1["DestinationState"] = To_state
+            df_ragi1["Commodity"] = commodity
+            df_ragi1["Rakes"] = values
+            df_ragi1["Flag"]= Flag
+            df_ragi1["SourceDivision"] = From_division
+            df_ragi1["DestinationDivision"] = To_division
+            df_ragi1["InlineSourceDivision"] = From_inlineDivision
+            df_ragi1["InlineDestinationDivision"] = To_inlineDivision
+            df_ragi1["sourceId"] = sourceId
+            df_ragi1["destinationId"] = destinationId
+
+            for i in dest_ragi_inline1.keys():
+                for j in range(len(df_ragi1["DestinationRailHead"])):
+                    if (i == df_ragi1.iloc[j]["DestinationRailHead"] or dest_ragi_inline1[i] == df_ragi1.iloc[j]["DestinationRailHead"]):
+                        df_ragi1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_ragi_inline1[i])
+
+            for i in source_ragi_inline1.keys():
+                for j in range(len(df_ragi1["SourceRailHead"])):
+                    if (i == df_ragi1.iloc[j]["SourceRailHead"] or source_ragi_inline1[i] == df_ragi1.iloc[j]["SourceRailHead"]):
+                        df_ragi1.loc[j, 'SourceRailHead'] = (i + '+' + source_ragi_inline1[i])
+
 
             df_jowar = pd.DataFrame()
             From = []
@@ -3810,6 +6577,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_jowar:
                 for j in dest_jowar:
@@ -3929,6 +6698,120 @@ def Daily_Planner():
                 for j in range(len(df_jowar["SourceRailHead"])):
                     if (i == df_jowar.iloc[j]["SourceRailHead"] or source_jowar_inline[i] == df_jowar.iloc[j]["SourceRailHead"]):
                         df_jowar.loc[j, 'SourceRailHead'] = (i + '+' + source_jowar_inline[i])
+            
+            df_jowar1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_jowar1:
+                for j in dest_jowar1:
+                    if int(x_ij_jowar1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_jowar1[(i,j)].value())
+                        commodity.append("Jowar")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for jowar in jowar_origin1:
+                    if From[i] == jowar["origin_railhead"]:
+                        From_state.append(jowar["origin_state"])
+                        From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
+                        sourceId.append(jowar["sourceId"])
+
+            for i in range(len(From)):
+                for jowar in jowar_origin_inline1:
+                    if From[i] == jowar["origin_railhead"] or From[i] == jowar["destination_railhead"]:
+                        From_state.append(jowar["origin_state"])
+                        From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
+                        sourceId.append(jowar["sourceId"])
+
+            for i in range(len(To)):
+                found_state = False
+                for jowar in jowar_dest1:
+                    if To[i] == jowar["origin_railhead"]:
+                        To_state.append(jowar["origin_state"])
+                        destinationId.append(jowar["destinationId"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for jowar in jowar_dest_inline1:
+                        if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
+                            To_state.append(jowar["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for jowar in jowar_dest1:
+                    if To[i] == jowar["origin_railhead"]:
+                        To_division.append(jowar["destinationDivision"] if "destinationDivision" in jowar else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for jowar in jowar_dest_inline1:
+                        if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
+                            To_division.append(jowar["destinationDivision"] if "destinationDivision" in wheajowar else "")
+                            found_state = True
+                            break  
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in jowar_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in jowar_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_jowar1["SourceRailHead"] = From
+            df_jowar1["SourceState"] = From_state
+            df_jowar1["DestinationRailHead"] = To
+            df_jowar1["DestinationState"] = To_state
+            df_jowar1["Commodity"] = commodity
+            df_jowar1["Rakes"] = values
+            df_jowar1["Flag"] = Flag
+            df_jowar1["SourceDivision"] = From_division
+            df_jowar1["DestinationDivision"] = To_division
+            df_jowar1["InlineSourceDivision"] = From_inlineDivision
+            df_jowar1["InlineDestinationDivision"] = To_inlineDivision
+            df_jowar1["sourceId"] = sourceId
+            df_jowar1["destinationId"] = destinationId
+
+            for i in dest_jowar_inline1.keys():
+                for j in range(len(df_jowar1["DestinationRailHead"])):
+                    if (i == df_jowar1.iloc[j]["DestinationRailHead"] or dest_jowar_inline1[i] == df_jowar1.iloc[j]["DestinationRailHead"]):
+                        df_jowar1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_jowar_inline1[i])
+
+            for i in source_jowar_inline1.keys():
+                for j in range(len(df_jowar1["SourceRailHead"])):
+                    if (i == df_jowar1.iloc[j]["SourceRailHead"] or source_jowar_inline1[i] == df_jowar1.iloc[j]["SourceRailHead"]):
+                        df_jowar1.loc[j, 'SourceRailHead'] = (i + '+' + source_jowar_inline1[i])
 
             df_bajra = pd.DataFrame()
             From = []
@@ -3944,6 +6827,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_bajra:
                 for j in dest_bajra:
@@ -4063,6 +6948,121 @@ def Daily_Planner():
                 for j in range(len(df_bajra["SourceRailHead"])):
                     if (i == df_bajra.iloc[j]["SourceRailHead"] or source_bajra_inline[i] == df_bajra.iloc[j]["SourceRailHead"]):
                         df_bajra.loc[j, 'SourceRailHead'] = (i + '+' + source_bajra_inline[i])
+            
+            df_bajra1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_bajra1:
+                for j in dest_bajra1:
+                    if int(x_ij_bajra1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_bajra1[(i,j)].value())
+                        commodity.append("Bajra")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for bajra in bajra_origin1:
+                    if From[i] == bajra["origin_railhead"]:
+                        From_state.append(bajra["origin_state"])
+                        From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
+                        sourceId.append(bajra["sourceId"])
+
+            for i in range(len(From)):
+                for bajra in bajra_origin_inline1:
+                    if From[i] == bajra["origin_railhead"] or From[i] == bajra["destination_railhead"]:
+                        From_state.append(bajra["origin_state"])
+                        From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
+                        sourceId.append(bajra["sourceId"])
+
+            for i in range(len(To)):
+                found_state = False
+                for bajra in bajra_dest1:
+                    if To[i] == bajra["origin_railhead"]:
+                        To_state.append(bajra["origin_state"])
+                        found_state = True
+                        destinationId.append(bajra["destinationId"])
+                        break
+                if not found_state:
+                    for bajra in bajra_dest_inline1:
+                        if To[i] == bajra["origin_railhead"] or To[i] == bajra["destination_railhead"]:
+                            To_state.append(bajra["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for bajra in bajra_dest1:
+                    if To[i] == bajra["origin_railhead"]:
+                        To_division.append(bajra["destinationDivision"] if "destinationDivision" in bajra else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for bajra in bajra_dest_inline1:
+                        if To[i] == bajra["origin_railhead"] or To[i] == bajra["destination_railhead"]:
+                            To_division.append(bajra["destinationDivision"] if "destinationDivision" in bajra else "")
+                            found_state = True
+                            break  
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in bajra_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in bajra_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_bajra1["SourceRailHead"] = From
+            df_bajra1["SourceState"] = From_state
+            df_bajra1["DestinationRailHead"] = To
+            df_bajra1["DestinationState"] = To_state
+            df_bajra1["Commodity"] = commodity
+            df_bajra1["Rakes"] = values
+            df_bajra1["Flag"]= Flag
+            df_bajra1["SourceDivision"] = From_division
+            df_bajra1["DestinationDivision"] = To_division
+            df_bajra1["InlineSourceDivision"] = From_inlineDivision
+            df_bajra1["InlineDestinationDivision"] = To_inlineDivision
+            df_bajra1["sourceId"] = sourceId
+            df_bajra1["destinationId"] = destinationId
+            
+            for i in dest_bajra_inline1.keys():
+                for j in range(len(df_bajra1["DestinationRailHead"])):
+                    if (i == df_bajra1.iloc[j]["DestinationRailHead"] or dest_bajra_inline1[i] == df_bajra1.iloc[j]["DestinationRailHead"]):
+                        df_bajra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_bajra_inline1[i])
+
+            for i in source_bajra_inline1.keys():
+                for j in range(len(df_bajra1["SourceRailHead"])):
+                    if (i == df_bajra1.iloc[j]["SourceRailHead"] or source_bajra_inline1[i] == df_bajra1.iloc[j]["SourceRailHead"]):
+                        df_bajra1.loc[j, 'SourceRailHead'] = (i + '+' + source_bajra_inline1[i])
+
 
             df_maize = pd.DataFrame()
             From = []
@@ -4078,6 +7078,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_maize:
                 for j in dest_maize:
@@ -4197,6 +7199,120 @@ def Daily_Planner():
                 for j in range(len(df_maize["SourceRailHead"])):
                     if (i == df_maize.iloc[j]["SourceRailHead"] or source_maize_inline[i] == df_maize.iloc[j]["SourceRailHead"]):
                         df_maize.loc[j, 'SourceRailHead'] = (i + '+' + source_maize_inline[i])
+            
+            df_maize1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_maize1:
+                for j in dest_maize1:
+                    if int(x_ij_maize1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_maize1[(i,j)].value())
+                        commodity.append("Maize")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for maize in maize_origin1:
+                    if From[i] == maize["origin_railhead"]:
+                        From_state.append(maize["origin_state"])
+                        From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
+                        sourceId.append(maize["sourceId"])
+
+            for i in range(len(From)):
+                for maize in maize_origin_inline1:
+                    if From[i] == maize["origin_railhead"] or From[i] == maize["destination_railhead"]:
+                        From_state.append(maize["origin_state"])
+                        From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
+                        sourceId.append(maize["sourceId"])
+
+            for i in range(len(To)):
+                found_state = False
+                for maize in maize_dest1:
+                    if To[i] == maize["origin_railhead"]:
+                        To_state.append(maize["origin_state"])
+                        destinationId.append(maize["destinationId"])
+                        found_state = True
+                        break
+                if not found_state:
+                    for maize in maize_dest_inline1:
+                        if To[i] == maize["origin_railhead"] or To[i] == maize["destination_railhead"]:
+                            To_state.append(maize["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for maize in maize_dest1:
+                    if To[i] == maize["origin_railhead"]:
+                        To_division.append(maize["destinationDivision"] if "destinationDivision" in maize else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for maize in maize_dest_inline1:
+                        if To[i] == maize["origin_railhead"] or To[i] == maize["destination_railhead"]:
+                            To_division.append(maize["destinationDivision"] if "destinationDivision" in maize else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in maize_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in maize_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_maize1["SourceRailHead"] = From
+            df_maize1["SourceState"] = From_state
+            df_maize1["DestinationRailHead"] = To
+            df_maize1["DestinationState"] = To_state
+            df_maize1["Commodity"] = commodity
+            df_maize1["Rakes"] = values
+            df_maize1["Flag"]= Flag
+            df_maize1["SourceDivision"] = From_division
+            df_maize1["DestinationDivision"] = To_division
+            df_maize1["InlineSourceDivision"] = From_inlineDivision
+            df_maize1["InlineDestinationDivision"] = To_inlineDivision
+            df_maize1["sourceId"] = sourceId
+            df_maize1["destinationId"] = destinationId
+            
+            for i in dest_maize_inline1.keys():
+                for j in range(len(df_maize1["DestinationRailHead"])):
+                    if (i == df_maize1.iloc[j]["DestinationRailHead"] or dest_maize_inline1[i] == df_maize1.iloc[j]["DestinationRailHead"]):
+                        df_maize1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_maize_inline1[i])
+
+            for i in source_maize_inline1.keys():
+                for j in range(len(df_maize1["SourceRailHead"])):
+                    if (i == df_maize1.iloc[j]["SourceRailHead"] or source_maize_inline1[i] == df_maize1.iloc[j]["SourceRailHead"]):
+                        df_maize1.loc[j, 'SourceRailHead'] = (i + '+' + source_maize_inline1[i])
 
             df_misc1 = pd.DataFrame()
             From = []
@@ -4212,6 +7328,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_misc1:
                 for j in dest_misc1:
@@ -4331,7 +7449,121 @@ def Daily_Planner():
                 for j in range(len(df_misc1["SourceRailHead"])):
                     if (i == df_misc1.iloc[j]["SourceRailHead"] or source_misc1_inline[i] == df_misc1.iloc[j]["SourceRailHead"]):
                         df_misc1.loc[j, 'SourceRailHead'] = (i + '+' + source_misc1_inline[i])
-                        
+
+            df_misc11 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_misc11:
+                for j in dest_misc11:
+                    if int(x_ij_misc11[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_misc11[(i,j)].value())
+                        commodity.append("Misc1")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for misc1 in misc1_origin1:
+                    if From[i] == misc1["origin_railhead"]:
+                        From_state.append(misc1["origin_state"])
+                        From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
+                        sourceId.append(misc1["sourceId"])
+
+            for i in range(len(From)):
+                for misc1 in misc1_origin_inline1:
+                    if From[i] == misc1["origin_railhead"] or From[i] == misc1["destination_railhead"]:
+                        From_state.append(misc1["origin_state"])
+                        From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
+                        sourceId.append(misc1["sourceId"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc1_dest1:
+                    if To[i] == misc1["origin_railhead"]:
+                        To_state.append(misc1["origin_state"])
+                        found_state = True
+                        destinationId.append(misc1["destinationId"])
+                        break
+                if not found_state:
+                    for misc1 in misc1_dest_inline1:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_state.append(misc1["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc1_dest1:
+                    if To[i] == misc1["origin_railhead"]:
+                        To_division.append(misc1["destinationDivision"] if "destinationDivision" in misc1 else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc1 in misc1_dest_inline1:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_division.append(misc1["destinationDivision"] if "destinationDivision" in misc1 else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in misc1_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in misc1_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_misc11["SourceRailHead"] = From
+            df_misc11["SourceState"] = From_state
+            df_misc11["DestinationRailHead"] = To
+            df_misc11["DestinationState"] = To_state
+            df_misc11["Commodity"] = commodity
+            df_misc11["Rakes"] = values
+            df_misc11["Flag"] =Flag
+            df_misc11["SourceDivision"] = From_division
+            df_misc11["DestinationDivision"] = To_division
+            df_misc11["InlineSourceDivision"] = From_inlineDivision
+            df_misc11["InlineDestinationDivision"] = To_inlineDivision
+            df_misc11["sourceId"] = sourceId
+            df_misc11["destinationId"] = destinationId
+            
+            for i in dest_misc1_inline1.keys():
+                for j in range(len(df_misc11["DestinationRailHead"])):
+                    if (i == df_misc11.iloc[j]["DestinationRailHead"] or dest_misc1_inline1[i] == df_misc11.iloc[j]["DestinationRailHead"]):
+                        df_misc11.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc1_inline1[i])
+
+            for i in source_misc1_inline1.keys():
+                for j in range(len(df_misc11["SourceRailHead"])):
+                    if (i == df_misc11.iloc[j]["SourceRailHead"] or source_misc1_inline1[i] == df_misc11.iloc[j]["SourceRailHead"]):
+                        df_misc11.loc[j, 'SourceRailHead'] = (i + '+' + source_misc1_inline1[i])
+
             df_misc2 = pd.DataFrame()
             From = []
             To = []
@@ -4346,6 +7578,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_misc2:
                 for j in dest_misc2:
@@ -4467,6 +7701,122 @@ def Daily_Planner():
                 for j in range(len(df_misc2["SourceRailHead"])):
                     if (i == df_misc2.iloc[j]["SourceRailHead"] or source_misc2_inline[i] == df_misc2.iloc[j]["SourceRailHead"]):
                         df_misc2.loc[j, 'SourceRailHead'] = (i + '+' + source_misc2_inline[i])
+            
+            df_misc21 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_misc21:
+                for j in dest_misc21:
+                    if int(x_ij_misc21[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_misc21[(i,j)].value())
+                        commodity.append("Misc2")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for misc2 in misc2_origin1:
+                    if From[i] == misc2["origin_railhead"]:
+                        From_state.append(misc2["origin_state"])
+                        From_division.append(misc2["sourceDivision"])
+                        From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
+                        sourceId.append(misc2["sourceId"])
+
+            for i in range(len(From)):
+                for misc2 in misc2_origin_inline1:
+                    if From[i] == misc2["origin_railhead"] or From[i] == misc2["destination_railhead"]  :
+                        From_state.append(misc2["origin_state"])
+                        From_division.append(misc2["sourceDivision"])
+                        From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
+                        sourceId.append(misc2["sourceId"])
+
+            for i in range(len(To)):
+                found_state = False
+                for misc2 in misc2_dest1:
+                    if To[i] == misc2["origin_railhead"]:
+                        To_state.append(misc2["origin_state"])
+                        found_state = True
+                        destinationId.append(misc2["destinationId"])
+                        break
+                if not found_state:
+                    for misc2 in misc2_dest_inline1:
+                        if To[i] == misc2["origin_railhead"] or To[i] == misc2["destination_railhead"]:
+                            To_state.append(misc2["origin_state"])
+                            found_state = True
+                            break   
+
+            for i in range(len(To)):
+                found_state = False
+                for misc2 in misc2_dest1:
+                    if To[i] == misc2["origin_railhead"]:
+                        To_division.append(misc2["destinationDivision"] if "destinationDivision" in misc2 else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc2 in misc2_dest_inline1:
+                        if To[i] == misc2["origin_railhead"] or To[i] == misc2["destination_railhead"]:
+                            To_division.append(misc2["destinationDivision"] if "destinationDivision" in misc2 else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in misc2_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in misc2_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_misc21["SourceRailHead"] = From
+            df_misc21["SourceState"] = From_state
+            df_misc21["DestinationRailHead"] = To
+            df_misc21["DestinationState"] = To_state
+            df_misc21["Commodity"] = commodity
+            df_misc21["Rakes"] = values
+            df_misc21["Flag"] = Flag
+            df_misc21["SourceDivision"] = From_division
+            df_misc21["DestinationDivision"] = To_division
+            df_misc21["InlineSourceDivision"] = From_inlineDivision
+            df_misc21["InlineDestinationDivision"] = To_inlineDivision
+            df_misc21["sourceId"] = sourceId
+            df_misc21["destinationId"] = destinationId
+            
+            for i in dest_misc2_inline1.keys():
+                for j in range(len(df_misc21["DestinationRailHead"])):
+                    if (i == df_misc21.iloc[j]["DestinationRailHead"] or dest_misc2_inline1[i] == df_misc21.iloc[j]["DestinationRailHead"]):
+                        df_misc21.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc2_inline1[i])
+
+            for i in source_misc2_inline1.keys():
+                for j in range(len(df_misc21["SourceRailHead"])):
+                    if (i == df_misc21.iloc[j]["SourceRailHead"] or source_misc2_inline1[i] == df_misc21.iloc[j]["SourceRailHead"]):
+                        df_misc21.loc[j, 'SourceRailHead'] = (i + '+' + source_misc2_inline1[i])
 
             df_wheaturs = pd.DataFrame()
             From = []
@@ -4482,6 +7832,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_wheaturs:
                 for j in dest_wheaturs:
@@ -4601,6 +7953,120 @@ def Daily_Planner():
                 for j in range(len(df_wheaturs["SourceRailHead"])):
                     if (i == df_wheaturs.iloc[j]["SourceRailHead"] or source_wheaturs_inline[i] == df_wheaturs.iloc[j]["SourceRailHead"]):
                         df_wheaturs.loc[j, 'SourceRailHead'] = (i + '+' + source_wheaturs_inline[i])
+            
+            df_wheaturs1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_wheaturs1:
+                for j in dest_wheaturs1:
+                    if int(x_ij_wheaturs[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wheaturs[(i,j)].value())
+                        commodity.append("Wheat(URS)")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for wheat in wheaturs_origin1:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+
+            for i in range(len(From)):
+                for wheat in wheaturs_origin_inline1:
+                    if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheaturs_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+                        found_state = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_state:
+                    for wheat in wheaturs_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheaturs_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheaturs_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in wheaturs_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in wheaturs_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            df_wheaturs1["SourceRailHead"] = From
+            df_wheaturs1["SourceState"] = From_state
+            df_wheaturs1["DestinationRailHead"] = To
+            df_wheaturs1["DestinationState"] = To_state
+            df_wheaturs1["Commodity"] = commodity
+            df_wheaturs1["Rakes"] = values
+            df_wheaturs1["Flag"] = Flag
+            df_wheaturs1["SourceDivision"] = From_division
+            df_wheaturs1["DestinationDivision"] = To_division
+            df_wheaturs1["InlineSourceDivision"] = From_inlineDivision
+            df_wheaturs1["InlineDestinationDivision"] = To_inlineDivision
+            df_wheaturs1["sourceId"] = sourceId
+            df_wheaturs1["destinationId"] = destinationId
+            
+            for i in dest_wheaturs_inline1.keys():
+                for j in range(len(df_wheaturs1["DestinationRailHead"])):
+                    if (i == df_wheaturs1.iloc[j]["DestinationRailHead"] or dest_wheaturs_inline1[i] == df_wheaturs.iloc[j]["DestinationRailHead"]):
+                        df_wheaturs1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheaturs_inline1[i])
+
+            for i in source_wheaturs_inline1.keys():
+                for j in range(len(df_wheaturs1["SourceRailHead"])):
+                    if (i == df_wheaturs1.iloc[j]["SourceRailHead"] or source_wheaturs_inline1[i] == df_wheaturs.iloc[j]["SourceRailHead"]):
+                        df_wheaturs1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheaturs_inline1[i])
 
             df_wheatfaq = pd.DataFrame()
             From = []
@@ -4616,6 +8082,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_wheatfaq:
                 for j in dest_wheatfaq:
@@ -4735,6 +8203,142 @@ def Daily_Planner():
                 for j in range(len(df_wheatfaq["SourceRailHead"])):
                     if (i == df_wheatfaq.iloc[j]["SourceRailHead"] or source_wheatfaq_inline[i] == df_wheatfaq.iloc[j]["SourceRailHead"]):
                         df_wheatfaq.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatfaq_inline[i])
+            
+            df_wheatfaq1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_wheatfaq1:
+                for j in dest_wheatfaq1:
+                    if int(x_ij_wheatfaq1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wheatfaq1[(i,j)].value())
+                        commodity.append("Wheat(FAQ)")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for wheat in wheatfaq_origin1:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+
+            for i in range(len(From)):
+                for wheat in wheatfaq_origin_inline1:
+                    if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatfaq_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+                        found_state = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_state:
+                    for wheat in wheatfaq_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatfaq_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheatfaq_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                            found_state = True
+                            break 
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in wheatfaq_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in wheatfaq_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat(FAQ)':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat(FAQ)")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append("")
+                    To_division.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
+
+            df_wheatfaq1["SourceRailHead"] = From
+            df_wheatfaq1["SourceState"] = From_state
+            df_wheatfaq1["DestinationRailHead"] = To
+            df_wheatfaq1["DestinationState"] = To_state
+            df_wheatfaq1["Commodity"] = commodity
+            df_wheatfaq1["Rakes"] = values
+            df_wheatfaq1["Flag"]= Flag
+            df_wheatfaq1["SourceDivision"] = From_division
+            df_wheatfaq1["DestinationDivision"] = To_division
+            df_wheatfaq1["InlineSourceDivision"] = From_inlineDivision
+            df_wheatfaq1["InlineDestinationDivision"] = To_inlineDivision
+            df_wheatfaq1["sourceId"] = sourceId
+            df_wheatfaq1["destinationId"] = destinationId
+            
+            for i in dest_wheatfaq_inline1.keys():
+                for j in range(len(df_wheatfaq1["DestinationRailHead"])):
+                    if (i == df_wheatfaq1.iloc[j]["DestinationRailHead"] or dest_wheatfaq_inline1[i] == df_wheatfaq1.iloc[j]["DestinationRailHead"]):
+                        df_wheatfaq1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheatfaq_inline1[i])
+
+            for i in source_wheatfaq_inline1.keys():
+                for j in range(len(df_wheatfaq1["SourceRailHead"])):
+                    if (i == df_wheatfaq1.iloc[j]["SourceRailHead"] or source_wheatfaq_inline1[i] == df_wheatfaq1.iloc[j]["SourceRailHead"]):
+                        df_wheatfaq1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatfaq_inline1[i])
 
             df_wheatrra = pd.DataFrame()
             From = []
@@ -4750,6 +8354,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_wheatrra:
                 for j in dest_wheatrra:
@@ -4869,7 +8475,143 @@ def Daily_Planner():
                 for j in range(len(df_wheatrra["SourceRailHead"])):
                     if (i == df_wheatrra.iloc[j]["SourceRailHead"] or source_wheatrra_inline[i] == df_wheatrra.iloc[j]["SourceRailHead"]):
                         df_wheatrra.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatrra_inline[i])
+            
+            df_wheatrra1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            
+            for i in source_wheatrra1:
+                for j in dest_wheatrra1:
+                    if int(x_ij_wheatrra1[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_wheatrra1[(i,j)].value())
+                        commodity.append("Wheat+RRA")
+                        Flag.append(region)
 
+            for i in range(len(From)):
+                for wheat in wheatrra_origin1:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+
+            for i in range(len(From)):
+                for wheat in wheatrra_origin_inline1:
+                    if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatrra_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+                        found_state = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_state:
+                    for wheat in wheatrra_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
+                            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in wheatrra_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in wheatrra_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                            found_state = True
+                            break 
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in wheatrra_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in wheatrra_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            for i in range(len(confirmed_org_rhcode)):
+                org = str(confirmed_org_rhcode[i])
+                org_state = str(confirmed_org_state[i])
+                dest = str(confirmed_dest_rhcode[i])
+                dest_state = str(confirmed_dest_state[i])
+                Commodity = confirmed_railhead_commodities[i]
+                val = confirmed_railhead_value[i]
+                if Commodity == 'Wheat+RRA':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat+RRA")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append("")
+                    To_division.append("")
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append("")
+                    destinationId.append("")
+
+            df_wheatrra1["SourceRailHead"] = From
+            df_wheatrra1["SourceState"] = From_state
+            df_wheatrra1["DestinationRailHead"] = To
+            df_wheatrra1["DestinationState"] = To_state
+            df_wheatrra1["Commodity"] = commodity
+            df_wheatrra1["Rakes"] = values
+            df_wheatrra1["Flag"] = Flag
+            df_wheatrra1["SourceDivision"] = From_division
+            df_wheatrra1["DestinationDivision"] = To_division
+            df_wheatrra1["InlineSourceDivision"] = From_inlineDivision
+            df_wheatrra1["InlineDestinationDivision"] = To_inlineDivision
+            df_wheatrra1["sourceId"] = sourceId
+            df_wheatrra1["destinationId"] = destinationId
+            
+            for i in dest_wheatrra_inline1.keys():
+                for j in range(len(df_wheatrra1["DestinationRailHead"])):
+                    if (i == df_wheatrra1.iloc[j]["DestinationRailHead"] or dest_wheatrra_inline1[i] == df_wheatrra.iloc[j]["DestinationRailHead"]):
+                        df_wheatrra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheatrra_inline1[i])
+
+            for i in source_wheatrra_inline1.keys():
+                for j in range(len(df_wheatrra1["SourceRailHead"])):
+                    if (i == df_wheatrra1.iloc[j]["SourceRailHead"] or source_wheatrra_inline1[i] == df_wheatrra1.iloc[j]["SourceRailHead"]):
+                        df_wheatrra1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatrra_inline1[i])
+# pending of adding 58 wagon wise commodity
             df_frk_rra = pd.DataFrame()
             From = []
             To = []
@@ -4884,6 +8626,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_frk_rra:
                 for j in dest_frk_rra:
@@ -5018,6 +8762,9 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
+            
             
             for i in source_misc3:
                 for j in dest_misc3:
@@ -5152,6 +8899,8 @@ def Daily_Planner():
             To_inlineDivision = []
             sourceId = []
             destinationId = []
+            source_rake = []
+            destination_rake = []
             
             for i in source_misc4:
                 for j in dest_misc4:
@@ -5316,6 +9065,7 @@ def Daily_Planner():
                 df_frk_rra.to_excel(writer, sheet_name="frk+rra", index=False)
                 df_misc3.to_excel(writer, sheet_name="misc3", index=False)
                 df_misc4.to_excel(writer, sheet_name="misc4", index=False)
+                df_wheat1.to_excel(writer, sheet_name="wheat_58w", index=False)
 
         except Exception as e:
             print(e)

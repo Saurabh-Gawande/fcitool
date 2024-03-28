@@ -63,7 +63,7 @@ function Daily_Planner() {
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [riceData, setRiceData] = useState(false);
-  const [wheatData, setWheatData] = useState(false);
+  const [wheatData, setWheatData] = useState([]);
   const [progress, setProgress] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [coarseGrain, setCoarseGrain] = useState(false);
@@ -74,23 +74,15 @@ function Daily_Planner() {
   const [w_cgr, setw_cgr] = useState(false);
   const [wheat_rra, setWheat_rra] = useState(false);
   const [frkPlusRRA, setFkrPlusRRA] = useState(false);
-  const [riceOriginvalue, setRiceOriginValue] = useState();
-  const [riceDestinationValue, setRiceDestinationValue] = useState();
-  const [wheatOriginValue, setWheatOriginValue] = useState();
-  const [wheatDestinationValue, setWheatDestinationValue] = useState();
-  const [coarseGrainOriginValue, setCoarseGrainOriginValue] = useState();
-  const [coarseGrainDestinationValue, setCoarseGrainDestinationValue] =
-    useState();
-  const [frkrraOriginValue, setfrkrraOriginValue] = useState();
-  const [frkrraDestinationValue, setfrkrraDestinationValue] = useState();
-  const [frkbrOriginValue, setfrkbrOriginValue] = useState();
-  const [frkbrDestinationValue, setfrkbrDestinationValue] = useState();
-  const [wcgrOriginValue, setwcgrOriginValue] = useState();
-  const [wcgrDestinationValue, setwcgrDestinationValue] = useState();
-  const [frkcgrOriginValue, setfrkcgrOriginValue] = useState();
-  const [frkcgrDestinationValue, setfrkcgrDestinationValue] = useState();
-  const [frkOriginValue, setfrkOriginValue] = useState();
 
+  const [riceOriginvalue, setRiceOriginValue] = useState();
+  const [wheatOriginValue, setWheatOriginValue] = useState();
+  const [coarseGrainOriginValue, setCoarseGrainOriginValue] = useState();
+  const [frkrraOriginValue, setfrkrraOriginValue] = useState();
+  const [frkbrOriginValue, setfrkbrOriginValue] = useState();
+  const [wcgrOriginValue, setwcgrOriginValue] = useState();
+  const [frkcgrOriginValue, setfrkcgrOriginValue] = useState();
+  const [frkOriginValue, setfrkOriginValue] = useState();
   const [rrcOriginValue, setRrcOriginValue] = useState();
   const [ragiOriginValue, setRagiOriginValue] = useState();
   const [jowarOriginValue, setJowarOriginValue] = useState();
@@ -105,6 +97,14 @@ function Daily_Planner() {
   const [frk_rraOriginValue, setfrk_rraOriginValue] = useState();
   const [wheat_rraOriginValue, setwheat_rraOriginValue] = useState();
 
+  const [riceDestinationValue, setRiceDestinationValue] = useState();
+  const [wheatDestinationValue, setWheatDestinationValue] = useState();
+  const [coarseGrainDestinationValue, setCoarseGrainDestinationValue] =
+    useState();
+  const [frkbrDestinationValue, setfrkbrDestinationValue] = useState();
+  const [wcgrDestinationValue, setwcgrDestinationValue] = useState();
+  const [frkcgrDestinationValue, setfrkcgrDestinationValue] = useState();
+  const [frkrraDestinationValue, setfrkrraDestinationValue] = useState();
   const [rrcDestinationValue, setRrcDestinationValue] = useState();
   const [ragiDestinationValue, setRagiDestinationValue] = useState();
   const [jowarDestinationValue, setJowarDestinationValue] = useState();
@@ -118,8 +118,55 @@ function Daily_Planner() {
   const [misc4DestinationValue, setMisc4DestinationValue] = useState();
   const [frk_rraDestinationValue, setfrk_rraDestinationValue] = useState();
   const [wheat_rraDestinationValue, setwheat_rraDestinationValue] = useState();
-
   const [frkDestinationValue, setfrkDestinationValue] = useState();
+
+  // for counting number of rakes of 58w
+  const [riceOriginvalue1, setRiceOriginValue1] = useState();
+  const [wheatOriginValue1, setWheatOriginValue1] = useState();
+  const [coarseGrainOriginValue1, setCoarseGrainOriginValue1] = useState();
+  const [frkrraOriginValue1, setfrkrraOriginValue1] = useState();
+  const [frkbrOriginValue1, setfrkbrOriginValue1] = useState();
+  const [wcgrOriginValue1, setwcgrOriginValue1] = useState();
+  const [frkcgrOriginValue1, setfrkcgrOriginValue1] = useState();
+  const [frkOriginValue1, setfrkOriginValue1] = useState();
+  const [rrcOriginValue1, setRrcOriginValue1] = useState();
+  const [ragiOriginValue1, setRagiOriginValue1] = useState();
+  const [jowarOriginValue1, setJowarOriginValue1] = useState();
+  const [bajraOriginValue1, setBajraOriginValue1] = useState();
+  const [maizeOriginValue1, setMiazeOriginValue1] = useState();
+  const [wheatUrsOriginValue1, setWheatUrsOriginValue1] = useState();
+  const [wheatFaqOriginValue1, setWheatFaqOriginValue1] = useState();
+  const [misc1OriginValue1, setMisc1OriginValue1] = useState();
+  const [misc2OriginValue1, setMisc2OriginValue1] = useState();
+  const [misc3OriginValue1, setMisc3OriginValue1] = useState();
+  const [misc4OriginValue1, setMisc4OriginValue1] = useState();
+  const [frk_rraOriginValue1, setfrk_rraOriginValue1] = useState();
+  const [wheat_rraOriginValue1, setwheat_rraOriginValue1] = useState();
+
+  const [riceDestinationValue1, setRiceDestinationValue1] = useState();
+  const [wheatDestinationValue1, setWheatDestinationValue1] = useState();
+  const [coarseGrainDestinationValue1, setCoarseGrainDestinationValue1] =
+    useState();
+  const [frkbrDestinationValue1, setfrkbrDestinationValue1] = useState();
+  const [wcgrDestinationValue1, setwcgrDestinationValue1] = useState();
+  const [frkcgrDestinationValue1, setfrkcgrDestinationValue1] = useState();
+  const [frkrraDestinationValue1, setfrkrraDestinationValue1] = useState();
+  const [rrcDestinationValue1, setRrcDestinationValue1] = useState();
+  const [ragiDestinationValue1, setRagiDestinationValue1] = useState();
+  const [jowarDestinationValue1, setJowarDestinationValue1] = useState();
+  const [bajraDestinationValue1, setBajraDestinationValue1] = useState();
+  const [maizeDestinationValue1, setMiazeDestinationValue1] = useState();
+  const [wheatUrsDestinationValue1, setWheatUrsDestinationValue1] = useState();
+  const [wheatFaqDestinationValue1, setWheatFaqDestinationValue1] = useState();
+  const [misc1DestinationValue1, setMisc1DestinationValue1] = useState();
+  const [misc2DestinationValue1, setMisc2DestinationValue1] = useState();
+  const [misc3DestinationValue1, setMisc3DestinationValue1] = useState();
+  const [misc4DestinationValue1, setMisc4DestinationValue1] = useState();
+  const [frk_rraDestinationValue1, setfrk_rraDestinationValue1] = useState();
+  const [wheat_rraDestinationValue1, setwheat_rraDestinationValue1] =
+    useState();
+  const [frkDestinationValue1, setfrkDestinationValue1] = useState();
+
   const [excelfiledata, setExcelFileData] = useState(null);
   const [railheadData, setRailheadData] = useState();
   const [rrc, setRrc] = useState(false);
@@ -1445,6 +1492,235 @@ function Daily_Planner() {
       misc4_Destination.reduce((total, item) => total + item.Value, 0) +
         misc4_InlineDestination.reduce((total, item) => total + item.Value, 0)
     );
+
+    // for 58w rake counting
+
+    setRiceOriginValue1(
+      riceOrigin1.reduce((total, item) => total + item.Value, 0) +
+        block_data21.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRiceDestinationValue1(
+      riceDestination1.reduce((total, item) => total + item.Value, 0) +
+        block_dataDest21.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setWheatOriginValue1(
+      wheatOrigin1.reduce((total, item) => total + item.Value, 0) +
+        block_dataWheat21.reduce((total, item) => total + item.Value, 0)
+    );
+    setWheatDestinationValue1(
+      wheatDestination1.reduce((total, item) => total + item.Value, 0) +
+        block_dataDestWheat21.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setCoarseGrainOriginValue1(
+      coarseGrainOrigin1.reduce((total, item) => total + item.Value, 0) +
+        coarseGrainInlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setCoarseGrainDestinationValue1(
+      coarseGrainDestination1.reduce((total, item) => total + item.Value, 0) +
+        coarseGrainInlineDestination1.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setfrkrraOriginValue1(
+      frkrraOrigin1.reduce((total, item) => total + item.Value, 0) +
+        frkrraInlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkrraDestinationValue1(
+      frkrraDestination1.reduce((total, item) => total + item.Value, 0) +
+        frkrraInlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkbrOriginValue1(
+      frkBr_Origin1.reduce((total, item) => total + item.Value, 0) +
+        frkBr_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkbrDestinationValue1(
+      frkBr_Destination1.reduce((total, item) => total + item.Value, 0) +
+        frkBr_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setwcgrOriginValue1(
+      w_cgr_Origin1.reduce((total, item) => total + item.Value, 0) +
+        w_cgr_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setwcgrDestinationValue1(
+      w_cgr_Destination1.reduce((total, item) => total + item.Value, 0) +
+        w_cgr_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkcgrOriginValue1(
+      frk_cgr_Origin1.reduce((total, item) => total + item.Value, 0) +
+        frk_cgr_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkcgrDestinationValue1(
+      frk_cgr_Destination1.reduce((total, item) => total + item.Value, 0) +
+        frk_cgr_InlineDestination1.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setfrkOriginValue1(
+      frk_Origin1.reduce((total, item) => total + item.Value, 0) +
+        frk_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrkDestinationValue1(
+      frk_Destination1.reduce((total, item) => total + item.Value, 0) +
+        frk_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRrcOriginValue1(
+      rrc_Origin1.reduce((total, item) => total + item.Value, 0) +
+        rrc_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRrcDestinationValue1(
+      rrc_Destination1.reduce((total, item) => total + item.Value, 0) +
+        rrc_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRagiOriginValue1(
+      ragi_Origin1.reduce((total, item) => total + item.Value, 0) +
+        ragi_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setRagiDestinationValue1(
+      ragi_Destination1.reduce((total, item) => total + item.Value, 0) +
+        ragi_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setJowarOriginValue1(
+      jowar_Origin1.reduce((total, item) => total + item.Value, 0) +
+        jowar_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setJowarDestinationValue1(
+      jowar_Destination1.reduce((total, item) => total + item.Value, 0) +
+        jowar_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setBajraOriginValue1(
+      bajra_Origin1.reduce((total, item) => total + item.Value, 0) +
+        bajra_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setBajraDestinationValue1(
+      bajra_Destination1.reduce((total, item) => total + item.Value, 0) +
+        bajra_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMiazeOriginValue1(
+      maize_Origin1.reduce((total, item) => total + item.Value, 0) +
+        maize_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMiazeDestinationValue1(
+      maize_Destination1.reduce((total, item) => total + item.Value, 0) +
+        maize_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc1OriginValue1(
+      misc1_Origin1.reduce((total, item) => total + item.Value, 0) +
+        misc1_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc1DestinationValue1(
+      misc1_Destination1.reduce((total, item) => total + item.Value, 0) +
+        misc1_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc2OriginValue(
+      misc2_Origin1.reduce((total, item) => total + item.Value, 0) +
+        misc2_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc2DestinationValue1(
+      misc2_Destination1.reduce((total, item) => total + item.Value, 0) +
+        misc2_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setWheatUrsOriginValue1(
+      wheaturs_Origin1.reduce((total, item) => total + item.Value, 0) +
+        wheaturs_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setWheatUrsDestinationValue1(
+      wheaturs_Destination1.reduce((total, item) => total + item.Value, 0) +
+        wheaturs_InlineDestination1.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setWheatFaqOriginValue1(
+      wheatfaq_Origin1.reduce((total, item) => total + item.Value, 0) +
+        wheatfaq_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setWheatFaqDestinationValue1(
+      wheatfaq_Destination1.reduce((total, item) => total + item.Value, 0) +
+        wheatfaq_InlineDestination1.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setwheat_rraOriginValue1(
+      wheat_rra_Origin1.reduce((total, item) => total + item.Value, 0) +
+        wheat_rra_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setwheat_rraDestinationValue1(
+      wheat_rra_Destination1.reduce((total, item) => total + item.Value, 0) +
+        wheat_rra_InlineDestination1.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setfrk_rraOriginValue1(
+      frk_rra_Origin1.reduce((total, item) => total + item.Value, 0) +
+        frk_rra_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setfrk_rraDestinationValue1(
+      frk_rra_Destination1.reduce((total, item) => total + item.Value, 0) +
+        frk_rra_InlineDestination1.reduce(
+          (total, item) => total + item.Value,
+          0
+        )
+    );
+
+    setMisc3OriginValue1(
+      misc3_Origin1.reduce((total, item) => total + item.Value, 0) +
+        misc3_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc3DestinationValue1(
+      misc3_Destination1.reduce((total, item) => total + item.Value, 0) +
+        misc3_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc4OriginValue1(
+      misc4_Origin1.reduce((total, item) => total + item.Value, 0) +
+        misc4_InlineOrigin1.reduce((total, item) => total + item.Value, 0)
+    );
+
+    setMisc4DestinationValue1(
+      misc4_Destination1.reduce((total, item) => total + item.Value, 0) +
+        misc4_InlineDestination1.reduce((total, item) => total + item.Value, 0)
+    );
   });
 
   const handleSolve = async () => {
@@ -2104,7 +2380,10 @@ function Daily_Planner() {
   const viewGrid = () => {
     setShowMessage(true);
     const riceData = JSON.parse(Total_result?.rra ?? 0);
-    const wheatData = JSON.parse(Total_result?.wheat ?? 0);
+    const wheatData = [
+      ...JSON.parse(Total_result?.wheat ?? 0),
+      ...JSON.parse(Total_result?.wheat_58w ?? 0),
+    ];
     const coarseGrainData = JSON.parse(Total_result?.coarse_grain ?? 0);
     const frk_rraData = JSON.parse(Total_result?.frk_rra ?? 0);
     const frk_brData = JSON.parse(Total_result?.frk_br ?? 0);
@@ -2275,6 +2554,7 @@ function Daily_Planner() {
         }
       })
       .then((data) => {
+        console.log(data);
         if (data) {
           setProgress((prev) => [
             ...prev,
@@ -2286,7 +2566,7 @@ function Daily_Planner() {
           setShowModal(true);
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
-              Sno: Math.floor(Math.random() * 500) + 1,
+              virtualCode: item.virtualcode,
               origin_railhead: item.sourceRailHead.split("_")[0],
               origin_state: item.sourceState,
               Value: item.value,
@@ -2300,7 +2580,7 @@ function Daily_Planner() {
 
           if (data.destinationResponse) {
             const updatedDeficit = data.destinationResponse.map((item) => ({
-              Sno: Math.floor(Math.random() * 500) + 1,
+              virtualCode: item.virtualcode,
               origin_railhead: item.destinationRailHead.split("_")[0],
               origin_state: item.destinationState,
               Value: item.value,
@@ -2315,7 +2595,8 @@ function Daily_Planner() {
           if (data.inlineSourceResponse) {
             const updatedSurplusInline = data.inlineSourceResponse.map(
               (item) => ({
-                Sno: Math.floor(Math.random() * 500) + 1,
+                virtualCode: item.virtualcode,
+                inlineVirtualCode: item.inlinevirtualcode,
                 origin_railhead: item.sourceRailHead.split("_")[0],
                 origin_state: item.sourceState,
                 destination_railhead: item.sourceInlineRailHead.split("_")[0],
@@ -2334,7 +2615,8 @@ function Daily_Planner() {
           if (data.inlineDestinationResponse) {
             const updatedDeficitInline = data.inlineDestinationResponse.map(
               (item) => ({
-                Sno: Math.floor(Math.random() * 500) + 1,
+                virtualCode: item.virtualcode,
+                inlineVirtualCode: item.inlinevirtualcode,
                 origin_railhead: item.destinationRailHead.split("_")[0],
                 origin_state: item.destinationState,
                 destination_railhead:
@@ -2353,6 +2635,8 @@ function Daily_Planner() {
 
           if (data.routeFixing) {
             const updatedRouteFixing = data.routeFixing.map((item) => ({
+              sourceVirtualCode: item.sourcevirtualcode,
+              destinationVirtualCode: item.destinationvirtualcode,
               origin_railhead: item.sourceRailHead,
               origin_state: item.sourceState,
               destination_railhead: item.destinationRailHead,
@@ -2366,6 +2650,8 @@ function Daily_Planner() {
 
           if (data.routeBlocking) {
             const updatedRouteBlocking = data.routeBlocking.map((item) => ({
+              sourceVirtualCode: item.sourcevirtualcode,
+              destinationVirtualCode: item.destinationvirtualcode,
               origin_railhead: item.sourceRailHead,
               origin_state: item.sourceState,
               destination_railhead: item.destinationRailHead,
@@ -2508,7 +2794,7 @@ function Daily_Planner() {
                   </div>
                   <br />
                   <form style={{ marginLeft: "50px" }}>
-                    <label>
+                    {/* <label>
                       <strong
                         style={{
                           fontSize: "20px",
@@ -2535,7 +2821,7 @@ function Daily_Planner() {
                         <option value="Non_TEFD_TC">Non-TEFD + TC</option>
                         <option value="TEFD_TC">TEFD + TC</option>
                       </select>
-                    </label>
+                    </label> */}
                     <br />
                     <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
                       <strong
@@ -2694,6 +2980,7 @@ function Daily_Planner() {
                               <th>Sno</th>
                               <th>Region</th>
                               <th>Source</th>
+                              <th>virtual Code</th>
                               <th>Railhead</th>
                               <th>Commodity</th>
                               <th>Rake preference</th>
@@ -2707,6 +2994,7 @@ function Daily_Planner() {
                                 <td>{index}</td>
                                 <td>{row.origin_state}</td>
                                 <td>{row.sourceDivision}</td>
+                                <td>{row.virtualCode}</td>
                                 <td>{row.origin_railhead}</td>
                                 <td>{row.Commodity}</td>
                                 <td>{row.rake}</td>
@@ -2892,6 +3180,7 @@ function Daily_Planner() {
                               <th>Sno</th>
                               <th>Region</th>
                               <th>Destination</th>
+                              <th>Virtual Code</th>
                               <th>Railhead</th>
                               <th>Commodity</th>
                               <th>Rake preference</th>
@@ -2905,6 +3194,7 @@ function Daily_Planner() {
                                 <td>{index}</td>
                                 <td>{row.origin_state}</td>
                                 <td>{row.destinationDivision}</td>
+                                <td>{row.virtualCode}</td>
                                 <td>{row.origin_railhead}</td>
                                 <td>{row.Commodity}</td>
                                 <td>{row.rake}</td>
@@ -3120,12 +3410,15 @@ function Daily_Planner() {
                           <thead>
                             <tr>
                               <th>Sno</th>
+                              <th>Virtual Code</th>
                               <th>Railhead</th>
                               <th>State</th>
+                              <th>Virtual Code</th>
                               <th>Railhead</th>
                               <th>State</th>
-                              <th>Value</th>
                               <th>Commodity</th>
+                              <th>Rake preference</th>
+                              <th>Value</th>
                               {/* <th>Delete</th> */}
                             </tr>
                           </thead>
@@ -3134,12 +3427,15 @@ function Daily_Planner() {
                               return (
                                 <tr key={index}>
                                   <td>{index}</td>
+                                  <td>{row.virtualCode}</td>
                                   <td>{row.origin_railhead}</td>
                                   <td>{row.origin_state}</td>
+                                  <td>{row.inlineVirtualCode}</td>
                                   <td>{row.destination_railhead}</td>
                                   <td>{row.destination_state}</td>
-                                  <td>{row.Value}</td>
                                   <td>{row.Commodity}</td>
+                                  <td>{row.rake}</td>
+                                  <td>{row.Value}</td>
                                   {/* <td>
                                     <span
                                       style={{
@@ -3357,12 +3653,15 @@ function Daily_Planner() {
                           <thead>
                             <tr>
                               <th>Sno</th>
+                              <th>Virtual Code</th>
                               <th>Railhead</th>
                               <th>State</th>
+                              <th>Virtual Code</th>
                               <th>Railhead</th>
                               <th>State</th>
-                              <th>Value</th>
                               <th>Commodity</th>
+                              <th>Rake preference</th>
+                              <th>Value</th>
                               {/* <th>Delete</th> */}
                             </tr>
                           </thead>
@@ -3371,12 +3670,15 @@ function Daily_Planner() {
                               return (
                                 <tr key={index}>
                                   <td>{index}</td>
+                                  <td>{row.virtualCode}</td>
                                   <td>{row.origin_railhead}</td>
                                   <td>{row.origin_state}</td>
+                                  <td>{row.inlineVirtualCode}</td>
                                   <td>{row.destination_railhead}</td>
                                   <td>{row.destination_state}</td>
-                                  <td>{row.Value}</td>
                                   <td>{row.Commodity}</td>
+                                  <td>{row.rake}</td>
+                                  <td>{row.Value}</td>
                                   {/* <td>
                                     <span
                                       style={{
@@ -3580,10 +3882,16 @@ function Daily_Planner() {
                                 Origin State
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
+                                Origin Virtual Code
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
                                 Origin Railhead
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination State
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Destination Virtual Code
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination Railhead
@@ -3592,7 +3900,7 @@ function Daily_Planner() {
                                 Commodity
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
-                                Value
+                                Rakes
                               </th>
                               {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Delete
@@ -3603,8 +3911,10 @@ function Daily_Planner() {
                             {fixed_data.map((item) => (
                               <tr key={item.id}>
                                 <td>{item.origin_state}</td>
+                                <td>{item.sourceVirtualCode}</td>
                                 <td>{item.origin_railhead}</td>
                                 <td>{item.destination_state}</td>
+                                <td>{item.sourceVirtualCode}</td>
                                 <td>{item.destination_railhead}</td>
                                 <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
@@ -3780,10 +4090,16 @@ function Daily_Planner() {
                                 Origin State
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
+                                Origin Virtual Code
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
                                 Origin Railhead
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination State
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Destination Virtual Code
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination Railhead
@@ -3803,8 +4119,10 @@ function Daily_Planner() {
                             {blocked_data.map((item) => (
                               <tr key={item.id}>
                                 <td>{item.origin_state}</td>
+                                <td>{item.sourceVirtualCode}</td>
                                 <td>{item.origin_railhead}</td>
                                 <td>{item.destination_state}</td>
+                                <td>{item.destinationVirtualCode}</td>
                                 <td>{item.destination_railhead}</td>
                                 <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
@@ -5889,7 +6207,7 @@ function Daily_Planner() {
             >
               {riceOriginvalue > 0 || riceDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  RRA (S/D) :
+                  42w RRA (S/D) :
                   <p
                     style={{
                       color:
@@ -5908,7 +6226,7 @@ function Daily_Planner() {
 
               {wheatOriginValue > 0 || wheatDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Wheat (S/D) :
+                  42w Wheat (S/D) :
                   <p
                     style={{
                       color:
@@ -5927,7 +6245,7 @@ function Daily_Planner() {
 
               {coarseGrainOriginValue > 0 || coarseGrainDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Coarse Grain (S/D) :
+                  42w Coarse Grain (S/D) :
                   <p
                     style={{
                       color:
@@ -5946,7 +6264,7 @@ function Daily_Planner() {
 
               {frkrraOriginValue > 0 || frkrraDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  FRK RRA (S/D) :
+                  42w FRK RRA (S/D) :
                   <p
                     style={{
                       color:
@@ -5965,7 +6283,7 @@ function Daily_Planner() {
 
               {frkbrOriginValue > 0 || frkbrDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  FRK BR (S/D) :
+                  42w FRK BR (S/D) :
                   <p
                     style={{
                       color:
@@ -5984,7 +6302,7 @@ function Daily_Planner() {
 
               {wcgrOriginValue > 0 || wcgrDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Wheat+CGR (S/D) :
+                  42w Wheat+CGR (S/D) :
                   <p
                     style={{
                       color:
@@ -6003,7 +6321,7 @@ function Daily_Planner() {
 
               {frkcgrOriginValue > 0 || frkcgrDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  FRK+CGR (S/D) :
+                  42w FRK+CGR (S/D) :
                   <p
                     style={{
                       color:
@@ -6022,7 +6340,7 @@ function Daily_Planner() {
 
               {frkOriginValue > 0 || frkDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Wheat+FRK (S/D) :
+                  42w Wheat+FRK (S/D) :
                   <p
                     style={{
                       color:
@@ -6039,7 +6357,7 @@ function Daily_Planner() {
 
               {rrcOriginValue > 0 || rrcDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  RRC (S/D) :
+                  42w RRC (S/D) :
                   <p
                     style={{
                       color:
@@ -6056,7 +6374,7 @@ function Daily_Planner() {
 
               {ragiOriginValue > 0 || ragiDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Ragi (S/D) :
+                  42w Ragi (S/D) :
                   <p
                     style={{
                       color:
@@ -6075,7 +6393,7 @@ function Daily_Planner() {
 
               {jowarOriginValue > 0 || jowarDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Jowar (S/D) :
+                  42w Jowar (S/D) :
                   <p
                     style={{
                       color:
@@ -6094,7 +6412,7 @@ function Daily_Planner() {
 
               {bajraOriginValue > 0 || bajraDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Bajra (S/D) :
+                  42w Bajra (S/D) :
                   <p
                     style={{
                       color:
@@ -6113,7 +6431,7 @@ function Daily_Planner() {
 
               {maizeOriginValue > 0 || maizeDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Maize (S/D) :
+                  42w Maize (S/D) :
                   <p
                     style={{
                       color:
@@ -6132,7 +6450,7 @@ function Daily_Planner() {
 
               {wheatUrsOriginValue > 0 || wheatUrsDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Wheat(URS) (S/D) :
+                  42w Wheat(URS) (S/D) :
                   <p
                     style={{
                       color:
@@ -6151,7 +6469,7 @@ function Daily_Planner() {
 
               {wheatFaqOriginValue > 0 || wheatFaqDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Wheat(FAQ) (S/D) :
+                  42w Wheat(FAQ) (S/D) :
                   <p
                     style={{
                       color:
@@ -6170,7 +6488,7 @@ function Daily_Planner() {
 
               {misc1OriginValue > 0 || misc1DestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Misc 1 (S/D) :
+                  42w Misc 1 (S/D) :
                   <p
                     style={{
                       color:
@@ -6189,7 +6507,7 @@ function Daily_Planner() {
 
               {misc2OriginValue > 0 || misc2DestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Misc 2 (S/D) :
+                  42w Misc 2 (S/D) :
                   <p
                     style={{
                       color:
@@ -6208,7 +6526,7 @@ function Daily_Planner() {
 
               {wheat_rraOriginValue > 0 || wheat_rraDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Wheat+RRA (S/D) :
+                  42w Wheat+RRA (S/D) :
                   <p
                     style={{
                       color:
@@ -6227,7 +6545,7 @@ function Daily_Planner() {
 
               {frk_rraOriginValue > 0 || frk_rraDestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  FRK+RRA (S/D) :
+                  42w FRK+RRA (S/D) :
                   <p
                     style={{
                       color:
@@ -6246,7 +6564,7 @@ function Daily_Planner() {
 
               {misc3OriginValue > 0 || misc3DestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Misc 3 (S/D) :
+                  42w Misc 3 (S/D) :
                   <p
                     style={{
                       color:
@@ -6265,7 +6583,7 @@ function Daily_Planner() {
 
               {misc4OriginValue > 0 || misc4DestinationValue > 0 ? (
                 <div style={{ display: "flex" }}>
-                  Misc 4 (S/D) :
+                  42w Misc 4 (S/D) :
                   <p
                     style={{
                       color:
@@ -6279,6 +6597,407 @@ function Daily_Planner() {
                   </p>
                   <p>/</p>
                   <p>{misc4DestinationValue}</p>
+                </div>
+              ) : null}
+              {/* for 58w rake counting */}
+
+              {riceOriginvalue1 > 0 || riceDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        riceDestinationValue1 > riceOriginvalue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {riceOriginvalue1}
+                  </p>
+                  <p>/</p>
+                  <p>{riceDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {wheatOriginValue1 > 0 || wheatDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Wheat (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheatDestinationValue1 > wheatOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheatOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{wheatDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {coarseGrainOriginValue1 > 0 ||
+              coarseGrainDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Coarse Grain (S/D) :
+                  <p
+                    style={{
+                      color:
+                        coarseGrainDestinationValue1 > coarseGrainOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {coarseGrainOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{coarseGrainDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {frkrraOriginValue1 > 0 || frkrraDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w FRK RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkrraDestinationValue1 > frkrraOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkrraOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{frkrraDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {frkbrOriginValue1 > 0 || frkbrDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w FRK BR (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkbrDestinationValue1 > frkbrOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkbrOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{frkbrDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {wcgrOriginValue1 > 0 || wcgrDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Wheat+CGR (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wcgrDestinationValue1 > wcgrOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wcgrOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{wcgrDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {frkcgrOriginValue1 > 0 || frkcgrDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w FRK+CGR (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkcgrDestinationValue1 > frkcgrOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkcgrOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{frkcgrDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {frkOriginValue1 > 0 || frkDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Wheat+FRK (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frkDestinationValue1 > frkOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frkOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{frkDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {rrcOriginValue1 > 0 || rrcDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w RRC (S/D) :
+                  <p
+                    style={{
+                      color:
+                        rrcDestinationValue1 > rrcOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {rrcOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{rrcDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {ragiOriginValue1 > 0 || ragiDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Ragi (S/D) :
+                  <p
+                    style={{
+                      color:
+                        ragiDestinationValue1 > ragiOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {ragiOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{ragiDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {jowarOriginValue1 > 0 || jowarDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Jowar (S/D) :
+                  <p
+                    style={{
+                      color:
+                        jowarDestinationValue1 > jowarOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {jowarOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{jowarDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {bajraOriginValue1 > 0 || bajraDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Bajra (S/D) :
+                  <p
+                    style={{
+                      color:
+                        bajraDestinationValue1 > bajraOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {bajraOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{bajraDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {maizeOriginValue1 > 0 || maizeDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Maize (S/D) :
+                  <p
+                    style={{
+                      color:
+                        maizeDestinationValue1 > maizeOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {maizeOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{maizeDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {wheatUrsOriginValue1 > 0 || wheatUrsDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Wheat(URS) (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheatUrsDestinationValue1 > wheatUrsOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheatUrsOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{wheatUrsDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {wheatFaqOriginValue1 > 0 || wheatFaqDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Wheat(FAQ) (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheatFaqDestinationValue1 > wheatFaqOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheatFaqOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{wheatFaqDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {misc1OriginValue1 > 0 || misc1DestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Misc 1 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc1DestinationValue1 > misc1OriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc1OriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{misc1DestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {misc2OriginValue1 > 0 || misc2DestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Misc 2 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc2DestinationValue1 > misc2OriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc2OriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{misc2DestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {wheat_rraOriginValue1 > 0 || wheat_rraDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Wheat+RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        wheat_rraDestinationValue1 > wheat_rraOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {wheat_rraOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{wheat_rraDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {frk_rraOriginValue1 > 0 || frk_rraDestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w FRK+RRA (S/D) :
+                  <p
+                    style={{
+                      color:
+                        frk_rraDestinationValue1 > frk_rraOriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {frk_rraOriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{frk_rraDestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {misc3OriginValue1 > 0 || misc3DestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Misc 3 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc3DestinationValue1 > misc3OriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc3OriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{misc3DestinationValue1}</p>
+                </div>
+              ) : null}
+
+              {misc4OriginValue1 > 0 || misc4DestinationValue1 > 0 ? (
+                <div style={{ display: "flex" }}>
+                  58w Misc 4 (S/D) :
+                  <p
+                    style={{
+                      color:
+                        misc4DestinationValue1 > misc4OriginValue1
+                          ? "red"
+                          : "green",
+                      marginLeft: 4,
+                    }}
+                  >
+                    {misc4OriginValue1}
+                  </p>
+                  <p>/</p>
+                  <p>{misc4DestinationValue1}</p>
                 </div>
               ) : null}
 
