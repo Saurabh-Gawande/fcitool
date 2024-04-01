@@ -221,8 +221,8 @@ def read_Daily_Planner_S2():
 def read_Daily_Planner_S1():
     if request.method == "GET":        
         try: 
-            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
             df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
+            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
             df3 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain") 
             df4 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra") 
             df5 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br") 
@@ -243,6 +243,27 @@ def read_Daily_Planner_S1():
             df20 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
             df21 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
             df22 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_58w")
+            
+            df23 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
+            df24 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain") 
+            df25 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra") 
+            df26 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br") 
+            df27 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk") 
+            df28 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr")
+            df29 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr")
+            df30 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs")
+            df31 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq")
+            df32 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc")
+            df33 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar")
+            df34 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi")
+            df35 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra")
+            df36 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize")
+            df37 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1")
+            df38 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2")
+            df39 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra")
+            df40 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra")
+            df41 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
+            df42 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
 
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
@@ -266,12 +287,37 @@ def read_Daily_Planner_S1():
             json_data20 = df20.to_json(orient='records', indent=1)
             json_data21 = df21.to_json(orient='records', indent=1)
             json_data22 = df22.to_json(orient='records', indent=1)
+            
+            json_data23 = df23.to_json(orient='records', indent=1)
+            json_data24 = df24.to_json(orient='records', indent=1)
+            json_data25 = df25.to_json(orient='records', indent=1)
+            json_data26 = df26.to_json(orient='records', indent=1)
+            json_data27 = df27.to_json(orient='records', indent=1)
+            json_data28 = df28.to_json(orient='records', indent=1)
+            json_data29 = df29.to_json(orient='records', indent=1)
+            json_data30 = df30.to_json(orient='records', indent=1)
+            json_data31 = df31.to_json(orient='records', indent=1)
+            json_data32 = df32.to_json(orient='records', indent=1)
+            json_data33 = df33.to_json(orient='records', indent=1)
+            json_data34 = df34.to_json(orient='records', indent=1)
+            json_data35 = df35.to_json(orient='records', indent=1)
+            json_data36 = df36.to_json(orient='records', indent=1)
+            json_data37 = df37.to_json(orient='records', indent=1)
+            json_data38 = df38.to_json(orient='records', indent=1)
+            json_data39 = df39.to_json(orient='records', indent=1)
+            json_data40 = df40.to_json(orient='records', indent=1)
+            json_data41 = df41.to_json(orient='records', indent=1)
+            json_data42 = df42.to_json(orient='records', indent=1)
 
             json_data = {
              "rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "wheat_frk": json_data6,
              "frkcgr":json_data7 , "wcgr": json_data8, "wheat_urs": json_data9 , "wheat_faq": json_data10, "rrc": json_data11, "jowar": json_data12, 
              "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
-             "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22
+             "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22 , "rra_58w": json_data23, 
+             "coarse_grain_58w": json_data24, "frk_rra_58w": json_data25, "frk_br_58w": json_data26, "wheat_frk_58w": json_data27, "frkcgr_58w": json_data28, 
+             "wcgr_58w": json_data29, "wheat_urs_58": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data32,
+             "ragi_58w": json_data34, "bajra_58w": json_data35, "maize_58w": json_data36, "misc1_58w": json_data37, "misc2_58w": json_data38, "wheat_rra_58w": json_data38,
+             "frkPlusRRa_58w": json_data39, "misc3_58w": json_data40, "misc4_58": json_data41
              }
              
         except:
@@ -850,11 +896,35 @@ def Daily_Planner():
             confirmed_dest_state = []
             confirmed_railhead_value = []
             confirmed_railhead_commodities = []
+            confirmed_org_division = []
+            confirmed_dest_division=[]
+            confirmed_org_rake =[]
+            confirmed_dest_rake =[]
+            confirmed_sourceId = []
+            confirmed_destinationId = []
+            confirmed_org_RH = []
+            confirmed_dest_RH = []
+
+            confirmed_org_rhcode1 = []
+            confirmed_dest_rhcode1 = []
+            confirmed_org_state1 = []
+            confirmed_dest_state1 = []
+            confirmed_railhead_value1 = []
+            confirmed_railhead_commodities1 = []
+            confirmed_org_division1 = []
+            confirmed_dest_division1 =[]
+            confirmed_org_rake1 =[]
+            confirmed_dest_rake1 =[]
+            confirmed_sourceId1 = []
+            confirmed_destinationId1 = []
+            confirmed_org_RH1 = []
+            confirmed_dest_RH1 = []
 
             fetched_data = request.get_json()
             blocked_data = fetched_data['blocked_data']
            
-            confirmed_data = fetched_data['confirmed_data']
+            confirmed_data1 = fetched_data['confirmed_data1']
+            confirmed_data2 = fetched_data['confirmed_data2']
             TEFD_fetched = fetched_data['TEFD']
             TEFDdata = fetched_data['TEFDdata']
             # df = pd.DataFrame(TEFD_fetched)
@@ -955,21 +1025,45 @@ def Daily_Planner():
                 blocked_org_state.append(blocked_data[i]["origin_state"])
                 blocked_dest_state.append(blocked_data[i]["destination_state"])
                 
-            for i in range(len(confirmed_data)):
-                confirmed_org_rhcode.append(confirmed_data[i]["origin_railhead"])
-                confirmed_dest_rhcode.append(confirmed_data[i]["destination_railhead"])
-                confirmed_org_state.append(confirmed_data[i]["origin_state"])
-                confirmed_dest_state.append(confirmed_data[i]["destination_state"])
-                confirmed_railhead_value.append(confirmed_data[i]["value"])
-                confirmed_railhead_commodities.append(confirmed_data[i]["Commodity"])
+            for i in range(len(confirmed_data1)):
+                confirmed_org_rhcode.append(confirmed_data1[i]["origin_railhead"])
+                confirmed_dest_rhcode.append(confirmed_data1[i]["destination_railhead"])
+                confirmed_org_state.append(confirmed_data1[i]["origin_state"])
+                confirmed_dest_state.append(confirmed_data1[i]["destination_state"])
+                confirmed_railhead_value.append(confirmed_data1[i]["value"])
+                confirmed_railhead_commodities.append(confirmed_data1[i]["Commodity"])
+                confirmed_org_division.append(confirmed_data1[i]["sourceDivision"])
+                confirmed_dest_division.append(confirmed_data1[i]["destinationDivision"])
+                confirmed_sourceId.append(confirmed_data1[i]["sourceId"])
+                confirmed_destinationId.append(confirmed_data1[i]["destinationId"])
+                confirmed_org_rake.append(confirmed_data1[i]["sourceRakeType"])
+                confirmed_dest_rake.append(confirmed_data1[i]["destinationRakeType"])
+                confirmed_org_RH.append(confirmed_data1[i]["sourceVirtualCode"])
+                confirmed_dest_RH.append(confirmed_data1[i]["destinationVirtualCode"])
+            
+            for i in range(len(confirmed_data2)):
+                confirmed_org_rhcode1.append(confirmed_data2[i]["origin_railhead"])
+                confirmed_dest_rhcode1.append(confirmed_data2[i]["destination_railhead"])
+                confirmed_org_state1.append(confirmed_data2[i]["origin_state"])
+                confirmed_dest_state1.append(confirmed_data2[i]["destination_state"])
+                confirmed_railhead_value1.append(confirmed_data2[i]["value"])
+                confirmed_railhead_commodities1.append(confirmed_data2[i]["Commodity"])
+                confirmed_org_division1.append(confirmed_data2[i]["sourceDivision"])
+                confirmed_dest_division1.append(confirmed_data2[i]["destinationDivision"])
+                confirmed_sourceId1.append(confirmed_data2[i]["sourceId"])
+                confirmed_destinationId1.append(confirmed_data2[i]["destinationId"])
+                confirmed_org_rake1.append(confirmed_data2[i]["sourceRakeType"])
+                confirmed_dest_rake1.append(confirmed_data2[i]["destinationRakeType"])
+                confirmed_org_RH1.append(confirmed_data1[i]["sourceVirtualCode"])
+                confirmed_dest_RH1.append(confirmed_data1[i]["destinationVirtualCode"])
+
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             matrices_data1 = pd.ExcelFile("Input\\Cost_matrix.xlsx")
             
             rail_cost = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
-            # print(rail_cost)
-            distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
-            # # states_alloc=pd.read_excel(data,sheet_name="States_allocation",index_col=0)
-            # # states_supply=pd.read_excel(data,sheet_name="States_supply",index_col=0)
+           
+            # distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
+            distance_rh = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
 
             prob = LpProblem("FCI_monthly_model_allocation_rr", LpMinimize)
 
@@ -3889,6 +3983,7 @@ def Daily_Planner():
             print("Minimum Cost of Transportation for 58w= Rs.", prob.objective.value(), "Lakh")
             print("Total Number of Variables for 58w:", len(prob.variables()))
             print("Total Number of Constraints for 58w:", len(prob.constraints))
+            print(wheatrra_origin, wheat_dest)
             # dataframe for 42 wagon
             df_wheat = pd.DataFrame()
             From = []
@@ -3907,7 +4002,9 @@ def Daily_Planner():
             # Cost = []
             source_rake = []
             destination_rake = []
-
+            sourceRH = []
+            destinationRH = []
+            print(source_wheat)
             for i in source_wheat:
                 for j in dest_wheat:
                     if int(x_ij_wheat[(i, j)].value()) > 0:
@@ -3925,6 +4022,7 @@ def Daily_Planner():
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             # for adding origin state and devision from inline
             for i in range(len(From)):
@@ -3934,6 +4032,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceRH.append(wheat["virtualCode"]) 
 
             # To add inline division 
             for i in range(len(From)):
@@ -3955,6 +4054,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         found_division = True
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")  
@@ -3967,6 +4067,7 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -3999,6 +4100,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Wheat':
                     From.append(org)
                     From_state.append(org_state)
@@ -4007,12 +4116,16 @@ def Daily_Planner():
                     commodity.append("Wheat")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
             
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
@@ -4033,6 +4146,8 @@ def Daily_Planner():
             df_wheat["destinationId"] = destinationId
             df_wheat["SourceRakeType"] = source_rake
             df_wheat["DestinationRakeType"] = destination_rake
+            df_wheat["sourceRH"] = sourceRH
+            df_wheat["destinationRH"] = destinationRH
             
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline.keys():
@@ -4045,7 +4160,7 @@ def Daily_Planner():
                 for j in range(len(df_wheat["SourceRailHead"])):
                     if (i == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i] == df_wheat.iloc[j]["SourceRailHead"]):
                         df_wheat.loc[j, 'SourceRailHead'] = (i + '+' + source_wheat_inline[i])
-            
+            print(df_wheat)
             df_wheat1 = pd.DataFrame()
             From = []
             To = []
@@ -4065,6 +4180,8 @@ def Daily_Planner():
             # Cost = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
 
             for i in source_wheat1:
                 for j in dest_wheat1:
@@ -4083,6 +4200,7 @@ def Daily_Planner():
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             # for adding origin state and devision from inline
             for i in range(len(From)):
@@ -4092,6 +4210,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             # To add inline division 
             for i in range(len(From)):
@@ -4112,6 +4231,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_division = True
                         break
                 if not found_division:
@@ -4125,6 +4245,7 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4151,6 +4272,39 @@ def Daily_Planner():
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Wheat':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wheat1["SourceRailHead"] = From
             df_wheat1["SourceState"] = From_state
@@ -4168,6 +4322,8 @@ def Daily_Planner():
             df_wheat1["destinationId"] = destinationId
             df_wheat1["SourceRakeType"] = source_rake
             df_wheat1["DestinationRakeType"] = destination_rake
+            df_wheat1["sourceRH"] = sourceRH
+            df_wheat1["destinationRH"] = destinationRH
             
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline1.keys():
@@ -4198,6 +4354,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
 
             for i in source_rra:
                 for j in dest_rra:
@@ -4215,6 +4373,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline:
@@ -4223,6 +4382,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
   
             for i in range(len(To)):
                 found_state = False
@@ -4245,6 +4405,7 @@ def Daily_Planner():
                         To_division.append(rra["destinationDivision"] if "destinationDivision" in rra else "")
                         destinationId.append(rra["destinationId"])
                         destination_rake.append(rra["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4260,6 +4421,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4285,7 +4447,13 @@ def Daily_Planner():
                 dest = str(confirmed_dest_rhcode[i])
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
-                val = float(confirmed_railhead_value[i])
+                val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
                 if Commodity == 'RRA':
                     From.append(org)
                     From_state_rra.append(org_state)
@@ -4294,12 +4462,16 @@ def Daily_Planner():
                     commodity.append("RRA")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_rra["SourceRailHead"] = From
             df_rra["SourceState"] = From_state_rra
@@ -4317,6 +4489,8 @@ def Daily_Planner():
             df_rra["destinationId"] = destinationId
             df_rra["SourceRakeType"] = source_rake
             df_rra["DestinationRakeType"] = destination_rake
+            df_rra["sourceRH"] = sourceRH
+            df_rra["destinationRH"] = destinationRH
            
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["DestinationRailHead"])):
@@ -4345,6 +4519,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
 
             for i in source_rra1:
                 for j in dest_rra1:
@@ -4362,6 +4538,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline1:
@@ -4370,6 +4547,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
   
             for i in range(len(To)):
                 found_state = False
@@ -4392,6 +4570,7 @@ def Daily_Planner():
                         To_division.append(rra["destinationDivision"] if "destinationDivision" in rra else "")
                         destinationId.append(rra["destinationId"])
                         destination_rake.append(rra["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4407,6 +4586,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4426,13 +4606,21 @@ def Daily_Planner():
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
          
-            for i in range(len(confirmed_org_rhcode)):
-                org = str(confirmed_org_rhcode[i])
-                org_state = str(confirmed_org_state[i])
-                dest = str(confirmed_dest_rhcode[i])
-                dest_state = str(confirmed_dest_state[i])
-                Commodity = confirmed_railhead_commodities[i]
-                val = float(confirmed_railhead_value[i])
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
                 if Commodity == 'RRA':
                     From.append(org)
                     From_state_rra.append(org_state)
@@ -4441,12 +4629,16 @@ def Daily_Planner():
                     commodity.append("RRA")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_rra1["SourceRailHead"] = From
             df_rra1["SourceState"] = From_state_rra
@@ -4464,6 +4656,8 @@ def Daily_Planner():
             df_rra1["destinationId"] = destinationId
             df_rra1["SourceRakeType"] = source_rake
             df_rra1["DestinationRakeType"] = destination_rake
+            df_rra1["sourceRH"] = sourceRH
+            df_rra1["destinationRH"] = destinationRH
            
             for i in dest_rra_inline1.keys():
                 for j in range(len(df_rra1["DestinationRailHead"])):
@@ -4492,6 +4686,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_coarseGrain:
                 for j in dest_coarseGrain:
@@ -4509,6 +4705,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
+                        sourceRH.append(wheat["virtualCode"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline:
@@ -4517,6 +4714,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4525,6 +4723,7 @@ def Daily_Planner():
                         To_state.append(coarseGrain["origin_state"])
                         destinationId.append(coarseGrain["destinationId"])
                         destination_rake.append(coarseGrain["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4556,6 +4755,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4579,6 +4779,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Coarse Grains':
                     From.append(org)
                     From_state.append(org_state)
@@ -4587,12 +4795,16 @@ def Daily_Planner():
                     commodity.append("Coarse Grains")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_CoarseGrain["SourceRailHead"] = From
             df_CoarseGrain["SourceState"] = From_state
@@ -4610,6 +4822,8 @@ def Daily_Planner():
             df_CoarseGrain["destinationId"] = destinationId
             df_CoarseGrain["SourceRakeType"] = source_rake
             df_CoarseGrain["DestinationRakeType"] = destination_rake
+            df_CoarseGrain["sourceRH"] = sourceRH
+            df_CoarseGrain["destinationRH"] = destinationRH
             
             for i in dest_coarseGrain_inline.keys():
                 for j in range(len(df_CoarseGrain["DestinationRailHead"])):
@@ -4638,7 +4852,9 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
-            
+            sourceRH = []
+            destinationRH = []
+
             for i in source_coarseGrain1:
                 for j in dest_coarseGrain1:
                     if int(x_ij_coarseGrain1[(i,j)].value()) > 0:
@@ -4655,6 +4871,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
+                        sourceRH.append(wheat["virtualCode"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline1:
@@ -4663,6 +4880,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4671,6 +4889,7 @@ def Daily_Planner():
                         To_state.append(coarseGrain["origin_state"])
                         destinationId.append(coarseGrain["destinationId"])
                         destination_rake.append(coarseGrain["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4702,6 +4921,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4717,6 +4937,40 @@ def Daily_Planner():
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Coarse Grains':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Coarse Grains")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_CoarseGrain1["SourceRailHead"] = From
             df_CoarseGrain1["SourceState"] = From_state
@@ -4734,6 +4988,8 @@ def Daily_Planner():
             df_CoarseGrain1["destinationId"] = destinationId
             df_CoarseGrain1["SourceRakeType"] = source_rake
             df_CoarseGrain1["DestinationRakeType"] = destination_rake
+            df_CoarseGrain1["sourceRH"] = sourceRH
+            df_CoarseGrain1["destinationRH"] = destinationRH
             
             for i in dest_coarseGrain_inline1.keys():
                 for j in range(len(df_CoarseGrain1["DestinationRailHead"])):
@@ -4763,6 +5019,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frkrra:
                 for j in dest_frkrra:
@@ -4780,6 +5038,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline:
@@ -4788,6 +5047,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4811,6 +5071,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkrra["destinationId"])
                         destination_rake.append(frkrra["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frkrra in frkrra_dest_inline:
@@ -4827,6 +5088,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4850,6 +5112,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'FRK RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -4858,12 +5128,16 @@ def Daily_Planner():
                     commodity.append("FRK RRA")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frkrra["SourceRailHead"] = From
             df_frkrra["SourceState"] = From_state
@@ -4881,6 +5155,8 @@ def Daily_Planner():
             df_frkrra["destinationId"] = destinationId
             df_frkrra["SourceRakeType"] = source_rake
             df_frkrra["DestinationRakeType"] = destination_rake
+            df_frkrra["sourceRH"] = sourceRH
+            df_frkrra["destinationRH"] = destinationRH
 
             for i in dest_frkrra_inline.keys():
                 for j in range(len(df_frkrra["DestinationRailHead"])):
@@ -4909,6 +5185,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frkrra1:
                 for j in dest_frkrra1:
@@ -4926,6 +5204,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline1:
@@ -4934,6 +5213,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4957,6 +5237,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkrra["destinationId"])
                         destination_rake.append(frkrra["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frkrra in frkrra_dest_inline1:
@@ -4973,6 +5254,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4988,6 +5270,40 @@ def Daily_Planner():
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'FRK RRA':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK RRA")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frkrra1["SourceRailHead"] = From
             df_frkrra1["SourceState"] = From_state
@@ -5005,6 +5321,8 @@ def Daily_Planner():
             df_frkrra1["destinationId"] = destinationId
             df_frkrra1["SourceRakeType"] = source_rake
             df_frkrra1["DestinationRakeType"] = destination_rake
+            df_frkrra1["sourceRH"] = sourceRH
+            df_frkrra1["destinationRH"] = destinationRH
 
             for i in dest_frkrra_inline1.keys():
                 for j in range(len(df_frkrra1["DestinationRailHead"])):
@@ -5033,6 +5351,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frkbr:
                 for j in dest_frkbr:
@@ -5050,6 +5370,7 @@ def Daily_Planner():
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline:
@@ -5058,6 +5379,7 @@ def Daily_Planner():
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5081,6 +5403,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkbr["destinationId"])
                         destination_rake.append(frkbr["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frkbr in frkbr_dest_inline:
@@ -5098,6 +5421,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -5121,6 +5445,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'FRK BR':
                     From.append(org)
                     From_state.append(org_state)
@@ -5129,12 +5461,16 @@ def Daily_Planner():
                     commodity.append("FRK BR")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frkbr["SourceRailHead"] = From
             df_frkbr["SourceState"] = From_state
@@ -5152,6 +5488,8 @@ def Daily_Planner():
             df_frkbr["destinationId"] = destinationId
             df_frkbr["SourceRakeType"] = source_rake
             df_frkbr["DestinationRakeType"] = destination_rake
+            df_frkbr["sourceRH"] = sourceRH
+            df_frkbr["destinationRH"] = destinationRH
 
             for i in dest_frkbr_inline.keys():
                 for j in range(len(df_frkbr["DestinationRailHead"])):
@@ -5162,7 +5500,7 @@ def Daily_Planner():
                 for j in range(len(df_frkbr["SourceRailHead"])):
                     if (i == df_frkbr.iloc[j]["SourceRailHead"] or source_frkbr_inline[i] == df_frkbr.iloc[j]["SourceRailHead"]):
                         df_frkbr.loc[j, 'SourceRailHead'] = (i + '+' + source_frkbr_inline[i])
-     #still this point rake type is not added
+     
             df_frkbr1 = pd.DataFrame()
             From = []
             To = []
@@ -5180,6 +5518,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frkbr1:
                 for j in dest_frkbr1:
@@ -5196,6 +5536,8 @@ def Daily_Planner():
                         From_state.append(frkbr["origin_state"])
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
+                        source_rake.append(frkbr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline1:
@@ -5203,6 +5545,8 @@ def Daily_Planner():
                         From_state.append(frkbr["origin_state"])
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
+                        source_rake.append(frkbr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5225,6 +5569,8 @@ def Daily_Planner():
                         To_division.append(frkbr["destinationDivision"] if "destinationDivision" in frkbr else "")
                         found_state = True
                         destinationId.append(frkbr["destinationId"])
+                        destination_rake.append(frkbr["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frkbr in frkbr_dest_inline1:
@@ -5242,6 +5588,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -5253,9 +5600,44 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'FRK BR':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK BR")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frkbr["SourceRailHead"] = From
             df_frkbr["SourceState"] = From_state
@@ -5271,6 +5653,10 @@ def Daily_Planner():
             df_frkbr["InlineDestinationDivision"] = To_inlineDivision
             df_frkbr["sourceId"] = sourceId
             df_frkbr["destinationId"] = destinationId
+            df_frkbr["SourceRakeType"] = source_rake
+            df_frkbr["DestinationRakeType"] = destination_rake
+            df_frkbr["sourceRH"] = sourceRH
+            df_frkbr["destinationRH"] = destinationRH
 
             for i in dest_frkbr_inline1.keys():
                 for j in range(len(df_frkbr1["DestinationRailHead"])):
@@ -5299,6 +5685,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frk:
                 for j in dest_frk:
@@ -5315,6 +5703,8 @@ def Daily_Planner():
                         From_state.append(frk["origin_state"])
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
+                        source_rake.append(frk["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline:
@@ -5322,6 +5712,8 @@ def Daily_Planner():
                         From_state.append(frk["origin_state"])
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
+                        source_rake.append(frk["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -5344,6 +5736,8 @@ def Daily_Planner():
                         To_division.append(frk["destinationDivision"] if "destinationDivision" in frk else "")
                         found_state = True
                         destinationId.append(frk["destinationId"])
+                        destination_rake.append(frk["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frk in frk_dest_inline:
@@ -5369,6 +5763,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5383,6 +5779,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Wheat+FRK':
                     From.append(org)
                     From_state.append(org_state)
@@ -5391,12 +5795,16 @@ def Daily_Planner():
                     commodity.append("Wheat+FRK")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frk["SourceRailHead"] = From
             df_frk["SourceState"] = From_state
@@ -5412,6 +5820,10 @@ def Daily_Planner():
             df_frk["InlineDestinationDivision"] = To_inlineDivision
             df_frk["sourceId"] = sourceId
             df_frk["destinationId"] = destinationId
+            df_frk["SourceRakeType"] = source_rake
+            df_frk["DestinationRakeType"] = destination_rake
+            df_frk["sourceRH"] = sourceRH
+            df_frk["destinationRH"] = destinationRH
 
             for i in dest_frk_inline.keys():
                 for j in range(len(df_frk["DestinationRailHead"])):
@@ -5440,6 +5852,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frk1:
                 for j in dest_frk1:
@@ -5456,6 +5870,8 @@ def Daily_Planner():
                         From_state.append(frk["origin_state"])
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
+                        source_rake.append(frk["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline1:
@@ -5463,6 +5879,9 @@ def Daily_Planner():
                         From_state.append(frk["origin_state"])
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
+                        source_rake.append(frk["rake"])
+                        sourceRH.append(wheat["virtualCode"])
+
 
             for i in range(len(To)):
                 found_state = False
@@ -5485,6 +5904,8 @@ def Daily_Planner():
                         To_division.append(frk["destinationDivision"] if "destinationDivision" in frk else "")
                         found_state = True
                         destinationId.append(frk["destinationId"])
+                        destination_rake.append(frk["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frk in frk_dest_inline1:
@@ -5499,6 +5920,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -5510,12 +5932,47 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Wheat+FRK':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat+FRK")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frk1["SourceRailHead"] = From
             df_frk1["SourceState"] = From_state
@@ -5531,6 +5988,10 @@ def Daily_Planner():
             df_frk1["InlineDestinationDivision"] = To_inlineDivision
             df_frk1["sourceId"] = sourceId
             df_frk1["destinationId"] = destinationId
+            df_frk1["SourceRakeType"] = source_rake
+            df_frk1["DestinationRakeType"] = destination_rake
+            df_frk1["sourceRH"] = sourceRH
+            df_frk1["destinationRH"] = destinationRH
 
             for i in dest_frk_inline1.keys():
                 for j in range(len(df_frk1["DestinationRailHead"])):
@@ -5559,6 +6020,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frkcgr:
                 for j in dest_frkcgr:
@@ -5575,6 +6038,8 @@ def Daily_Planner():
                         From_state.append(frkcgr["origin_state"])
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
+                        source_rake.append(frkcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin_inline:
@@ -5582,6 +6047,8 @@ def Daily_Planner():
                         From_state.append(frkcgr["origin_state"])
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
+                        source_rake.append(frkcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5604,6 +6071,8 @@ def Daily_Planner():
                         To_division.append(frkcgr["destinationDivision"] if "destinationDivision" in frkcgr else "")
                         found_state = True
                         destinationId.append(frkcgr["destinationId"])
+                        destination_rake.append(frkcgr["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frkcgr in frkcgr_dest_inline:
@@ -5629,6 +6098,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5643,6 +6114,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'FRK+CGR':
                     From.append(org)
                     From_state.append(org_state)
@@ -5651,12 +6130,16 @@ def Daily_Planner():
                     commodity.append("FRK+CGR")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frkcgr["SourceRailHead"] = From
             df_frkcgr["SourceState"] = From_state
@@ -5672,6 +6155,10 @@ def Daily_Planner():
             # df_frkcgr["Cost"] = Cost
             df_frkcgr["sourceId"] = sourceId
             df_frkcgr["destinationId"] = destinationId
+            df_frkcgr["SourceRakeType"] = source_rake
+            df_frkcgr["DestinationRakeType"] = destination_rake
+            df_frkcgr["sourceRH"] = sourceRH
+            df_frkcgr["destinationRH"] = destinationRH
 
             for i in dest_frkcgr_inline.keys():
                 for j in range(len(df_frkcgr["DestinationRailHead"])):
@@ -5700,6 +6187,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frkcgr1:
                 for j in dest_frkcgr1:
@@ -5716,6 +6205,8 @@ def Daily_Planner():
                         From_state.append(frkcgr["origin_state"])
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
+                        source_rake.append(frkcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin_inline1:
@@ -5723,6 +6214,8 @@ def Daily_Planner():
                         From_state.append(frkcgr["origin_state"])
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
+                        source_rake.append(frkcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5745,6 +6238,8 @@ def Daily_Planner():
                         To_division.append(frkcgr["destinationDivision"] if "destinationDivision" in frkcgr else "")
                         found_state = True
                         destinationId.append(frkcgr["destinationId"])
+                        destination_rake.append(frkcgr["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for frkcgr in frkcgr_dest_inline1:
@@ -5770,12 +6265,48 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'FRK+CGR':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK+CGR")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frkcgr1["SourceRailHead"] = From
             df_frkcgr1["SourceState"] = From_state
@@ -5791,6 +6322,10 @@ def Daily_Planner():
             # df_frkcgr1["Cost"] = Cost
             df_frkcgr1["sourceId"] = sourceId
             df_frkcgr1["destinationId"] = destinationId
+            df_frkcgr1["SourceRakeType"] = source_rake
+            df_frkcgr1["DestinationRakeType"] = destination_rake
+            df_frkcgr1["sourceRH"] = sourceRH
+            df_frkcgr1["destinationRH"] = destinationRH
 
             for i in dest_frkcgr_inline1.keys():
                 for j in range(len(df_frkcgr1["DestinationRailHead"])):
@@ -5819,6 +6354,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wcgr:
                 for j in dest_wcgr:
@@ -5835,6 +6372,8 @@ def Daily_Planner():
                         From_state.append(wcgr["origin_state"])
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
+                        source_rake.append(wcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline:
@@ -5842,6 +6381,8 @@ def Daily_Planner():
                         From_state.append(wcgr["origin_state"])
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
+                        source_rake.append(wcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5850,6 +6391,8 @@ def Daily_Planner():
                         To_state.append(wcgr["origin_state"])
                         found_state = True
                         destinationId.append(wcgr["destinationId"])
+                        destination_rake.append(wcgr["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wcgr in wcgr_dest_inline:
@@ -5889,6 +6432,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5903,6 +6448,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Wheat+CGR':
                     From.append(org)
                     From_state.append(org_state)
@@ -5911,12 +6464,16 @@ def Daily_Planner():
                     commodity.append("Wheat+CGR")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wcgr["SourceRailHead"] = From 
             df_wcgr["SourceState"] = From_state
@@ -5932,6 +6489,10 @@ def Daily_Planner():
             # df_wcgr["Cost"] = Cost
             df_wcgr["sourceId"] = sourceId
             df_wcgr["destinationId"] = destinationId
+            df_wcgr["SourceRakeType"] = source_rake
+            df_wcgr["DestinationRakeType"] = destination_rake
+            df_wcgr["sourceRH"] = sourceRH
+            df_wcgr["destinationRH"] = destinationRH
 
             for i in dest_wcgr_inline.keys():
                 for j in range(len(df_wcgr["DestinationRailHead"])):
@@ -5960,6 +6521,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wcgr1:
                 for j in dest_wcgr1:
@@ -5976,6 +6539,8 @@ def Daily_Planner():
                         From_state.append(wcgr["origin_state"])
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
+                        source_rake.append(wcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline1:
@@ -5983,6 +6548,8 @@ def Daily_Planner():
                         From_state.append(wcgr["origin_state"])
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
+                        source_rake.append(wcgr["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5991,6 +6558,8 @@ def Daily_Planner():
                         To_state.append(wcgr["origin_state"])
                         found_state = True
                         destinationId.append(wcgr["destinationId"])
+                        destination_rake.append(wcgr["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wcgr in wcgr_dest_inline1:
@@ -6019,6 +6588,7 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
+                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -6030,12 +6600,47 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
 
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Wheat+CGR':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat+CGR")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wcgr1["SourceRailHead"] = From 
             df_wcgr1["SourceState"] = From_state
@@ -6051,6 +6656,10 @@ def Daily_Planner():
             # df_wcgr1["Cost"] = Cost
             df_wcgr1["sourceId"] = sourceId
             df_wcgr1["destinationId"] = destinationId
+            df_wcgr1["SourceRakeType"] = source_rake
+            df_wcgr1["DestinationRakeType"] = destination_rake
+            df_wcgr1["sourceRH"] = sourceRH
+            df_wcgr1["destinationRH"] = destinationRH
 
             for i in dest_wcgr_inline1.keys():
                 for j in range(len(df_wcgr1["DestinationRailHead"])):
@@ -6078,6 +6687,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_rrc:
                 for j in dest_rrc:
@@ -6094,6 +6705,8 @@ def Daily_Planner():
                         From_state.append(rrc["origin_state"])
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
+                        source_rake.append(rrc["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline:
@@ -6101,6 +6714,8 @@ def Daily_Planner():
                         From_state.append(rrc["origin_state"])
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
+                        source_rake.append(rrc["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6108,6 +6723,8 @@ def Daily_Planner():
                     if To[i] == rrc["origin_railhead"]:
                         To_state.append(rrc["origin_state"])
                         destinationId.append(rrc["destinationId"])
+                        destination_rake.append(rrc["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -6148,6 +6765,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6159,6 +6778,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'RRC':
                     From.append(org)
                     From_state.append(org_state)
@@ -6167,12 +6794,16 @@ def Daily_Planner():
                     commodity.append("RRC")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_rrc["SourceRailHead"] = From
             df_rrc["SourceState"] = From_state
@@ -6187,6 +6818,10 @@ def Daily_Planner():
             df_rrc["InlineDestinationDivision"] = To_inlineDivision
             df_rrc["sourceId"] = sourceId
             df_rrc["destinationId"] = destinationId
+            df_rrc["SourceRakeType"] = source_rake
+            df_rrc["DestinationRakeType"] = destination_rake
+            df_rrc["sourceRH"] = sourceRH
+            df_rrc["destinationRH"] = destinationRH
           
             for i in dest_rrc_inline.keys():
                 for j in range(len(df_rrc["DestinationRailHead"])):
@@ -6214,6 +6849,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_rrc1:
                 for j in dest_rrc1:
@@ -6230,6 +6867,8 @@ def Daily_Planner():
                         From_state.append(rrc["origin_state"])
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
+                        source_rake.append(rrc["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline1:
@@ -6237,6 +6876,8 @@ def Daily_Planner():
                         From_state.append(rrc["origin_state"])
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
+                        source_rake.append(rrc["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6244,6 +6885,8 @@ def Daily_Planner():
                     if To[i] == rrc["origin_railhead"]:
                         To_state.append(rrc["origin_state"])
                         destinationId.append(rrc["destinationId"])
+                        destination_rake.append(rrc["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -6284,9 +6927,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'RRC':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("RRC")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_rrc1["SourceRailHead"] = From
             df_rrc1["SourceState"] = From_state
@@ -6301,6 +6980,10 @@ def Daily_Planner():
             df_rrc1["InlineDestinationDivision"] = To_inlineDivision
             df_rrc1["sourceId"] = sourceId
             df_rrc1["destinationId"] = destinationId
+            df_rrc1["SourceRakeType"] = source_rake
+            df_rrc1["DestinationRakeType"] = destination_rake
+            df_rrc1["sourceRH"] = sourceRH
+            df_rrc1["destinationRH"] = destinationRH
           
             for i in dest_rrc_inline1.keys():
                 for j in range(len(df_rrc1["DestinationRailHead"])):
@@ -6328,6 +7011,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_ragi:
                 for j in dest_ragi:
@@ -6344,6 +7029,8 @@ def Daily_Planner():
                         From_state.append(ragi["origin_state"])
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
+                        source_rake.append(ragi["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline:
@@ -6351,6 +7038,8 @@ def Daily_Planner():
                         From_state.append(ragi["origin_state"])
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
+                        source_rake.append(ragi["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -6359,6 +7048,8 @@ def Daily_Planner():
                         To_state.append(ragi["origin_state"])
                         found_state = True
                         destinationId.append(ragi["destinationId"])
+                        destination_rake.append(ragi["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for ragi in ragi_dest_inline:
@@ -6398,6 +7089,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6409,6 +7102,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Ragi':
                     From.append(org)
                     From_state.append(org_state)
@@ -6417,12 +7118,16 @@ def Daily_Planner():
                     commodity.append("Ragi")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_ragi["SourceRailHead"] = From
             df_ragi["SourceState"] = From_state
@@ -6437,6 +7142,10 @@ def Daily_Planner():
             df_ragi["InlineDestinationDivision"] = To_inlineDivision
             df_ragi["sourceId"] = sourceId
             df_ragi["destinationId"] = destinationId
+            df_ragi["SourceRakeType"] = source_rake
+            df_ragi["DestinationRakeType"] = destination_rake
+            df_ragi["sourceRH"] = sourceRH
+            df_ragi["destinationRH"] = destinationRH
 
             for i in dest_ragi_inline.keys():
                 for j in range(len(df_ragi["DestinationRailHead"])):
@@ -6464,6 +7173,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_ragi1:
                 for j in dest_ragi1:
@@ -6480,6 +7191,8 @@ def Daily_Planner():
                         From_state.append(ragi["origin_state"])
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
+                        source_rake.append(ragi["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline1:
@@ -6487,6 +7200,8 @@ def Daily_Planner():
                         From_state.append(ragi["origin_state"])
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
+                        source_rake.append(ragi["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -6495,6 +7210,8 @@ def Daily_Planner():
                         To_state.append(ragi["origin_state"])
                         found_state = True
                         destinationId.append(ragi["destinationId"])
+                        destination_rake.append(ragi["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for ragi in ragi_dest_inline1:
@@ -6534,9 +7251,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Ragi':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Ragi")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_ragi1["SourceRailHead"] = From
             df_ragi1["SourceState"] = From_state
@@ -6551,6 +7304,10 @@ def Daily_Planner():
             df_ragi1["InlineDestinationDivision"] = To_inlineDivision
             df_ragi1["sourceId"] = sourceId
             df_ragi1["destinationId"] = destinationId
+            df_ragi1["SourceRakeType"] = source_rake
+            df_ragi1["DestinationRakeType"] = destination_rake
+            df_ragi1["sourceRH"] = sourceRH
+            df_ragi1["destinationRH"] = destinationRH
 
             for i in dest_ragi_inline1.keys():
                 for j in range(len(df_ragi1["DestinationRailHead"])):
@@ -6579,6 +7336,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_jowar:
                 for j in dest_jowar:
@@ -6595,6 +7354,8 @@ def Daily_Planner():
                         From_state.append(jowar["origin_state"])
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
+                        source_rake.append(jowar["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline:
@@ -6602,6 +7363,8 @@ def Daily_Planner():
                         From_state.append(jowar["origin_state"])
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
+                        source_rake.append(jowar["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -6609,6 +7372,8 @@ def Daily_Planner():
                     if To[i] == jowar["origin_railhead"]:
                         To_state.append(jowar["origin_state"])
                         destinationId.append(jowar["destinationId"])
+                        destination_rake.append(jowar["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -6628,7 +7393,7 @@ def Daily_Planner():
                 if not found_state:
                     for jowar in jowar_dest_inline:
                         if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
-                            To_division.append(jowar["destinationDivision"] if "destinationDivision" in wheajowar else "")
+                            To_division.append(jowar["destinationDivision"] if "destinationDivision" in jowar else "")
                             found_state = True
                             break  
             
@@ -6649,6 +7414,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6660,6 +7427,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Jowar':
                     From.append(org)
                     From_state.append(org_state)
@@ -6668,12 +7443,16 @@ def Daily_Planner():
                     commodity.append("Jowar")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_jowar["SourceRailHead"] = From
             df_jowar["SourceState"] = From_state
@@ -6688,6 +7467,10 @@ def Daily_Planner():
             df_jowar["InlineDestinationDivision"] = To_inlineDivision
             df_jowar["sourceId"] = sourceId
             df_jowar["destinationId"] = destinationId
+            df_jowar["SourceRakeType"] = source_rake
+            df_jowar["DestinationRakeType"] = destination_rake
+            df_jowar["sourceRH"] = sourceRH
+            df_jowar["destinationRH"] = destinationRH
 
             for i in dest_jowar_inline.keys():
                 for j in range(len(df_jowar["DestinationRailHead"])):
@@ -6715,6 +7498,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_jowar1:
                 for j in dest_jowar1:
@@ -6731,6 +7516,8 @@ def Daily_Planner():
                         From_state.append(jowar["origin_state"])
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
+                        source_rake.append(jowar["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline1:
@@ -6738,6 +7525,8 @@ def Daily_Planner():
                         From_state.append(jowar["origin_state"])
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
+                        source_rake.append(jowar["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -6745,6 +7534,8 @@ def Daily_Planner():
                     if To[i] == jowar["origin_railhead"]:
                         To_state.append(jowar["origin_state"])
                         destinationId.append(jowar["destinationId"])
+                        destination_rake.append(jowar["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -6764,7 +7555,7 @@ def Daily_Planner():
                 if not found_state:
                     for jowar in jowar_dest_inline1:
                         if To[i] == jowar["origin_railhead"] or To[i] == jowar["destination_railhead"]:
-                            To_division.append(jowar["destinationDivision"] if "destinationDivision" in wheajowar else "")
+                            To_division.append(jowar["destinationDivision"] if "destinationDivision" in jowar else "")
                             found_state = True
                             break  
             
@@ -6785,9 +7576,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Ragi':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Ragi")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_jowar1["SourceRailHead"] = From
             df_jowar1["SourceState"] = From_state
@@ -6802,6 +7629,10 @@ def Daily_Planner():
             df_jowar1["InlineDestinationDivision"] = To_inlineDivision
             df_jowar1["sourceId"] = sourceId
             df_jowar1["destinationId"] = destinationId
+            df_jowar1["SourceRakeType"] = source_rake
+            df_jowar1["DestinationRakeType"] = destination_rake
+            df_jowar1["sourceRH"] = sourceRH
+            df_jowar1["destinationRH"] = destinationRH
 
             for i in dest_jowar_inline1.keys():
                 for j in range(len(df_jowar1["DestinationRailHead"])):
@@ -6829,6 +7660,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_bajra:
                 for j in dest_bajra:
@@ -6845,6 +7678,8 @@ def Daily_Planner():
                         From_state.append(bajra["origin_state"])
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
+                        source_rake.append(bajra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline:
@@ -6852,6 +7687,8 @@ def Daily_Planner():
                         From_state.append(bajra["origin_state"])
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
+                        source_rake.append(bajra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -6860,6 +7697,8 @@ def Daily_Planner():
                         To_state.append(bajra["origin_state"])
                         found_state = True
                         destinationId.append(bajra["destinationId"])
+                        destination_rake.append(bajra["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for bajra in bajra_dest_inline:
@@ -6899,6 +7738,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(Wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6910,6 +7751,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Bajra':
                     From.append(org)
                     From_state.append(org_state)
@@ -6918,12 +7767,16 @@ def Daily_Planner():
                     commodity.append("Bajra")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_bajra["SourceRailHead"] = From
             df_bajra["SourceState"] = From_state
@@ -6938,6 +7791,10 @@ def Daily_Planner():
             df_bajra["InlineDestinationDivision"] = To_inlineDivision
             df_bajra["sourceId"] = sourceId
             df_bajra["destinationId"] = destinationId
+            df_bajra["SourceRakeType"] = source_rake
+            df_bajra["DestinationRakeType"] = destination_rake
+            df_bajra["sourceRH"] = sourceRH
+            df_bajra["destinationRH"] = destinationRH
             
             for i in dest_bajra_inline.keys():
                 for j in range(len(df_bajra["DestinationRailHead"])):
@@ -6965,6 +7822,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_bajra1:
                 for j in dest_bajra1:
@@ -6981,6 +7840,8 @@ def Daily_Planner():
                         From_state.append(bajra["origin_state"])
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
+                        source_rake.append(bajra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline1:
@@ -6988,6 +7849,8 @@ def Daily_Planner():
                         From_state.append(bajra["origin_state"])
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
+                        source_rake.append(bajra["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -6996,6 +7859,8 @@ def Daily_Planner():
                         To_state.append(bajra["origin_state"])
                         found_state = True
                         destinationId.append(bajra["destinationId"])
+                        destination_rake.append(bajra["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for bajra in bajra_dest_inline1:
@@ -7035,9 +7900,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Bajra':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Bajra")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_bajra1["SourceRailHead"] = From
             df_bajra1["SourceState"] = From_state
@@ -7052,6 +7953,10 @@ def Daily_Planner():
             df_bajra1["InlineDestinationDivision"] = To_inlineDivision
             df_bajra1["sourceId"] = sourceId
             df_bajra1["destinationId"] = destinationId
+            df_bajra1["SourceRakeType"] = source_rake
+            df_bajra1["DestinationRakeType"] = destination_rake
+            df_bajra1["sourceRH"] = sourceRH
+            df_bajra1["destinationRH"] = destinationRH
             
             for i in dest_bajra_inline1.keys():
                 for j in range(len(df_bajra1["DestinationRailHead"])):
@@ -7080,6 +7985,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_maize:
                 for j in dest_maize:
@@ -7096,6 +8003,8 @@ def Daily_Planner():
                         From_state.append(maize["origin_state"])
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
+                        source_rake.append(maize["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline:
@@ -7103,6 +8012,8 @@ def Daily_Planner():
                         From_state.append(maize["origin_state"])
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
+                        source_rake.append(maize["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7110,6 +8021,8 @@ def Daily_Planner():
                     if To[i] == maize["origin_railhead"]:
                         To_state.append(maize["origin_state"])
                         destinationId.append(maize["destinationId"])
+                        destination_rake.append(maize["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -7150,6 +8063,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7161,6 +8076,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Maize':
                     From.append(org)
                     From_state.append(org_state)
@@ -7169,12 +8092,16 @@ def Daily_Planner():
                     commodity.append("Maize")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_maize["SourceRailHead"] = From
             df_maize["SourceState"] = From_state
@@ -7189,6 +8116,10 @@ def Daily_Planner():
             df_maize["InlineDestinationDivision"] = To_inlineDivision
             df_maize["sourceId"] = sourceId
             df_maize["destinationId"] = destinationId
+            df_maize["SourceRakeType"] = source_rake
+            df_maize["DestinationRakeType"] = destination_rake
+            df_maize["sourceRH"] = sourceRH
+            df_maize["destinationRH"] = destinationRH
             
             for i in dest_maize_inline.keys():
                 for j in range(len(df_maize["DestinationRailHead"])):
@@ -7216,6 +8147,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_maize1:
                 for j in dest_maize1:
@@ -7232,6 +8165,8 @@ def Daily_Planner():
                         From_state.append(maize["origin_state"])
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
+                        source_rake.append(maize["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline1:
@@ -7239,6 +8174,8 @@ def Daily_Planner():
                         From_state.append(maize["origin_state"])
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
+                        source_rake.append(maize["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7246,6 +8183,8 @@ def Daily_Planner():
                     if To[i] == maize["origin_railhead"]:
                         To_state.append(maize["origin_state"])
                         destinationId.append(maize["destinationId"])
+                        destination_rake.append(maize["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -7286,9 +8225,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Maize':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Maize")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_maize1["SourceRailHead"] = From
             df_maize1["SourceState"] = From_state
@@ -7303,6 +8278,10 @@ def Daily_Planner():
             df_maize1["InlineDestinationDivision"] = To_inlineDivision
             df_maize1["sourceId"] = sourceId
             df_maize1["destinationId"] = destinationId
+            df_maize1["SourceRakeType"] = source_rake
+            df_maize1["DestinationRakeType"] = destination_rake
+            df_maize1["sourceRH"] = sourceRH
+            df_maize1["destinationRH"] = destinationRH
             
             for i in dest_maize_inline1.keys():
                 for j in range(len(df_maize1["DestinationRailHead"])):
@@ -7330,6 +8309,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_misc1:
                 for j in dest_misc1:
@@ -7346,6 +8327,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline:
@@ -7353,6 +8336,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -7361,6 +8346,8 @@ def Daily_Planner():
                         To_state.append(misc1["origin_state"])
                         found_state = True
                         destinationId.append(misc1["destinationId"])
+                        destination_rake.append(misc1["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc1_dest_inline:
@@ -7400,6 +8387,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7411,6 +8400,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Misc1':
                     From.append(org)
                     From_state.append(org_state)
@@ -7419,12 +8416,16 @@ def Daily_Planner():
                     commodity.append("Misc1")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_misc1["SourceRailHead"] = From
             df_misc1["SourceState"] = From_state
@@ -7439,6 +8440,10 @@ def Daily_Planner():
             df_misc1["InlineDestinationDivision"] = To_inlineDivision
             df_misc1["sourceId"] = sourceId
             df_misc1["destinationId"] = destinationId
+            df_misc1["SourceRakeType"] = source_rake
+            df_misc1["DestinationRakeType"] = destination_rake
+            df_misc1["sourceRH"] = sourceRH
+            df_misc1["destinationRH"] = destinationRH
             
             for i in dest_misc1_inline.keys():
                 for j in range(len(df_misc1["DestinationRailHead"])):
@@ -7466,6 +8471,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_misc11:
                 for j in dest_misc11:
@@ -7482,6 +8489,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline1:
@@ -7489,6 +8498,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -7497,6 +8508,8 @@ def Daily_Planner():
                         To_state.append(misc1["origin_state"])
                         found_state = True
                         destinationId.append(misc1["destinationId"])
+                        destination_rake.append(misc1["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc1_dest_inline1:
@@ -7536,9 +8549,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Misc1':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Misc1")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_misc11["SourceRailHead"] = From
             df_misc11["SourceState"] = From_state
@@ -7553,6 +8602,10 @@ def Daily_Planner():
             df_misc11["InlineDestinationDivision"] = To_inlineDivision
             df_misc11["sourceId"] = sourceId
             df_misc11["destinationId"] = destinationId
+            df_misc11["SourceRakeType"] = source_rake
+            df_misc11["DestinationRakeType"] = destination_rake
+            df_misc11["sourceRH"] = sourceRH
+            df_misc11["destinationRH"] = destinationRH
             
             for i in dest_misc1_inline1.keys():
                 for j in range(len(df_misc11["DestinationRailHead"])):
@@ -7580,6 +8633,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_misc2:
                 for j in dest_misc2:
@@ -7597,6 +8652,8 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"])
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
+                        source_rake.append(misc2["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline:
@@ -7605,6 +8662,8 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"])
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
+                        source_rake.append(misc2["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7613,6 +8672,8 @@ def Daily_Planner():
                         To_state.append(misc2["origin_state"])
                         found_state = True
                         destinationId.append(misc2["destinationId"])
+                        destination_rake.append(misc2["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for misc2 in misc2_dest_inline:
@@ -7652,6 +8713,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7663,6 +8726,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Misc2':
                     From.append(org)
                     From_state.append(org_state)
@@ -7671,12 +8742,16 @@ def Daily_Planner():
                     commodity.append("Misc2")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_misc2["SourceRailHead"] = From
             df_misc2["SourceState"] = From_state
@@ -7691,6 +8766,10 @@ def Daily_Planner():
             df_misc2["InlineDestinationDivision"] = To_inlineDivision
             df_misc2["sourceId"] = sourceId
             df_misc2["destinationId"] = destinationId
+            df_misc2["SourceRakeType"] = source_rake
+            df_misc2["DestinationRakeType"] = destination_rake
+            df_misc2["sourceRH"] = sourceRH
+            df_misc2["destinationRH"] = destinationRH
             
             for i in dest_misc2_inline.keys():
                 for j in range(len(df_misc2["DestinationRailHead"])):
@@ -7718,6 +8797,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_misc21:
                 for j in dest_misc21:
@@ -7735,6 +8816,8 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"])
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
+                        source_rake.append(misc2["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline1:
@@ -7743,6 +8826,8 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"])
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
+                        source_rake.append(misc2["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7751,6 +8836,8 @@ def Daily_Planner():
                         To_state.append(misc2["origin_state"])
                         found_state = True
                         destinationId.append(misc2["destinationId"])
+                        destination_rake.append(misc2["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for misc2 in misc2_dest_inline1:
@@ -7790,9 +8877,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Misc2':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Misc2")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_misc21["SourceRailHead"] = From
             df_misc21["SourceState"] = From_state
@@ -7807,6 +8930,10 @@ def Daily_Planner():
             df_misc21["InlineDestinationDivision"] = To_inlineDivision
             df_misc21["sourceId"] = sourceId
             df_misc21["destinationId"] = destinationId
+            df_misc21["SourceRakeType"] = source_rake
+            df_misc21["DestinationRakeType"] = destination_rake
+            df_misc21["sourceRH"] = sourceRH
+            df_misc21["destinationRH"] = destinationRH
             
             for i in dest_misc2_inline1.keys():
                 for j in range(len(df_misc21["DestinationRailHead"])):
@@ -7834,6 +8961,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wheaturs:
                 for j in dest_wheaturs:
@@ -7850,6 +8979,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(maize["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wheat in wheaturs_origin_inline:
@@ -7857,6 +8988,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(maize["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -7865,6 +8998,8 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         found_state = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wheat in wheaturs_dest_inline:
@@ -7904,6 +9039,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7915,6 +9052,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Wheat(URS)':
                     From.append(org)
                     From_state.append(org_state)
@@ -7923,12 +9068,16 @@ def Daily_Planner():
                     commodity.append("Wheat(URS)")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wheaturs["SourceRailHead"] = From
             df_wheaturs["SourceState"] = From_state
@@ -7943,6 +9092,10 @@ def Daily_Planner():
             df_wheaturs["InlineDestinationDivision"] = To_inlineDivision
             df_wheaturs["sourceId"] = sourceId
             df_wheaturs["destinationId"] = destinationId
+            df_wheaturs["SourceRakeType"] = source_rake
+            df_wheaturs["DestinationRakeType"] = destination_rake
+            df_wheaturs["sourceRH"] = sourceRH
+            df_wheaturs["destinationRH"] = destinationRH
             
             for i in dest_wheaturs_inline.keys():
                 for j in range(len(df_wheaturs["DestinationRailHead"])):
@@ -7970,6 +9123,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wheaturs1:
                 for j in dest_wheaturs1:
@@ -7986,6 +9141,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wheat in wheaturs_origin_inline1:
@@ -7993,6 +9150,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8001,6 +9160,8 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         found_state = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wheat in wheaturs_dest_inline1:
@@ -8040,9 +9201,45 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
+            
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Wheat(URS)':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Wheat(URS)")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wheaturs1["SourceRailHead"] = From
             df_wheaturs1["SourceState"] = From_state
@@ -8057,6 +9254,10 @@ def Daily_Planner():
             df_wheaturs1["InlineDestinationDivision"] = To_inlineDivision
             df_wheaturs1["sourceId"] = sourceId
             df_wheaturs1["destinationId"] = destinationId
+            df_wheaturs1["SourceRakeType"] = source_rake
+            df_wheaturs1["DestinationRakeType"] = destination_rake
+            df_wheaturs1["sourceRH"] = sourceRH
+            df_wheaturs1["destinationRH"] = destinationRH
             
             for i in dest_wheaturs_inline1.keys():
                 for j in range(len(df_wheaturs1["DestinationRailHead"])):
@@ -8084,6 +9285,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wheatfaq:
                 for j in dest_wheatfaq:
@@ -8100,6 +9303,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wheat in wheatfaq_origin_inline:
@@ -8107,6 +9312,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8115,6 +9322,8 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         found_state = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wheat in wheatfaq_dest_inline:
@@ -8154,6 +9363,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8165,6 +9376,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Wheat(FAQ)':
                     From.append(org)
                     From_state.append(org_state)
@@ -8173,12 +9392,16 @@ def Daily_Planner():
                     commodity.append("Wheat(FAQ)")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wheatfaq["SourceRailHead"] = From
             df_wheatfaq["SourceState"] = From_state
@@ -8193,6 +9416,10 @@ def Daily_Planner():
             df_wheatfaq["InlineDestinationDivision"] = To_inlineDivision
             df_wheatfaq["sourceId"] = sourceId
             df_wheatfaq["destinationId"] = destinationId
+            df_wheatfaq["SourceRakeType"] = source_rake
+            df_wheatfaq["DestinationRakeType"] = destination_rake
+            df_wheatfaq["sourceRH"] = sourceRH
+            df_wheatfaq["destinationRH"] = destinationRH
             
             for i in dest_wheatfaq_inline.keys():
                 for j in range(len(df_wheatfaq["DestinationRailHead"])):
@@ -8220,6 +9447,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wheatfaq1:
                 for j in dest_wheatfaq1:
@@ -8236,6 +9465,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wheat in wheatfaq_origin_inline1:
@@ -8243,6 +9474,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8251,6 +9484,8 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         found_state = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wheat in wheatfaq_dest_inline1:
@@ -8290,17 +9525,27 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
 
-            for i in range(len(confirmed_org_rhcode)):
-                org = str(confirmed_org_rhcode[i])
-                org_state = str(confirmed_org_state[i])
-                dest = str(confirmed_dest_rhcode[i])
-                dest_state = str(confirmed_dest_state[i])
-                Commodity = confirmed_railhead_commodities[i]
-                val = confirmed_railhead_value[i]
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
                 if Commodity == 'Wheat(FAQ)':
                     From.append(org)
                     From_state.append(org_state)
@@ -8309,12 +9554,16 @@ def Daily_Planner():
                     commodity.append("Wheat(FAQ)")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wheatfaq1["SourceRailHead"] = From
             df_wheatfaq1["SourceState"] = From_state
@@ -8329,6 +9578,10 @@ def Daily_Planner():
             df_wheatfaq1["InlineDestinationDivision"] = To_inlineDivision
             df_wheatfaq1["sourceId"] = sourceId
             df_wheatfaq1["destinationId"] = destinationId
+            df_wheatfaq1["SourceRakeType"] = source_rake
+            df_wheatfaq1["DestinationRakeType"] = destination_rake
+            df_wheatfaq1["sourceRH"] = sourceRH
+            df_wheatfaq1["destinationRH"] = destinationRH
             
             for i in dest_wheatfaq_inline1.keys():
                 for j in range(len(df_wheatfaq1["DestinationRailHead"])):
@@ -8356,6 +9609,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wheatrra:
                 for j in dest_wheatrra:
@@ -8372,6 +9627,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wheat in wheatrra_origin_inline:
@@ -8379,6 +9636,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8387,6 +9646,8 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         found_state = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wheat in wheatrra_dest_inline:
@@ -8426,6 +9687,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(frkbr["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8437,6 +9700,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Wheat+RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -8445,12 +9716,16 @@ def Daily_Planner():
                     commodity.append("Wheat+RRA")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wheatrra["SourceRailHead"] = From
             df_wheatrra["SourceState"] = From_state
@@ -8465,6 +9740,10 @@ def Daily_Planner():
             df_wheatrra["InlineDestinationDivision"] = To_inlineDivision
             df_wheatrra["sourceId"] = sourceId
             df_wheatrra["destinationId"] = destinationId
+            df_wheatrra["SourceRakeType"] = source_rake
+            df_wheatrra["DestinationRakeType"] = destination_rake
+            df_wheatrra["sourceRH"] = sourceRH
+            df_wheatrra["destinationRH"] = destinationRH
             
             for i in dest_wheatrra_inline.keys():
                 for j in range(len(df_wheatrra["DestinationRailHead"])):
@@ -8492,6 +9771,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_wheatrra1:
                 for j in dest_wheatrra1:
@@ -8508,6 +9789,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wheat in wheatrra_origin_inline1:
@@ -8515,6 +9798,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8523,6 +9808,8 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         found_state = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wheat in wheatrra_dest_inline1:
@@ -8562,17 +9849,27 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
 
-            for i in range(len(confirmed_org_rhcode)):
-                org = str(confirmed_org_rhcode[i])
-                org_state = str(confirmed_org_state[i])
-                dest = str(confirmed_dest_rhcode[i])
-                dest_state = str(confirmed_dest_state[i])
-                Commodity = confirmed_railhead_commodities[i]
-                val = confirmed_railhead_value[i]
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
                 if Commodity == 'Wheat+RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -8581,12 +9878,16 @@ def Daily_Planner():
                     commodity.append("Wheat+RRA")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_wheatrra1["SourceRailHead"] = From
             df_wheatrra1["SourceState"] = From_state
@@ -8601,6 +9902,10 @@ def Daily_Planner():
             df_wheatrra1["InlineDestinationDivision"] = To_inlineDivision
             df_wheatrra1["sourceId"] = sourceId
             df_wheatrra1["destinationId"] = destinationId
+            df_wheatrra1["SourceRakeType"] = source_rake
+            df_wheatrra1["DestinationRakeType"] = destination_rake
+            df_wheatrra1["sourceRH"] = sourceRH
+            df_wheatrra1["destinationRH"] = destinationRH
             
             for i in dest_wheatrra_inline1.keys():
                 for j in range(len(df_wheatrra1["DestinationRailHead"])):
@@ -8628,6 +9933,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_frk_rra:
                 for j in dest_frk_rra:
@@ -8644,6 +9951,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for wheat in frk_rra_origin_inline:
@@ -8651,6 +9960,8 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8659,6 +9970,8 @@ def Daily_Planner():
                         To_state.append(wheat["origin_state"])
                         found_state = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for wheat in frk_rra_dest_inline:
@@ -8698,6 +10011,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8709,6 +10024,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'FRK+RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -8717,12 +10040,16 @@ def Daily_Planner():
                     commodity.append("FRK+RRA")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_frk_rra["SourceRailHead"] = From
             df_frk_rra["SourceState"] = From_state
@@ -8737,6 +10064,10 @@ def Daily_Planner():
             df_frk_rra["InlineDestinationDivision"] = To_inlineDivision
             df_frk_rra["sourceId"] = sourceId
             df_frk_rra["destinationId"] = destinationId
+            df_frk_rra["SourceRakeType"] = source_rake
+            df_frk_rra["DestinationRakeType"] = destination_rake
+            df_frk_rra["sourceRH"] = sourceRH
+            df_frk_rra["destinationRH"] = destinationRH
             
             for i in dest_frk_rra_inline.keys():
                 for j in range(len(df_frk_rra["DestinationRailHead"])):
@@ -8748,6 +10079,168 @@ def Daily_Planner():
                     if (i == df_frk_rra.iloc[j]["SourceRailHead"] or source_frk_rra_inline[i] == df_frk_rra.iloc[j]["SourceRailHead"]):
                         df_frk_rra.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_rra_inline[i])
             
+            df_frk_rra1 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            sourceRH = []
+            destinationRH = []
+            
+            for i in source_frk_rra1:
+                for j in dest_frk_rra1:
+                    if int(x_ij_frk_rra[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_frk_rra[(i,j)].value())
+                        commodity.append("FRK+RRA")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for wheat in frk_rra_origin1:
+                    if From[i] == wheat["origin_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
+
+            for i in range(len(From)):
+                for wheat in frk_rra_origin_inline1:
+                    if From[i] == wheat["origin_railhead"] or From[i] == wheat["destination_railhead"]:
+                        From_state.append(wheat["origin_state"])
+                        From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
+                        sourceId.append(wheat["sourceId"])
+                        source_rake.append(wheat["rake"])
+                        sourceRH.append(wheat["virtualCode"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for wheat in frk_rra_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_state.append(wheat["origin_state"])
+                        found_state = True
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
+                        break
+                if not found_state:
+                    for wheat in frk_rra_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_state.append(wheat["origin_state"])
+                            found_state = True
+                            break 
+
+            for i in range(len(To)):
+                found_state = False
+                for wheat in frk_rra_dest1:
+                    if To[i] == wheat["origin_railhead"]:
+                        To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for wheat in frk_rra_dest_inline1:
+                        if To[i] == wheat["origin_railhead"] or To[i] == wheat["destination_railhead"]:
+                            To_division.append(wheat["destinationDivision"] if "destinationDivision" in wheat else "")
+                            found_state = True
+                            break 
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in frk_rra_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in frk_rra_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'FRK+RRA':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("FRK+RRA")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
+
+            df_frk_rra1["SourceRailHead"] = From
+            df_frk_rra1["SourceState"] = From_state
+            df_frk_rra1["DestinationRailHead"] = To
+            df_frk_rra1["DestinationState"] = To_state
+            df_frk_rra1["Commodity"] = commodity
+            df_frk_rra1["Rakes"] = values
+            df_frk_rra1["Flag"] = Flag
+            df_frk_rra1["SourceDivision"] = From_division
+            df_frk_rra1["DestinationDivision"] = To_division
+            df_frk_rra1["InlineSourceDivision"] = From_inlineDivision
+            df_frk_rra1["InlineDestinationDivision"] = To_inlineDivision
+            df_frk_rra1["sourceId"] = sourceId
+            df_frk_rra1["destinationId"] = destinationId
+            df_frk_rra1["SourceRakeType"] = source_rake
+            df_frk_rra1["DestinationRakeType"] = destination_rake
+            df_frk_rra1["sourceRH"] = sourceRH
+            df_frk_rra1["destinationRH"] = destinationRH
+            
+            for i in dest_frk_rra_inline1.keys():
+                for j in range(len(df_frk_rra1["DestinationRailHead"])):
+                    if (i == df_frk_rra1.iloc[j]["DestinationRailHead"] or dest_frk_rra_inline1[i] == df_frk_rra1.iloc[j]["DestinationRailHead"]):
+                        df_frk_rra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frk_rra_inline1[i])
+
+            for i in source_frk_rra_inline1.keys():
+                for j in range(len(df_frk_rra1["SourceRailHead"])):
+                    if (i == df_frk_rra1.iloc[j]["SourceRailHead"] or source_frk_rra_inline1[i] == df_frk_rra1.iloc[j]["SourceRailHead"]):
+                        df_frk_rra1.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_rra_inline1[i])
+
             df_misc3 = pd.DataFrame()
             From = []
             To = []
@@ -8764,7 +10257,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
-            
+            sourceRH = []
+            destinationRH = []
             
             for i in source_misc3:
                 for j in dest_misc3:
@@ -8781,6 +10275,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc3_origin_inline:
@@ -8788,6 +10284,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8796,6 +10294,8 @@ def Daily_Planner():
                         To_state.append(misc1["origin_state"])
                         found_state = True
                         destinationId.append(misc1["destinationId"])
+                        destination_rake.append(misc1["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc3_dest_inline:
@@ -8835,6 +10335,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8846,6 +10348,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Misc3':
                     From.append(org)
                     From_state.append(org_state)
@@ -8854,12 +10364,16 @@ def Daily_Planner():
                     commodity.append("Misc3")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_misc3["SourceRailHead"] = From
             df_misc3["SourceState"] = From_state
@@ -8874,6 +10388,10 @@ def Daily_Planner():
             df_misc3["InlineDestinationDivision"] = To_inlineDivision
             df_misc3["sourceId"] = sourceId
             df_misc3["destinationId"] = destinationId
+            df_misc3["SourceRakeType"] = source_rake
+            df_misc3["DestinationRakeType"] = destination_rake
+            df_misc3["sourceRH"] = sourceRH
+            df_misc3["destinationRH"] = destinationRH
             
             for i in dest_misc3_inline.keys():
                 for j in range(len(df_misc3["DestinationRailHead"])):
@@ -8885,6 +10403,168 @@ def Daily_Planner():
                     if (i == df_misc3.iloc[j]["SourceRailHead"] or source_misc3_inline[i] == df_misc3.iloc[j]["SourceRailHead"]):
                         df_misc3.loc[j, 'SourceRailHead'] = (i + '+' + source_misc3_inline[i])
             
+            df_misc31 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            sourceRH = []
+            destinationRH = []
+            
+            for i in source_misc31:
+                for j in dest_misc31:
+                    if int(x_ij_misc3[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_misc3[(i,j)].value())
+                        commodity.append("Misc3")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for misc1 in misc3_origin1:
+                    if From[i] == misc1["origin_railhead"]:
+                        From_state.append(misc1["origin_state"])
+                        From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
+                        sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
+
+            for i in range(len(From)):
+                for misc1 in misc3_origin_inline1:
+                    if From[i] == misc1["origin_railhead"] or From[i] == misc1["destination_railhead"]:
+                        From_state.append(misc1["origin_state"])
+                        From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
+                        sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc3_dest1:
+                    if To[i] == misc1["origin_railhead"]:
+                        To_state.append(misc1["origin_state"])
+                        found_state = True
+                        destinationId.append(misc1["destinationId"])
+                        destination_rake.append(misc1["rake"])
+                        destinationRH.append(wheat["virtualCode"])
+                        break
+                if not found_state:
+                    for misc1 in misc3_dest_inline1:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_state.append(misc1["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc3_dest1:
+                    if To[i] == misc1["origin_railhead"]:
+                        To_division.append(misc1["destinationDivision"] if "destinationDivision" in misc1 else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc1 in misc3_dest_inline1:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_division.append(misc1["destinationDivision"] if "destinationDivision" in misc1 else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in misc3_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in misc3_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Misc3':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Misc3")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
+
+            df_misc31["SourceRailHead"] = From
+            df_misc31["SourceState"] = From_state
+            df_misc31["DestinationRailHead"] = To
+            df_misc31["DestinationState"] = To_state
+            df_misc31["Commodity"] = commodity
+            df_misc31["Rakes"] = values
+            df_misc31["Flag"] =Flag
+            df_misc31["SourceDivision"] = From_division
+            df_misc31["DestinationDivision"] = To_division
+            df_misc31["InlineSourceDivision"] = From_inlineDivision
+            df_misc31["InlineDestinationDivision"] = To_inlineDivision
+            df_misc31["sourceId"] = sourceId
+            df_misc31["destinationId"] = destinationId
+            df_misc31["SourceRakeType"] = source_rake
+            df_misc31["DestinationRakeType"] = destination_rake
+            df_misc31["sourceRH"] = sourceRH
+            df_misc31["destinationRH"] = destinationRH
+            
+            for i in dest_misc3_inline1.keys():
+                for j in range(len(df_misc31["DestinationRailHead"])):
+                    if (i == df_misc31.iloc[j]["DestinationRailHead"] or dest_misc3_inline1[i] == df_misc31.iloc[j]["DestinationRailHead"]):
+                        df_misc31.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc3_inline1[i])
+
+            for i in source_misc3_inline1.keys():
+                for j in range(len(df_misc31["SourceRailHead"])):
+                    if (i == df_misc31.iloc[j]["SourceRailHead"] or source_misc3_inline1[i] == df_misc31.iloc[j]["SourceRailHead"]):
+                        df_misc31.loc[j, 'SourceRailHead'] = (i + '+' + source_misc3_inline1[i])
+
             df_misc4 = pd.DataFrame()
             From = []
             To = []
@@ -8901,6 +10581,8 @@ def Daily_Planner():
             destinationId = []
             source_rake = []
             destination_rake = []
+            sourceRH = []
+            destinationRH = []
             
             for i in source_misc4:
                 for j in dest_misc4:
@@ -8917,6 +10599,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc4_origin_inline:
@@ -8924,6 +10608,8 @@ def Daily_Planner():
                         From_state.append(misc1["origin_state"])
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8932,6 +10618,8 @@ def Daily_Planner():
                         To_state.append(misc1["origin_state"])
                         found_state = True
                         destinationId.append(misc1["destinationId"])
+                        destination_rake.append(misc1["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc4_dest_inline:
@@ -8971,6 +10659,8 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8982,6 +10672,14 @@ def Daily_Planner():
                 dest_state = str(confirmed_dest_state[i])
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
+                conf_sourceId = confirmed_sourceId[i]
+                conf_destinationId = confirmed_destinationId[i]
+                conf_org_div = confirmed_org_division[i] 
+                conf_des_div = confirmed_dest_division[i]
+                org_rake = confirmed_org_rake[i]
+                dest_rake = confirmed_dest_rake[i]
+                orgRH = confirmed_org_RH[i]
+                destRH = confirmed_dest_RH[i]
                 if Commodity == 'Misc4':
                     From.append(org)
                     From_state.append(org_state)
@@ -8990,12 +10688,16 @@ def Daily_Planner():
                     commodity.append("Misc4")
                     values.append(val)
                     Flag.append(region)
-                    From_division.append("")
-                    To_division.append("")
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
                     From_inlineDivision.append("")
                     To_inlineDivision.append("")
-                    sourceId.append("")
-                    destinationId.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
 
             df_misc4["SourceRailHead"] = From
             df_misc4["SourceState"] = From_state
@@ -9010,6 +10712,10 @@ def Daily_Planner():
             df_misc4["InlineDestinationDivision"] = To_inlineDivision
             df_misc4["sourceId"] = sourceId
             df_misc4["destinationId"] = destinationId
+            df_misc4["SourceRakeType"] = source_rake
+            df_misc4["DestinationRakeType"] = destination_rake
+            df_misc4["sourceRH"] = sourceRH
+            df_misc4["destinationRH"] = destinationRH
             
             for i in dest_misc4_inline.keys():
                 for j in range(len(df_misc4["DestinationRailHead"])):
@@ -9020,6 +10726,168 @@ def Daily_Planner():
                 for j in range(len(df_misc4["SourceRailHead"])):
                     if (i == df_misc4.iloc[j]["SourceRailHead"] or source_misc4_inline[i] == df_misc4.iloc[j]["SourceRailHead"]):
                         df_misc4.loc[j, 'SourceRailHead'] = (i + '+' + source_misc4_inline[i])
+            
+            df_misc41 = pd.DataFrame()
+            From = []
+            To = []
+            values = []
+            commodity = []
+            From_state = []
+            To_state = []
+            Flag = []
+            From_division = []
+            To_division = []
+            From_inlineDivision = []
+            To_inlineDivision = []
+            sourceId = []
+            destinationId = []
+            source_rake = []
+            destination_rake = []
+            sourceRH = []
+            destinationRH = []
+            
+            for i in source_misc41:
+                for j in dest_misc41:
+                    if int(x_ij_misc4[(i,j)].value()) > 0:
+                        From.append(i)
+                        To.append(j)
+                        values.append(x_ij_misc4[(i,j)].value())
+                        commodity.append("Misc4")
+                        Flag.append(region)
+
+            for i in range(len(From)):
+                for misc1 in misc4_origin1:
+                    if From[i] == misc1["origin_railhead"]:
+                        From_state.append(misc1["origin_state"])
+                        From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
+                        sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
+
+            for i in range(len(From)):
+                for misc1 in misc4_origin_inline1:
+                    if From[i] == misc1["origin_railhead"] or From[i] == misc1["destination_railhead"]:
+                        From_state.append(misc1["origin_state"])
+                        From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
+                        sourceId.append(misc1["sourceId"])
+                        source_rake.append(misc1["rake"])
+                        sourceRH.append(wheat["virtualCode"])
+            
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc4_dest1:
+                    if To[i] == misc1["origin_railhead"]:
+                        To_state.append(misc1["origin_state"])
+                        found_state = True
+                        destinationId.append(misc1["destinationId"])
+                        destination_rake.append(misc1["rake"])
+                        destinationRH.append(wheat["virtualCode"])
+                        break
+                if not found_state:
+                    for misc1 in misc4_dest_inline1:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_state.append(misc1["origin_state"])
+                            found_state = True
+                            break  
+
+            for i in range(len(To)):
+                found_state = False
+                for misc1 in misc4_dest1:
+                    if To[i] == misc1["origin_railhead"]:
+                        To_division.append(misc1["destinationDivision"] if "destinationDivision" in misc1 else "")
+                        found_state = True
+                        break
+                if not found_state:
+                    for misc1 in misc4_dest_inline1:
+                        if To[i] == misc1["origin_railhead"] or To[i] == misc1["destination_railhead"]:
+                            To_division.append(misc1["destinationDivision"] if "destinationDivision" in misc1 else "")
+                            found_state = True
+                            break   
+            
+            for i in range(len(From)):
+                    found_division = False
+                    for wheat in misc4_origin_inline1:
+                        if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                            From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
+                            found_division = True
+                            break
+                    if not found_division:
+                        From_inlineDivision.append("")  
+
+            for i in range(len(To)):
+                found_division = False
+                for wheat in misc4_dest_inline1:
+                    if To[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
+                        To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
+                        found_division = True
+                        destinationId.append(wheat["destinationId"])
+                        destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
+                        break
+                if not found_division:
+                    To_inlineDivision.append("")
+
+            for i in range(len(confirmed_org_rhcode1)):
+                org = str(confirmed_org_rhcode1[i])
+                org_state = str(confirmed_org_state1[i])
+                dest = str(confirmed_dest_rhcode1[i])
+                dest_state = str(confirmed_dest_state1[i])
+                Commodity = confirmed_railhead_commodities1[i]
+                val = confirmed_railhead_value1[i]
+                conf_sourceId = confirmed_sourceId1[i]
+                conf_destinationId = confirmed_destinationId1[i]
+                conf_org_div = confirmed_org_division1[i] 
+                conf_des_div = confirmed_dest_division1[i]
+                org_rake = confirmed_org_rake1[i]
+                dest_rake = confirmed_dest_rake1[i]
+                orgRH = confirmed_org_RH1[i]
+                destRH = confirmed_dest_RH1[i]
+                if Commodity == 'Misc4':
+                    From.append(org)
+                    From_state.append(org_state)
+                    To.append(dest)
+                    To_state.append(dest_state)
+                    commodity.append("Misc4")
+                    values.append(val)
+                    Flag.append(region)
+                    From_division.append(conf_org_div)
+                    To_division.append(conf_des_div)
+                    From_inlineDivision.append("")
+                    To_inlineDivision.append("")
+                    sourceId.append(conf_sourceId)
+                    destinationId.append(conf_destinationId)
+                    source_rake.append(org_rake)
+                    destination_rake.append(dest_rake)
+                    sourceRH.append(orgRH)
+                    destinationRH.append(destRH)
+
+            df_misc41["SourceRailHead"] = From
+            df_misc41["SourceState"] = From_state
+            df_misc41["DestinationRailHead"] = To
+            df_misc41["DestinationState"] = To_state
+            df_misc41["Commodity"] = commodity
+            df_misc41["Rakes"] = values
+            df_misc41["Flag"] =Flag
+            df_misc41["SourceDivision"] = From_division
+            df_misc41["DestinationDivision"] = To_division
+            df_misc41["InlineSourceDivision"] = From_inlineDivision
+            df_misc41["InlineDestinationDivision"] = To_inlineDivision
+            df_misc41["sourceId"] = sourceId
+            df_misc41["destinationId"] = destinationId
+            df_misc41["SourceRakeType"] = source_rake
+            df_misc41["DestinationRakeType"] = destination_rake
+            df_misc41["sourceRH"] = sourceRH
+            df_misc41["destinationRH"] = destinationRH
+            
+            for i in dest_misc4_inline1.keys():
+                for j in range(len(df_misc41["DestinationRailHead"])):
+                    if (i == df_misc41.iloc[j]["DestinationRailHead"] or dest_misc4_inline1[i] == df_misc41.iloc[j]["DestinationRailHead"]):
+                        df_misc41.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc4_inline1[i])
+
+            for i in source_misc4_inline1.keys():
+                for j in range(len(df_misc41["SourceRailHead"])):
+                    if (i == df_misc41.iloc[j]["SourceRailHead"] or source_misc4_inline1[i] == df_misc41.iloc[j]["SourceRailHead"]):
+                        df_misc41.loc[j, 'SourceRailHead'] = (i + '+' + source_misc4_inline1[i])
 
             data1["rra"] = df_rra
             data1["wheat"] = df_wheat
@@ -9066,6 +10934,26 @@ def Daily_Planner():
                 df_misc3.to_excel(writer, sheet_name="misc3", index=False)
                 df_misc4.to_excel(writer, sheet_name="misc4", index=False)
                 df_wheat1.to_excel(writer, sheet_name="wheat_58w", index=False)
+                df_rra1.to_excel(writer, sheet_name="rra_58w", index=False)
+                df_CoarseGrain1.to_excel(writer, sheet_name="coarse_grain_58w", index=False)
+                df_frkrra1.to_excel(writer, sheet_name="frk_rra_58w", index=False)
+                df_frkbr1.to_excel(writer, sheet_name="frk_br_58w", index=False)
+                df_frk1.to_excel(writer, sheet_name="frk_58w", index=False)
+                df_frkcgr1.to_excel(writer, sheet_name="frkcgr_58w", index=False)
+                df_wcgr1.to_excel(writer, sheet_name="wcgr_58w", index=False)
+                df_rrc1.to_excel(writer, sheet_name="rrc_58w", index=False)
+                df_wheaturs1.to_excel(writer, sheet_name="wheaturs_58w", index=False)
+                df_wheatfaq1.to_excel(writer, sheet_name="wheatfaq_58w", index=False)
+                df_ragi1.to_excel(writer, sheet_name="ragi_58w", index=False)
+                df_jowar1.to_excel(writer, sheet_name="jowar_58w", index=False)
+                df_bajra1.to_excel(writer, sheet_name="bajra_58w", index=False)
+                df_maize1.to_excel(writer, sheet_name="maize_58w", index=False)
+                df_misc11.to_excel(writer, sheet_name="misc1_58w", index=False)
+                df_misc21.to_excel(writer, sheet_name="misc2_58w", index=False)
+                df_wheatrra1.to_excel(writer, sheet_name="wheat_rra_58w", index=False)
+                df_frk_rra1.to_excel(writer, sheet_name="frk+rra_58w", index=False)
+                df_misc31.to_excel(writer, sheet_name="misc3_58w", index=False)
+                df_misc41.to_excel(writer, sheet_name="misc4_58w", index=False)
 
         except Exception as e:
             print(e)

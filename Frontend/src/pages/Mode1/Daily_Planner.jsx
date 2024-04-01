@@ -538,6 +538,20 @@ function Daily_Planner() {
     }
   };
 
+  const fixed_data1 = fixed_data.filter(
+    (item) => item.sourceRakeType === "42W/58W" || item.sourceRakeType === "42W"
+  );
+  const fixed_data2 = fixed_data.filter(
+    (item) => item.sourceRakeType === "58W"
+  );
+
+  const blocked_data1 = blocked_data.filter(
+    (item) => item.sourceRakeType === "42W/58W" || item.sourceRakeType === "42W"
+  );
+  const blocked_data2 = blocked_data.filter(
+    (item) => item.sourceRakeType === "42W/58W" || item.sourceRakeType === "42W"
+  );
+
   const riceOrigin = surplus.filter(
     (item) =>
       item.Commodity === "RRA" &&
@@ -1966,7 +1980,8 @@ function Daily_Planner() {
 
     const payload = {
       TEFD: TEFD,
-      confirmed_data: fixed_data, // fixing all data
+      confirmed_data1: fixed_data1, // fixing all data
+      confirmed_data2: fixed_data2, // fixing all data
       blocked_data: blocked_data,
 
       rice_origin: riceOrigin, // rice origin data
@@ -2566,8 +2581,8 @@ function Daily_Planner() {
           setShowModal(true);
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
-              virtualCode: item.virtualcode,
-              origin_railhead: item.sourceRailHead.split("_")[0],
+              virtualCode: item.sourceRailHead,
+              origin_railhead: item.virtualcode,
               origin_state: item.sourceState,
               Value: item.value,
               Commodity: item.commodity,
@@ -2580,8 +2595,8 @@ function Daily_Planner() {
 
           if (data.destinationResponse) {
             const updatedDeficit = data.destinationResponse.map((item) => ({
-              virtualCode: item.virtualcode,
-              origin_railhead: item.destinationRailHead.split("_")[0],
+              virtualCode: item.destinationRailHead,
+              origin_railhead: item.virtualcode,
               origin_state: item.destinationState,
               Value: item.value,
               Commodity: item.commodity,
@@ -2595,11 +2610,11 @@ function Daily_Planner() {
           if (data.inlineSourceResponse) {
             const updatedSurplusInline = data.inlineSourceResponse.map(
               (item) => ({
-                virtualCode: item.virtualcode,
-                inlineVirtualCode: item.inlinevirtualcode,
-                origin_railhead: item.sourceRailHead.split("_")[0],
+                virtualCode: item.sourceRailHead,
+                inlineVirtualCode: item.sourceInlineRailHead,
+                origin_railhead: item.virtualcode,
                 origin_state: item.sourceState,
-                destination_railhead: item.sourceInlineRailHead.split("_")[0],
+                destination_railhead: item.inlinevirtualcode,
                 destination_state: item.sourceState,
                 Value: 1,
                 Commodity: item.commodity,
@@ -2615,12 +2630,11 @@ function Daily_Planner() {
           if (data.inlineDestinationResponse) {
             const updatedDeficitInline = data.inlineDestinationResponse.map(
               (item) => ({
-                virtualCode: item.virtualcode,
-                inlineVirtualCode: item.inlinevirtualcode,
-                origin_railhead: item.destinationRailHead.split("_")[0],
+                virtualCode: item.destinationRailHead,
+                inlineVirtualCode: item.destinationInlineRailHead,
+                origin_railhead: item.virtualcode,
                 origin_state: item.destinationState,
-                destination_railhead:
-                  item.destinationInlineRailHead.split("_")[0],
+                destination_railhead: item.inlinevirtualcode,
                 destination_state: item.destinationState,
                 Value: 1,
                 Commodity: item.commodity,
@@ -2635,26 +2649,31 @@ function Daily_Planner() {
 
           if (data.routeFixing) {
             const updatedRouteFixing = data.routeFixing.map((item) => ({
-              sourceVirtualCode: item.sourcevirtualcode,
-              destinationVirtualCode: item.destinationvirtualcode,
-              origin_railhead: item.sourceRailHead,
+              sourceVirtualCode: item.sourceRailHead,
+              destinationVirtualCode: item.destinationRailHead,
+              origin_railhead: item.sourcevirtualcode,
               origin_state: item.sourceState,
-              destination_railhead: item.destinationRailHead,
+              destination_railhead: item.destinationvirtualcode,
               destination_state: item.destinationState,
               Commodity: item.sourceCommodity,
               value: item.sourceValue,
-              rake: item.rake,
+              sourceRakeType: item.sourceRakeType,
+              destinationRakeType: item.destinationRakeType,
+              sourceDivision: item.sourceDivision,
+              destinationDivision: item.destinationDivision,
+              sourceId: item.sourceId,
+              destinationId: item.destinationId,
             }));
             setFixeddata(updatedRouteFixing);
           }
 
           if (data.routeBlocking) {
             const updatedRouteBlocking = data.routeBlocking.map((item) => ({
-              sourceVirtualCode: item.sourcevirtualcode,
-              destinationVirtualCode: item.destinationvirtualcode,
-              origin_railhead: item.sourceRailHead,
+              sourceVirtualCode: item.sourceRailHead,
+              destinationVirtualCode: item.destinationRailHead,
+              origin_railhead: item.sourcevirtualcode,
               origin_state: item.sourceState,
-              destination_railhead: item.destinationRailHead,
+              destination_railhead: item.destinationvirtualcode,
               destination_state: item.destinationState,
               Commodity: item.sourceCommodity,
               value: item.sourceValue,
@@ -2794,7 +2813,7 @@ function Daily_Planner() {
                   </div>
                   <br />
                   <form style={{ marginLeft: "50px" }}>
-                    {/* <label>
+                    <label>
                       <strong
                         style={{
                           fontSize: "20px",
@@ -2821,7 +2840,7 @@ function Daily_Planner() {
                         <option value="Non_TEFD_TC">Non-TEFD + TC</option>
                         <option value="TEFD_TC">TEFD + TC</option>
                       </select>
-                    </label> */}
+                    </label>
                     <br />
                     <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
                       <strong
@@ -2979,8 +2998,8 @@ function Daily_Planner() {
                             <tr>
                               <th>Sno</th>
                               <th>Region</th>
-                              <th>Source</th>
-                              <th>virtual Code</th>
+                              <th>Division</th>
+                              {/* <th>virtual Code</th> */}
                               <th>Railhead</th>
                               <th>Commodity</th>
                               <th>Rake preference</th>
@@ -2991,11 +3010,11 @@ function Daily_Planner() {
                           <tbody>
                             {surplus.map((row, index) => (
                               <tr key={index}>
-                                <td>{index}</td>
+                                <td>{index + 1}</td>
                                 <td>{row.origin_state}</td>
                                 <td>{row.sourceDivision}</td>
+                                {/* <td>{row.virtualCode}</td> */}
                                 <td>{row.virtualCode}</td>
-                                <td>{row.origin_railhead}</td>
                                 <td>{row.Commodity}</td>
                                 <td>{row.rake}</td>
                                 <td>{row.Value}</td>
@@ -3022,7 +3041,7 @@ function Daily_Planner() {
                           </tbody>
                         </table>
                       )}
-                      <p style={{ margin: 2, padding: 0, marginTop: 12 }}>
+                      <p style={{ margin: 2, padding: 0, marginTop: 20 }}>
                         <strong
                           style={{
                             color: "#9d0921",
@@ -3179,8 +3198,8 @@ function Daily_Planner() {
                             <tr>
                               <th>Sno</th>
                               <th>Region</th>
-                              <th>Destination</th>
-                              <th>Virtual Code</th>
+                              <th>Division</th>
+                              {/* <th>Virtual Code</th> */}
                               <th>Railhead</th>
                               <th>Commodity</th>
                               <th>Rake preference</th>
@@ -3191,11 +3210,11 @@ function Daily_Planner() {
                           <tbody>
                             {deficit.map((row, index) => (
                               <tr key={index}>
-                                <td>{index}</td>
+                                <td>{index + 1}</td>
                                 <td>{row.origin_state}</td>
                                 <td>{row.destinationDivision}</td>
+                                {/* <td>{row.virtualCode}</td> */}
                                 <td>{row.virtualCode}</td>
-                                <td>{row.origin_railhead}</td>
                                 <td>{row.Commodity}</td>
                                 <td>{row.rake}</td>
                                 <td>{row.Value}</td>
@@ -3410,10 +3429,10 @@ function Daily_Planner() {
                           <thead>
                             <tr>
                               <th>Sno</th>
-                              <th>Virtual Code</th>
+                              {/* <th>Virtual Code</th> */}
                               <th>Railhead</th>
                               <th>State</th>
-                              <th>Virtual Code</th>
+                              {/* <th>Virtual Code</th> */}
                               <th>Railhead</th>
                               <th>State</th>
                               <th>Commodity</th>
@@ -3426,12 +3445,12 @@ function Daily_Planner() {
                             {surplusInline.map((row, index) => {
                               return (
                                 <tr key={index}>
-                                  <td>{index}</td>
+                                  <td>{index + 1}</td>
+                                  {/* <td>{row.virtualCode}</td> */}
                                   <td>{row.virtualCode}</td>
-                                  <td>{row.origin_railhead}</td>
                                   <td>{row.origin_state}</td>
+                                  {/* <td>{row.inlineVirtualCode}</td> */}
                                   <td>{row.inlineVirtualCode}</td>
-                                  <td>{row.destination_railhead}</td>
                                   <td>{row.destination_state}</td>
                                   <td>{row.Commodity}</td>
                                   <td>{row.rake}</td>
@@ -3653,10 +3672,10 @@ function Daily_Planner() {
                           <thead>
                             <tr>
                               <th>Sno</th>
-                              <th>Virtual Code</th>
+                              {/* <th>Virtual Code</th> */}
                               <th>Railhead</th>
                               <th>State</th>
-                              <th>Virtual Code</th>
+                              {/* <th>Virtual Code</th> */}
                               <th>Railhead</th>
                               <th>State</th>
                               <th>Commodity</th>
@@ -3669,12 +3688,12 @@ function Daily_Planner() {
                             {deficitInline.map((row, index) => {
                               return (
                                 <tr key={index}>
-                                  <td>{index}</td>
+                                  <td>{index + 1}</td>
+                                  {/* <td>{row.virtualCode}</td> */}
                                   <td>{row.virtualCode}</td>
-                                  <td>{row.origin_railhead}</td>
                                   <td>{row.origin_state}</td>
+                                  {/* <td>{row.inlineVirtualCode}</td> */}
                                   <td>{row.inlineVirtualCode}</td>
-                                  <td>{row.destination_railhead}</td>
                                   <td>{row.destination_state}</td>
                                   <td>{row.Commodity}</td>
                                   <td>{row.rake}</td>
@@ -3881,20 +3900,23 @@ function Daily_Planner() {
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Origin State
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Origin Virtual Code
-                              </th>
+                              </th> */}
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Origin Railhead
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination State
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Destination Virtual Code
-                              </th>
+                              </th> */}
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination Railhead
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
+                                Rake preference
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Commodity
@@ -3912,10 +3934,11 @@ function Daily_Planner() {
                               <tr key={item.id}>
                                 <td>{item.origin_state}</td>
                                 <td>{item.sourceVirtualCode}</td>
-                                <td>{item.origin_railhead}</td>
+                                {/* <td>{item.origin_railhead}</td> */}
                                 <td>{item.destination_state}</td>
-                                <td>{item.sourceVirtualCode}</td>
-                                <td>{item.destination_railhead}</td>
+                                <td>{item.destinationVirtualCode}</td>
+                                {/* <td>{item.destination_railhead}</td> */}
+                                <td>{item.sourceRakeType}</td>
                                 <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
                                 {/* <td>
@@ -4089,18 +4112,18 @@ function Daily_Planner() {
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Origin State
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Origin Virtual Code
-                              </th>
+                              </th> */}
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Origin Railhead
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination State
                               </th>
-                              <th style={{ padding: "10px", width: "15%" }}>
+                              {/* <th style={{ padding: "10px", width: "15%" }}>
                                 Destination Virtual Code
-                              </th>
+                              </th> */}
                               <th style={{ padding: "10px", width: "15%" }}>
                                 Destination Railhead
                               </th>
@@ -4120,10 +4143,10 @@ function Daily_Planner() {
                               <tr key={item.id}>
                                 <td>{item.origin_state}</td>
                                 <td>{item.sourceVirtualCode}</td>
-                                <td>{item.origin_railhead}</td>
+                                {/* <td>{item.origin_railhead}</td> */}
                                 <td>{item.destination_state}</td>
                                 <td>{item.destinationVirtualCode}</td>
-                                <td>{item.destination_railhead}</td>
+                                {/* <td>{item.destination_railhead}</td> */}
                                 <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
                                 {/* <td>
@@ -4395,9 +4418,9 @@ function Daily_Planner() {
                                     {wheatData.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.sourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.destinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         {/* <td>{item.Cost}</td> */}
@@ -4488,9 +4511,9 @@ function Daily_Planner() {
                                     {coarseGrain.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4580,9 +4603,9 @@ function Daily_Planner() {
                                     {frk_rra.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4672,9 +4695,9 @@ function Daily_Planner() {
                                     {frk_br.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4764,9 +4787,9 @@ function Daily_Planner() {
                                     {frk.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4856,9 +4879,9 @@ function Daily_Planner() {
                                     {frk_cgr.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4948,9 +4971,9 @@ function Daily_Planner() {
                                     {w_cgr.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5040,9 +5063,9 @@ function Daily_Planner() {
                                     {rrc.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5132,9 +5155,9 @@ function Daily_Planner() {
                                     {ragi.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5224,9 +5247,9 @@ function Daily_Planner() {
                                     {jowar.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5316,9 +5339,9 @@ function Daily_Planner() {
                                     {bajra.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5408,9 +5431,9 @@ function Daily_Planner() {
                                     {maize.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5500,9 +5523,9 @@ function Daily_Planner() {
                                     {wheat_urs.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5592,9 +5615,9 @@ function Daily_Planner() {
                                     {wheat_faq.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5684,9 +5707,9 @@ function Daily_Planner() {
                                     {misc1.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5776,9 +5799,9 @@ function Daily_Planner() {
                                     {misc2.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5868,9 +5891,9 @@ function Daily_Planner() {
                                     {wheat_rra.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5960,9 +5983,9 @@ function Daily_Planner() {
                                     {frkPlusRRA.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -6053,9 +6076,9 @@ function Daily_Planner() {
                                     {misc3.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -6146,9 +6169,9 @@ function Daily_Planner() {
                                     {misc4.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRH}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRH}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
