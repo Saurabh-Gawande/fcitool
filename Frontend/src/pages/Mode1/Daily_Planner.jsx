@@ -546,11 +546,10 @@ function Daily_Planner() {
   );
 
   const blocked_data1 = blocked_data.filter(
-    (item) => item.sourceRakeType === "42W/58W" || item.sourceRakeType === "42W"
+    (item) => item.rake === "42W/58W" || item.rake === "42W"
   );
-  const blocked_data2 = blocked_data.filter(
-    (item) => item.sourceRakeType === "42W/58W" || item.sourceRakeType === "42W"
-  );
+  const blocked_data2 = blocked_data.filter((item) => item.rake === "58W");
+  console.log(blocked_data1, blocked_data2);
 
   const riceOrigin = surplus.filter(
     (item) =>
@@ -1982,7 +1981,8 @@ function Daily_Planner() {
       TEFD: TEFD,
       confirmed_data1: fixed_data1, // fixing all data
       confirmed_data2: fixed_data2, // fixing all data
-      blocked_data: blocked_data,
+      blocked_data1: blocked_data1,
+      blocked_data2: blocked_data2,
 
       rice_origin: riceOrigin, // rice origin data
       rice_destination: riceDestination, //rice destination data
@@ -4131,6 +4131,9 @@ function Daily_Planner() {
                                 Commodity
                               </th>
                               <th style={{ padding: "10px", width: "15%" }}>
+                                Rake preference
+                              </th>
+                              <th style={{ padding: "10px", width: "15%" }}>
                                 Value
                               </th>
                               {/* <th style={{ padding: "10px", width: "15%" }}>
@@ -4148,6 +4151,7 @@ function Daily_Planner() {
                                 <td>{item.destinationVirtualCode}</td>
                                 {/* <td>{item.destination_railhead}</td> */}
                                 <td>{item.Commodity}</td>
+                                <td>{item.rake}</td>
                                 <td>{item.value}</td>
                                 {/* <td>
                                   <span

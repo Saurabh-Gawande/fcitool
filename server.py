@@ -242,28 +242,28 @@ def read_Daily_Planner_S1():
             df19 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra")
             df20 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
             df21 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
+
             df22 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_58w")
-            
-            df23 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
-            df24 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain") 
-            df25 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra") 
-            df26 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br") 
-            df27 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk") 
-            df28 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr")
-            df29 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr")
-            df30 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs")
-            df31 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq")
-            df32 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc")
-            df33 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar")
-            df34 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi")
-            df35 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra")
-            df36 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize")
-            df37 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1")
-            df38 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2")
-            df39 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra")
-            df40 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra")
-            df41 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
-            df42 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
+            df23 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra_58w")
+            df24 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain_58w") 
+            df25 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra_58w") 
+            df26 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br_58w") 
+            df27 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_58w") 
+            df28 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr_58w")
+            df29 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr_58w")
+            df30 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs_58w")
+            df31 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq_58w")
+            df32 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc_58w")
+            df33 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar_58w")
+            df34 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi_58w")
+            df35 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra_58w")
+            df36 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize_58w")
+            df37 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1_58w")
+            df38 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2_58w")
+            df39 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra_58w")
+            df40 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra_58w")
+            df41 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3_58w")
+            df42 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4_58w")
 
             json_data1 = df1.to_json(orient='records', indent=1)
             json_data2 = df2.to_json(orient='records', indent=1)
@@ -286,8 +286,8 @@ def read_Daily_Planner_S1():
             json_data19 = df19.to_json(orient='records', indent=1)
             json_data20 = df20.to_json(orient='records', indent=1)
             json_data21 = df21.to_json(orient='records', indent=1)
+
             json_data22 = df22.to_json(orient='records', indent=1)
-            
             json_data23 = df23.to_json(orient='records', indent=1)
             json_data24 = df24.to_json(orient='records', indent=1)
             json_data25 = df25.to_json(orient='records', indent=1)
@@ -315,9 +315,9 @@ def read_Daily_Planner_S1():
              "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
              "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22 , "rra_58w": json_data23, 
              "coarse_grain_58w": json_data24, "frk_rra_58w": json_data25, "frk_br_58w": json_data26, "wheat_frk_58w": json_data27, "frkcgr_58w": json_data28, 
-             "wcgr_58w": json_data29, "wheat_urs_58": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data32,
-             "ragi_58w": json_data34, "bajra_58w": json_data35, "maize_58w": json_data36, "misc1_58w": json_data37, "misc2_58w": json_data38, "wheat_rra_58w": json_data38,
-             "frkPlusRRa_58w": json_data39, "misc3_58w": json_data40, "misc4_58": json_data41
+             "wcgr_58w": json_data29, "wheat_urs_58": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data33,
+             "ragi_58w": json_data34, "bajra_58w": json_data35, "maize_58w": json_data36, "misc1_58w": json_data37, "misc2_58w": json_data38, "wheat_rra_58w": json_data39,
+             "frkPlusRRa_58w": json_data40, "misc3_58w": json_data41, "misc4_58": json_data42
              }
              
         except:
@@ -890,6 +890,11 @@ def Daily_Planner():
             blocked_org_state = []
             blocked_dest_state = []
 
+            blocked_org_rhcode1 = []
+            blocked_dest_rhcode1 = []
+            blocked_org_state1 = []
+            blocked_dest_state1 = []
+
             confirmed_org_rhcode = []
             confirmed_dest_rhcode = []
             confirmed_org_state = []
@@ -921,8 +926,9 @@ def Daily_Planner():
             confirmed_dest_RH1 = []
 
             fetched_data = request.get_json()
-            blocked_data = fetched_data['blocked_data']
-           
+            blocked_data = fetched_data['blocked_data1']
+            blocked_data1 = fetched_data['blocked_data2']
+            print(blocked_data, blocked_data1)
             confirmed_data1 = fetched_data['confirmed_data1']
             confirmed_data2 = fetched_data['confirmed_data2']
             TEFD_fetched = fetched_data['TEFD']
@@ -1024,6 +1030,12 @@ def Daily_Planner():
                 blocked_dest_rhcode.append(blocked_data[i]["destination_railhead"])
                 blocked_org_state.append(blocked_data[i]["origin_state"])
                 blocked_dest_state.append(blocked_data[i]["destination_state"])
+
+            for i in range(len(blocked_data1)):
+                blocked_org_rhcode1.append(blocked_data[i]["origin_railhead"])
+                blocked_dest_rhcode1.append(blocked_data[i]["destination_railhead"])
+                blocked_org_state1.append(blocked_data[i]["origin_state"])
+                blocked_dest_state1.append(blocked_data[i]["destination_state"])
                 
             for i in range(len(confirmed_data1)):
                 confirmed_org_rhcode.append(confirmed_data1[i]["origin_railhead"])
@@ -1678,7 +1690,6 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                print(dest_frk_inline)
                 for j in dest_frk.keys() or dest_frk_inline.keys():
                     List_A.append(i)
                     List_A.append(source_frk_inline[i])
@@ -3203,7 +3214,6 @@ def Daily_Planner():
                 Value = {}
                 List_A = []
                 List_B = []
-                print(dest_frk_inline)
                 for j in dest_frk1.keys() or dest_frk_inline1.keys():
                     List_A.append(i)
                     List_A.append(source_frk_inline1[i])
@@ -3851,6 +3861,51 @@ def Daily_Planner():
                 lpSum(x_ij_misc41[(i, j)] * rail_cost.loc[i][j] for i in source_misc41.keys() for j in dest_misc41.keys()) 
             )
             
+            for i in range(len(blocked_org_rhcode1)):
+                commodity = blocked_data1[i]["Commodity"]
+                if commodity == "Wheat":
+                    prob += x_ij_wheat1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "RRA":
+                    prob += x_ij_rra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Coarse Grains":
+                    prob += x_ij_coarseGrain1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK RRA":
+                    prob += x_ij_frkrra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK BR":
+                    prob += x_ij_frk_br1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat+FRK":
+                    prob += x_ij_frk1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK+CGR":
+                    prob += x_ij_frkcgr1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "RRC":
+                    prob += x_ij_rrc1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat+CGR":
+                    prob += x_ij_wcgr1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Ragi":
+                    prob += x_ij_ragi1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Jowar":
+                    prob += x_ij_jowar1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Bajra":
+                    prob += x_ij_bajra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Maize":
+                    prob += x_ij_maize1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc1":
+                    prob += x_ij_misc11[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc2":
+                    prob += x_ij_misc21[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat(URS)":
+                    prob += x_ij_wheaturs1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat(FAQ)":
+                    prob += x_ij_wheatfaq1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat+RRA":
+                    prob += x_ij_wheatrra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK+RRA":
+                    prob += x_ij_frk_rra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc3":
+                    prob += x_ij_misc31[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc4":
+                    prob += x_ij_misc41[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+
             for i in source_wheat1.keys():
                 prob += lpSum(x_ij_wheat1[(i, j)] for j in dest_wheat1.keys()) <= source_wheat1[i]
              
@@ -4004,7 +4059,6 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
-            print(source_wheat)
             for i in source_wheat:
                 for j in dest_wheat:
                     if int(x_ij_wheat[(i, j)].value()) > 0:
