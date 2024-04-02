@@ -62,18 +62,19 @@ function Daily_Planner() {
   const [Relevant_result, set_Relevant_Result] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  const [riceData, setRiceData] = useState(false);
+
+  const [riceData, setRiceData] = useState([]);
   const [wheatData, setWheatData] = useState([]);
   const [progress, setProgress] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [coarseGrain, setCoarseGrain] = useState(false);
-  const [frk, setFrk] = useState(false);
-  const [frk_rra, setFrk_rra] = useState(false);
-  const [frk_br, setFrk_br] = useState(false);
-  const [frk_cgr, setFrk_cgr] = useState(false);
-  const [w_cgr, setw_cgr] = useState(false);
-  const [wheat_rra, setWheat_rra] = useState(false);
-  const [frkPlusRRA, setFkrPlusRRA] = useState(false);
+  const [coarseGrain, setCoarseGrain] = useState([]);
+  const [frk, setFrk] = useState([]);
+  const [frk_rra, setFrk_rra] = useState([]);
+  const [frk_br, setFrk_br] = useState([]);
+  const [frk_cgr, setFrk_cgr] = useState([]);
+  const [w_cgr, setw_cgr] = useState([]);
+  const [wheat_rra, setWheat_rra] = useState([]);
+  const [frkPlusRRA, setFkrPlusRRA] = useState([]);
 
   const [riceOriginvalue, setRiceOriginValue] = useState();
   const [wheatOriginValue, setWheatOriginValue] = useState();
@@ -169,17 +170,17 @@ function Daily_Planner() {
 
   const [excelfiledata, setExcelFileData] = useState(null);
   const [railheadData, setRailheadData] = useState();
-  const [rrc, setRrc] = useState(false);
-  const [ragi, setRagi] = useState(false);
-  const [jowar, setJowar] = useState(false);
-  const [bajra, setBajra] = useState(false);
-  const [maize, setMaize] = useState(false);
-  const [wheat_urs, setWheat_urs] = useState(false);
-  const [wheat_faq, setWheat_faq] = useState(false);
-  const [misc1, setMisc1] = useState(false);
-  const [misc2, setMisc2] = useState(false);
-  const [misc3, setMisc3] = useState(false);
-  const [misc4, setMisc4] = useState(false);
+  const [rrc, setRrc] = useState([]);
+  const [ragi, setRagi] = useState([]);
+  const [jowar, setJowar] = useState([]);
+  const [bajra, setBajra] = useState([]);
+  const [maize, setMaize] = useState([]);
+  const [wheat_urs, setWheat_urs] = useState([]);
+  const [wheat_faq, setWheat_faq] = useState([]);
+  const [misc1, setMisc1] = useState([]);
+  const [misc2, setMisc2] = useState([]);
+  const [misc3, setMisc3] = useState([]);
+  const [misc4, setMisc4] = useState([]);
   const [disableAfterImport, setDisableAfterImport] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalValue, setModalValue] = useState("");
@@ -549,7 +550,6 @@ function Daily_Planner() {
     (item) => item.rake === "42W/58W" || item.rake === "42W"
   );
   const blocked_data2 = blocked_data.filter((item) => item.rake === "58W");
-  console.log(blocked_data1, blocked_data2);
 
   const riceOrigin = surplus.filter(
     (item) =>
@@ -2392,32 +2392,31 @@ function Daily_Planner() {
     }
   };
 
+  console.log("total result", Total_result);
+
   const viewGrid = () => {
     setShowMessage(true);
-    const riceData = JSON.parse(Total_result?.rra ?? 0);
-    const wheatData = [
-      ...JSON.parse(Total_result?.wheat ?? 0),
-      ...JSON.parse(Total_result?.wheat_58w ?? 0),
-    ];
-    const coarseGrainData = JSON.parse(Total_result?.coarse_grain ?? 0);
-    const frk_rraData = JSON.parse(Total_result?.frk_rra ?? 0);
-    const frk_brData = JSON.parse(Total_result?.frk_br ?? 0);
-    const frkData = JSON.parse(Total_result?.wheat_frk ?? 0);
-    const frkcgrData = JSON.parse(Total_result?.frkcgr ?? 0);
-    const wcgrData = JSON.parse(Total_result?.wcgr ?? 0);
-    const rrc = JSON.parse(Total_result?.rrc ?? 0);
-    const ragi = JSON.parse(Total_result?.ragi ?? 0);
-    const bajra = JSON.parse(Total_result?.bajra ?? 0);
-    const jowar = JSON.parse(Total_result?.jowar ?? 0);
-    const maize = JSON.parse(Total_result?.maize ?? 0);
-    const wheat_faq = JSON.parse(Total_result?.wheat_faq ?? 0);
-    const wheat_urs = JSON.parse(Total_result?.wheat_urs ?? 0);
-    const misc1 = JSON.parse(Total_result?.misc1 ?? 0);
-    const misc2 = JSON.parse(Total_result?.misc2 ?? 0);
-    const wheat_rra = JSON.parse(Total_result?.wheat_rra ?? 0);
-    const frkPlusRRA = JSON.parse(Total_result?.frkPlusRRA ?? 0);
-    const misc3 = JSON.parse(Total_result?.misc3 ?? 0);
-    const misc4 = JSON.parse(Total_result?.misc4 ?? 0);
+    const riceData = JSON.parse(Total_result?.rra ?? "[]");
+    const wheatData = JSON.parse(Total_result?.wheat ?? "[]");
+    const coarseGrainData = JSON.parse(Total_result?.coarse_grain ?? "[]");
+    const frk_rraData = JSON.parse(Total_result?.frk_rra ?? "[]");
+    const frk_brData = JSON.parse(Total_result?.frk_br ?? "[]");
+    const frkData = JSON.parse(Total_result?.wheat_frk ?? "[]");
+    const frkcgrData = JSON.parse(Total_result?.frkcgr ?? "[]");
+    const wcgrData = JSON.parse(Total_result?.wcgr ?? "[]");
+    const rrc = JSON.parse(Total_result?.rrc ?? "[]");
+    const ragi = JSON.parse(Total_result?.ragi ?? "[]");
+    const bajra = JSON.parse(Total_result?.bajra ?? "[]");
+    const jowar = JSON.parse(Total_result?.jowar ?? "[]");
+    const maize = JSON.parse(Total_result?.maize ?? "[]");
+    const wheat_faq = JSON.parse(Total_result?.wheat_faq ?? "[]");
+    const wheat_urs = JSON.parse(Total_result?.wheat_urs ?? "[]");
+    const misc1 = JSON.parse(Total_result?.misc1 ?? "[]");
+    const misc2 = JSON.parse(Total_result?.misc2 ?? "[]");
+    const wheat_rra = JSON.parse(Total_result?.wheat_rra ?? "[]");
+    const frkPlusRRA = JSON.parse(Total_result?.frkPlusRRA ?? "[]");
+    const misc3 = JSON.parse(Total_result?.misc3 ?? "[]");
+    const misc4 = JSON.parse(Total_result?.misc4 ?? "[]");
     setRiceData(riceData);
     setWheatData(wheatData);
     setCoarseGrain(coarseGrainData);
@@ -2440,7 +2439,7 @@ function Daily_Planner() {
     setMisc3(misc3);
     setMisc4(misc4);
   };
-
+  console.log(wheatData);
   const exportToExcel1 = () => {
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
@@ -2813,7 +2812,7 @@ function Daily_Planner() {
                   </div>
                   <br />
                   <form style={{ marginLeft: "50px" }}>
-                    <label>
+                    {/* <label>
                       <strong
                         style={{
                           fontSize: "20px",
@@ -2840,7 +2839,7 @@ function Daily_Planner() {
                         <option value="Non_TEFD_TC">Non-TEFD + TC</option>
                         <option value="TEFD_TC">TEFD + TC</option>
                       </select>
-                    </label>
+                    </label> */}
                     <br />
                     <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
                       <strong
@@ -4422,9 +4421,9 @@ function Daily_Planner() {
                                     {wheatData.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.sourceRH}</td>
+                                        <td>{item.SourceRailHead}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.destinationRH}</td>
+                                        <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         {/* <td>{item.Cost}</td> */}
@@ -5067,9 +5066,9 @@ function Daily_Planner() {
                                     {rrc.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceRailHead}</td>
                                         <td>{item.SourceState}</td>
-                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationRailHead}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>

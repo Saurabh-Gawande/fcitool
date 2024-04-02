@@ -3844,9 +3844,9 @@ def Daily_Planner():
                 lpSum(x_ij_frkrra1[(i, j)] * rail_cost.loc1[i][j] for i in source_frkrra1.keys() for j in dest_frkrra1.keys()) +
                 lpSum(x_ij_frk_br1[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr1.keys() for j in dest_frkbr1.keys()) +
                 lpSum(x_ij_frk1[(i, j)] * rail_cost.loc[i][j] for i in source_frk1.keys() for j in dest_frk1.keys()) +
-                lpSum(x_ij_frkcgr1[(i, j)] * rail_cost1.loc[i][j] for i in source_frkcgr1.keys() for j in dest_frkcgr1.keys()) +
-                lpSum(x_ij_wcgr1[(i, j)] * rail_cost1.loc[i][j] for i in source_wcgr1.keys() for j in dest_wcgr1.keys()) +
-                lpSum(x_ij_rrc1[(i, j)] * rail_cost1.loc[i][j] for i in source_rrc1.keys() for j in dest_rrc1.keys()) +
+                lpSum(x_ij_frkcgr1[(i, j)] * rail_cost.loc[i][j] for i in source_frkcgr1.keys() for j in dest_frkcgr1.keys()) +
+                lpSum(x_ij_wcgr1[(i, j)] * rail_cost.loc[i][j] for i in source_wcgr1.keys() for j in dest_wcgr1.keys()) +
+                lpSum(x_ij_rrc1[(i, j)] * rail_cost.loc[i][j] for i in source_rrc1.keys() for j in dest_rrc1.keys()) +
                 lpSum(x_ij_ragi1[(i, j)] * rail_cost.loc[i][j] for i in source_ragi1.keys() for j in dest_ragi1.keys()) +
                 lpSum(x_ij_jowar1[(i, j)] * rail_cost.loc[i][j] for i in source_jowar1.keys() for j in dest_jowar1.keys()) +
                 lpSum(x_ij_bajra1[(i, j)] * rail_cost.loc[i][j] for i in source_bajra1.keys() for j in dest_bajra1.keys()) +
@@ -4038,7 +4038,7 @@ def Daily_Planner():
             print("Minimum Cost of Transportation for 58w= Rs.", prob.objective.value(), "Lakh")
             print("Total Number of Variables for 58w:", len(prob.variables()))
             print("Total Number of Constraints for 58w:", len(prob.constraints))
-            print(wheatrra_origin, wheat_dest)
+           
             # dataframe for 42 wagon
             df_wheat = pd.DataFrame()
             From = []
@@ -4184,9 +4184,9 @@ def Daily_Planner():
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
 
-            df_wheat["SourceRailHead"] = From
+            df_wheat["SourceRailHead"] = sourceRH
             df_wheat["SourceState"] = From_state
-            df_wheat["DestinationRailHead"] = To
+            df_wheat["DestinationRailHead"] =  destinationRH
             df_wheat["DestinationState"] = To_state
             df_wheat["Commodity"] = commodity
             # df_wheat["Cost"] = Cost
@@ -4200,21 +4200,21 @@ def Daily_Planner():
             df_wheat["destinationId"] = destinationId
             df_wheat["SourceRakeType"] = source_rake
             df_wheat["DestinationRakeType"] = destination_rake
-            df_wheat["sourceRH"] = sourceRH
-            df_wheat["destinationRH"] = destinationRH
+            df_wheat["sourceRH"] =  From
+            df_wheat["destinationRH"] = To
             
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["DestinationRailHead"])):
-                    if (i == df_wheat.iloc[j]["DestinationRailHead"] or dest_wheat_inline[i] == df_wheat.iloc[j]["DestinationRailHead"]):
-                        df_wheat.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheat_inline[i])
+                    if (i.split("_")[0] == df_wheat.iloc[j]["DestinationRailHead"] or dest_wheat_inline[i].split("_")[0] == df_wheat.iloc[j]["DestinationRailHead"]):
+                        df_wheat.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheat_inline[i].split("_")[0])
              
              # to add value1 + value2 for origin
             for i in source_wheat_inline.keys():
                 for j in range(len(df_wheat["SourceRailHead"])):
-                    if (i == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i] == df_wheat.iloc[j]["SourceRailHead"]):
-                        df_wheat.loc[j, 'SourceRailHead'] = (i + '+' + source_wheat_inline[i])
-            print(df_wheat)
+                    if (i.split("_")[0] == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i].split("_")[0] == df_wheat.iloc[j]["SourceRailHead"]):
+                        df_wheat.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheat_inline[i].split("_")[0])
+            
             df_wheat1 = pd.DataFrame()
             From = []
             To = []
@@ -4382,14 +4382,14 @@ def Daily_Planner():
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline1.keys():
                 for j in range(len(df_wheat1["DestinationRailHead"])):
-                    if (i == df_wheat1.iloc[j]["DestinationRailHead"] or dest_wheat_inline1[i] == df_wheat1.iloc[j]["DestinationRailHead"]):
-                        df_wheat1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheat_inline1[i])
+                    if (i.split("_")[0] == df_wheat1.iloc[j]["DestinationRailHead"] or dest_wheat_inline1[i].split("_")[0] == df_wheat1.iloc[j]["DestinationRailHead"]):
+                        df_wheat1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheat_inline1[i].split("_")[0])
              
              # to add value1 + value2 for origin
             for i in source_wheat_inline1.keys():
                 for j in range(len(df_wheat1["SourceRailHead"])):
-                    if (i == df_wheat1.iloc[j]["SourceRailHead"] or source_wheat_inline1[i] == df_wheat1.iloc[j]["SourceRailHead"]):
-                        df_wheat1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheat_inline1[i])
+                    if (i.split("_")[0] == df_wheat1.iloc[j]["SourceRailHead"] or source_wheat_inline1[i].split("_")[0] == df_wheat1.iloc[j]["SourceRailHead"]):
+                        df_wheat1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheat_inline1[i].split("_")[0])
 
             df_rra = pd.DataFrame()
             From = []
@@ -4427,7 +4427,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rra["virtualCode"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline:
@@ -4436,7 +4436,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rra["virtualCode"])
   
             for i in range(len(To)):
                 found_state = False
@@ -4459,7 +4459,7 @@ def Daily_Planner():
                         To_division.append(rra["destinationDivision"] if "destinationDivision" in rra else "")
                         destinationId.append(rra["destinationId"])
                         destination_rake.append(rra["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(rra["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4529,7 +4529,7 @@ def Daily_Planner():
 
             df_rra["SourceRailHead"] = From
             df_rra["SourceState"] = From_state_rra
-            df_rra["DestinationRailHead"] = To
+            df_rra["DestinationRailHead"] =   To
             df_rra["DestinationState"] = To_state_rra
             df_rra["Commodity"] = commodity
             # df_rra["Cost"] = Cost
@@ -4543,18 +4543,18 @@ def Daily_Planner():
             df_rra["destinationId"] = destinationId
             df_rra["SourceRakeType"] = source_rake
             df_rra["DestinationRakeType"] = destination_rake
-            df_rra["sourceRH"] = sourceRH
+            df_rra["sourceRH"] =  sourceRH
             df_rra["destinationRH"] = destinationRH
            
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["DestinationRailHead"])):
-                    if (i == df_rra.iloc[j]["DestinationRailHead"] or dest_rra_inline[i] == df_rra.iloc[j]["DestinationRailHead"]):
-                        df_rra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rra_inline[i])
+                    if (i.split("_")[0] == df_rra.iloc[j]["DestinationRailHead"] or dest_rra_inline[i].split("_")[0] == df_rra.iloc[j]["DestinationRailHead"]):
+                        df_rra.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_rra_inline[i].split("_")[0])
 
             for i in source_rra_inline.keys():
                 for j in range(len(df_rra["SourceRailHead"])):
-                    if (i == df_rra.iloc[j]["SourceRailHead"] or source_rra_inline[i] == df_rra.iloc[j]["SourceRailHead"]):
-                        df_rra.loc[j, 'SourceRailHead'] = (i + '+' + source_rra_inline[i])
+                    if (i.split("_")[0] == df_rra.iloc[j]["SourceRailHead"] or source_rra_inline[i].split("_")[0] == df_rra.iloc[j]["SourceRailHead"]):
+                        df_rra.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_rra_inline[i].split("_")[0])
             
             df_rra1 = pd.DataFrame()
             From = []
@@ -4592,7 +4592,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rra["virtualCode"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline1:
@@ -4601,7 +4601,7 @@ def Daily_Planner():
                         From_division.append(rra["sourceDivision"] if "sourceDivision" in rra else "")
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rra["virtualCode"])
   
             for i in range(len(To)):
                 found_state = False
@@ -4624,7 +4624,7 @@ def Daily_Planner():
                         To_division.append(rra["destinationDivision"] if "destinationDivision" in rra else "")
                         destinationId.append(rra["destinationId"])
                         destination_rake.append(rra["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(rra["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4715,13 +4715,13 @@ def Daily_Planner():
            
             for i in dest_rra_inline1.keys():
                 for j in range(len(df_rra1["DestinationRailHead"])):
-                    if (i == df_rra1.iloc[j]["DestinationRailHead"] or dest_rra_inline1[i] == df_rra1.iloc[j]["DestinationRailHead"]):
-                        df_rra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rra_inline1[i])
+                    if (i.split("_")[0] == df_rra1.iloc[j]["DestinationRailHead"] or dest_rra_inline1[i].split("_")[0] == df_rra1.iloc[j]["DestinationRailHead"]):
+                        df_rra1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_rra_inline1[i].split("_")[0])
 
             for i in source_rra_inline1.keys():
                 for j in range(len(df_rra1["SourceRailHead"])):
-                    if (i == df_rra1.iloc[j]["SourceRailHead"] or source_rra_inline1[i] == df_rra1.iloc[j]["SourceRailHead"]):
-                        df_rra1.loc[j, 'SourceRailHead'] = (i + '+' + source_rra_inline1[i])
+                    if (i.split("_")[0] == df_rra1.iloc[j]["SourceRailHead"] or source_rra_inline1[i].split("_")[0] == df_rra1.iloc[j]["SourceRailHead"]):
+                        df_rra1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_rra_inline1[i].split("_")[0])
 
             df_CoarseGrain = pd.DataFrame()
             From = []
@@ -4759,7 +4759,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(coarseGrain["virtualCode"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline:
@@ -4768,7 +4768,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(coarseGrain["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4777,7 +4777,7 @@ def Daily_Planner():
                         To_state.append(coarseGrain["origin_state"])
                         destinationId.append(coarseGrain["destinationId"])
                         destination_rake.append(coarseGrain["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(coarseGrain["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -4881,13 +4881,13 @@ def Daily_Planner():
             
             for i in dest_coarseGrain_inline.keys():
                 for j in range(len(df_CoarseGrain["DestinationRailHead"])):
-                    if (i == df_CoarseGrain.iloc[j]["DestinationRailHead"] or dest_coarseGrain_inline[i] == df_CoarseGrain.iloc[j]["DestinationRailHead"]):
-                        df_CoarseGrain.loc[j, 'DestinationRailHead'] = (i + '+' + dest_coarseGrain_inline[i])
+                    if (i.split("_")[0] == df_CoarseGrain.iloc[j]["DestinationRailHead"] or dest_coarseGrain_inline[i].split("_")[0] == df_CoarseGrain.iloc[j]["DestinationRailHead"]):
+                        df_CoarseGrain.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_coarseGrain_inline[i].split("_")[0])
 
             for i in source_coarseGrain_inline.keys():
                 for j in range(len(df_CoarseGrain["SourceRailHead"])):
-                    if (i == df_CoarseGrain.iloc[j]["SourceRailHead"] or source_coarseGrain_inline[i] == df_CoarseGrain.iloc[j]["SourceRailHead"]):
-                        df_CoarseGrain.loc[j, 'SourceRailHead'] = (i + '+' + source_coarseGrain_inline[i])
+                    if (i.split("_")[0] == df_CoarseGrain.iloc[j]["SourceRailHead"] or source_coarseGrain_inline[i].split("_")[0] == df_CoarseGrain.iloc[j]["SourceRailHead"]):
+                        df_CoarseGrain.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_coarseGrain_inline[i].split("_")[0])
             
             df_CoarseGrain1 = pd.DataFrame()
             From = []
@@ -4925,7 +4925,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(coarseGrain["virtualCode"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline1:
@@ -4934,7 +4934,7 @@ def Daily_Planner():
                         From_division.append(coarseGrain["sourceDivision"] if "sourceDivision" in coarseGrain else "")
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(coarseGrain["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4943,7 +4943,7 @@ def Daily_Planner():
                         To_state.append(coarseGrain["origin_state"])
                         destinationId.append(coarseGrain["destinationId"])
                         destination_rake.append(coarseGrain["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(coarseGrain["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -5026,9 +5026,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_CoarseGrain1["SourceRailHead"] = From
+            df_CoarseGrain1["SourceRailHead"] =  sourceRH
             df_CoarseGrain1["SourceState"] = From_state
-            df_CoarseGrain1["DestinationRailHead"] = To
+            df_CoarseGrain1["DestinationRailHead"] =  destinationRH
             df_CoarseGrain1["DestinationState"] = To_state
             df_CoarseGrain1["Commodity"] = commodity
             # df_CoarseGrain1["Cost"] = Cost
@@ -5042,19 +5042,18 @@ def Daily_Planner():
             df_CoarseGrain1["destinationId"] = destinationId
             df_CoarseGrain1["SourceRakeType"] = source_rake
             df_CoarseGrain1["DestinationRakeType"] = destination_rake
-            df_CoarseGrain1["sourceRH"] = sourceRH
-            df_CoarseGrain1["destinationRH"] = destinationRH
+            df_CoarseGrain1["sourceRH"] = From
+            df_CoarseGrain1["destinationRH"] = To
             
             for i in dest_coarseGrain_inline1.keys():
                 for j in range(len(df_CoarseGrain1["DestinationRailHead"])):
-                    if (i == df_CoarseGrain1.iloc[j]["DestinationRailHead"] or dest_coarseGrain_inline1[i] == df_CoarseGrain1.iloc[j]["DestinationRailHead"]):
-                        df_CoarseGrain1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_coarseGrain_inline1[i])
+                    if (i.split("_")[0] == df_CoarseGrain1.iloc[j]["DestinationRailHead"] or dest_coarseGrain_inline1[i].split("_")[0] == df_CoarseGrain1.iloc[j]["DestinationRailHead"]):
+                        df_CoarseGrain1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_coarseGrain_inline1[i].split("_")[0])
 
             for i in source_coarseGrain_inline1.keys():
                 for j in range(len(df_CoarseGrain1["SourceRailHead"])):
-                    if (i == df_CoarseGrain1.iloc[j]["SourceRailHead"] or source_coarseGrain_inline1[i] == df_CoarseGrain1.iloc[j]["SourceRailHead"]):
-                        df_CoarseGrain1.loc[j, 'SourceRailHead'] = (i + '+' + source_coarseGrain_inline1[i])
-
+                    if (i.split("_")[0] == df_CoarseGrain1.iloc[j]["SourceRailHead"] or source_coarseGrain_inline1[i].split("_")[0] == df_CoarseGrain1.iloc[j]["SourceRailHead"]):
+                        df_CoarseGrain1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_coarseGrain_inline1[i].split("_")[0])
 
             df_frkrra = pd.DataFrame()
             From = []
@@ -5092,7 +5091,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkrra["virtualCode"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline:
@@ -5101,7 +5100,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkrra["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -5125,7 +5124,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkrra["destinationId"])
                         destination_rake.append(frkrra["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frkrra["virtualCode"])
                         break
                 if not found_state:
                     for frkrra in frkrra_dest_inline:
@@ -5214,12 +5213,12 @@ def Daily_Planner():
 
             for i in dest_frkrra_inline.keys():
                 for j in range(len(df_frkrra["DestinationRailHead"])):
-                    if (i == df_frkrra.iloc[j]["DestinationRailHead"] or dest_frkrra_inline[i] == df_frkrra.iloc[j]["DestinationRailHead"]):
-                        df_frkrra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkrra_inline[i])
+                    if (i.split("_")[0] == df_frkrra.iloc[j]["DestinationRailHead"] or dest_frkrra_inline[i].split("_")[0] == df_frkrra.iloc[j]["DestinationRailHead"]):
+                        df_frkrra.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frkrra_inline[i].split("_")[0])
 
             for i in source_frkrra_inline.keys():
                 for j in range(len(df_frkrra["SourceRailHead"])):
-                    if (i == df_frkrra.iloc[j]["SourceRailHead"] or source_frkrra_inline[i] == df_frkrra.iloc[j]["SourceRailHead"]):
+                    if (i.split("_")[0] == df_frkrra.iloc[j]["SourceRailHead"] or source_frkrra_inline[i].split("_")[0] == df_frkrra.iloc[j]["SourceRailHead"]):
                         df_frkrra.loc[j, 'SourceRailHead'] = (i + '+' + source_frkrra_inline[i])
             
             df_frkrra1 = pd.DataFrame()
@@ -5258,7 +5257,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkrra["virtualCode"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline1:
@@ -5267,7 +5266,7 @@ def Daily_Planner():
                         From_division.append(frkrra["sourceDivision"] if "sourceDivision" in frkrra else "")
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkrra["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -5291,7 +5290,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkrra["destinationId"])
                         destination_rake.append(frkrra["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frkrra["virtualCode"])
                         break
                 if not found_state:
                     for frkrra in frkrra_dest_inline1:
@@ -5359,9 +5358,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frkrra1["SourceRailHead"] = From
+            df_frkrra1["SourceRailHead"] =  sourceRH
             df_frkrra1["SourceState"] = From_state
-            df_frkrra1["DestinationRailHead"] = To
+            df_frkrra1["DestinationRailHead"] = destinationRH
             df_frkrra1["DestinationState"] = To_state
             df_frkrra1["Commodity"] = commodity
             # df_frkrra["Cost"] = Cost
@@ -5375,18 +5374,18 @@ def Daily_Planner():
             df_frkrra1["destinationId"] = destinationId
             df_frkrra1["SourceRakeType"] = source_rake
             df_frkrra1["DestinationRakeType"] = destination_rake
-            df_frkrra1["sourceRH"] = sourceRH
-            df_frkrra1["destinationRH"] = destinationRH
+            df_frkrra1["sourceRH"] = From
+            df_frkrra1["destinationRH"] = To
 
             for i in dest_frkrra_inline1.keys():
                 for j in range(len(df_frkrra1["DestinationRailHead"])):
-                    if (i == df_frkrra1.iloc[j]["DestinationRailHead"] or dest_frkrra_inline1[i] == df_frkrra1.iloc[j]["DestinationRailHead"]):
-                        df_frkrra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkrra_inline1[i])
+                    if (i.split("_")[0] == df_frkrra1.iloc[j]["DestinationRailHead"] or dest_frkrra_inline1[i].split("_")[0] == df_frkrra1.iloc[j]["DestinationRailHead"]):
+                        df_frkrra1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frkrra_inline1[i].split("_")[0])
 
             for i in source_frkrra_inline1.keys():
                 for j in range(len(df_frkrra["SourceRailHead"])):
-                    if (i == df_frkrra1.iloc[j]["SourceRailHead"] or source_frkrra_inline1[i] == df_frkrra1.iloc[j]["SourceRailHead"]):
-                        df_frkrra1.loc[j, 'SourceRailHead'] = (i + '+' + source_frkrra_inline1[i])
+                    if (i.split("_")[0] == df_frkrra1.iloc[j]["SourceRailHead"] or source_frkrra_inline1[i].split("_")[0] == df_frkrra1.iloc[j]["SourceRailHead"]):
+                        df_frkrra1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frkrra_inline1[i].split("_")[0])
 
             df_frkbr = pd.DataFrame()
             From = []
@@ -5424,7 +5423,7 @@ def Daily_Planner():
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkbr["virtualCode"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline:
@@ -5433,7 +5432,7 @@ def Daily_Planner():
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkbr["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5457,7 +5456,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkbr["destinationId"])
                         destination_rake.append(frkbr["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frkbr["virtualCode"])
                         break
                 if not found_state:
                     for frkbr in frkbr_dest_inline:
@@ -5526,9 +5525,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frkbr["SourceRailHead"] = From
+            df_frkbr["SourceRailHead"] =  sourceRH
             df_frkbr["SourceState"] = From_state
-            df_frkbr["DestinationRailHead"] = To
+            df_frkbr["DestinationRailHead"] = destinationRH
             df_frkbr["DestinationState"] = To_state
             df_frkbr["Commodity"] = commodity
             # df_frkbr["Cost"] = Cost
@@ -5542,18 +5541,18 @@ def Daily_Planner():
             df_frkbr["destinationId"] = destinationId
             df_frkbr["SourceRakeType"] = source_rake
             df_frkbr["DestinationRakeType"] = destination_rake
-            df_frkbr["sourceRH"] = sourceRH
-            df_frkbr["destinationRH"] = destinationRH
+            df_frkbr["sourceRH"] = From
+            df_frkbr["destinationRH"] =  To
 
             for i in dest_frkbr_inline.keys():
                 for j in range(len(df_frkbr["DestinationRailHead"])):
-                    if (i == df_frkbr.iloc[j]["DestinationRailHead"] or dest_frkbr_inline[i] == df_frkbr.iloc[j]["DestinationRailHead"]):
-                        df_frkbr.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkbr_inline[i])
+                    if (i.split("_")[0] == df_frkbr.iloc[j]["DestinationRailHead"] or dest_frkbr_inline[i].split("_")[0] == df_frkbr.iloc[j]["DestinationRailHead"]):
+                        df_frkbr.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frkbr_inline[i].split("_")[0])
 
             for i in source_frkbr_inline.keys():
                 for j in range(len(df_frkbr["SourceRailHead"])):
-                    if (i == df_frkbr.iloc[j]["SourceRailHead"] or source_frkbr_inline[i] == df_frkbr.iloc[j]["SourceRailHead"]):
-                        df_frkbr.loc[j, 'SourceRailHead'] = (i + '+' + source_frkbr_inline[i])
+                    if (i.split("_")[0] == df_frkbr.iloc[j]["SourceRailHead"] or source_frkbr_inline[i].split("_")[0] == df_frkbr.iloc[j]["SourceRailHead"]):
+                        df_frkbr.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frkbr_inline[i].split("_")[0])
      
             df_frkbr1 = pd.DataFrame()
             From = []
@@ -5591,7 +5590,7 @@ def Daily_Planner():
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkbr["virtualCode"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline1:
@@ -5600,7 +5599,7 @@ def Daily_Planner():
                         From_division.append(frkbr["sourceDivision"] if "sourceDivision" in frkbr else "")
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkbr["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5624,7 +5623,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkbr["destinationId"])
                         destination_rake.append(frkbr["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frkbr["virtualCode"])
                         break
                 if not found_state:
                     for frkbr in frkbr_dest_inline1:
@@ -5714,13 +5713,13 @@ def Daily_Planner():
 
             for i in dest_frkbr_inline1.keys():
                 for j in range(len(df_frkbr1["DestinationRailHead"])):
-                    if (i == df_frkbr1.iloc[j]["DestinationRailHead"] or dest_frkbr_inline1[i] == df_frkbr1.iloc[j]["DestinationRailHead"]):
-                        df_frkbr1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkbr_inline1[i])
+                    if (i.split("_")[0] == df_frkbr1.iloc[j]["DestinationRailHead"] or dest_frkbr_inline1[i].split("_")[0] == df_frkbr1.iloc[j]["DestinationRailHead"]):
+                        df_frkbr1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frkbr_inline1[i].split("_")[0])
 
             for i in source_frkbr_inline1.keys():
                 for j in range(len(df_frkbr1["SourceRailHead"])):
-                    if (i == df_frkbr1.iloc[j]["SourceRailHead"] or source_frkbr_inline[i] == df_frkbr1.iloc[j]["SourceRailHead"]):
-                        df_frkbr1.loc[j, 'SourceRailHead'] = (i + '+' + source_frkbr_inline[i])
+                    if (i.split("_")[0] == df_frkbr1.iloc[j]["SourceRailHead"] or source_frkbr_inline[i].split("_")[0] == df_frkbr1.iloc[j]["SourceRailHead"]):
+                        df_frkbr1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frkbr_inline[i].split("_")[0])
 
             df_frk = pd.DataFrame()
             From = []
@@ -5758,7 +5757,7 @@ def Daily_Planner():
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frk["virtualCode"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline:
@@ -5767,7 +5766,7 @@ def Daily_Planner():
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frk["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -5791,7 +5790,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frk["destinationId"])
                         destination_rake.append(frk["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frk["virtualCode"])
                         break
                 if not found_state:
                     for frk in frk_dest_inline:
@@ -5860,9 +5859,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frk["SourceRailHead"] = From
+            df_frk["SourceRailHead"] =  sourceRH
             df_frk["SourceState"] = From_state
-            df_frk["DestinationRailHead"] = To
+            df_frk["DestinationRailHead"] = destinationRH
             df_frk["DestinationState"] = To_state
             df_frk["Commodity"] = commodity
             # df_frk["Cost"] = Cost
@@ -5876,18 +5875,18 @@ def Daily_Planner():
             df_frk["destinationId"] = destinationId
             df_frk["SourceRakeType"] = source_rake
             df_frk["DestinationRakeType"] = destination_rake
-            df_frk["sourceRH"] = sourceRH
-            df_frk["destinationRH"] = destinationRH
+            df_frk["sourceRH"] = From
+            df_frk["destinationRH"] =  To
 
             for i in dest_frk_inline.keys():
                 for j in range(len(df_frk["DestinationRailHead"])):
-                    if (i == df_frk.iloc[j]["DestinationRailHead"] or dest_frk_inline[i] == df_frk.iloc[j]["DestinationRailHead"]):
-                        df_frk.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frk_inline[i])
+                    if (i.split("_")[0] == df_frk.iloc[j]["DestinationRailHead"] or dest_frk_inline[i].split("_")[0] == df_frk.iloc[j]["DestinationRailHead"]):
+                        df_frk.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frk_inline[i].split("_")[0])
 
             for i in source_frk_inline.keys():
                 for j in range(len(df_frk["SourceRailHead"])):
-                    if (i == df_frk.iloc[j]["SourceRailHead"] or source_frk_inline[i] == df_frk.iloc[j]["SourceRailHead"]):
-                        df_frk.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_inline[i])
+                    if (i.split("_")[0] == df_frk.iloc[j]["SourceRailHead"] or source_frk_inline[i].split("_")[0] == df_frk.iloc[j]["SourceRailHead"]):
+                        df_frk.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frk_inline[i].split("_")[0])
             
             df_frk1 = pd.DataFrame()
             From = []
@@ -5925,7 +5924,7 @@ def Daily_Planner():
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frk["virtualCode"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline1:
@@ -5934,7 +5933,7 @@ def Daily_Planner():
                         From_division.append(frk["sourceDivision"] if "sourceDivision" in frk else "")
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frk["virtualCode"])
 
 
             for i in range(len(To)):
@@ -5959,7 +5958,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frk["destinationId"])
                         destination_rake.append(frk["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frk["virtualCode"])
                         break
                 if not found_state:
                     for frk in frk_dest_inline1:
@@ -6028,9 +6027,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frk1["SourceRailHead"] = From
+            df_frk1["SourceRailHead"] =  sourceRH
             df_frk1["SourceState"] = From_state
-            df_frk1["DestinationRailHead"] = To
+            df_frk1["DestinationRailHead"] = destinationRH
             df_frk1["DestinationState"] = To_state
             df_frk1["Commodity"] = commodity
             # df_frk["Cost"] = Cost
@@ -6044,18 +6043,18 @@ def Daily_Planner():
             df_frk1["destinationId"] = destinationId
             df_frk1["SourceRakeType"] = source_rake
             df_frk1["DestinationRakeType"] = destination_rake
-            df_frk1["sourceRH"] = sourceRH
-            df_frk1["destinationRH"] = destinationRH
+            df_frk1["sourceRH"] = From
+            df_frk1["destinationRH"] =  To
 
             for i in dest_frk_inline1.keys():
                 for j in range(len(df_frk1["DestinationRailHead"])):
-                    if (i == df_frk1.iloc[j]["DestinationRailHead"] or dest_frk_inline1[i] == df_frk1.iloc[j]["DestinationRailHead"]):
-                        df_frk1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frk_inline1[i])
+                    if (i.split("_")[0] == df_frk1.iloc[j]["DestinationRailHead"] or dest_frk_inline1[i].split("_")[0] == df_frk1.iloc[j]["DestinationRailHead"]):
+                        df_frk1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frk_inline1[i].split("_")[0])
 
             for i in source_frk_inline1.keys():
                 for j in range(len(df_frk1["SourceRailHead"])):
-                    if (i == df_frk1.iloc[j]["SourceRailHead"] or source_frk_inline1[i] == df_frk1.iloc[j]["SourceRailHead"]):
-                        df_frk1.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_inline1[i])
+                    if (i.split("_")[0] == df_frk1.iloc[j]["SourceRailHead"] or source_frk_inline1[i].split("_")[0] == df_frk1.iloc[j]["SourceRailHead"]):
+                        df_frk1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frk_inline1[i].split("_")[0])
 
             df_frkcgr = pd.DataFrame()
             From = []
@@ -6195,9 +6194,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frkcgr["SourceRailHead"] = From
+            df_frkcgr["SourceRailHead"] = sourceRH
             df_frkcgr["SourceState"] = From_state
-            df_frkcgr["DestinationRailHead"] = To
+            df_frkcgr["DestinationRailHead"] = destinationRH
             df_frkcgr["DestinationState"] = To_state
             df_frkcgr["Commodity"] = commodity
             df_frkcgr["Rakes"] = values
@@ -6211,18 +6210,18 @@ def Daily_Planner():
             df_frkcgr["destinationId"] = destinationId
             df_frkcgr["SourceRakeType"] = source_rake
             df_frkcgr["DestinationRakeType"] = destination_rake
-            df_frkcgr["sourceRH"] = sourceRH
-            df_frkcgr["destinationRH"] = destinationRH
+            df_frkcgr["sourceRH"] =  From
+            df_frkcgr["destinationRH"] = To
 
             for i in dest_frkcgr_inline.keys():
                 for j in range(len(df_frkcgr["DestinationRailHead"])):
-                    if (i == df_frkcgr.iloc[j]["DestinationRailHead"] or dest_frkcgr_inline[i] == df_frkcgr.iloc[j]["DestinationRailHead"]):
-                        df_frkcgr.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkcgr_inline[i])
+                    if (i.split("_")[0] == df_frkcgr.iloc[j]["DestinationRailHead"] or dest_frkcgr_inline[i].split("_")[0] == df_frkcgr.iloc[j]["DestinationRailHead"]):
+                        df_frkcgr.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frkcgr_inline[i].split("_")[0])
 
             for i in source_frkcgr_inline.keys():
                 for j in range(len(df_frkcgr["SourceRailHead"])):
-                    if (i == df_frkcgr.iloc[j]["SourceRailHead"] or source_frkcgr_inline[i] == df_frkcgr.iloc[j]["SourceRailHead"]):
-                        df_frkcgr.loc[j, 'SourceRailHead'] = (i + '+' + source_frkcgr_inline[i])
+                    if (i.split("_")[0] == df_frkcgr.iloc[j]["SourceRailHead"] or source_frkcgr_inline[i].split("_")[0] == df_frkcgr.iloc[j]["SourceRailHead"]):
+                        df_frkcgr.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frkcgr_inline[i].split("_")[0])
             
             df_frkcgr1 = pd.DataFrame()
             From = []
@@ -6260,7 +6259,7 @@ def Daily_Planner():
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
                         source_rake.append(frkcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkcgr["virtualCode"])
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin_inline1:
@@ -6269,7 +6268,7 @@ def Daily_Planner():
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
                         source_rake.append(frkcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkcgr["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6293,7 +6292,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkcgr["destinationId"])
                         destination_rake.append(frkcgr["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frkcgr["virtualCode"])
                         break
                 if not found_state:
                     for frkcgr in frkcgr_dest_inline1:
@@ -6383,13 +6382,13 @@ def Daily_Planner():
 
             for i in dest_frkcgr_inline1.keys():
                 for j in range(len(df_frkcgr1["DestinationRailHead"])):
-                    if (i == df_frkcgr1.iloc[j]["DestinationRailHead"] or dest_frkcgr_inline1[i] == df_frkcgr1.iloc[j]["DestinationRailHead"]):
-                        df_frkcgr1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frkcgr_inline1[i])
+                    if (i.split("_")[0] == df_frkcgr1.iloc[j]["DestinationRailHead"] or dest_frkcgr_inline1[i].split("_")[0] == df_frkcgr1.iloc[j]["DestinationRailHead"]):
+                        df_frkcgr1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frkcgr_inline1[i].split("_")[0])
 
             for i in source_frkcgr_inline1.keys():
                 for j in range(len(df_frkcgr1["SourceRailHead"])):
-                    if (i == df_frkcgr1.iloc[j]["SourceRailHead"] or source_frkcgr_inline1[i] == df_frkcgr.iloc[j]["SourceRailHead"]):
-                        df_frkcgr1.loc[j, 'SourceRailHead'] = (i + '+' + source_frkcgr_inline1[i])
+                    if (i.split("_")[0] == df_frkcgr1.iloc[j]["SourceRailHead"] or source_frkcgr_inline1[i].split("_")[0] == df_frkcgr.iloc[j]["SourceRailHead"]):
+                        df_frkcgr1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frkcgr_inline1[i].split("_")[0])
 
             df_wcgr = pd.DataFrame()
             From = []
@@ -6427,7 +6426,7 @@ def Daily_Planner():
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(wcgr["virtualCode"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline:
@@ -6436,7 +6435,7 @@ def Daily_Planner():
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(wcgr["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6446,7 +6445,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(wcgr["destinationId"])
                         destination_rake.append(wcgr["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(wcgr["virtualCode"])
                         break
                 if not found_state:
                     for wcgr in wcgr_dest_inline:
@@ -6529,9 +6528,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wcgr["SourceRailHead"] = From 
+            df_wcgr["SourceRailHead"] =  sourceRH
             df_wcgr["SourceState"] = From_state
-            df_wcgr["DestinationRailHead"] = To
+            df_wcgr["DestinationRailHead"] = destinationRH
             df_wcgr["DestinationState"] = To_state
             df_wcgr["Commodity"] = commodity
             df_wcgr["Rakes"] = values
@@ -6545,18 +6544,18 @@ def Daily_Planner():
             df_wcgr["destinationId"] = destinationId
             df_wcgr["SourceRakeType"] = source_rake
             df_wcgr["DestinationRakeType"] = destination_rake
-            df_wcgr["sourceRH"] = sourceRH
-            df_wcgr["destinationRH"] = destinationRH
+            df_wcgr["sourceRH"] = From
+            df_wcgr["destinationRH"] = To
 
             for i in dest_wcgr_inline.keys():
                 for j in range(len(df_wcgr["DestinationRailHead"])):
-                    if (i == df_wcgr.iloc[j]["DestinationRailHead"] or dest_wcgr_inline[i] == df_wcgr.iloc[j]["DestinationRailHead"]):
-                        df_wcgr.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wcgr_inline[i])
+                    if (i.split("_")[0] == df_wcgr.iloc[j]["DestinationRailHead"] or dest_wcgr_inline[i].split("_")[0] == df_wcgr.iloc[j]["DestinationRailHead"]):
+                        df_wcgr.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wcgr_inline[i].split("_")[0])
 
             for i in source_wcgr_inline.keys():
                 for j in range(len(df_wcgr["SourceRailHead"])):
-                    if (i == df_wcgr.iloc[j]["SourceRailHead"] or source_wcgr_inline[i] == df_wcgr.iloc[j]["SourceRailHead"]):
-                        df_wcgr.loc[j, 'SourceRailHead'] = (i + '+' + source_wcgr_inline[i])
+                    if (i.split("_")[0] == df_wcgr.iloc[j]["SourceRailHead"] or source_wcgr_inline[i].split("_")[0] == df_wcgr.iloc[j]["SourceRailHead"]):
+                        df_wcgr.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wcgr_inline[i].split("_")[0])
             
             df_wcgr1 = pd.DataFrame()
             From = []
@@ -6594,7 +6593,7 @@ def Daily_Planner():
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(wcgr["virtualCode"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline1:
@@ -6603,7 +6602,7 @@ def Daily_Planner():
                         From_division.append(wcgr["sourceDivision"] if "sourceDivision" in wcgr else "")
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(wcgr["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6613,7 +6612,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(wcgr["destinationId"])
                         destination_rake.append(wcgr["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(wcgr["virtualCode"])
                         break
                 if not found_state:
                     for wcgr in wcgr_dest_inline1:
@@ -6696,9 +6695,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wcgr1["SourceRailHead"] = From 
+            df_wcgr1["SourceRailHead"] =  sourceRH
             df_wcgr1["SourceState"] = From_state
-            df_wcgr1["DestinationRailHead"] = To
+            df_wcgr1["DestinationRailHead"] = destinationRH
             df_wcgr1["DestinationState"] = To_state
             df_wcgr1["Commodity"] = commodity
             df_wcgr1["Rakes"] = values
@@ -6712,18 +6711,18 @@ def Daily_Planner():
             df_wcgr1["destinationId"] = destinationId
             df_wcgr1["SourceRakeType"] = source_rake
             df_wcgr1["DestinationRakeType"] = destination_rake
-            df_wcgr1["sourceRH"] = sourceRH
-            df_wcgr1["destinationRH"] = destinationRH
+            df_wcgr1["sourceRH"] = From
+            df_wcgr1["destinationRH"] = To
 
             for i in dest_wcgr_inline1.keys():
                 for j in range(len(df_wcgr1["DestinationRailHead"])):
-                    if (i == df_wcgr1.iloc[j]["DestinationRailHead"] or dest_wcgr_inline1[i] == df_wcgr1.iloc[j]["DestinationRailHead"]):
-                        df_wcgr1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wcgr_inline1[i])
+                    if (i.split("_")[0] == df_wcgr1.iloc[j]["DestinationRailHead"] or dest_wcgr_inline1[i].split("_")[0] == df_wcgr1.iloc[j]["DestinationRailHead"]):
+                        df_wcgr1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wcgr_inline1[i].split("_")[0])
 
             for i in source_wcgr_inline1.keys():
                 for j in range(len(df_wcgr1["SourceRailHead"])):
-                    if (i == df_wcgr1.iloc[j]["SourceRailHead"] or source_wcgr_inline1[i] == df_wcgr1.iloc[j]["SourceRailHead"]):
-                        df_wcgr1.loc[j, 'SourceRailHead'] = (i + '+' + source_wcgr_inline1[i])
+                    if (i.split("_")[0] == df_wcgr1.iloc[j]["SourceRailHead"] or source_wcgr_inline1[i].split("_")[0] == df_wcgr1.iloc[j]["SourceRailHead"]):
+                        df_wcgr1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wcgr_inline1[i].split("_")[0])
 
             df_rrc = pd.DataFrame()
             From = []
@@ -6760,7 +6759,7 @@ def Daily_Planner():
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rrc["virtualCode"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline:
@@ -6769,7 +6768,7 @@ def Daily_Planner():
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rrc["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6778,7 +6777,7 @@ def Daily_Planner():
                         To_state.append(rrc["origin_state"])
                         destinationId.append(rrc["destinationId"])
                         destination_rake.append(rrc["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(rrc["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -6859,9 +6858,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_rrc["SourceRailHead"] = From
+            df_rrc["SourceRailHead"] =  sourceRH
             df_rrc["SourceState"] = From_state
-            df_rrc["DestinationRailHead"] = To
+            df_rrc["DestinationRailHead"] = destinationRH
             df_rrc["DestinationState"] = To_state
             df_rrc["Commodity"] = commodity
             df_rrc["Rakes"] = values
@@ -6874,18 +6873,18 @@ def Daily_Planner():
             df_rrc["destinationId"] = destinationId
             df_rrc["SourceRakeType"] = source_rake
             df_rrc["DestinationRakeType"] = destination_rake
-            df_rrc["sourceRH"] = sourceRH
-            df_rrc["destinationRH"] = destinationRH
+            df_rrc["sourceRH"] = From
+            df_rrc["destinationRH"] = To
           
             for i in dest_rrc_inline.keys():
                 for j in range(len(df_rrc["DestinationRailHead"])):
-                    if (i == df_rrc.iloc[j]["DestinationRailHead"] or dest_rrc_inline[i] == df_rrc.iloc[j]["DestinationRailHead"]):
-                        df_rrc.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rrc_inline[i])
+                    if (i.split("_")[0] == df_rrc.iloc[j]["DestinationRailHead"] or dest_rrc_inline[i].split("_")[0] == df_rrc.iloc[j]["DestinationRailHead"]):
+                        df_rrc.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_rrc_inline[i].split("_")[0])
 
             for i in source_rrc_inline.keys():
                 for j in range(len(df_rrc["SourceRailHead"])):
-                    if (i == df_rrc.iloc[j]["SourceRailHead"] or source_rrc_inline[i] == df_rrc.iloc[j]["SourceRailHead"]):
-                        df_rrc.loc[j, 'SourceRailHead'] = (i + '+' + source_rrc_inline[i])
+                    if (i.split("_")[0] == df_rrc.iloc[j]["SourceRailHead"] or source_rrc_inline[i].split("_")[0] == df_rrc.iloc[j]["SourceRailHead"]):
+                        df_rrc.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_rrc_inline[i].split("_")[0])
             
             df_rrc1 = pd.DataFrame()
             From = []
@@ -6922,7 +6921,7 @@ def Daily_Planner():
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rrc["virtualCode"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline1:
@@ -6931,7 +6930,7 @@ def Daily_Planner():
                         From_division.append(rrc["sourceDivision"] if "sourceDivision" in rrc else "")
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(rrc["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6940,7 +6939,7 @@ def Daily_Planner():
                         To_state.append(rrc["origin_state"])
                         destinationId.append(rrc["destinationId"])
                         destination_rake.append(rrc["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(rrc["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -7021,9 +7020,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_rrc1["SourceRailHead"] = From
+            df_rrc1["SourceRailHead"] =  sourceRH
             df_rrc1["SourceState"] = From_state
-            df_rrc1["DestinationRailHead"] = To
+            df_rrc1["DestinationRailHead"] =  destinationRH
             df_rrc1["DestinationState"] = To_state
             df_rrc1["Commodity"] = commodity
             df_rrc1["Rakes"] = values
@@ -7036,18 +7035,18 @@ def Daily_Planner():
             df_rrc1["destinationId"] = destinationId
             df_rrc1["SourceRakeType"] = source_rake
             df_rrc1["DestinationRakeType"] = destination_rake
-            df_rrc1["sourceRH"] = sourceRH
-            df_rrc1["destinationRH"] = destinationRH
+            df_rrc1["sourceRH"] = From
+            df_rrc1["destinationRH"] = To
           
             for i in dest_rrc_inline1.keys():
                 for j in range(len(df_rrc1["DestinationRailHead"])):
-                    if (i == df_rrc1.iloc[j]["DestinationRailHead"] or dest_rrc_inline1[i] == df_rrc1.iloc[j]["DestinationRailHead"]):
-                        df_rrc1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_rrc_inline1[i])
+                    if (i.split("_")[0] == df_rrc1.iloc[j]["DestinationRailHead"] or dest_rrc_inline1[i].split("_")[0] == df_rrc1.iloc[j]["DestinationRailHead"]):
+                        df_rrc1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_rrc_inline1[i].split("_")[0])
 
             for i in source_rrc_inline1.keys():
                 for j in range(len(df_rrc1["SourceRailHead"])):
-                    if (i == df_rrc1.iloc[j]["SourceRailHead"] or source_rrc_inline1[i] == df_rrc1.iloc[j]["SourceRailHead"]):
-                        df_rrc1.loc[j, 'SourceRailHead'] = (i + '+' + source_rrc_inline1[i])
+                    if (i.split("_")[0] == df_rrc1.iloc[j]["SourceRailHead"] or source_rrc_inline1[i].split("_")[0] == df_rrc1.iloc[j]["SourceRailHead"]):
+                        df_rrc1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_rrc_inline1[i].split("_")[0])
 
             df_ragi = pd.DataFrame()
             From = []
@@ -7084,7 +7083,7 @@ def Daily_Planner():
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(ragi["virtualCode"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline:
@@ -7093,7 +7092,7 @@ def Daily_Planner():
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(ragi["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7103,7 +7102,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(ragi["destinationId"])
                         destination_rake.append(ragi["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(ragi["virtualCode"])
                         break
                 if not found_state:
                     for ragi in ragi_dest_inline:
@@ -7183,9 +7182,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_ragi["SourceRailHead"] = From
+            df_ragi["SourceRailHead"] = sourceRH
             df_ragi["SourceState"] = From_state
-            df_ragi["DestinationRailHead"] = To
+            df_ragi["DestinationRailHead"] = destinationRH
             df_ragi["DestinationState"] = To_state
             df_ragi["Commodity"] = commodity
             df_ragi["Rakes"] = values
@@ -7198,18 +7197,18 @@ def Daily_Planner():
             df_ragi["destinationId"] = destinationId
             df_ragi["SourceRakeType"] = source_rake
             df_ragi["DestinationRakeType"] = destination_rake
-            df_ragi["sourceRH"] = sourceRH
-            df_ragi["destinationRH"] = destinationRH
+            df_ragi["sourceRH"] = From
+            df_ragi["destinationRH"] = To
 
             for i in dest_ragi_inline.keys():
                 for j in range(len(df_ragi["DestinationRailHead"])):
-                    if (i == df_ragi.iloc[j]["DestinationRailHead"] or dest_ragi_inline[i] == df_ragi.iloc[j]["DestinationRailHead"]):
-                        df_ragi.loc[j, 'DestinationRailHead'] = (i + '+' + dest_ragi_inline[i])
+                    if (i.split("_")[0] == df_ragi.iloc[j]["DestinationRailHead"] or dest_ragi_inline[i].split("_")[0] == df_ragi.iloc[j]["DestinationRailHead"]):
+                        df_ragi.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_ragi_inline[i].split("_")[0])
 
             for i in source_ragi_inline.keys():
                 for j in range(len(df_ragi["SourceRailHead"])):
-                    if (i == df_ragi.iloc[j]["SourceRailHead"] or source_ragi_inline[i] == df_ragi.iloc[j]["SourceRailHead"]):
-                        df_ragi.loc[j, 'SourceRailHead'] = (i + '+' + source_ragi_inline[i])
+                    if (i.split("_")[0] == df_ragi.iloc[j]["SourceRailHead"] or source_ragi_inline[i].split("_")[0] == df_ragi.iloc[j]["SourceRailHead"]):
+                        df_ragi.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_ragi_inline[i].split("_")[0])
             
             df_ragi1 = pd.DataFrame()
             From = []
@@ -7246,7 +7245,7 @@ def Daily_Planner():
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(ragi["virtualCode"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline1:
@@ -7255,7 +7254,7 @@ def Daily_Planner():
                         From_division.append(ragi["sourceDivision"] if "sourceDivision" in ragi else "")
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(ragi["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7265,7 +7264,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(ragi["destinationId"])
                         destination_rake.append(ragi["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(ragi["virtualCode"])
                         break
                 if not found_state:
                     for ragi in ragi_dest_inline1:
@@ -7345,9 +7344,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_ragi1["SourceRailHead"] = From
+            df_ragi1["SourceRailHead"] =  sourceRH
             df_ragi1["SourceState"] = From_state
-            df_ragi1["DestinationRailHead"] = To
+            df_ragi1["DestinationRailHead"] =  destinationRH
             df_ragi1["DestinationState"] = To_state
             df_ragi1["Commodity"] = commodity
             df_ragi1["Rakes"] = values
@@ -7360,18 +7359,18 @@ def Daily_Planner():
             df_ragi1["destinationId"] = destinationId
             df_ragi1["SourceRakeType"] = source_rake
             df_ragi1["DestinationRakeType"] = destination_rake
-            df_ragi1["sourceRH"] = sourceRH
-            df_ragi1["destinationRH"] = destinationRH
+            df_ragi1["sourceRH"] = From
+            df_ragi1["destinationRH"] = To
 
             for i in dest_ragi_inline1.keys():
                 for j in range(len(df_ragi1["DestinationRailHead"])):
-                    if (i == df_ragi1.iloc[j]["DestinationRailHead"] or dest_ragi_inline1[i] == df_ragi1.iloc[j]["DestinationRailHead"]):
-                        df_ragi1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_ragi_inline1[i])
+                    if (i.split("_")[0] == df_ragi1.iloc[j]["DestinationRailHead"] or dest_ragi_inline1[i].split("_")[0] == df_ragi1.iloc[j]["DestinationRailHead"]):
+                        df_ragi1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_ragi_inline1[i].split("_")[0])
 
             for i in source_ragi_inline1.keys():
                 for j in range(len(df_ragi1["SourceRailHead"])):
-                    if (i == df_ragi1.iloc[j]["SourceRailHead"] or source_ragi_inline1[i] == df_ragi1.iloc[j]["SourceRailHead"]):
-                        df_ragi1.loc[j, 'SourceRailHead'] = (i + '+' + source_ragi_inline1[i])
+                    if (i.split("_")[0] == df_ragi1.iloc[j]["SourceRailHead"] or source_ragi_inline1[i].split("_")[0] == df_ragi1.iloc[j]["SourceRailHead"]):
+                        df_ragi1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_ragi_inline1[i].split("_")[0])
 
 
             df_jowar = pd.DataFrame()
@@ -7409,7 +7408,7 @@ def Daily_Planner():
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(jowar["virtualCode"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline:
@@ -7418,7 +7417,7 @@ def Daily_Planner():
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(jowar["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7427,7 +7426,7 @@ def Daily_Planner():
                         To_state.append(jowar["origin_state"])
                         destinationId.append(jowar["destinationId"])
                         destination_rake.append(jowar["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(jowar["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -7508,9 +7507,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_jowar["SourceRailHead"] = From
+            df_jowar["SourceRailHead"] =  sourceRH
             df_jowar["SourceState"] = From_state
-            df_jowar["DestinationRailHead"] = To
+            df_jowar["DestinationRailHead"] = destinationRH
             df_jowar["DestinationState"] = To_state
             df_jowar["Commodity"] = commodity
             df_jowar["Rakes"] = values
@@ -7523,18 +7522,18 @@ def Daily_Planner():
             df_jowar["destinationId"] = destinationId
             df_jowar["SourceRakeType"] = source_rake
             df_jowar["DestinationRakeType"] = destination_rake
-            df_jowar["sourceRH"] = sourceRH
-            df_jowar["destinationRH"] = destinationRH
+            df_jowar["sourceRH"] = From
+            df_jowar["destinationRH"] = To
 
             for i in dest_jowar_inline.keys():
                 for j in range(len(df_jowar["DestinationRailHead"])):
-                    if (i == df_jowar.iloc[j]["DestinationRailHead"] or dest_jowar_inline[i] == df_jowar.iloc[j]["DestinationRailHead"]):
-                        df_jowar.loc[j, 'DestinationRailHead'] = (i + '+' + dest_jowar_inline[i])
+                    if (i.split("_")[0] == df_jowar.iloc[j]["DestinationRailHead"] or dest_jowar_inline[i].split("_")[0] == df_jowar.iloc[j]["DestinationRailHead"]):
+                        df_jowar.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_jowar_inline[i].split("_")[0])
 
             for i in source_jowar_inline.keys():
                 for j in range(len(df_jowar["SourceRailHead"])):
-                    if (i == df_jowar.iloc[j]["SourceRailHead"] or source_jowar_inline[i] == df_jowar.iloc[j]["SourceRailHead"]):
-                        df_jowar.loc[j, 'SourceRailHead'] = (i + '+' + source_jowar_inline[i])
+                    if (i.split("_")[0] == df_jowar.iloc[j]["SourceRailHead"] or source_jowar_inline[i].split("_")[0] == df_jowar.iloc[j]["SourceRailHead"]):
+                        df_jowar.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_jowar_inline[i].split("_")[0])
             
             df_jowar1 = pd.DataFrame()
             From = []
@@ -7571,7 +7570,7 @@ def Daily_Planner():
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(jowar["virtualCode"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline1:
@@ -7580,7 +7579,7 @@ def Daily_Planner():
                         From_division.append(jowar["sourceDivision"] if "sourceDivision" in jowar else "")
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(jowar["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7589,7 +7588,7 @@ def Daily_Planner():
                         To_state.append(jowar["origin_state"])
                         destinationId.append(jowar["destinationId"])
                         destination_rake.append(jowar["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(jowar["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -7670,9 +7669,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_jowar1["SourceRailHead"] = From
+            df_jowar1["SourceRailHead"] =  sourceRH
             df_jowar1["SourceState"] = From_state
-            df_jowar1["DestinationRailHead"] = To
+            df_jowar1["DestinationRailHead"] = destinationRH
             df_jowar1["DestinationState"] = To_state
             df_jowar1["Commodity"] = commodity
             df_jowar1["Rakes"] = values
@@ -7685,18 +7684,18 @@ def Daily_Planner():
             df_jowar1["destinationId"] = destinationId
             df_jowar1["SourceRakeType"] = source_rake
             df_jowar1["DestinationRakeType"] = destination_rake
-            df_jowar1["sourceRH"] = sourceRH
-            df_jowar1["destinationRH"] = destinationRH
+            df_jowar1["sourceRH"] = From
+            df_jowar1["destinationRH"] = To 
 
             for i in dest_jowar_inline1.keys():
                 for j in range(len(df_jowar1["DestinationRailHead"])):
-                    if (i == df_jowar1.iloc[j]["DestinationRailHead"] or dest_jowar_inline1[i] == df_jowar1.iloc[j]["DestinationRailHead"]):
-                        df_jowar1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_jowar_inline1[i])
+                    if (i.split("_")[0] == df_jowar1.iloc[j]["DestinationRailHead"] or dest_jowar_inline1[i].split("_")[0] == df_jowar1.iloc[j]["DestinationRailHead"]):
+                        df_jowar1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_jowar_inline1[i].split("_")[0])
 
             for i in source_jowar_inline1.keys():
                 for j in range(len(df_jowar1["SourceRailHead"])):
-                    if (i == df_jowar1.iloc[j]["SourceRailHead"] or source_jowar_inline1[i] == df_jowar1.iloc[j]["SourceRailHead"]):
-                        df_jowar1.loc[j, 'SourceRailHead'] = (i + '+' + source_jowar_inline1[i])
+                    if (i.split("_")[0] == df_jowar1.iloc[j]["SourceRailHead"] or source_jowar_inline1[i].split("_")[0] == df_jowar1.iloc[j]["SourceRailHead"]):
+                        df_jowar1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_jowar_inline1[i].split("_")[0])
 
             df_bajra = pd.DataFrame()
             From = []
@@ -7733,7 +7732,7 @@ def Daily_Planner():
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(bajra["virtualCode"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline:
@@ -7742,7 +7741,7 @@ def Daily_Planner():
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(bajra["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7752,7 +7751,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(bajra["destinationId"])
                         destination_rake.append(bajra["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(bajra["virtualCode"])
                         break
                 if not found_state:
                     for bajra in bajra_dest_inline:
@@ -7832,9 +7831,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_bajra["SourceRailHead"] = From
+            df_bajra["SourceRailHead"] = sourceRH 
             df_bajra["SourceState"] = From_state
-            df_bajra["DestinationRailHead"] = To
+            df_bajra["DestinationRailHead"] = destinationRH 
             df_bajra["DestinationState"] = To_state
             df_bajra["Commodity"] = commodity
             df_bajra["Rakes"] = values
@@ -7847,18 +7846,18 @@ def Daily_Planner():
             df_bajra["destinationId"] = destinationId
             df_bajra["SourceRakeType"] = source_rake
             df_bajra["DestinationRakeType"] = destination_rake
-            df_bajra["sourceRH"] = sourceRH
-            df_bajra["destinationRH"] = destinationRH
+            df_bajra["sourceRH"] = From
+            df_bajra["destinationRH"] = To 
             
             for i in dest_bajra_inline.keys():
                 for j in range(len(df_bajra["DestinationRailHead"])):
-                    if (i == df_bajra.iloc[j]["DestinationRailHead"] or dest_bajra_inline[i] == df_bajra.iloc[j]["DestinationRailHead"]):
-                        df_bajra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_bajra_inline[i])
+                    if (i.split("_")[0] == df_bajra.iloc[j]["DestinationRailHead"] or dest_bajra_inline[i].split("_")[0] == df_bajra.iloc[j]["DestinationRailHead"]):
+                        df_bajra.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_bajra_inline[i].split("_")[0])
 
             for i in source_bajra_inline.keys():
                 for j in range(len(df_bajra["SourceRailHead"])):
-                    if (i == df_bajra.iloc[j]["SourceRailHead"] or source_bajra_inline[i] == df_bajra.iloc[j]["SourceRailHead"]):
-                        df_bajra.loc[j, 'SourceRailHead'] = (i + '+' + source_bajra_inline[i])
+                    if (i.split("_")[0] == df_bajra.iloc[j]["SourceRailHead"] or source_bajra_inline[i].split("_")[0] == df_bajra.iloc[j]["SourceRailHead"]):
+                        df_bajra.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_bajra_inline[i].split("_")[0])
             
             df_bajra1 = pd.DataFrame()
             From = []
@@ -7895,7 +7894,7 @@ def Daily_Planner():
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(bajra["virtualCode"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline1:
@@ -7904,7 +7903,7 @@ def Daily_Planner():
                         From_division.append(bajra["sourceDivision"] if "sourceDivision" in bajra else "")
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(bajra["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7914,7 +7913,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(bajra["destinationId"])
                         destination_rake.append(bajra["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(bajra["virtualCode"])
                         break
                 if not found_state:
                     for bajra in bajra_dest_inline1:
@@ -7994,9 +7993,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_bajra1["SourceRailHead"] = From
+            df_bajra1["SourceRailHead"] = sourceRH 
             df_bajra1["SourceState"] = From_state
-            df_bajra1["DestinationRailHead"] = To
+            df_bajra1["DestinationRailHead"] = destinationRH 
             df_bajra1["DestinationState"] = To_state
             df_bajra1["Commodity"] = commodity
             df_bajra1["Rakes"] = values
@@ -8009,19 +8008,18 @@ def Daily_Planner():
             df_bajra1["destinationId"] = destinationId
             df_bajra1["SourceRakeType"] = source_rake
             df_bajra1["DestinationRakeType"] = destination_rake
-            df_bajra1["sourceRH"] = sourceRH
-            df_bajra1["destinationRH"] = destinationRH
+            df_bajra1["sourceRH"] = From
+            df_bajra1["destinationRH"] = To
             
             for i in dest_bajra_inline1.keys():
                 for j in range(len(df_bajra1["DestinationRailHead"])):
-                    if (i == df_bajra1.iloc[j]["DestinationRailHead"] or dest_bajra_inline1[i] == df_bajra1.iloc[j]["DestinationRailHead"]):
-                        df_bajra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_bajra_inline1[i])
+                    if (i.split("_")[0] == df_bajra1.iloc[j]["DestinationRailHead"] or dest_bajra_inline1[i].split("_")[0] == df_bajra1.iloc[j]["DestinationRailHead"]):
+                        df_bajra1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_bajra_inline1[i].split("_")[0])
 
             for i in source_bajra_inline1.keys():
                 for j in range(len(df_bajra1["SourceRailHead"])):
-                    if (i == df_bajra1.iloc[j]["SourceRailHead"] or source_bajra_inline1[i] == df_bajra1.iloc[j]["SourceRailHead"]):
-                        df_bajra1.loc[j, 'SourceRailHead'] = (i + '+' + source_bajra_inline1[i])
-
+                    if (i.split("_")[0] == df_bajra1.iloc[j]["SourceRailHead"] or source_bajra_inline1[i].split("_")[0] == df_bajra1.iloc[j]["SourceRailHead"]):
+                        df_bajra1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_bajra_inline1[i].split("_")[0])
 
             df_maize = pd.DataFrame()
             From = []
@@ -8058,7 +8056,7 @@ def Daily_Planner():
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(maize["virtualCode"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline:
@@ -8067,7 +8065,7 @@ def Daily_Planner():
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(maize["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8076,7 +8074,7 @@ def Daily_Planner():
                         To_state.append(maize["origin_state"])
                         destinationId.append(maize["destinationId"])
                         destination_rake.append(maize["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(maize["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -8157,9 +8155,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_maize["SourceRailHead"] = From
+            df_maize["SourceRailHead"] = sourceRH 
             df_maize["SourceState"] = From_state
-            df_maize["DestinationRailHead"] = To
+            df_maize["DestinationRailHead"] = destinationRH
             df_maize["DestinationState"] = To_state
             df_maize["Commodity"] = commodity
             df_maize["Rakes"] = values
@@ -8172,18 +8170,18 @@ def Daily_Planner():
             df_maize["destinationId"] = destinationId
             df_maize["SourceRakeType"] = source_rake
             df_maize["DestinationRakeType"] = destination_rake
-            df_maize["sourceRH"] = sourceRH
-            df_maize["destinationRH"] = destinationRH
+            df_maize["sourceRH"] = From
+            df_maize["destinationRH"] = To 
             
             for i in dest_maize_inline.keys():
                 for j in range(len(df_maize["DestinationRailHead"])):
-                    if (i == df_maize.iloc[j]["DestinationRailHead"] or dest_maize_inline[i] == df_maize.iloc[j]["DestinationRailHead"]):
-                        df_maize.loc[j, 'DestinationRailHead'] = (i + '+' + dest_maize_inline[i])
+                    if (i.split("_")[0] == df_maize.iloc[j]["DestinationRailHead"] or dest_maize_inline[i].split("_")[0] == df_maize.iloc[j]["DestinationRailHead"]):
+                        df_maize.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_maize_inline[i].split("_")[0])
 
             for i in source_maize_inline.keys():
                 for j in range(len(df_maize["SourceRailHead"])):
-                    if (i == df_maize.iloc[j]["SourceRailHead"] or source_maize_inline[i] == df_maize.iloc[j]["SourceRailHead"]):
-                        df_maize.loc[j, 'SourceRailHead'] = (i + '+' + source_maize_inline[i])
+                    if (i.split("_")[0] == df_maize.iloc[j]["SourceRailHead"] or source_maize_inline[i].split("_")[0] == df_maize.iloc[j]["SourceRailHead"]):
+                        df_maize.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_maize_inline[i].split("_")[0])
             
             df_maize1 = pd.DataFrame()
             From = []
@@ -8220,7 +8218,7 @@ def Daily_Planner():
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(maize["virtualCode"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline1:
@@ -8229,7 +8227,7 @@ def Daily_Planner():
                         From_division.append(maize["sourceDivision"] if "sourceDivision" in maize else "")
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(maize["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8238,7 +8236,7 @@ def Daily_Planner():
                         To_state.append(maize["origin_state"])
                         destinationId.append(maize["destinationId"])
                         destination_rake.append(maize["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(maize["virtualCode"])
                         found_state = True
                         break
                 if not found_state:
@@ -8319,9 +8317,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_maize1["SourceRailHead"] = From
+            df_maize1["SourceRailHead"] = sourceRH 
             df_maize1["SourceState"] = From_state
-            df_maize1["DestinationRailHead"] = To
+            df_maize1["DestinationRailHead"] = destinationRH
             df_maize1["DestinationState"] = To_state
             df_maize1["Commodity"] = commodity
             df_maize1["Rakes"] = values
@@ -8334,18 +8332,18 @@ def Daily_Planner():
             df_maize1["destinationId"] = destinationId
             df_maize1["SourceRakeType"] = source_rake
             df_maize1["DestinationRakeType"] = destination_rake
-            df_maize1["sourceRH"] = sourceRH
-            df_maize1["destinationRH"] = destinationRH
+            df_maize1["sourceRH"] = From
+            df_maize1["destinationRH"] = To
             
             for i in dest_maize_inline1.keys():
                 for j in range(len(df_maize1["DestinationRailHead"])):
-                    if (i == df_maize1.iloc[j]["DestinationRailHead"] or dest_maize_inline1[i] == df_maize1.iloc[j]["DestinationRailHead"]):
-                        df_maize1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_maize_inline1[i])
+                    if (i.split("_")[0] == df_maize1.iloc[j]["DestinationRailHead"] or dest_maize_inline1[i].split("_")[0] == df_maize1.iloc[j]["DestinationRailHead"]):
+                        df_maize1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_maize_inline1[i].split("_")[0])
 
             for i in source_maize_inline1.keys():
                 for j in range(len(df_maize1["SourceRailHead"])):
-                    if (i == df_maize1.iloc[j]["SourceRailHead"] or source_maize_inline1[i] == df_maize1.iloc[j]["SourceRailHead"]):
-                        df_maize1.loc[j, 'SourceRailHead'] = (i + '+' + source_maize_inline1[i])
+                    if (i.split("_")[0] == df_maize1.iloc[j]["SourceRailHead"] or source_maize_inline1[i].split("_")[0] == df_maize1.iloc[j]["SourceRailHead"]):
+                        df_maize1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_maize_inline1[i].split("_")[0])
 
             df_misc1 = pd.DataFrame()
             From = []
@@ -8382,7 +8380,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline:
@@ -8391,7 +8389,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8401,7 +8399,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc1["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc1_dest_inline:
@@ -8481,9 +8479,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc1["SourceRailHead"] = From
+            df_misc1["SourceRailHead"] = sourceRH 
             df_misc1["SourceState"] = From_state
-            df_misc1["DestinationRailHead"] = To
+            df_misc1["DestinationRailHead"] = destinationRH 
             df_misc1["DestinationState"] = To_state
             df_misc1["Commodity"] = commodity
             df_misc1["Rakes"] = values
@@ -8496,18 +8494,18 @@ def Daily_Planner():
             df_misc1["destinationId"] = destinationId
             df_misc1["SourceRakeType"] = source_rake
             df_misc1["DestinationRakeType"] = destination_rake
-            df_misc1["sourceRH"] = sourceRH
-            df_misc1["destinationRH"] = destinationRH
+            df_misc1["sourceRH"] = From
+            df_misc1["destinationRH"] = To
             
             for i in dest_misc1_inline.keys():
                 for j in range(len(df_misc1["DestinationRailHead"])):
-                    if (i == df_misc1.iloc[j]["DestinationRailHead"] or dest_misc1_inline[i] == df_misc1.iloc[j]["DestinationRailHead"]):
-                        df_misc1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc1_inline[i])
+                    if (i.split("_")[0] == df_misc1.iloc[j]["DestinationRailHead"] or dest_misc1_inline[i].split("_")[0] == df_misc1.iloc[j]["DestinationRailHead"]):
+                        df_misc1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc1_inline[i].split("_")[0])
 
             for i in source_misc1_inline.keys():
                 for j in range(len(df_misc1["SourceRailHead"])):
-                    if (i == df_misc1.iloc[j]["SourceRailHead"] or source_misc1_inline[i] == df_misc1.iloc[j]["SourceRailHead"]):
-                        df_misc1.loc[j, 'SourceRailHead'] = (i + '+' + source_misc1_inline[i])
+                    if (i.split("_")[0] == df_misc1.iloc[j]["SourceRailHead"] or source_misc1_inline[i].split("_")[0] == df_misc1.iloc[j]["SourceRailHead"]):
+                        df_misc1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc1_inline[i].split("_")[0])
 
             df_misc11 = pd.DataFrame()
             From = []
@@ -8544,7 +8542,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline1:
@@ -8553,7 +8551,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8563,7 +8561,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc1["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc1_dest_inline1:
@@ -8643,9 +8641,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc11["SourceRailHead"] = From
+            df_misc11["SourceRailHead"] = sourceRH 
             df_misc11["SourceState"] = From_state
-            df_misc11["DestinationRailHead"] = To
+            df_misc11["DestinationRailHead"] =  destinationRH 
             df_misc11["DestinationState"] = To_state
             df_misc11["Commodity"] = commodity
             df_misc11["Rakes"] = values
@@ -8658,18 +8656,18 @@ def Daily_Planner():
             df_misc11["destinationId"] = destinationId
             df_misc11["SourceRakeType"] = source_rake
             df_misc11["DestinationRakeType"] = destination_rake
-            df_misc11["sourceRH"] = sourceRH
-            df_misc11["destinationRH"] = destinationRH
+            df_misc11["sourceRH"] = From
+            df_misc11["destinationRH"] = To
             
             for i in dest_misc1_inline1.keys():
                 for j in range(len(df_misc11["DestinationRailHead"])):
-                    if (i == df_misc11.iloc[j]["DestinationRailHead"] or dest_misc1_inline1[i] == df_misc11.iloc[j]["DestinationRailHead"]):
-                        df_misc11.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc1_inline1[i])
+                    if (i.split("_")[0] == df_misc11.iloc[j]["DestinationRailHead"] or dest_misc1_inline1[i].split("_")[0] == df_misc11.iloc[j]["DestinationRailHead"]):
+                        df_misc11.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc1_inline1[i].split("_")[0])
 
             for i in source_misc1_inline1.keys():
                 for j in range(len(df_misc11["SourceRailHead"])):
-                    if (i == df_misc11.iloc[j]["SourceRailHead"] or source_misc1_inline1[i] == df_misc11.iloc[j]["SourceRailHead"]):
-                        df_misc11.loc[j, 'SourceRailHead'] = (i + '+' + source_misc1_inline1[i])
+                    if (i.split("_")[0] == df_misc11.iloc[j]["SourceRailHead"] or source_misc1_inline1[i].split("_")[0] == df_misc11.iloc[j]["SourceRailHead"]):
+                        df_misc11.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc1_inline1[i].split("_")[0])
 
             df_misc2 = pd.DataFrame()
             From = []
@@ -8707,7 +8705,7 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc2["virtualCode"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline:
@@ -8717,7 +8715,7 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc2["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8727,7 +8725,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc2["destinationId"])
                         destination_rake.append(misc2["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc2["virtualCode"])
                         break
                 if not found_state:
                     for misc2 in misc2_dest_inline:
@@ -8807,9 +8805,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc2["SourceRailHead"] = From
+            df_misc2["SourceRailHead"] = sourceRH 
             df_misc2["SourceState"] = From_state
-            df_misc2["DestinationRailHead"] = To
+            df_misc2["DestinationRailHead"] = destinationRH 
             df_misc2["DestinationState"] = To_state
             df_misc2["Commodity"] = commodity
             df_misc2["Rakes"] = values
@@ -8822,18 +8820,18 @@ def Daily_Planner():
             df_misc2["destinationId"] = destinationId
             df_misc2["SourceRakeType"] = source_rake
             df_misc2["DestinationRakeType"] = destination_rake
-            df_misc2["sourceRH"] = sourceRH
-            df_misc2["destinationRH"] = destinationRH
+            df_misc2["sourceRH"] = From
+            df_misc2["destinationRH"] = To
             
             for i in dest_misc2_inline.keys():
                 for j in range(len(df_misc2["DestinationRailHead"])):
-                    if (i == df_misc2.iloc[j]["DestinationRailHead"] or dest_misc2_inline[i] == df_misc2.iloc[j]["DestinationRailHead"]):
-                        df_misc2.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc2_inline[i])
+                    if (i.split("_")[0] == df_misc2.iloc[j]["DestinationRailHead"] or dest_misc2_inline[i].split("_")[0] == df_misc2.iloc[j]["DestinationRailHead"]):
+                        df_misc2.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc2_inline[i].split("_")[0])
 
             for i in source_misc2_inline.keys():
                 for j in range(len(df_misc2["SourceRailHead"])):
-                    if (i == df_misc2.iloc[j]["SourceRailHead"] or source_misc2_inline[i] == df_misc2.iloc[j]["SourceRailHead"]):
-                        df_misc2.loc[j, 'SourceRailHead'] = (i + '+' + source_misc2_inline[i])
+                    if (i.split("_")[0] == df_misc2.iloc[j]["SourceRailHead"] or source_misc2_inline[i].split("_")[0] == df_misc2.iloc[j]["SourceRailHead"]):
+                        df_misc2.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc2_inline[i].split("_")[0])
             
             df_misc21 = pd.DataFrame()
             From = []
@@ -8871,7 +8869,7 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc2["virtualCode"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline1:
@@ -8881,7 +8879,7 @@ def Daily_Planner():
                         From_division.append(misc2["sourceDivision"] if "sourceDivision" in misc2 else "")
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc2["virtualCode"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8891,7 +8889,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc2["destinationId"])
                         destination_rake.append(misc2["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc2["virtualCode"])
                         break
                 if not found_state:
                     for misc2 in misc2_dest_inline1:
@@ -8971,9 +8969,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc21["SourceRailHead"] = From
+            df_misc21["SourceRailHead"] = sourceRH 
             df_misc21["SourceState"] = From_state
-            df_misc21["DestinationRailHead"] = To
+            df_misc21["DestinationRailHead"] = destinationRH 
             df_misc21["DestinationState"] = To_state
             df_misc21["Commodity"] = commodity
             df_misc21["Rakes"] = values
@@ -8986,18 +8984,18 @@ def Daily_Planner():
             df_misc21["destinationId"] = destinationId
             df_misc21["SourceRakeType"] = source_rake
             df_misc21["DestinationRakeType"] = destination_rake
-            df_misc21["sourceRH"] = sourceRH
-            df_misc21["destinationRH"] = destinationRH
+            df_misc21["sourceRH"] = From
+            df_misc21["destinationRH"] = To
             
             for i in dest_misc2_inline1.keys():
                 for j in range(len(df_misc21["DestinationRailHead"])):
-                    if (i == df_misc21.iloc[j]["DestinationRailHead"] or dest_misc2_inline1[i] == df_misc21.iloc[j]["DestinationRailHead"]):
-                        df_misc21.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc2_inline1[i])
+                    if (i.split("_")[0] == df_misc21.iloc[j]["DestinationRailHead"] or dest_misc2_inline1[i].split("_")[0] == df_misc21.iloc[j]["DestinationRailHead"]):
+                        df_misc21.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc2_inline1[i].split("_")[0])
 
             for i in source_misc2_inline1.keys():
                 for j in range(len(df_misc21["SourceRailHead"])):
-                    if (i == df_misc21.iloc[j]["SourceRailHead"] or source_misc2_inline1[i] == df_misc21.iloc[j]["SourceRailHead"]):
-                        df_misc21.loc[j, 'SourceRailHead'] = (i + '+' + source_misc2_inline1[i])
+                    if (i.split("_")[0] == df_misc21.iloc[j]["SourceRailHead"] or source_misc2_inline1[i].split("_")[0] == df_misc21.iloc[j]["SourceRailHead"]):
+                        df_misc21.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc2_inline1[i].split("_")[0])
 
             df_wheaturs = pd.DataFrame()
             From = []
@@ -9033,7 +9031,7 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
-                        source_rake.append(maize["rake"])
+                        source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
 
             for i in range(len(From)):
@@ -9042,7 +9040,7 @@ def Daily_Planner():
                         From_state.append(wheat["origin_state"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         sourceId.append(wheat["sourceId"])
-                        source_rake.append(maize["rake"])
+                        source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
             
             for i in range(len(To)):
@@ -9133,9 +9131,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wheaturs["SourceRailHead"] = From
+            df_wheaturs["SourceRailHead"] = sourceRH 
             df_wheaturs["SourceState"] = From_state
-            df_wheaturs["DestinationRailHead"] = To
+            df_wheaturs["DestinationRailHead"] = destinationRH
             df_wheaturs["DestinationState"] = To_state
             df_wheaturs["Commodity"] = commodity
             df_wheaturs["Rakes"] = values
@@ -9148,18 +9146,18 @@ def Daily_Planner():
             df_wheaturs["destinationId"] = destinationId
             df_wheaturs["SourceRakeType"] = source_rake
             df_wheaturs["DestinationRakeType"] = destination_rake
-            df_wheaturs["sourceRH"] = sourceRH
-            df_wheaturs["destinationRH"] = destinationRH
+            df_wheaturs["sourceRH"] = From
+            df_wheaturs["destinationRH"] = To
             
             for i in dest_wheaturs_inline.keys():
                 for j in range(len(df_wheaturs["DestinationRailHead"])):
-                    if (i == df_wheaturs.iloc[j]["DestinationRailHead"] or dest_wheaturs_inline[i] == df_wheaturs.iloc[j]["DestinationRailHead"]):
-                        df_wheaturs.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheaturs_inline[i])
+                    if (i.split("_")[0] == df_wheaturs.iloc[j]["DestinationRailHead"] or dest_wheaturs_inline[i].split("_")[0] == df_wheaturs.iloc[j]["DestinationRailHead"]):
+                        df_wheaturs.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheaturs_inline[i].split("_")[0])
 
             for i in source_wheaturs_inline.keys():
                 for j in range(len(df_wheaturs["SourceRailHead"])):
-                    if (i == df_wheaturs.iloc[j]["SourceRailHead"] or source_wheaturs_inline[i] == df_wheaturs.iloc[j]["SourceRailHead"]):
-                        df_wheaturs.loc[j, 'SourceRailHead'] = (i + '+' + source_wheaturs_inline[i])
+                    if (i.split("_")[0] == df_wheaturs.iloc[j]["SourceRailHead"] or source_wheaturs_inline[i].split("_")[0] == df_wheaturs.iloc[j]["SourceRailHead"]):
+                        df_wheaturs.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheaturs_inline[i].split("_")[0])
             
             df_wheaturs1 = pd.DataFrame()
             From = []
@@ -9295,9 +9293,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wheaturs1["SourceRailHead"] = From
+            df_wheaturs1["SourceRailHead"] = sourceRH 
             df_wheaturs1["SourceState"] = From_state
-            df_wheaturs1["DestinationRailHead"] = To
+            df_wheaturs1["DestinationRailHead"] = destinationRH 
             df_wheaturs1["DestinationState"] = To_state
             df_wheaturs1["Commodity"] = commodity
             df_wheaturs1["Rakes"] = values
@@ -9310,18 +9308,18 @@ def Daily_Planner():
             df_wheaturs1["destinationId"] = destinationId
             df_wheaturs1["SourceRakeType"] = source_rake
             df_wheaturs1["DestinationRakeType"] = destination_rake
-            df_wheaturs1["sourceRH"] = sourceRH
-            df_wheaturs1["destinationRH"] = destinationRH
+            df_wheaturs1["sourceRH"] = From
+            df_wheaturs1["destinationRH"] = To
             
             for i in dest_wheaturs_inline1.keys():
                 for j in range(len(df_wheaturs1["DestinationRailHead"])):
-                    if (i == df_wheaturs1.iloc[j]["DestinationRailHead"] or dest_wheaturs_inline1[i] == df_wheaturs.iloc[j]["DestinationRailHead"]):
-                        df_wheaturs1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheaturs_inline1[i])
+                    if (i.split("_")[0] == df_wheaturs1.iloc[j]["DestinationRailHead"] or dest_wheaturs_inline1[i].split("_")[0] == df_wheaturs.iloc[j]["DestinationRailHead"]):
+                        df_wheaturs1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheaturs_inline1[i].split("_")[0])
 
             for i in source_wheaturs_inline1.keys():
                 for j in range(len(df_wheaturs1["SourceRailHead"])):
-                    if (i == df_wheaturs1.iloc[j]["SourceRailHead"] or source_wheaturs_inline1[i] == df_wheaturs.iloc[j]["SourceRailHead"]):
-                        df_wheaturs1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheaturs_inline1[i])
+                    if (i.split("_")[0] == df_wheaturs1.iloc[j]["SourceRailHead"] or source_wheaturs_inline1[i].split("_")[0] == df_wheaturs.iloc[j]["SourceRailHead"]):
+                        df_wheaturs1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheaturs_inline1[i].split("_")[0])
 
             df_wheatfaq = pd.DataFrame()
             From = []
@@ -9457,9 +9455,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wheatfaq["SourceRailHead"] = From
+            df_wheatfaq["SourceRailHead"] = sourceRH 
             df_wheatfaq["SourceState"] = From_state
-            df_wheatfaq["DestinationRailHead"] = To
+            df_wheatfaq["DestinationRailHead"] = destinationRH
             df_wheatfaq["DestinationState"] = To_state
             df_wheatfaq["Commodity"] = commodity
             df_wheatfaq["Rakes"] = values
@@ -9472,18 +9470,18 @@ def Daily_Planner():
             df_wheatfaq["destinationId"] = destinationId
             df_wheatfaq["SourceRakeType"] = source_rake
             df_wheatfaq["DestinationRakeType"] = destination_rake
-            df_wheatfaq["sourceRH"] = sourceRH
-            df_wheatfaq["destinationRH"] = destinationRH
+            df_wheatfaq["sourceRH"] = From
+            df_wheatfaq["destinationRH"] = To
             
             for i in dest_wheatfaq_inline.keys():
                 for j in range(len(df_wheatfaq["DestinationRailHead"])):
-                    if (i == df_wheatfaq.iloc[j]["DestinationRailHead"] or dest_wheatfaq_inline[i] == df_wheatfaq.iloc[j]["DestinationRailHead"]):
-                        df_wheatfaq.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheatfaq_inline[i])
+                    if (i.split("_")[0] == df_wheatfaq.iloc[j]["DestinationRailHead"] or dest_wheatfaq_inline[i].split("_")[0] == df_wheatfaq.iloc[j]["DestinationRailHead"]):
+                        df_wheatfaq.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheatfaq_inline[i].split("_")[0])
 
             for i in source_wheatfaq_inline.keys():
                 for j in range(len(df_wheatfaq["SourceRailHead"])):
-                    if (i == df_wheatfaq.iloc[j]["SourceRailHead"] or source_wheatfaq_inline[i] == df_wheatfaq.iloc[j]["SourceRailHead"]):
-                        df_wheatfaq.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatfaq_inline[i])
+                    if (i.split("_")[0] == df_wheatfaq.iloc[j]["SourceRailHead"] or source_wheatfaq_inline[i].split("_")[0] == df_wheatfaq.iloc[j]["SourceRailHead"]):
+                        df_wheatfaq.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheatfaq_inline[i].split("_")[0])
             
             df_wheatfaq1 = pd.DataFrame()
             From = []
@@ -9619,9 +9617,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wheatfaq1["SourceRailHead"] = From
+            df_wheatfaq1["SourceRailHead"] = sourceRH
             df_wheatfaq1["SourceState"] = From_state
-            df_wheatfaq1["DestinationRailHead"] = To
+            df_wheatfaq1["DestinationRailHead"] = destinationRH
             df_wheatfaq1["DestinationState"] = To_state
             df_wheatfaq1["Commodity"] = commodity
             df_wheatfaq1["Rakes"] = values
@@ -9634,18 +9632,18 @@ def Daily_Planner():
             df_wheatfaq1["destinationId"] = destinationId
             df_wheatfaq1["SourceRakeType"] = source_rake
             df_wheatfaq1["DestinationRakeType"] = destination_rake
-            df_wheatfaq1["sourceRH"] = sourceRH
-            df_wheatfaq1["destinationRH"] = destinationRH
+            df_wheatfaq1["sourceRH"] = From
+            df_wheatfaq1["destinationRH"] = To
             
             for i in dest_wheatfaq_inline1.keys():
                 for j in range(len(df_wheatfaq1["DestinationRailHead"])):
-                    if (i == df_wheatfaq1.iloc[j]["DestinationRailHead"] or dest_wheatfaq_inline1[i] == df_wheatfaq1.iloc[j]["DestinationRailHead"]):
-                        df_wheatfaq1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheatfaq_inline1[i])
+                    if (i.split("_")[0] == df_wheatfaq1.iloc[j]["DestinationRailHead"] or dest_wheatfaq_inline1[i].split("_")[0] == df_wheatfaq1.iloc[j]["DestinationRailHead"]):
+                        df_wheatfaq1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheatfaq_inline1[i].split("_")[0])
 
             for i in source_wheatfaq_inline1.keys():
                 for j in range(len(df_wheatfaq1["SourceRailHead"])):
-                    if (i == df_wheatfaq1.iloc[j]["SourceRailHead"] or source_wheatfaq_inline1[i] == df_wheatfaq1.iloc[j]["SourceRailHead"]):
-                        df_wheatfaq1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatfaq_inline1[i])
+                    if (i.split("_")[0] == df_wheatfaq1.iloc[j]["SourceRailHead"] or source_wheatfaq_inline1[i].split("_")[0] == df_wheatfaq1.iloc[j]["SourceRailHead"]):
+                        df_wheatfaq1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheatfaq_inline1[i].split("_")[0])
 
             df_wheatrra = pd.DataFrame()
             From = []
@@ -9781,9 +9779,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wheatrra["SourceRailHead"] = From
+            df_wheatrra["SourceRailHead"] = sourceRH
             df_wheatrra["SourceState"] = From_state
-            df_wheatrra["DestinationRailHead"] = To
+            df_wheatrra["DestinationRailHead"] = destinationRH
             df_wheatrra["DestinationState"] = To_state
             df_wheatrra["Commodity"] = commodity
             df_wheatrra["Rakes"] = values
@@ -9796,18 +9794,18 @@ def Daily_Planner():
             df_wheatrra["destinationId"] = destinationId
             df_wheatrra["SourceRakeType"] = source_rake
             df_wheatrra["DestinationRakeType"] = destination_rake
-            df_wheatrra["sourceRH"] = sourceRH
-            df_wheatrra["destinationRH"] = destinationRH
+            df_wheatrra["sourceRH"] = From
+            df_wheatrra["destinationRH"] = To
             
             for i in dest_wheatrra_inline.keys():
                 for j in range(len(df_wheatrra["DestinationRailHead"])):
-                    if (i == df_wheatrra.iloc[j]["DestinationRailHead"] or dest_wheatrra_inline[i] == df_wheatrra.iloc[j]["DestinationRailHead"]):
-                        df_wheatrra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheatrra_inline[i])
+                    if (i.split("_")[0] == df_wheatrra.iloc[j]["DestinationRailHead"] or dest_wheatrra_inline[i].split("_")[0] == df_wheatrra.iloc[j]["DestinationRailHead"]):
+                        df_wheatrra.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheatrra_inline[i].split("_")[0])
 
             for i in source_wheatrra_inline.keys():
                 for j in range(len(df_wheatrra["SourceRailHead"])):
-                    if (i == df_wheatrra.iloc[j]["SourceRailHead"] or source_wheatrra_inline[i] == df_wheatrra.iloc[j]["SourceRailHead"]):
-                        df_wheatrra.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatrra_inline[i])
+                    if (i.split("_")[0] == df_wheatrra.iloc[j]["SourceRailHead"] or source_wheatrra_inline[i].split("_")[0] == df_wheatrra.iloc[j]["SourceRailHead"]):
+                        df_wheatrra.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheatrra_inline[i].split("_")[0])
             
             df_wheatrra1 = pd.DataFrame()
             From = []
@@ -9943,9 +9941,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_wheatrra1["SourceRailHead"] = From
+            df_wheatrra1["SourceRailHead"] = sourceRH
             df_wheatrra1["SourceState"] = From_state
-            df_wheatrra1["DestinationRailHead"] = To
+            df_wheatrra1["DestinationRailHead"] = destinationRH 
             df_wheatrra1["DestinationState"] = To_state
             df_wheatrra1["Commodity"] = commodity
             df_wheatrra1["Rakes"] = values
@@ -9958,19 +9956,19 @@ def Daily_Planner():
             df_wheatrra1["destinationId"] = destinationId
             df_wheatrra1["SourceRakeType"] = source_rake
             df_wheatrra1["DestinationRakeType"] = destination_rake
-            df_wheatrra1["sourceRH"] = sourceRH
-            df_wheatrra1["destinationRH"] = destinationRH
+            df_wheatrra1["sourceRH"] = From
+            df_wheatrra1["destinationRH"] = To
             
             for i in dest_wheatrra_inline1.keys():
                 for j in range(len(df_wheatrra1["DestinationRailHead"])):
-                    if (i == df_wheatrra1.iloc[j]["DestinationRailHead"] or dest_wheatrra_inline1[i] == df_wheatrra.iloc[j]["DestinationRailHead"]):
-                        df_wheatrra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_wheatrra_inline1[i])
+                    if (i.split("_")[0] == df_wheatrra1.iloc[j]["DestinationRailHead"] or dest_wheatrra_inline1[i].split("_")[0] == df_wheatrra.iloc[j]["DestinationRailHead"]):
+                        df_wheatrra1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_wheatrra_inline1[i].split("_")[0])
 
             for i in source_wheatrra_inline1.keys():
                 for j in range(len(df_wheatrra1["SourceRailHead"])):
-                    if (i == df_wheatrra1.iloc[j]["SourceRailHead"] or source_wheatrra_inline1[i] == df_wheatrra1.iloc[j]["SourceRailHead"]):
-                        df_wheatrra1.loc[j, 'SourceRailHead'] = (i + '+' + source_wheatrra_inline1[i])
-# pending of adding 58 wagon wise commodity
+                    if (i.split("_")[0] == df_wheatrra1.iloc[j]["SourceRailHead"] or source_wheatrra_inline1[i].split("_")[0] == df_wheatrra1.iloc[j]["SourceRailHead"]):
+                        df_wheatrra1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheatrra_inline1[i].split("_")[0])
+
             df_frk_rra = pd.DataFrame()
             From = []
             To = []
@@ -10105,9 +10103,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frk_rra["SourceRailHead"] = From
+            df_frk_rra["SourceRailHead"] = sourceRH
             df_frk_rra["SourceState"] = From_state
-            df_frk_rra["DestinationRailHead"] = To
+            df_frk_rra["DestinationRailHead"] = destinationRH
             df_frk_rra["DestinationState"] = To_state
             df_frk_rra["Commodity"] = commodity
             df_frk_rra["Rakes"] = values
@@ -10120,18 +10118,18 @@ def Daily_Planner():
             df_frk_rra["destinationId"] = destinationId
             df_frk_rra["SourceRakeType"] = source_rake
             df_frk_rra["DestinationRakeType"] = destination_rake
-            df_frk_rra["sourceRH"] = sourceRH
-            df_frk_rra["destinationRH"] = destinationRH
+            df_frk_rra["sourceRH"] = From 
+            df_frk_rra["destinationRH"] = To 
             
             for i in dest_frk_rra_inline.keys():
                 for j in range(len(df_frk_rra["DestinationRailHead"])):
-                    if (i == df_frk_rra.iloc[j]["DestinationRailHead"] or dest_frk_rra_inline[i] == df_frk_rra.iloc[j]["DestinationRailHead"]):
-                        df_frk_rra.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frk_rra_inline[i])
+                    if (i.split("_")[0] == df_frk_rra.iloc[j]["DestinationRailHead"] or dest_frk_rra_inline[i].split("_")[0] == df_frk_rra.iloc[j]["DestinationRailHead"]):
+                        df_frk_rra.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frk_rra_inline[i].split("_")[0])
 
             for i in source_frk_rra_inline.keys():
                 for j in range(len(df_frk_rra["SourceRailHead"])):
-                    if (i == df_frk_rra.iloc[j]["SourceRailHead"] or source_frk_rra_inline[i] == df_frk_rra.iloc[j]["SourceRailHead"]):
-                        df_frk_rra.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_rra_inline[i])
+                    if (i.split("_")[0] == df_frk_rra.iloc[j]["SourceRailHead"] or source_frk_rra_inline[i].split("_")[0] == df_frk_rra.iloc[j]["SourceRailHead"]):
+                        df_frk_rra.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frk_rra_inline[i].split("_")[0])
             
             df_frk_rra1 = pd.DataFrame()
             From = []
@@ -10267,9 +10265,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frk_rra1["SourceRailHead"] = From
+            df_frk_rra1["SourceRailHead"] = sourceRH
             df_frk_rra1["SourceState"] = From_state
-            df_frk_rra1["DestinationRailHead"] = To
+            df_frk_rra1["DestinationRailHead"] = destinationRH
             df_frk_rra1["DestinationState"] = To_state
             df_frk_rra1["Commodity"] = commodity
             df_frk_rra1["Rakes"] = values
@@ -10282,18 +10280,18 @@ def Daily_Planner():
             df_frk_rra1["destinationId"] = destinationId
             df_frk_rra1["SourceRakeType"] = source_rake
             df_frk_rra1["DestinationRakeType"] = destination_rake
-            df_frk_rra1["sourceRH"] = sourceRH
-            df_frk_rra1["destinationRH"] = destinationRH
+            df_frk_rra1["sourceRH"] = From 
+            df_frk_rra1["destinationRH"] = To
             
             for i in dest_frk_rra_inline1.keys():
                 for j in range(len(df_frk_rra1["DestinationRailHead"])):
-                    if (i == df_frk_rra1.iloc[j]["DestinationRailHead"] or dest_frk_rra_inline1[i] == df_frk_rra1.iloc[j]["DestinationRailHead"]):
-                        df_frk_rra1.loc[j, 'DestinationRailHead'] = (i + '+' + dest_frk_rra_inline1[i])
+                    if (i.split("_")[0] == df_frk_rra1.iloc[j]["DestinationRailHead"] or dest_frk_rra_inline1[i].split("_")[0] == df_frk_rra1.iloc[j]["DestinationRailHead"]):
+                        df_frk_rra1.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_frk_rra_inline1[i].split("_")[0])
 
             for i in source_frk_rra_inline1.keys():
                 for j in range(len(df_frk_rra1["SourceRailHead"])):
-                    if (i == df_frk_rra1.iloc[j]["SourceRailHead"] or source_frk_rra_inline1[i] == df_frk_rra1.iloc[j]["SourceRailHead"]):
-                        df_frk_rra1.loc[j, 'SourceRailHead'] = (i + '+' + source_frk_rra_inline1[i])
+                    if (i.split("_")[0] == df_frk_rra1.iloc[j]["SourceRailHead"] or source_frk_rra_inline1[i].split("_")[0] == df_frk_rra1.iloc[j]["SourceRailHead"]):
+                        df_frk_rra1.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frk_rra_inline1[i].split("_")[0])
 
             df_misc3 = pd.DataFrame()
             From = []
@@ -10330,7 +10328,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc3_origin_inline:
@@ -10339,7 +10337,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10349,7 +10347,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc1["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc3_dest_inline:
@@ -10429,9 +10427,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc3["SourceRailHead"] = From
+            df_misc3["SourceRailHead"] = sourceRH
             df_misc3["SourceState"] = From_state
-            df_misc3["DestinationRailHead"] = To
+            df_misc3["DestinationRailHead"] = destinationRH
             df_misc3["DestinationState"] = To_state
             df_misc3["Commodity"] = commodity
             df_misc3["Rakes"] = values
@@ -10444,18 +10442,18 @@ def Daily_Planner():
             df_misc3["destinationId"] = destinationId
             df_misc3["SourceRakeType"] = source_rake
             df_misc3["DestinationRakeType"] = destination_rake
-            df_misc3["sourceRH"] = sourceRH
-            df_misc3["destinationRH"] = destinationRH
+            df_misc3["sourceRH"] = From 
+            df_misc3["destinationRH"] = To
             
             for i in dest_misc3_inline.keys():
                 for j in range(len(df_misc3["DestinationRailHead"])):
-                    if (i == df_misc3.iloc[j]["DestinationRailHead"] or dest_misc3_inline[i] == df_misc3.iloc[j]["DestinationRailHead"]):
-                        df_misc3.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc3_inline[i])
+                    if (i.split("_")[0] == df_misc3.iloc[j]["DestinationRailHead"] or dest_misc3_inline[i].split("_")[0] == df_misc3.iloc[j]["DestinationRailHead"]):
+                        df_misc3.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc3_inline[i].split("_")[0])
 
             for i in source_misc3_inline.keys():
                 for j in range(len(df_misc3["SourceRailHead"])):
-                    if (i == df_misc3.iloc[j]["SourceRailHead"] or source_misc3_inline[i] == df_misc3.iloc[j]["SourceRailHead"]):
-                        df_misc3.loc[j, 'SourceRailHead'] = (i + '+' + source_misc3_inline[i])
+                    if (i.split("_")[0] == df_misc3.iloc[j]["SourceRailHead"] or source_misc3_inline[i].split("_")[0] == df_misc3.iloc[j]["SourceRailHead"]):
+                        df_misc3.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc3_inline[i].split("_")[0])
             
             df_misc31 = pd.DataFrame()
             From = []
@@ -10492,7 +10490,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc3_origin_inline1:
@@ -10501,7 +10499,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10511,7 +10509,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc1["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc3_dest_inline1:
@@ -10591,9 +10589,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc31["SourceRailHead"] = From
+            df_misc31["SourceRailHead"] = sourceRH
             df_misc31["SourceState"] = From_state
-            df_misc31["DestinationRailHead"] = To
+            df_misc31["DestinationRailHead"] = destinationRH 
             df_misc31["DestinationState"] = To_state
             df_misc31["Commodity"] = commodity
             df_misc31["Rakes"] = values
@@ -10606,18 +10604,18 @@ def Daily_Planner():
             df_misc31["destinationId"] = destinationId
             df_misc31["SourceRakeType"] = source_rake
             df_misc31["DestinationRakeType"] = destination_rake
-            df_misc31["sourceRH"] = sourceRH
-            df_misc31["destinationRH"] = destinationRH
+            df_misc31["sourceRH"] = From
+            df_misc31["destinationRH"] = To
             
             for i in dest_misc3_inline1.keys():
                 for j in range(len(df_misc31["DestinationRailHead"])):
-                    if (i == df_misc31.iloc[j]["DestinationRailHead"] or dest_misc3_inline1[i] == df_misc31.iloc[j]["DestinationRailHead"]):
-                        df_misc31.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc3_inline1[i])
+                    if (i.split("_")[0] == df_misc31.iloc[j]["DestinationRailHead"] or dest_misc3_inline1[i].split("_")[0] == df_misc31.iloc[j]["DestinationRailHead"]):
+                        df_misc31.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc3_inline1[i].split("_")[0])
 
             for i in source_misc3_inline1.keys():
                 for j in range(len(df_misc31["SourceRailHead"])):
-                    if (i == df_misc31.iloc[j]["SourceRailHead"] or source_misc3_inline1[i] == df_misc31.iloc[j]["SourceRailHead"]):
-                        df_misc31.loc[j, 'SourceRailHead'] = (i + '+' + source_misc3_inline1[i])
+                    if (i.split("_")[0] == df_misc31.iloc[j]["SourceRailHead"] or source_misc3_inline1[i].split("_")[0] == df_misc31.iloc[j]["SourceRailHead"]):
+                        df_misc31.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc3_inline1[i].split("_")[0])
 
             df_misc4 = pd.DataFrame()
             From = []
@@ -10654,7 +10652,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc4_origin_inline:
@@ -10663,7 +10661,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10673,7 +10671,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc1["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc4_dest_inline:
@@ -10753,9 +10751,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc4["SourceRailHead"] = From
+            df_misc4["SourceRailHead"] = sourceRH 
             df_misc4["SourceState"] = From_state
-            df_misc4["DestinationRailHead"] = To
+            df_misc4["DestinationRailHead"] = destinationRH
             df_misc4["DestinationState"] = To_state
             df_misc4["Commodity"] = commodity
             df_misc4["Rakes"] = values
@@ -10768,18 +10766,18 @@ def Daily_Planner():
             df_misc4["destinationId"] = destinationId
             df_misc4["SourceRakeType"] = source_rake
             df_misc4["DestinationRakeType"] = destination_rake
-            df_misc4["sourceRH"] = sourceRH
-            df_misc4["destinationRH"] = destinationRH
+            df_misc4["sourceRH"] = From
+            df_misc4["destinationRH"] = To 
             
             for i in dest_misc4_inline.keys():
                 for j in range(len(df_misc4["DestinationRailHead"])):
-                    if (i == df_misc4.iloc[j]["DestinationRailHead"] or dest_misc4_inline[i] == df_misc4.iloc[j]["DestinationRailHead"]):
-                        df_misc4.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc4_inline[i])
+                    if (i.split("_")[0] == df_misc4.iloc[j]["DestinationRailHead"] or dest_misc4_inline[i].split("_")[0] == df_misc4.iloc[j]["DestinationRailHead"]):
+                        df_misc4.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc4_inline[i].split("_")[0])
 
             for i in source_misc4_inline.keys():
                 for j in range(len(df_misc4["SourceRailHead"])):
-                    if (i == df_misc4.iloc[j]["SourceRailHead"] or source_misc4_inline[i] == df_misc4.iloc[j]["SourceRailHead"]):
-                        df_misc4.loc[j, 'SourceRailHead'] = (i + '+' + source_misc4_inline[i])
+                    if (i.split("_")[0] == df_misc4.iloc[j]["SourceRailHead"] or source_misc4_inline[i].split("_")[0] == df_misc4.iloc[j]["SourceRailHead"]):
+                        df_misc4.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc4_inline[i].split("_")[0])
             
             df_misc41 = pd.DataFrame()
             From = []
@@ -10816,7 +10814,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
 
             for i in range(len(From)):
                 for misc1 in misc4_origin_inline1:
@@ -10825,7 +10823,7 @@ def Daily_Planner():
                         From_division.append(misc1["sourceDivision"] if "sourceDivision" in misc1 else "")
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(misc1["virtualCode"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10835,7 +10833,7 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(misc1["virtualCode"])
                         break
                 if not found_state:
                     for misc1 in misc4_dest_inline1:
@@ -10915,9 +10913,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_misc41["SourceRailHead"] = From
+            df_misc41["SourceRailHead"] = sourceRH
             df_misc41["SourceState"] = From_state
-            df_misc41["DestinationRailHead"] = To
+            df_misc41["DestinationRailHead"] = destinationRH
             df_misc41["DestinationState"] = To_state
             df_misc41["Commodity"] = commodity
             df_misc41["Rakes"] = values
@@ -10930,18 +10928,18 @@ def Daily_Planner():
             df_misc41["destinationId"] = destinationId
             df_misc41["SourceRakeType"] = source_rake
             df_misc41["DestinationRakeType"] = destination_rake
-            df_misc41["sourceRH"] = sourceRH
-            df_misc41["destinationRH"] = destinationRH
+            df_misc41["sourceRH"] = From
+            df_misc41["destinationRH"] = To
             
             for i in dest_misc4_inline1.keys():
                 for j in range(len(df_misc41["DestinationRailHead"])):
-                    if (i == df_misc41.iloc[j]["DestinationRailHead"] or dest_misc4_inline1[i] == df_misc41.iloc[j]["DestinationRailHead"]):
-                        df_misc41.loc[j, 'DestinationRailHead'] = (i + '+' + dest_misc4_inline1[i])
+                    if (i.split("_")[0] == df_misc41.iloc[j]["DestinationRailHead"] or dest_misc4_inline1[i].split("_")[0] == df_misc41.iloc[j]["DestinationRailHead"]):
+                        df_misc41.loc[j, 'DestinationRailHead'] = (i.split("_")[0] + '+' + dest_misc4_inline1[i].split("_")[0])
 
             for i in source_misc4_inline1.keys():
                 for j in range(len(df_misc41["SourceRailHead"])):
-                    if (i == df_misc41.iloc[j]["SourceRailHead"] or source_misc4_inline1[i] == df_misc41.iloc[j]["SourceRailHead"]):
-                        df_misc41.loc[j, 'SourceRailHead'] = (i + '+' + source_misc4_inline1[i])
+                    if (i.split("_")[0] == df_misc41.iloc[j]["SourceRailHead"] or source_misc4_inline1[i].split("_")[0] == df_misc41.iloc[j]["SourceRailHead"]):
+                        df_misc41.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc4_inline1[i].split("_")[0])
 
             data1["rra"] = df_rra
             data1["wheat"] = df_wheat
