@@ -62,19 +62,52 @@ function Daily_Planner() {
   const [Relevant_result, set_Relevant_Result] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-
-  const [riceData, setRiceData] = useState([]);
-  const [wheatData, setWheatData] = useState([]);
   const [progress, setProgress] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [coarseGrain, setCoarseGrain] = useState([]);
-  const [frk, setFrk] = useState([]);
-  const [frk_rra, setFrk_rra] = useState([]);
-  const [frk_br, setFrk_br] = useState([]);
-  const [frk_cgr, setFrk_cgr] = useState([]);
-  const [w_cgr, setw_cgr] = useState([]);
-  const [wheat_rra, setWheat_rra] = useState([]);
-  const [frkPlusRRA, setFkrPlusRRA] = useState([]);
+
+  const [riceData, setRiceData] = useState(false);
+  const [wheatData, setWheatData] = useState(false);
+  const [coarseGrain, setCoarseGrain] = useState(false);
+  const [frk, setFrk] = useState(false);
+  const [frk_rra, setFrk_rra] = useState(false);
+  const [frk_br, setFrk_br] = useState(false);
+  const [frk_cgr, setFrk_cgr] = useState(false);
+  const [w_cgr, setw_cgr] = useState(false);
+  const [wheat_rra, setWheat_rra] = useState(false);
+  const [frkPlusRRA, setFkrPlusRRA] = useState(false);
+  const [rrc, setRrc] = useState(false);
+  const [ragi, setRagi] = useState(false);
+  const [jowar, setJowar] = useState(false);
+  const [bajra, setBajra] = useState(false);
+  const [maize, setMaize] = useState(false);
+  const [wheat_urs, setWheat_urs] = useState(false);
+  const [wheat_faq, setWheat_faq] = useState(false);
+  const [misc1, setMisc1] = useState(false);
+  const [misc2, setMisc2] = useState(false);
+  const [misc3, setMisc3] = useState(false);
+  const [misc4, setMisc4] = useState(false);
+
+  const [riceData1, setRiceData1] = useState(false);
+  const [wheatData1, setWheatData1] = useState(false);
+  const [coarseGrain1, setCoarseGrain1] = useState(false);
+  const [frk1, setFrk1] = useState(false);
+  const [frk_rra1, setFrk_rra1] = useState(false);
+  const [frk_br1, setFrk_br1] = useState(false);
+  const [frk_cgr1, setFrk_cgr1] = useState(false);
+  const [w_cgr1, setw_cgr1] = useState(false);
+  const [wheat_rra1, setWheat_rra1] = useState(false);
+  const [frkPlusRRA1, setFkrPlusRRA1] = useState(false);
+  const [rrc1, setRrc1] = useState(false);
+  const [ragi1, setRagi1] = useState(false);
+  const [jowar1, setJowar1] = useState(false);
+  const [bajra1, setBajra1] = useState(false);
+  const [maize1, setMaize1] = useState(false);
+  const [wheat_urs1, setWheat_urs1] = useState(false);
+  const [wheat_faq1, setWheat_faq1] = useState(false);
+  const [misc11, setMisc11] = useState(false);
+  const [misc21, setMisc21] = useState(false);
+  const [misc31, setMisc31] = useState(false);
+  const [misc41, setMisc41] = useState(false);
 
   const [riceOriginvalue, setRiceOriginValue] = useState();
   const [wheatOriginValue, setWheatOriginValue] = useState();
@@ -170,17 +203,7 @@ function Daily_Planner() {
 
   const [excelfiledata, setExcelFileData] = useState(null);
   const [railheadData, setRailheadData] = useState();
-  const [rrc, setRrc] = useState([]);
-  const [ragi, setRagi] = useState([]);
-  const [jowar, setJowar] = useState([]);
-  const [bajra, setBajra] = useState([]);
-  const [maize, setMaize] = useState([]);
-  const [wheat_urs, setWheat_urs] = useState([]);
-  const [wheat_faq, setWheat_faq] = useState([]);
-  const [misc1, setMisc1] = useState([]);
-  const [misc2, setMisc2] = useState([]);
-  const [misc3, setMisc3] = useState([]);
-  const [misc4, setMisc4] = useState([]);
+
   const [disableAfterImport, setDisableAfterImport] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalValue, setModalValue] = useState("");
@@ -2417,6 +2440,51 @@ function Daily_Planner() {
     const frkPlusRRA = JSON.parse(Total_result?.frkPlusRRA ?? "[]");
     const misc3 = JSON.parse(Total_result?.misc3 ?? "[]");
     const misc4 = JSON.parse(Total_result?.misc4 ?? "[]");
+
+    const riceData1 = JSON.parse(Total_result?.rra_58w ?? "[]");
+    const wheatData1 = JSON.parse(Total_result?.wheat_58w ?? "[]");
+    const coarseGrainData1 = JSON.parse(Total_result?.coarse_grain_58w ?? "[]");
+    const frk_rraData1 = JSON.parse(Total_result?.frk_rra_58w ?? "[]");
+    const frk_brData1 = JSON.parse(Total_result?.frk_br_58w ?? "[]");
+    const frkData1 = JSON.parse(Total_result?.wheat_frk_58w ?? "[]");
+    const frkcgrData1 = JSON.parse(Total_result?.frkcgr_58w ?? "[]");
+    const wcgrData1 = JSON.parse(Total_result?.wcgr_58w ?? "[]");
+    const rrc1 = JSON.parse(Total_result?.rrc_58w ?? "[]");
+    const ragi1 = JSON.parse(Total_result?.ragi_58w ?? "[]");
+    const bajra1 = JSON.parse(Total_result?.bajra_58w ?? "[]");
+    const jowar1 = JSON.parse(Total_result?.jowar_58w ?? "[]");
+    const maize1 = JSON.parse(Total_result?.maize_58w ?? "[]");
+    const wheat_faq1 = JSON.parse(Total_result?.wheat_faq_58w ?? "[]");
+    const wheat_urs1 = JSON.parse(Total_result?.wheat_urs_58w ?? "[]");
+    const misc11 = JSON.parse(Total_result?.misc1_58w ?? "[]");
+    const misc21 = JSON.parse(Total_result?.misc2_58w ?? "[]");
+    const wheat_rra1 = JSON.parse(Total_result?.wheat_rra_58w ?? "[]");
+    const frkPlusRRA1 = JSON.parse(Total_result?.frkPlusRRA_58w ?? "[]");
+    const misc31 = JSON.parse(Total_result?.misc3_58w ?? "[]");
+    const misc41 = JSON.parse(Total_result?.misc4_58w ?? "[]");
+
+    setRiceData1(riceData1);
+    setWheatData1(wheatData1);
+    setCoarseGrain1(coarseGrainData1);
+    setFrk_rra1(frk_rraData1);
+    setFrk_br1(frk_brData1);
+    setFrk1(frkData1);
+    setFrk_cgr1(frkcgrData1);
+    setw_cgr1(wcgrData1);
+    setRrc1(rrc1);
+    setRagi1(ragi1);
+    setBajra1(bajra1);
+    setJowar1(jowar1);
+    setMaize1(maize1);
+    setWheat_faq1(wheat_faq1);
+    setWheat_urs1(wheat_urs1);
+    setMisc11(misc11);
+    setMisc21(misc21);
+    setWheat_rra1(wheat_rra1);
+    setFkrPlusRRA1(frkPlusRRA1);
+    setMisc31(misc31);
+    setMisc41(misc41);
+
     setRiceData(riceData);
     setWheatData(wheatData);
     setCoarseGrain(coarseGrainData);
@@ -2439,7 +2507,7 @@ function Daily_Planner() {
     setMisc3(misc3);
     setMisc4(misc4);
   };
-  console.log(wheatData);
+  
   const exportToExcel1 = () => {
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
@@ -4253,7 +4321,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {riceData !== null && riceData.length > 0 ? (
+                            {(riceData || riceData1) !== null && (riceData.length || riceData1.length) > 0 ? (
                               <div>
                                 <div>RRA</div>
                                 <table>
@@ -4319,7 +4387,18 @@ function Daily_Planner() {
                                   </thead>
                                   <tbody>
                                     {riceData.map((item, index) => (
-                                      <tr key={item["Unnamed: 0"]}>
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
+                                    {riceData1.map((item, index) => (
+                                      <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
                                         <td>{item.SourceState}</td>
@@ -4345,7 +4424,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {wheatData !== null && wheatData.length > 0 ? (
+                            {(wheatData || wheatData1) !== null && (wheatData.length || wheatData1.length) > 0 ? (
                               <div>
                                 <div>Wheat</div>
                                 <table>
@@ -4430,6 +4509,18 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {wheatData1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        {/* <td>{item.Cost}</td> */}
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -4446,7 +4537,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {coarseGrain !== null && coarseGrain.length > 0 ? (
+                            {(coarseGrain || coarseGrain1) !== null && (coarseGrain.length|| coarseGrain1.length) > 0 ? (
                               <div>
                                 <div>Coarse Grain</div>
                                 <table>
@@ -4522,6 +4613,18 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+
+                                    {coarseGrain1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -4538,7 +4641,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {frk_rra !== null && frk_rra.length > 0 ? (
+                            {(frk_rra|| frk_rra1) !== null && (frk_rra.length || frk_rra1.length) > 0 ? (
                               <div>
                                 <div>frk rra</div>
                                 <table>
@@ -4614,6 +4717,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {frk_rra1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -4630,7 +4744,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {frk_br !== null && frk_br.length > 0 ? (
+                            {(frk_br|| frk_br1) !== null && (frk_br.length || frk_br1.length) > 0 ? (
                               <div>
                                 <div>Frk Br</div>
                                 <table>
@@ -4706,6 +4820,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {frk_br1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -4722,7 +4847,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {frk !== null && frk.length > 0 ? (
+                            {(frk || frk1) !== null && (frk.length || frk1.length) > 0 ? (
                               <div>
                                 <div>Wheat+FRK</div>
                                 <table>
@@ -4798,6 +4923,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {frk1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -4814,7 +4950,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {frk_cgr !== null && frk_cgr.length > 0 ? (
+                            {(frk_cgr || frk_cgr1) !== null && (frk_cgr.length || frk_cgr1.length) > 0 ? (
                               <div>
                                 <div>frk cgr</div>
                                 <table>
@@ -4998,7 +5134,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {rrc !== null && rrc.length > 0 ? (
+                            {(rrc || rrc1) !== null && (rrc.length || rrc1.length) > 0 ? (
                               <div>
                                 <div>RRC</div>
                                 <table>
@@ -5074,6 +5210,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {rrc1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5090,7 +5237,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {ragi !== null && ragi.length > 0 ? (
+                            {(ragi|| ragi1) !== null && (ragi.length || ragi1.length) > 0 ? (
                               <div>
                                 <div>Ragi</div>
                                 <table>
@@ -5166,6 +5313,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {ragi1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5182,7 +5340,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {jowar !== null && jowar.length > 0 ? (
+                            {(jowar || jowar1) !== null && (jowar.length || jowar1.length) > 0 ? (
                               <div>
                                 <div>Jowar</div>
                                 <table>
@@ -5258,6 +5416,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {jowar1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5274,7 +5443,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {bajra !== null && bajra.length > 0 ? (
+                            {(bajra || bajra1) !== null && (bajra.length || bajra1.length) > 0 ? (
                               <div>
                                 <div>Bajra</div>
                                 <table>
@@ -5350,6 +5519,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {bajra1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5366,7 +5546,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {maize !== null && maize.length > 0 ? (
+                            {(maize || maize1) !== null && (maize.length || maize1.length) > 0 ? (
                               <div>
                                 <div>Maize</div>
                                 <table>
@@ -5442,6 +5622,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {maize1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5458,7 +5649,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {wheat_urs !== null && wheat_urs.length > 0 ? (
+                            {(wheat_urs || wheat_urs1) !== null && (wheat_urs.length || wheat_urs1.length) > 0 ? (
                               <div>
                                 <div>Wheat(URS)</div>
                                 <table>
@@ -5534,6 +5725,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {wheat_urs1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5550,7 +5752,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {wheat_faq !== null && wheat_faq.length > 0 ? (
+                            {(wheat_faq || wheat_faq1) !== null && (wheat_faq.length || wheat_faq1.length) > 0 ? (
                               <div>
                                 <div>Wheat(FAQ)</div>
                                 <table>
@@ -5626,6 +5828,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {wheat_faq1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5642,7 +5855,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {misc1 !== null && misc1.length > 0 ? (
+                            {(misc1 || misc11) !== null && (misc1.length || misc11) > 0 ? (
                               <div>
                                 <div>Misc1</div>
                                 <table>
@@ -5718,6 +5931,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {misc11.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5734,7 +5958,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {misc2 !== null && misc2.length > 0 ? (
+                            {(misc2 || misc21) !== null && (misc2.length || misc21.length) > 0 ? (
                               <div>
                                 <div>Misc2</div>
                                 <table>
@@ -5810,6 +6034,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {misc21.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5826,7 +6061,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {wheat_rra !== null && wheat_rra.length > 0 ? (
+                            {(wheat_rra || wheat_rra1) !== null && (wheat_rra.length || wheat_rra1.length) > 0 ? (
                               <div>
                                 <div>Wheat+RRA</div>
                                 <table>
@@ -5902,6 +6137,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {wheat_rra1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -5918,7 +6164,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {frkPlusRRA !== null && frkPlusRRA.length > 0 ? (
+                            {(frkPlusRRA || frkPlusRRA1) !== null && (frkPlusRRA.length || frkPlusRRA1.length) > 0 ? (
                               <div>
                                 <div>FRK+RRA</div>
                                 <table>
@@ -5994,6 +6240,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {frkPlusRRA1.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -6011,7 +6268,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {misc3 !== null && misc3.length > 0 ? (
+                            {(misc3 || misc31) !== null && (misc3.length || misc31.length) > 0 ? (
                               <div>
                                 <div>Misc3</div>
                                 <table>
@@ -6087,6 +6344,17 @@ function Daily_Planner() {
                                         <td>{item.Rakes}</td>
                                       </tr>
                                     ))}
+                                    {misc31.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
                                   </tbody>
                                 </table>
                               </div>
@@ -6104,7 +6372,7 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {misc4 !== null && misc4.length > 0 ? (
+                            {(misc4 || misc41)  !== null &&  (misc4.length > 0 || misc41.length) ? (
                               <div>
                                 <div>Misc4</div>
                                 <table>
@@ -6170,6 +6438,17 @@ function Daily_Planner() {
                                   </thead>
                                   <tbody>
                                     {misc4.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRH}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRH}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
+                                    {misc41.map((item, index) => (
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRH}</td>

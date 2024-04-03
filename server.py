@@ -4578,10 +4578,10 @@ def Daily_Planner():
 
             for i in source_rra1:
                 for j in dest_rra1:
-                    if int(x_ij_rra[(i, j)].value()) > 0:
+                    if int(x_ij_rra1[(i, j)].value()) > 0:
                         From.append(i)
                         To.append(j)
-                        values.append(x_ij_rra[(i, j)].value())
+                        values.append(x_ij_rra1[(i, j)].value())
                         commodity.append("RRA")
                         Flag.append(region)
 
@@ -4694,9 +4694,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_rra1["SourceRailHead"] = From
+            df_rra1["SourceRailHead"] = sourceRH
             df_rra1["SourceState"] = From_state_rra
-            df_rra1["DestinationRailHead"] = To
+            df_rra1["DestinationRailHead"] = destinationRH 
             df_rra1["DestinationState"] = To_state_rra
             df_rra1["Commodity"] = commodity
             # df_rra1["Cost"] = Cost
@@ -4710,8 +4710,8 @@ def Daily_Planner():
             df_rra1["destinationId"] = destinationId
             df_rra1["SourceRakeType"] = source_rake
             df_rra1["DestinationRakeType"] = destination_rake
-            df_rra1["sourceRH"] = sourceRH
-            df_rra1["destinationRH"] = destinationRH
+            df_rra1["sourceRH"] = From
+            df_rra1["destinationRH"] = To
            
             for i in dest_rra_inline1.keys():
                 for j in range(len(df_rra1["DestinationRailHead"])):
