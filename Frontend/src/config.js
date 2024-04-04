@@ -1,6 +1,6 @@
 // config.js
 const config = {
-  serverUrl: "https://fcitooltest.callippus.in/api",
+  serverUrl: "https://fcitool.callippus.in/api",
   // serverUrl: "http://localhost:5000",
 };
 
