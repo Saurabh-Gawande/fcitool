@@ -4529,9 +4529,9 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_rra["SourceRailHead"] = From
+            df_rra["SourceRailHead"] = sourceRH
             df_rra["SourceState"] = From_state_rra
-            df_rra["DestinationRailHead"] =   To
+            df_rra["DestinationRailHead"] = destinationRH 
             df_rra["DestinationState"] = To_state_rra
             df_rra["Commodity"] = commodity
             # df_rra["Cost"] = Cost
@@ -4545,8 +4545,8 @@ def Daily_Planner():
             df_rra["destinationId"] = destinationId
             df_rra["SourceRakeType"] = source_rake
             df_rra["DestinationRakeType"] = destination_rake
-            df_rra["sourceRH"] =  sourceRH
-            df_rra["destinationRH"] = destinationRH
+            df_rra["sourceRH"] =  From
+            df_rra["destinationRH"] = To 
            
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["DestinationRailHead"])):
