@@ -2507,7 +2507,7 @@ function Daily_Planner() {
     setMisc3(misc3);
     setMisc4(misc4);
   };
-  
+
   const exportToExcel1 = () => {
     if (Total_result == null) {
       window.alert("Fetching Result, Please Wait");
@@ -2649,7 +2649,7 @@ function Daily_Planner() {
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
               virtualCode: item.sourceRailHead,
-              origin_railhead: item.virtualcode,
+              origin_railhead: item.virtualCode,
               origin_state: item.sourceState,
               Value: item.value,
               Commodity: item.commodity,
@@ -2663,7 +2663,7 @@ function Daily_Planner() {
           if (data.destinationResponse) {
             const updatedDeficit = data.destinationResponse.map((item) => ({
               virtualCode: item.destinationRailHead,
-              origin_railhead: item.virtualcode,
+              origin_railhead: item.virtualCode,
               origin_state: item.destinationState,
               Value: item.value,
               Commodity: item.commodity,
@@ -2679,7 +2679,7 @@ function Daily_Planner() {
               (item) => ({
                 virtualCode: item.sourceRailHead,
                 inlineVirtualCode: item.sourceInlineRailHead,
-                origin_railhead: item.virtualcode,
+                origin_railhead: item.virtualCode,
                 origin_state: item.sourceState,
                 destination_railhead: item.inlinevirtualcode,
                 destination_state: item.sourceState,
@@ -2699,7 +2699,7 @@ function Daily_Planner() {
               (item) => ({
                 virtualCode: item.destinationRailHead,
                 inlineVirtualCode: item.destinationInlineRailHead,
-                origin_railhead: item.virtualcode,
+                origin_railhead: item.virtualCode,
                 origin_state: item.destinationState,
                 destination_railhead: item.inlinevirtualcode,
                 destination_state: item.destinationState,
@@ -2866,10 +2866,16 @@ function Daily_Planner() {
                   }}
                 >
                   <button
-                    style={{ color: "white", display: "flex", flexFlow: 1 }}
+                    style={{
+                      color: "white",
+                      display: "flex",
+                      flexFlow: 1,
+                      alignItems: "center",
+                    }}
                     className="btn btn-danger dropdown-toggle"
                     onClick={fetchData}
                   >
+                    <i className="fa fa-bars"></i>
                     Import data
                   </button>
                 </div>
@@ -4321,7 +4327,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(riceData || riceData1) !== null && (riceData.length || riceData1.length) > 0 ? (
+                            {(riceData || riceData1) !== null &&
+                            (riceData.length || riceData1.length) > 0 ? (
                               <div>
                                 <div>RRA</div>
                                 <table>
@@ -4424,7 +4431,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(wheatData || wheatData1) !== null && (wheatData.length || wheatData1.length) > 0 ? (
+                            {(wheatData || wheatData1) !== null &&
+                            (wheatData.length || wheatData1.length) > 0 ? (
                               <div>
                                 <div>Wheat</div>
                                 <table>
@@ -4537,7 +4545,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(coarseGrain || coarseGrain1) !== null && (coarseGrain.length|| coarseGrain1.length) > 0 ? (
+                            {(coarseGrain || coarseGrain1) !== null &&
+                            (coarseGrain.length || coarseGrain1.length) > 0 ? (
                               <div>
                                 <div>Coarse Grain</div>
                                 <table>
@@ -4641,7 +4650,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(frk_rra|| frk_rra1) !== null && (frk_rra.length || frk_rra1.length) > 0 ? (
+                            {(frk_rra || frk_rra1) !== null &&
+                            (frk_rra.length || frk_rra1.length) > 0 ? (
                               <div>
                                 <div>frk rra</div>
                                 <table>
@@ -4744,7 +4754,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(frk_br|| frk_br1) !== null && (frk_br.length || frk_br1.length) > 0 ? (
+                            {(frk_br || frk_br1) !== null &&
+                            (frk_br.length || frk_br1.length) > 0 ? (
                               <div>
                                 <div>Frk Br</div>
                                 <table>
@@ -4847,7 +4858,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(frk || frk1) !== null && (frk.length || frk1.length) > 0 ? (
+                            {(frk || frk1) !== null &&
+                            (frk.length || frk1.length) > 0 ? (
                               <div>
                                 <div>Wheat+FRK</div>
                                 <table>
@@ -4950,7 +4962,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(frk_cgr || frk_cgr1) !== null && (frk_cgr.length || frk_cgr1.length) > 0 ? (
+                            {(frk_cgr || frk_cgr1) !== null &&
+                            (frk_cgr.length || frk_cgr1.length) > 0 ? (
                               <div>
                                 <div>frk cgr</div>
                                 <table>
@@ -5134,7 +5147,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(rrc || rrc1) !== null && (rrc.length || rrc1.length) > 0 ? (
+                            {(rrc || rrc1) !== null &&
+                            (rrc.length || rrc1.length) > 0 ? (
                               <div>
                                 <div>RRC</div>
                                 <table>
@@ -5237,7 +5251,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(ragi|| ragi1) !== null && (ragi.length || ragi1.length) > 0 ? (
+                            {(ragi || ragi1) !== null &&
+                            (ragi.length || ragi1.length) > 0 ? (
                               <div>
                                 <div>Ragi</div>
                                 <table>
@@ -5340,7 +5355,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(jowar || jowar1) !== null && (jowar.length || jowar1.length) > 0 ? (
+                            {(jowar || jowar1) !== null &&
+                            (jowar.length || jowar1.length) > 0 ? (
                               <div>
                                 <div>Jowar</div>
                                 <table>
@@ -5443,7 +5459,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(bajra || bajra1) !== null && (bajra.length || bajra1.length) > 0 ? (
+                            {(bajra || bajra1) !== null &&
+                            (bajra.length || bajra1.length) > 0 ? (
                               <div>
                                 <div>Bajra</div>
                                 <table>
@@ -5546,7 +5563,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(maize || maize1) !== null && (maize.length || maize1.length) > 0 ? (
+                            {(maize || maize1) !== null &&
+                            (maize.length || maize1.length) > 0 ? (
                               <div>
                                 <div>Maize</div>
                                 <table>
@@ -5649,7 +5667,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(wheat_urs || wheat_urs1) !== null && (wheat_urs.length || wheat_urs1.length) > 0 ? (
+                            {(wheat_urs || wheat_urs1) !== null &&
+                            (wheat_urs.length || wheat_urs1.length) > 0 ? (
                               <div>
                                 <div>Wheat(URS)</div>
                                 <table>
@@ -5752,7 +5771,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(wheat_faq || wheat_faq1) !== null && (wheat_faq.length || wheat_faq1.length) > 0 ? (
+                            {(wheat_faq || wheat_faq1) !== null &&
+                            (wheat_faq.length || wheat_faq1.length) > 0 ? (
                               <div>
                                 <div>Wheat(FAQ)</div>
                                 <table>
@@ -5855,7 +5875,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(misc1 || misc11) !== null && (misc1.length || misc11) > 0 ? (
+                            {(misc1 || misc11) !== null &&
+                            (misc1.length || misc11) > 0 ? (
                               <div>
                                 <div>Misc1</div>
                                 <table>
@@ -5958,7 +5979,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(misc2 || misc21) !== null && (misc2.length || misc21.length) > 0 ? (
+                            {(misc2 || misc21) !== null &&
+                            (misc2.length || misc21.length) > 0 ? (
                               <div>
                                 <div>Misc2</div>
                                 <table>
@@ -6061,7 +6083,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(wheat_rra || wheat_rra1) !== null && (wheat_rra.length || wheat_rra1.length) > 0 ? (
+                            {(wheat_rra || wheat_rra1) !== null &&
+                            (wheat_rra.length || wheat_rra1.length) > 0 ? (
                               <div>
                                 <div>Wheat+RRA</div>
                                 <table>
@@ -6164,7 +6187,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(frkPlusRRA || frkPlusRRA1) !== null && (frkPlusRRA.length || frkPlusRRA1.length) > 0 ? (
+                            {(frkPlusRRA || frkPlusRRA1) !== null &&
+                            (frkPlusRRA.length || frkPlusRRA1.length) > 0 ? (
                               <div>
                                 <div>FRK+RRA</div>
                                 <table>
@@ -6268,7 +6292,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(misc3 || misc31) !== null && (misc3.length || misc31.length) > 0 ? (
+                            {(misc3 || misc31) !== null &&
+                            (misc3.length || misc31.length) > 0 ? (
                               <div>
                                 <div>Misc3</div>
                                 <table>
@@ -6372,7 +6397,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(misc4 || misc41)  !== null &&  (misc4.length > 0 || misc41.length) ? (
+                            {(misc4 || misc41) !== null &&
+                            (misc4.length > 0 || misc41.length) ? (
                               <div>
                                 <div>Misc4</div>
                                 <table>
