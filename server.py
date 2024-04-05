@@ -5694,24 +5694,24 @@ def Daily_Planner():
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
 
-            df_frkbr["SourceRailHead"] = From
-            df_frkbr["SourceState"] = From_state
-            df_frkbr["DestinationRailHead"] = To
-            df_frkbr["DestinationState"] = To_state
-            df_frkbr["Commodity"] = commodity
+            df_frkbr1["SourceRailHead"] = sourceRH
+            df_frkbr1["SourceState"] = From_state
+            df_frkbr1["DestinationRailHead"] = destinationRH
+            df_frkbr1["DestinationState"] = To_state
+            df_frkbr1["Commodity"] = commodity
             # df_frkbr["Cost"] = Cost
-            df_frkbr["Rakes"] = values
-            df_frkbr["Flag"] = Flag
-            df_frkbr["SourceDivision"] = From_division
-            df_frkbr["DestinationDivision"] = To_division
-            df_frkbr["InlineSourceDivision"] = From_inlineDivision
-            df_frkbr["InlineDestinationDivision"] = To_inlineDivision
-            df_frkbr["sourceId"] = sourceId
-            df_frkbr["destinationId"] = destinationId
-            df_frkbr["SourceRakeType"] = source_rake
-            df_frkbr["DestinationRakeType"] = destination_rake
-            df_frkbr["sourceRH"] = sourceRH
-            df_frkbr["destinationRH"] = destinationRH
+            df_frkbr1["Rakes"] = values
+            df_frkbr1["Flag"] = Flag
+            df_frkbr1["SourceDivision"] = From_division
+            df_frkbr1["DestinationDivision"] = To_division
+            df_frkbr1["InlineSourceDivision"] = From_inlineDivision
+            df_frkbr1["InlineDestinationDivision"] = To_inlineDivision
+            df_frkbr1["sourceId"] = sourceId
+            df_frkbr1["destinationId"] = destinationId
+            df_frkbr1["SourceRakeType"] = source_rake
+            df_frkbr1["DestinationRakeType"] = destination_rake
+            df_frkbr1["sourceRH"] = From 
+            df_frkbr1["destinationRH"] = To 
 
             for i in dest_frkbr_inline1.keys():
                 for j in range(len(df_frkbr1["DestinationRailHead"])):
