@@ -19,6 +19,7 @@ function Monthly_Solution() {
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [commodiyCountData, setCommodityCountData] = useState([]);
+  const [monthlyDataCollection, setMonthlyDataCollection] = useState([]);
 
   const handleFileChange = (e) => {
     setFileSelected(e.target.files[0]);
@@ -61,8 +62,14 @@ function Monthly_Solution() {
     )
       .then((res) => res.json())
       .then((data) => setCommodityCountData(data));
+
+    fetch(
+      "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel"
+    )
+      .then((res) => res.json())
+      .then((data) => setMonthlyDataCollection(data));
   };
-  console.log(commodiyCountData);
+
   useEffect(() => {
     if (importedFile1) {
       const uploadFile = async () => {
@@ -292,9 +299,11 @@ function Monthly_Solution() {
   return (
     <div
       className="page-container"
-      style={{ backgroundColor: "#ebab44b0", height: "100%" }}
+      style={{ backgroundColor: "#ebab44b0", height: "100vh" }}
     >
-      <Sidenav />
+      <div>
+        <Sidenav />
+      </div>
       <div
         className="page-content"
         style={{
@@ -425,7 +434,7 @@ function Monthly_Solution() {
                     <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
                     Configurations
                   </div> */}
-                  <br />
+                  {/* <br /> */}
                   {/* <form style={{ marginLeft: "50px" }}>
                     <label>
                       <strong
@@ -459,35 +468,100 @@ function Monthly_Solution() {
                     </label>
                     <br />
                   </form> */}
-                  <div className="container mt-5">
-                    <div className="table-responsive">
-                      <table className="table table-sm table-hover">
-                        <thead>
-                          <tr>
-                            <th>Commodity</th>
-                            <th>State</th>
-                            <th>Inward</th>
-                            <th>Outward</th>
-                            <th>Surplus</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {commodiyCountData.map((item, index) => (
-                            <tr
-                              key={index}
-                              className={getRowColor(item.inward, item.outward)}
-                            >
-                              <td>{item.commodity}</td>
-                              <td>{item.state}</td>
-                              <td>{item.inward}</td>
-                              <td>{item.outward}</td>
-                              <td>{item.surplus}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  {showMessage && (
+                    <div className="container mt-5">
+                      <div className="row">
+                        <div className="col-md-8">
+                          <div className="table-responsive">
+                            <table className="table table-sm table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>Commodity</th>
+                                  <th>State</th>
+                                  <th>Inward</th>
+                                  <th>Outward</th>
+                                  <th>Surplus</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {commodiyCountData.map((item, index) => (
+                                  <tr
+                                    key={index}
+                                    className={getRowColor(
+                                      item.inward,
+                                      item.outward
+                                    )}
+                                  >
+                                    <td>{item.commodity}</td>
+                                    <td>{item.state}</td>
+                                    <td>{item.inward}</td>
+                                    <td>{item.outward}</td>
+                                    <td>{item.surplus}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {showMessage && (
+                    <div className="container mt-5">
+                      <h2>Region Data</h2>
+                      <div className="table-responsive">
+                        <table className="table table-sm table-bordered">
+                          <thead>
+                            <tr>
+                              <th>State</th>
+                              <th>Max Run ID</th>
+                              <th>Inward Wheat URS</th>
+                              <th>Inward Wheat FAQ</th>
+                              <th>Inward Wheat Total</th>
+                              <th>Inward Rice FRKBR</th>
+                              <th>Inward Rice RRA</th>
+                              <th>Inward Rice FRKRRA</th>
+                              <th>Inward G Total</th>
+                              <th>Outward Wheat URS</th>
+                              <th>Outward Wheat FAQ</th>
+                              <th>Outward Wheat Total</th>
+                              <th>Outward Rice FRKBR</th>
+                              <th>Outward Rice RRA</th>
+                              <th>Outward Rice FRKRRA</th>
+                              <th>Outward G Total</th>
+                              {/* <th>Created Date</th> */}
+                              {/* <th>Last Modified Date</th> */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {monthlyDataCollection.map((region, index) => (
+                              <tr key={index}>
+                                <td>{region.state}</td>
+                                <td>{region.maxRunId}</td>
+                                <td>{region.inward_Wheat_URS}</td>
+                                <td>{region.inward_Wheat_FAQ}</td>
+                                <td>{region.inward_Wheat_Total}</td>
+                                <td>{region.inward_Rice_FRKBR}</td>
+                                <td>{region.inward_Rice_RRA}</td>
+                                <td>{region.inward_Rice_FRKRRA}</td>
+                                <td>{region.inward_G_Total}</td>
+                                <td>{region.outward_Wheat_URS}</td>
+                                <td>{region.outward_Wheat_FAQ}</td>
+                                <td>{region.outward_Wheat_Total}</td>
+                                <td>{region.outward_Rice_FRKBR}</td>
+                                <td>{region.outward_Rice_RRA}</td>
+                                <td>{region.outward_Rice_FRKRRA}</td>
+                                <td>{region.outward_G_Total}</td>
+                                {/* <td>{region.createdDate}</td> */}
+                                {/* <td>{region.lastModifiedDate}</td> */}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
                     Optimal Plan
