@@ -2415,7 +2415,6 @@ function Daily_Planner() {
     }
   };
 
-  console.log("total result", Total_result);
 
   const viewGrid = () => {
     setShowMessage(true);
@@ -2636,7 +2635,7 @@ function Daily_Planner() {
         }
       })
       .then((data) => {
-        console.log(data);
+        
         if (data) {
           setProgress((prev) => [
             ...prev,
@@ -2647,6 +2646,7 @@ function Daily_Planner() {
           );
           setShowModal(true);
           if (data.sourceResponse) {
+            
             const updatedSurplus = data.sourceResponse.map((item) => ({
               virtualCode: item.sourceRailHead,
               origin_railhead: item.virtualCode,
@@ -2656,6 +2656,7 @@ function Daily_Planner() {
               sourceDivision: item.sourceDivision,
               sourceId: item.sourceId,
               rake: item.rake,
+              sourceMergingId: item.sourceMergingId,
             }));
             setSurplus(updatedSurplus);
           }
@@ -2670,6 +2671,7 @@ function Daily_Planner() {
               destinationDivision: item.destinationDivision,
               destinationId: item.destinationId,
               rake: item.rake,
+              destinationMergingId: item.destinationMergingId,
             }));
             setDeficit(updatedDeficit);
           }
@@ -2689,6 +2691,7 @@ function Daily_Planner() {
                 inlineSourceDivision: item.inlineSourceDivision,
                 sourceId: item.sourceId,
                 rake: item.rake,
+                sourceMergingId: item.sourceMergingId,
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -2709,6 +2712,7 @@ function Daily_Planner() {
                 inlineDestinationDivision: item.inlineDestinationDivision,
                 destinationId: item.destinationId,
                 rake: item.rake,
+                destinationMergingId: item.destinationMergingId,
               })
             );
             setDeficitInline(updatedDeficitInline);
@@ -2730,6 +2734,8 @@ function Daily_Planner() {
               destinationDivision: item.destinationDivision,
               sourceId: item.sourceId,
               destinationId: item.destinationId,
+              destinationMergingId: item.destinationMergingId,
+              sourceMergingId: item.sourceMergingId,
             }));
             setFixeddata(updatedRouteFixing);
           }
@@ -5066,7 +5072,8 @@ function Daily_Planner() {
                               width: "62vw",
                             }}
                           >
-                            {(w_cgr || w_cgr1) !== null && (w_cgr.length || w_cgr1.length) > 0 ? (
+                            {(w_cgr || w_cgr1) !== null &&
+                            (w_cgr.length || w_cgr1.length) > 0 ? (
                               <div>
                                 <div>wheat+cgr</div>
                                 <table>

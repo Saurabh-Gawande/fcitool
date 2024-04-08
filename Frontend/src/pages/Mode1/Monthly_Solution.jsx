@@ -5,6 +5,7 @@ import { saveAs } from "file-saver";
 import background1 from "./../../assets/upload1_.png";
 import "./Monthly_sol.css";
 import config from "../../config";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Monthly_Solution() {
   const ProjectIp = config.serverUrl;
@@ -17,24 +18,13 @@ function Monthly_Solution() {
   const [Relevant_result, set_Relevant_Result] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  const [Bajra, setBajra] = useState(false);
-  const [Jowar, setJowar] = useState(false);
-  const [Maize, setMaize] = useState(false);
-  const [Ragi, setRagi] = useState(false);
-  const [Misc1, setMisc1] = useState(false);
-  const [Misc2, setMisc2] = useState(false);
-  const [RRA, setRRA] = useState(false);
-  const [Wheat_faq, setWheat_faq] = useState(false);
-  const [Wheat_urs, setWheat_urs] = useState(false);
-  const [frk_br, setFrk_br] = useState(false);
-  const [frk_rra, setFrk_rra] = useState(false);
-  const [excelfiledata, setExcelFileData] = useState();
+  const [commodiyCountData, setCommodityCountData] = useState([]);
 
   const handleFileChange = (e) => {
     setFileSelected(e.target.files[0]);
   };
 
-  //for import the data 
+  //for import the data
   const ImportData = () => {
     fetch(
       "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
@@ -45,6 +35,7 @@ function Monthly_Solution() {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
         setImportedFile1(excelFile);
+        setShowMessage(true);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -64,8 +55,14 @@ function Monthly_Solution() {
         console.error("Error fetching data:", error);
       });
     set_type("Imported");
-  };
 
+    fetch(
+      "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData"
+    )
+      .then((res) => res.json())
+      .then((data) => setCommodityCountData(data));
+  };
+  console.log(commodiyCountData);
   useEffect(() => {
     if (importedFile1) {
       const uploadFile = async () => {
@@ -282,10 +279,20 @@ function Monthly_Solution() {
     }
   };
 
+  const getRowColor = (inward, outward) => {
+    if (outward > inward) {
+      return "table-success";
+    } else if (inward > outward) {
+      return "table-danger";
+    } else {
+      return "";
+    }
+  };
+
   return (
     <div
       className="page-container"
-      style={{ backgroundColor: "#ebab44b0", height: "100vh" }}
+      style={{ backgroundColor: "#ebab44b0", height: "100%" }}
     >
       <Sidenav />
       <div
@@ -452,6 +459,35 @@ function Monthly_Solution() {
                     </label>
                     <br />
                   </form> */}
+                  <div className="container mt-5">
+                    <div className="table-responsive">
+                      <table className="table table-sm table-hover">
+                        <thead>
+                          <tr>
+                            <th>Commodity</th>
+                            <th>State</th>
+                            <th>Inward</th>
+                            <th>Outward</th>
+                            <th>Surplus</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {commodiyCountData.map((item, index) => (
+                            <tr
+                              key={index}
+                              className={getRowColor(item.inward, item.outward)}
+                            >
+                              <td>{item.commodity}</td>
+                              <td>{item.state}</td>
+                              <td>{item.inward}</td>
+                              <td>{item.outward}</td>
+                              <td>{item.surplus}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
                     Optimal Plan

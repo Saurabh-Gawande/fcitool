@@ -171,34 +171,6 @@ def read_Relevant_Result():
     else:
         return ("error")
     
-# @app.route("/read_Result_M02",methods = ["POST","GET"])
-# def read_Result_M02():
-#     if request.method == "POST":        
-#         try: 
-#             df1 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="r_wheat")
-#             df2 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="r_rice")  
-#             df3 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="w_wheat")
-#             df4 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="w_rice")  
-#             df5 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="x_wr_wheat")
-#             df6 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="x_wr_rice")  
-#             df7 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="x_rw_wheat")
-#             df8 = pd.read_excel('Output\\Results_tentative.xlsx', sheet_name="x_rw_rice")    
-#             json_data1 = df1.to_json(orient='records', indent=1)
-#             json_data2 = df2.to_json(orient='records', indent=1)
-#             json_data3 = df3.to_json(orient='records', indent=1)
-#             json_data4 = df4.to_json(orient='records', indent=1)
-#             json_data5 = df5.to_json(orient='records', indent=1)
-#             json_data6 = df6.to_json(orient='records', indent=1)
-#             json_data7 = df7.to_json(orient='records', indent=1)
-#             json_data8 = df8.to_json(orient='records', indent=1)
-#             json_data = {"r_rice": json_data1, "r_wheat": json_data2, "w_rice": json_data3, "w_wheat": json_data4, "x_wr_rice": json_data5, "x_wr_wheat": json_data6, "x_rw_rice": json_data7, "x_rw_wheat": json_data8}
-#         except:
-#             json_data = json.dumps({"Status": 0}, indent=1)
-
-#         json_object = json.dumps(json_data)
-#         return json_object
-#     else:
-#         return ("error")
     
 @app.route("/read_Daily_Planner_S2",methods = ["POST","GET"])
 def read_Daily_Planner_S2():
@@ -453,124 +425,6 @@ def Download_Template_to_add():
         return "error"
 
 
-@app.route("/Update_matrices",methods = ["POST"])
-def Update_matrices():
-    data = {}
-    try:
-        file = request.files['uploadFile']
-        file.save("Input//Update_matrices.xlsx")
-        Railhead_cost_matrix_1rake_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
-        Railhead_cost_matrix_U_data_Non_TEFD = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_Non_TEFD", index_col=0)
-        Railhead_cost_matrix_U_data_TEFD = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_TEFD", index_col=0)
-        Railhead_cost_matrix_U_data_Non_TEFD_TC = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_Non_TEFD+TC", index_col=0)
-        Railhead_cost_matrix_U_data_TEFD_TC = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Cost_matrix_TEFD+TC", index_col=0)
-        Railhead_dist_matrix_U_data = pd.read_excel("Input/Update_matrices.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
-        Railhead_cost_matrix_1rake_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix_1rake", index_col=0)
-        Railhead_cost_matrix_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_cost_matrix", index_col=0)
-        Railhead_dist_matrix_M_data = pd.read_excel("Input/Non-TEFD.xlsx", sheet_name="Railhead_dist_matrix", index_col=0)
-
-        for row in Railhead_cost_matrix_1rake_U_data.index:
-            for col in Railhead_cost_matrix_1rake_U_data.columns:
-                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
-                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
-                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
-
-        for row in Railhead_cost_matrix_U_data_Non_TEFD.index:
-            for col in Railhead_cost_matrix_U_data_Non_TEFD.columns:
-                value = Railhead_cost_matrix_U_data_Non_TEFD.loc[row, col]
-                Railhead_cost_matrix_M_data.at[row, col] = value
-                Railhead_cost_matrix_M_data.at[col, row] = value
-
-        for row in Railhead_dist_matrix_U_data.index:
-            for col in Railhead_dist_matrix_U_data.columns:
-                value = Railhead_dist_matrix_U_data.loc[row, col]
-                Railhead_dist_matrix_M_data.at[row, col] = value
-                Railhead_dist_matrix_M_data.at[col, row] = value
-
-        with pd.ExcelWriter("Input/Non-TEFD.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
-            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
-            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
-
-        for row in Railhead_cost_matrix_1rake_U_data.index:
-            for col in Railhead_cost_matrix_1rake_U_data.columns:
-                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
-                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
-                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
-
-        for row in Railhead_cost_matrix_U_data_TEFD.index:
-            for col in Railhead_cost_matrix_U_data_TEFD.columns:
-                value = Railhead_cost_matrix_U_data_TEFD.loc[row, col]
-                Railhead_cost_matrix_M_data.at[row, col] = value
-                Railhead_cost_matrix_M_data.at[col, row] = value
-
-        for row in Railhead_dist_matrix_U_data.index:
-            for col in Railhead_dist_matrix_U_data.columns:
-                value = Railhead_dist_matrix_U_data.loc[row, col]
-                Railhead_dist_matrix_M_data.at[row, col] = value
-                Railhead_dist_matrix_M_data.at[col, row] = value
-
-        with pd.ExcelWriter("Input/TEFD.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
-            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
-            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
-
-        for row in Railhead_cost_matrix_1rake_U_data.index:
-            for col in Railhead_cost_matrix_1rake_U_data.columns:
-                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
-                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
-                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
-
-        for row in Railhead_cost_matrix_U_data_Non_TEFD_TC.index:
-            for col in Railhead_cost_matrix_U_data_Non_TEFD_TC.columns:
-                value = Railhead_cost_matrix_U_data_Non_TEFD_TC.loc[row, col]
-                Railhead_cost_matrix_M_data.at[row, col] = value
-                Railhead_cost_matrix_M_data.at[col, row] = value
-
-        for row in Railhead_dist_matrix_U_data.index:
-            for col in Railhead_dist_matrix_U_data.columns:
-                value = Railhead_dist_matrix_U_data.loc[row, col]
-                Railhead_dist_matrix_M_data.at[row, col] = value
-                Railhead_dist_matrix_M_data.at[col, row] = value
-
-        with pd.ExcelWriter("Input/Non_TEFD_TC.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
-            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
-            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
-
-        for row in Railhead_cost_matrix_1rake_U_data.index:
-            for col in Railhead_cost_matrix_1rake_U_data.columns:
-                value = Railhead_cost_matrix_1rake_U_data.loc[row, col]
-                Railhead_cost_matrix_1rake_M_data.at[row, col] = value
-                Railhead_cost_matrix_1rake_M_data.at[col, row] = value
-
-        for row in Railhead_cost_matrix_U_data_TEFD_TC.index:
-            for col in Railhead_cost_matrix_U_data_TEFD_TC.columns:
-                value = Railhead_cost_matrix_U_data_TEFD_TC.loc[row, col]
-                Railhead_cost_matrix_M_data.at[row, col] = value
-                Railhead_cost_matrix_M_data.at[col, row] = value
-
-        for row in Railhead_dist_matrix_U_data.index:
-            for col in Railhead_dist_matrix_U_data.columns:
-                value = Railhead_dist_matrix_U_data.loc[row, col]
-                Railhead_dist_matrix_M_data.at[row, col] = value
-                Railhead_dist_matrix_M_data.at[col, row] = value
-
-        with pd.ExcelWriter("Input/TEFD_TC.xlsx",mode='a',engine='openpyxl', if_sheet_exists='replace') as writer:
-            Railhead_cost_matrix_1rake_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix_1rake", index=True)
-            Railhead_cost_matrix_M_data.to_excel(writer,sheet_name="Railhead_cost_matrix", index=True)
-            Railhead_dist_matrix_M_data.to_excel(writer,sheet_name="Railhead_dist_matrix", index=True)
-
-        data['status'] = 1
-    except:
-        data['status'] = 0
-    
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
-
-    return(json.dumps(json_object, indent = 1))
-
-
 @app.route("/Alternate_Railhead_readPickle",methods = ["POST","GET"])
 def Alternate_Railhead_readPickle():
     try:
@@ -585,92 +439,6 @@ def Alternate_Railhead_readPickle():
         db["status"] = 0
     return jsonify(db)
 
-
-@app.route("/Add_Railhead", methods=["POST", "GET"])
-def Add_Railhead():
-    try:
-        Railhead_name = []
-        Railhead_State = []
-        fetched_data = request.get_json() 
-        Railhead_name.append(fetched_data["railhead"].upper())
-        Railhead_State.append(fetched_data['state'])
-
-        Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
-        Daily_Template_S1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
-        Daily_Template_S2 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
-        Data_sheet = 'Frontend/public/data/Updated_railhead_list.xlsx'
-
-        # Sheets
-        Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-        Daily_Sheets_S1 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-        Daily_Sheets_S2 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-
-        # Initialize lists for DataFrames
-        Monthly_df = []
-        Daily_S1_df = []
-        Daily_S2_df = []
-        Data_sheets = pd.read_excel(Data_sheet, sheet_name="RH_Sheet")
-
-        # Read data from Excel files and store in lists
-        for sheets in Monthly_Sheets:
-            x = pd.read_excel(Monthly_Template_M1, sheet_name=sheets)
-            Monthly_df.append(x)
-
-        for sheets in Daily_Sheets_S1:
-            x = pd.read_excel(Daily_Template_S1, sheet_name=sheets)
-            Daily_S1_df.append(x)
-
-        for sheets in Daily_Sheets_S2:
-            x = pd.read_excel(Daily_Template_S2, sheet_name=sheets)
-            Daily_S2_df.append(x)
-
-        for i in range(len(Railhead_name)):
-            Data_sheets = pd.concat([Data_sheets, pd.DataFrame({"RH_code": [Railhead_name[i]], "State": [Railhead_State[i]]})])
-
-        # Append data to the DataFrames
-        for i in range(len(Monthly_Sheets)):
-            for j in range(len(Railhead_name)):
-                Monthly_df[i] = pd.concat([Monthly_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
-                for col in Monthly_df[i].columns:
-                    if col not in ["Railhead", "State"]:
-                        Monthly_df[i][col] = 0  # Set all values to zero
-
-        for i in range(len(Daily_Sheets_S1)):
-            for j in range(len(Railhead_name)):
-                Daily_S1_df[i] = pd.concat([Daily_S1_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
-                for col in Daily_S1_df[i].columns:
-                    if col not in ["Railhead", "State"]:
-                        Daily_S1_df[i][col] = 0  # Set all values to zero
-
-        for i in range(len(Daily_Sheets_S2)):
-            for j in range(len(Railhead_name)):
-                Daily_S2_df[i] = pd.concat([Daily_S2_df[i], pd.DataFrame({"Railhead": [Railhead_name[j]], "State": [Railhead_State[j]]})])
-                for col in Daily_S2_df[i].columns:
-                    if col not in ["Railhead", "State"]:
-                        Daily_S2_df[i][col] = 0  # Set all values to zero
-
-        # Write modified DataFrames back to Excel files
-        with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            for i in range(len(Monthly_Sheets)):
-                Monthly_df[i].to_excel(writer, sheet_name=Monthly_Sheets[i], index=False)
-
-        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            for i in range(len(Daily_Sheets_S1)):
-                Daily_S1_df[i].to_excel(writer, sheet_name=Daily_Sheets_S1[i], index=False)
-
-        with pd.ExcelWriter("Input\\Temp_balanced_DPT_scen2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            for i in range(len(Daily_Sheets_S2)):
-                Daily_S2_df[i].to_excel(writer, sheet_name=Daily_Sheets_S2[i], index=False)
-
-        with pd.ExcelWriter("Frontend\\public\\data\\Updated_railhead_list.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            Data_sheets.to_excel(writer, sheet_name="RH_Sheet", index=False)
-
-
-        db = {"status": 1, "message": "Railhead names and states added successfully"}
-    except Exception as e:
-        db = {"status": 0, "message": str(e)}
-
-    return json.dumps(db, indent=1)
 
 @app.route('/getDaily1ExcelData')
 def get_daily_scen1_excel_data():
@@ -689,66 +457,6 @@ def data_template():
     Monthly_Template_M1 = 'Input\\Data_template.xlsx'
     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
     return send_file(excel_path, as_attachment=True)
-
-@app.route("/Remove_Railhead", methods=["POST", "GET"])
-def Remove_Railhead():
-    try:
-        Railhead_name = []
-        Railhead_State = []
-        fetched_data = request.get_json()
-        Railhead_name.append(fetched_data["railhead"].upper())
-        Railhead_State.append(fetched_data['state'])
-        Monthly_Template_M1 = 'Input\\Monthly_Template_M1.xlsx'
-        Daily_Template_S1 = 'Input\\Daily_Template_Scene1.xlsx'
-        Daily_Template_S2 = 'Input\\Daily_Template_Scene1.xlsx'
-        Data_sheet = 'Frontend\\public\\data\\Updated_railhead_list.xlsx'
-
-        Monthly_Sheets = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-        Daily_Sheets_S1 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-        Daily_Sheets_S2 = ["Surplus_wheat", "Deficit_wheat", "Surplus_rice", "Deficit_rice"]
-
-        Monthly_df = []
-        Daily_S1_df = []
-        Daily_S2_df = []
-        Data_sheets = pd.read_excel(Data_sheet, sheet_name="RH_Sheet")
-
-        for sheets in Monthly_Sheets:
-            x = pd.read_excel(Monthly_Template_M1, sheet_name=sheets)
-            Monthly_df.append(x)
-        for sheets in Daily_Sheets_S1:
-            x = pd.read_excel(Daily_Template_S1, sheet_name=sheets)
-            Daily_S1_df.append(x)
-        for sheets in Daily_Sheets_S2:
-            x = pd.read_excel(Daily_Template_S2, sheet_name=sheets)
-            Daily_S2_df.append(x)
-
-        for i in range(len(Monthly_Sheets)):
-            for j in range(len(Railhead_name)):
-                for df in [Monthly_df[i], Daily_S1_df[i], Daily_S2_df[i]]:
-                        df.drop(df[df["Railhead"] == Railhead_name[j]].index, inplace=True)
-                        
-        for i in range(len(Railhead_name)):
-            Data_sheets.drop(Data_sheets[Data_sheets["RH_code"] == Railhead_name[i]].index, inplace=True)
-
-        with pd.ExcelWriter("Input\\Monthly_Template_M1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            for i in range(len(Monthly_Sheets)):
-                Monthly_df[i].to_excel(writer, sheet_name=Monthly_Sheets[i], index=False)
-        with pd.ExcelWriter("Input\\Daily_Template_Scene1.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            for i in range(len(Daily_Sheets_S1)):
-                Daily_S1_df[i].to_excel(writer, sheet_name=Daily_Sheets_S1[i], index=False)
-        with pd.ExcelWriter("Input\\Daily_Template_Scene2.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            for i in range(len(Daily_Sheets_S2)):
-                Daily_S2_df[i].to_excel(writer, sheet_name=Daily_Sheets_S2[i], index=False)
-        with pd.ExcelWriter("Frontend\\public\\data\\Updated_railhead_list.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            Data_sheets.to_excel(writer, sheet_name="RH_Sheet", index=False)
-
-
-        db = {"status": 1, "message": "Railhead names and states added successfully"}
-    except Exception as e:
-        db = {"status": 0, "message": str(e)}
-
-    return json.dumps(db, indent=1)
-
 
 
 @app.route("/Monthly_Solution",methods = ["POST","GET"])
@@ -909,6 +617,8 @@ def Daily_Planner():
             confirmed_destinationId = []
             confirmed_org_RH = []
             confirmed_dest_RH = []
+            confirmed_sourceMergingId = []
+            confirmed_destinationMergingId = []
 
             confirmed_org_rhcode1 = []
             confirmed_dest_rhcode1 = []
@@ -924,11 +634,13 @@ def Daily_Planner():
             confirmed_destinationId1 = []
             confirmed_org_RH1 = []
             confirmed_dest_RH1 = []
+            confirmed_sourceMergingId = []
+            confirmed_destinationMergingId = []
 
             fetched_data = request.get_json()
             blocked_data = fetched_data['blocked_data1']
             blocked_data1 = fetched_data['blocked_data2']
-            print(blocked_data, blocked_data1)
+            
             confirmed_data1 = fetched_data['confirmed_data1']
             confirmed_data2 = fetched_data['confirmed_data2']
             TEFD_fetched = fetched_data['TEFD']
@@ -987,7 +699,6 @@ def Daily_Planner():
             rra_dest_inline = fetched_data["rice_dest_inline"]
             wheat_origin_inline = fetched_data["wheat_inline"]
             wheat_dest_inline = fetched_data["wheat_dest_inline"]
-            print(wheat_dest_inline, wheat_origin_inline)
             coarseGrain_origin_inline = fetched_data["coarseGrain_inline"]
             coarseGrain_dest_inline = fetched_data["coarseGrain_dest_inline"]
             frk_origin_inline = fetched_data["frk_inline"]
@@ -1034,10 +745,10 @@ def Daily_Planner():
                 blocked_dest_state.append(blocked_data[i]["destination_state"])
 
             for i in range(len(blocked_data1)):
-                blocked_org_rhcode1.append(blocked_data[i]["origin_railhead"])
-                blocked_dest_rhcode1.append(blocked_data[i]["destination_railhead"])
-                blocked_org_state1.append(blocked_data[i]["origin_state"])
-                blocked_dest_state1.append(blocked_data[i]["destination_state"])
+                blocked_org_rhcode1.append(blocked_data1[i]["origin_railhead"])
+                blocked_dest_rhcode1.append(blocked_data1[i]["destination_railhead"])
+                blocked_org_state1.append(blocked_data1[i]["origin_state"])
+                blocked_dest_state1.append(blocked_data1[i]["destination_state"])
                 
             for i in range(len(confirmed_data1)):
                 confirmed_org_rhcode.append(confirmed_data1[i]["origin_railhead"])
@@ -1054,6 +765,8 @@ def Daily_Planner():
                 confirmed_dest_rake.append(confirmed_data1[i]["destinationRakeType"])
                 confirmed_org_RH.append(confirmed_data1[i]["sourceVirtualCode"])
                 confirmed_dest_RH.append(confirmed_data1[i]["destinationVirtualCode"])
+                confirmed_sourceMergingId.append(confirmed_data1[i]["sourceMergingId"])
+                confirmed_destinationMergingId.append(confirmed_data1[i]["destinationMergingId"])
             
             for i in range(len(confirmed_data2)):
                 confirmed_org_rhcode1.append(confirmed_data2[i]["origin_railhead"])
@@ -1068,8 +781,10 @@ def Daily_Planner():
                 confirmed_destinationId1.append(confirmed_data2[i]["destinationId"])
                 confirmed_org_rake1.append(confirmed_data2[i]["sourceRakeType"])
                 confirmed_dest_rake1.append(confirmed_data2[i]["destinationRakeType"])
-                confirmed_org_RH1.append(confirmed_data1[i]["sourceVirtualCode"])
-                confirmed_dest_RH1.append(confirmed_data1[i]["destinationVirtualCode"])
+                confirmed_org_RH1.append(confirmed_data2[i]["sourceVirtualCode"])
+                confirmed_dest_RH1.append(confirmed_data2[i]["destinationVirtualCode"])
+                confirmed_sourceMergingId1.append(confirmed_data2[i]["sourceMergingId"])
+                confirmed_destinationMergingId1.append(confirmed_data2[i]["destinationMergingId"])
 
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             matrices_data1 = pd.ExcelFile("Input\\Cost_matrix.xlsx")
@@ -4061,6 +3776,9 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
+
             for i in source_wheat:
                 for j in dest_wheat:
                     if int(x_ij_wheat[(i, j)].value()) > 0:
@@ -4079,6 +3797,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             # for adding origin state and devision from inline
             for i in range(len(From)):
@@ -4088,7 +3807,8 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
-                        sourceRH.append(wheat["virtualCode"]) 
+                        sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"]) 
 
             # To add inline division 
             for i in range(len(From)):
@@ -4111,6 +3831,7 @@ def Daily_Planner():
                         destination_rake.append(wheat["rake"])
                         found_division = True
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")  
@@ -4124,6 +3845,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -4164,6 +3886,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Wheat':
                     From.append(org)
                     From_state.append(org_state)
@@ -4182,6 +3906,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
             
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
@@ -4204,7 +3930,9 @@ def Daily_Planner():
             df_wheat["DestinationRakeType"] = destination_rake
             df_wheat["sourceRH"] =  From
             df_wheat["destinationRH"] = To
-            
+            df_wheat["SourceMergingId"] = sourceMergingId
+            df_wheat["DestinationMergingId"] = destinationMergingId
+            print(df_wheat)
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["DestinationRailHead"])):
@@ -4238,6 +3966,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
 
             for i in source_wheat1:
                 for j in dest_wheat1:
@@ -4257,6 +3987,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             # for adding origin state and devision from inline
             for i in range(len(From)):
@@ -4267,6 +3998,7 @@ def Daily_Planner():
                         From_division.append(wheat["sourceDivision"] if "sourceDivision" in wheat else "")
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             # To add inline division 
             for i in range(len(From)):
@@ -4288,6 +4020,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_division = True
                         break
                 if not found_division:
@@ -4302,6 +4035,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -4343,6 +4077,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Wheat':
                     From.append(org)
                     From_state.append(org_state)
@@ -4361,10 +4097,12 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
-            df_wheat1["SourceRailHead"] = From
+            df_wheat1["SourceRailHead"] = sourceRH 
             df_wheat1["SourceState"] = From_state
-            df_wheat1["DestinationRailHead"] = To
+            df_wheat1["DestinationRailHead"] = destinationRH 
             df_wheat1["DestinationState"] = To_state
             df_wheat1["Commodity"] = commodity
             # df_wheat["Cost"] = Cost
@@ -4378,8 +4116,10 @@ def Daily_Planner():
             df_wheat1["destinationId"] = destinationId
             df_wheat1["SourceRakeType"] = source_rake
             df_wheat1["DestinationRakeType"] = destination_rake
-            df_wheat1["sourceRH"] = sourceRH
-            df_wheat1["destinationRH"] = destinationRH
+            df_wheat1["sourceRH"] = From
+            df_wheat1["destinationRH"] = To
+            df_wheat1["SourceMergingId"] = sourceMergingId
+            df_wheat1["DestinationMergingId"] = destinationMergingId
             
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline1.keys():
@@ -4412,6 +4152,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
 
             for i in source_rra:
                 for j in dest_rra:
@@ -4430,6 +4172,7 @@ def Daily_Planner():
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
                         sourceRH.append(rra["virtualCode"])
+                        sourceMergingId.append(rra["sourceMergingId"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline:
@@ -4439,6 +4182,7 @@ def Daily_Planner():
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
                         sourceRH.append(rra["virtualCode"])
+                        sourceMergingId.append(rra["sourceMergingId"])
   
             for i in range(len(To)):
                 found_state = False
@@ -4462,6 +4206,7 @@ def Daily_Planner():
                         destinationId.append(rra["destinationId"])
                         destination_rake.append(rra["rake"])
                         destinationRH.append(rra["virtualCode"])
+                        destinationMergingId.append(rra["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -4489,6 +4234,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_division = True
                         break
                 if not found_division:
@@ -4510,6 +4256,8 @@ def Daily_Planner():
                 conf_des_div = confirmed_dest_division[i]
                 org_rake = confirmed_org_rake[i]
                 dest_rake = confirmed_dest_rake[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'RRA':
                     From.append(org)
                     From_state_rra.append(org_state)
@@ -4528,6 +4276,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_rra["SourceRailHead"] = sourceRH
             df_rra["SourceState"] = From_state_rra
@@ -4547,6 +4297,8 @@ def Daily_Planner():
             df_rra["DestinationRakeType"] = destination_rake
             df_rra["sourceRH"] =  From
             df_rra["destinationRH"] = To 
+            df_rra["SourceMergingId"] = sourceMergingId
+            df_rra["DestinationMergingId"] = destinationMergingId
            
             for i in dest_rra_inline.keys():
                 for j in range(len(df_rra["DestinationRailHead"])):
@@ -4577,6 +4329,9 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
+            
 
             for i in source_rra1:
                 for j in dest_rra1:
@@ -4595,6 +4350,7 @@ def Daily_Planner():
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
                         sourceRH.append(rra["virtualCode"])
+                        sourceMergingId.append(rra["sourceMergingId"])
             
             for i in range(len(From)):
                 for rra in rra_origin_inline1:
@@ -4604,6 +4360,7 @@ def Daily_Planner():
                         sourceId.append(rra["sourceId"])
                         source_rake.append(rra["rake"])
                         sourceRH.append(rra["virtualCode"])
+                        sourceMergingId.append(rra["sourceMergingId"])
   
             for i in range(len(To)):
                 found_state = False
@@ -4627,6 +4384,7 @@ def Daily_Planner():
                         destinationId.append(rra["destinationId"])
                         destination_rake.append(rra["rake"])
                         destinationRH.append(rra["virtualCode"])
+                        destinationMergingId.append(rra["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -4654,6 +4412,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_division = True
                         break
                 if not found_division:
@@ -4677,6 +4436,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'RRA':
                     From.append(org)
                     From_state_rra.append(org_state)
@@ -4695,6 +4456,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_rra1["SourceRailHead"] = sourceRH
             df_rra1["SourceState"] = From_state_rra
@@ -4714,6 +4477,8 @@ def Daily_Planner():
             df_rra1["DestinationRakeType"] = destination_rake
             df_rra1["sourceRH"] = From
             df_rra1["destinationRH"] = To
+            df_rra1["SourceMergingId"] = sourceMergingId
+            df_rra1["DestinationMergingId"] = destinationMergingId
            
             for i in dest_rra_inline1.keys():
                 for j in range(len(df_rra1["DestinationRailHead"])):
@@ -4744,6 +4509,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_coarseGrain:
                 for j in dest_coarseGrain:
@@ -4762,6 +4529,7 @@ def Daily_Planner():
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
                         sourceRH.append(coarseGrain["virtualCode"])
+                        sourceMergingId.append(coarseGrain["sourceMergingId"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline:
@@ -4771,6 +4539,7 @@ def Daily_Planner():
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
                         sourceRH.append(coarseGrain["virtualCode"])
+                        sourceMergingId.append(coarseGrain["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4780,6 +4549,7 @@ def Daily_Planner():
                         destinationId.append(coarseGrain["destinationId"])
                         destination_rake.append(coarseGrain["rake"])
                         destinationRH.append(coarseGrain["virtualCode"])
+                        destinationMergingId.append(coarseGrain["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -4823,6 +4593,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_division = True
                         break
                 if not found_division:
@@ -4843,6 +4614,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Coarse Grains':
                     From.append(org)
                     From_state.append(org_state)
@@ -4861,6 +4634,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_CoarseGrain["SourceRailHead"] = From
             df_CoarseGrain["SourceState"] = From_state
@@ -4880,6 +4655,8 @@ def Daily_Planner():
             df_CoarseGrain["DestinationRakeType"] = destination_rake
             df_CoarseGrain["sourceRH"] = sourceRH
             df_CoarseGrain["destinationRH"] = destinationRH
+            df_CoarseGrain["SourceMergingId"] = sourceMergingId
+            df_CoarseGrain["DestinationMergingId"] = destinationMergingId
             
             for i in dest_coarseGrain_inline.keys():
                 for j in range(len(df_CoarseGrain["DestinationRailHead"])):
@@ -4910,6 +4687,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
 
             for i in source_coarseGrain1:
                 for j in dest_coarseGrain1:
@@ -4928,6 +4707,7 @@ def Daily_Planner():
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
                         sourceRH.append(coarseGrain["virtualCode"])
+                        sourceMergingId.append(coarseGrain["sourceMergingId"])
                         
             for i in range(len(From)):
                 for coarseGrain in coarseGrain_origin_inline1:
@@ -4937,6 +4717,7 @@ def Daily_Planner():
                         sourceId.append(coarseGrain["sourceId"])
                         source_rake.append(coarseGrain["rake"])
                         sourceRH.append(coarseGrain["virtualCode"])
+                        sourceMergingId.append(coarseGrain["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -4946,6 +4727,7 @@ def Daily_Planner():
                         destinationId.append(coarseGrain["destinationId"])
                         destination_rake.append(coarseGrain["rake"])
                         destinationRH.append(coarseGrain["virtualCode"])
+                        destinationMergingId.append(coarseGrain["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -4989,6 +4771,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_division = True
                         break
                 if not found_division:
@@ -5009,6 +4792,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Coarse Grains':
                     From.append(org)
                     From_state.append(org_state)
@@ -5027,6 +4812,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_CoarseGrain1["SourceRailHead"] =  sourceRH
             df_CoarseGrain1["SourceState"] = From_state
@@ -5046,6 +4833,8 @@ def Daily_Planner():
             df_CoarseGrain1["DestinationRakeType"] = destination_rake
             df_CoarseGrain1["sourceRH"] = From
             df_CoarseGrain1["destinationRH"] = To
+            df_CoarseGrain1["SourceMergingId"] = sourceMergingId
+            df_CoarseGrain1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_coarseGrain_inline1.keys():
                 for j in range(len(df_CoarseGrain1["DestinationRailHead"])):
@@ -5076,6 +4865,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frkrra:
                 for j in dest_frkrra:
@@ -5094,6 +4885,7 @@ def Daily_Planner():
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
                         sourceRH.append(frkrra["virtualCode"])
+                        sourceMergingId.append(frkrra["sourceMergingId"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline:
@@ -5103,6 +4895,7 @@ def Daily_Planner():
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
                         sourceRH.append(frkrra["virtualCode"])
+                        sourceMergingId.append(frkrra["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -5127,6 +4920,7 @@ def Daily_Planner():
                         destinationId.append(frkrra["destinationId"])
                         destination_rake.append(frkrra["rake"])
                         destinationRH.append(frkrra["virtualCode"])
+                        destinationMergingId.append(frkrra["destinationMergingId"])
                         break
                 if not found_state:
                     for frkrra in frkrra_dest_inline:
@@ -5156,6 +4950,7 @@ def Daily_Planner():
                         found_division = True
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5175,6 +4970,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'FRK RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -5193,10 +4990,12 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
-            df_frkrra["SourceRailHead"] = From
+            df_frkrra["SourceRailHead"] = sourceRH
             df_frkrra["SourceState"] = From_state
-            df_frkrra["DestinationRailHead"] = To
+            df_frkrra["DestinationRailHead"] = destinationRH
             df_frkrra["DestinationState"] = To_state
             df_frkrra["Commodity"] = commodity
             # df_frkrra["Cost"] = Cost
@@ -5210,8 +5009,10 @@ def Daily_Planner():
             df_frkrra["destinationId"] = destinationId
             df_frkrra["SourceRakeType"] = source_rake
             df_frkrra["DestinationRakeType"] = destination_rake
-            df_frkrra["sourceRH"] = sourceRH
-            df_frkrra["destinationRH"] = destinationRH
+            df_frkrra["sourceRH"] = From 
+            df_frkrra["destinationRH"] = To 
+            df_frkrra["SourceMergingId"] = sourceMergingId
+            df_frkrra["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frkrra_inline.keys():
                 for j in range(len(df_frkrra["DestinationRailHead"])):
@@ -5242,6 +5043,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frkrra1:
                 for j in dest_frkrra1:
@@ -5260,6 +5063,7 @@ def Daily_Planner():
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
                         sourceRH.append(frkrra["virtualCode"])
+                        sourceMergingId.append(frkrra["sourceMergingId"])
 
             for i in range(len(From)):
                 for frkrra in frkrra_origin_inline1:
@@ -5269,6 +5073,7 @@ def Daily_Planner():
                         sourceId.append(frkrra["sourceId"])
                         source_rake.append(frkrra["rake"])
                         sourceRH.append(frkrra["virtualCode"])
+                        sourceMergingId.append(frkrra["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -5293,6 +5098,7 @@ def Daily_Planner():
                         destinationId.append(frkrra["destinationId"])
                         destination_rake.append(frkrra["rake"])
                         destinationRH.append(frkrra["virtualCode"])
+                        destinationMergingId.append(frkrra["destinationMergingId"])
                         break
                 if not found_state:
                     for frkrra in frkrra_dest_inline1:
@@ -5322,6 +5128,7 @@ def Daily_Planner():
                         found_division = True
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5341,6 +5148,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'FRK RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -5359,6 +5168,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frkrra1["SourceRailHead"] =  sourceRH
             df_frkrra1["SourceState"] = From_state
@@ -5378,6 +5189,8 @@ def Daily_Planner():
             df_frkrra1["DestinationRakeType"] = destination_rake
             df_frkrra1["sourceRH"] = From
             df_frkrra1["destinationRH"] = To
+            df_frkrra1["SourceMergingId"] = sourceMergingId
+            df_frkrra1["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frkrra_inline1.keys():
                 for j in range(len(df_frkrra1["DestinationRailHead"])):
@@ -5408,6 +5221,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frkbr:
                 for j in dest_frkbr:
@@ -5426,6 +5241,7 @@ def Daily_Planner():
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
                         sourceRH.append(frkbr["virtualCode"])
+                        sourceMergingId.append(frkbr["sourceMergingId"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline:
@@ -5435,6 +5251,7 @@ def Daily_Planner():
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
                         sourceRH.append(frkbr["virtualCode"])
+                        sourceMergingId.append(frkbr["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5459,6 +5276,7 @@ def Daily_Planner():
                         destinationId.append(frkbr["destinationId"])
                         destination_rake.append(frkbr["rake"])
                         destinationRH.append(frkbr["virtualCode"])
+                        destinationMergingId.append(frkbr["destinationMergingId"])
                         break
                 if not found_state:
                     for frkbr in frkbr_dest_inline:
@@ -5489,6 +5307,7 @@ def Daily_Planner():
                         found_division = True
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5508,6 +5327,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'FRK BR':
                     From.append(org)
                     From_state.append(org_state)
@@ -5526,6 +5347,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frkbr["SourceRailHead"] =  sourceRH
             df_frkbr["SourceState"] = From_state
@@ -5545,6 +5368,8 @@ def Daily_Planner():
             df_frkbr["DestinationRakeType"] = destination_rake
             df_frkbr["sourceRH"] = From
             df_frkbr["destinationRH"] =  To
+            df_frkbr["SourceMergingId"] = sourceMergingId
+            df_frkbr["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frkbr_inline.keys():
                 for j in range(len(df_frkbr["DestinationRailHead"])):
@@ -5575,6 +5400,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frkbr1:
                 for j in dest_frkbr1:
@@ -5593,6 +5420,7 @@ def Daily_Planner():
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
                         sourceRH.append(frkbr["virtualCode"])
+                        sourceMergingId.append(frkbr["sourceMergingId"])
 
             for i in range(len(From)):
                 for frkbr in frkbr_origin_inline1:
@@ -5602,6 +5430,7 @@ def Daily_Planner():
                         sourceId.append(frkbr["sourceId"])
                         source_rake.append(frkbr["rake"])
                         sourceRH.append(frkbr["virtualCode"])
+                        sourceMergingId.append(frkbr["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -5626,6 +5455,7 @@ def Daily_Planner():
                         destinationId.append(frkbr["destinationId"])
                         destination_rake.append(frkbr["rake"])
                         destinationRH.append(frkbr["virtualCode"])
+                        destinationMergingId.append(frkbr["destinationMergingId"])
                         break
                 if not found_state:
                     for frkbr in frkbr_dest_inline1:
@@ -5656,6 +5486,7 @@ def Daily_Planner():
                         found_division = True
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5675,6 +5506,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'FRK BR':
                     From.append(org)
                     From_state.append(org_state)
@@ -5693,6 +5526,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frkbr1["SourceRailHead"] = sourceRH
             df_frkbr1["SourceState"] = From_state
@@ -5712,6 +5547,8 @@ def Daily_Planner():
             df_frkbr1["DestinationRakeType"] = destination_rake
             df_frkbr1["sourceRH"] = From 
             df_frkbr1["destinationRH"] = To 
+            df_frkbr1["SourceMergingId"] = sourceMergingId
+            df_frkbr1["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frkbr_inline1.keys():
                 for j in range(len(df_frkbr1["DestinationRailHead"])):
@@ -5742,6 +5579,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frk:
                 for j in dest_frk:
@@ -5760,6 +5599,7 @@ def Daily_Planner():
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
                         sourceRH.append(frk["virtualCode"])
+                        sourceMergingId.append(frk["sourceMergingId"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline:
@@ -5769,6 +5609,7 @@ def Daily_Planner():
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
                         sourceRH.append(frk["virtualCode"])
+                        sourceMergingId.append(frk["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -5793,6 +5634,7 @@ def Daily_Planner():
                         destinationId.append(frk["destinationId"])
                         destination_rake.append(frk["rake"])
                         destinationRH.append(frk["virtualCode"])
+                        destinationMergingId.append(frk["destinationMergingId"])
                         break
                 if not found_state:
                     for frk in frk_dest_inline:
@@ -5820,6 +5662,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5842,6 +5685,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Wheat+FRK':
                     From.append(org)
                     From_state.append(org_state)
@@ -5860,6 +5705,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frk["SourceRailHead"] =  sourceRH
             df_frk["SourceState"] = From_state
@@ -5879,6 +5726,8 @@ def Daily_Planner():
             df_frk["DestinationRakeType"] = destination_rake
             df_frk["sourceRH"] = From
             df_frk["destinationRH"] =  To
+            df_frk["SourceMergingId"] = sourceMergingId
+            df_frk["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frk_inline.keys():
                 for j in range(len(df_frk["DestinationRailHead"])):
@@ -5909,6 +5758,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frk1:
                 for j in dest_frk1:
@@ -5927,6 +5778,7 @@ def Daily_Planner():
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
                         sourceRH.append(frk["virtualCode"])
+                        sourceMergingId.append(frk["sourceMergingId"])
 
             for i in range(len(From)):
                 for frk in frk_origin_inline1:
@@ -5936,6 +5788,7 @@ def Daily_Planner():
                         sourceId.append(frk["sourceId"])
                         source_rake.append(frk["rake"])
                         sourceRH.append(frk["virtualCode"])
+                        sourceMergingId.append(frk["sourceMergingId"])
 
 
             for i in range(len(To)):
@@ -5961,6 +5814,7 @@ def Daily_Planner():
                         destinationId.append(frk["destinationId"])
                         destination_rake.append(frk["rake"])
                         destinationRH.append(frk["virtualCode"])
+                        destinationMergingId.append(frk["destinationMergingId"])
                         break
                 if not found_state:
                     for frk in frk_dest_inline1:
@@ -5976,6 +5830,7 @@ def Daily_Planner():
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
                             destinationRH.append(wheat["virtualCode"])
+                            destinationMergingId.append(wheat["destinationMergingId"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -6010,6 +5865,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Wheat+FRK':
                     From.append(org)
                     From_state.append(org_state)
@@ -6028,6 +5885,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frk1["SourceRailHead"] =  sourceRH
             df_frk1["SourceState"] = From_state
@@ -6046,7 +5905,9 @@ def Daily_Planner():
             df_frk1["SourceRakeType"] = source_rake
             df_frk1["DestinationRakeType"] = destination_rake
             df_frk1["sourceRH"] = From
-            df_frk1["destinationRH"] =  To
+            df_frk1["destinationRH"] = To
+            df_frk1["SourceMergingId"] = sourceMergingId
+            df_frk1["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frk_inline1.keys():
                 for j in range(len(df_frk1["DestinationRailHead"])):
@@ -6077,6 +5938,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frkcgr:
                 for j in dest_frkcgr:
@@ -6094,7 +5957,8 @@ def Daily_Planner():
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
                         source_rake.append(frkcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkcgr["virtualCode"])
+                        sourceMergingId.append(frkcgr["sourceMergingId"])
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin_inline:
@@ -6103,7 +5967,8 @@ def Daily_Planner():
                         From_division.append(frkcgr["sourceDivision"] if "sourceDivision" in frkcgr else "")
                         sourceId.append(frkcgr["sourceId"])
                         source_rake.append(frkcgr["rake"])
-                        sourceRH.append(wheat["virtualCode"])
+                        sourceRH.append(frkcgr["virtualCode"])
+                        sourceMergingId.append(frkcgr["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6127,7 +5992,8 @@ def Daily_Planner():
                         found_state = True
                         destinationId.append(frkcgr["destinationId"])
                         destination_rake.append(frkcgr["rake"])
-                        destinationRH.append(wheat["virtualCode"])
+                        destinationRH.append(frkcgr["virtualCode"])
+                        destinationMergingId.append(frkcgr["destinationMergingId"])
                         break
                 if not found_state:
                     for frkcgr in frkcgr_dest_inline:
@@ -6155,6 +6021,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6177,6 +6044,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'FRK+CGR':
                     From.append(org)
                     From_state.append(org_state)
@@ -6195,6 +6064,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frkcgr["SourceRailHead"] = sourceRH
             df_frkcgr["SourceState"] = From_state
@@ -6214,6 +6085,8 @@ def Daily_Planner():
             df_frkcgr["DestinationRakeType"] = destination_rake
             df_frkcgr["sourceRH"] =  From
             df_frkcgr["destinationRH"] = To
+            df_frkcgr["SourceMergingId"] = sourceMergingId
+            df_frkcgr["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frkcgr_inline.keys():
                 for j in range(len(df_frkcgr["DestinationRailHead"])):
@@ -6244,6 +6117,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frkcgr1:
                 for j in dest_frkcgr1:
@@ -6262,6 +6137,7 @@ def Daily_Planner():
                         sourceId.append(frkcgr["sourceId"])
                         source_rake.append(frkcgr["rake"])
                         sourceRH.append(frkcgr["virtualCode"])
+                        sourceMergingId.append(frkcgr["sourceMergingId"])
 
             for i in range(len(From)):
                 for frkcgr in frkcgr_origin_inline1:
@@ -6271,6 +6147,7 @@ def Daily_Planner():
                         sourceId.append(frkcgr["sourceId"])
                         source_rake.append(frkcgr["rake"])
                         sourceRH.append(frkcgr["virtualCode"])
+                        sourceMergingId.append(frkcgr["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6295,6 +6172,7 @@ def Daily_Planner():
                         destinationId.append(frkcgr["destinationId"])
                         destination_rake.append(frkcgr["rake"])
                         destinationRH.append(frkcgr["virtualCode"])
+                        destinationMergingId.append(frkcgr["destinationMergingId"])
                         break
                 if not found_state:
                     for frkcgr in frkcgr_dest_inline1:
@@ -6322,6 +6200,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6344,6 +6223,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'FRK+CGR':
                     From.append(org)
                     From_state.append(org_state)
@@ -6362,6 +6243,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frkcgr1["SourceRailHead"] = From
             df_frkcgr1["SourceState"] = From_state
@@ -6381,6 +6264,8 @@ def Daily_Planner():
             df_frkcgr1["DestinationRakeType"] = destination_rake
             df_frkcgr1["sourceRH"] = sourceRH
             df_frkcgr1["destinationRH"] = destinationRH
+            df_frkcgr1["SourceMergingId"] = sourceMergingId
+            df_frkcgr1["DestinationMergingId"] = destinationMergingId
 
             for i in dest_frkcgr_inline1.keys():
                 for j in range(len(df_frkcgr1["DestinationRailHead"])):
@@ -6411,6 +6296,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wcgr:
                 for j in dest_wcgr:
@@ -6429,6 +6316,7 @@ def Daily_Planner():
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
                         sourceRH.append(wcgr["virtualCode"])
+                        sourceMergingId.append(wcgr["sourceMergingId"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline:
@@ -6438,6 +6326,7 @@ def Daily_Planner():
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
                         sourceRH.append(wcgr["virtualCode"])
+                        sourceMergingId.append(wcgr["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6448,6 +6337,7 @@ def Daily_Planner():
                         destinationId.append(wcgr["destinationId"])
                         destination_rake.append(wcgr["rake"])
                         destinationRH.append(wcgr["virtualCode"])
+                        destinationMergingId.append(wcgr["destinationMergingId"])
                         break
                 if not found_state:
                     for wcgr in wcgr_dest_inline:
@@ -6489,6 +6379,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6511,6 +6402,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Wheat+CGR':
                     From.append(org)
                     From_state.append(org_state)
@@ -6529,6 +6422,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wcgr["SourceRailHead"] =  sourceRH
             df_wcgr["SourceState"] = From_state
@@ -6548,6 +6443,8 @@ def Daily_Planner():
             df_wcgr["DestinationRakeType"] = destination_rake
             df_wcgr["sourceRH"] = From
             df_wcgr["destinationRH"] = To
+            df_wcgr["SourceMergingId"] = sourceMergingId
+            df_wcgr["DestinationMergingId"] = destinationMergingId
 
             for i in dest_wcgr_inline.keys():
                 for j in range(len(df_wcgr["DestinationRailHead"])):
@@ -6578,6 +6475,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wcgr1:
                 for j in dest_wcgr1:
@@ -6596,6 +6495,7 @@ def Daily_Planner():
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
                         sourceRH.append(wcgr["virtualCode"])
+                        sourceMergingId.append(wcgr["sourceMergingId"])
 
             for i in range(len(From)):
                 for wcgr in wcgr_origin_inline1:
@@ -6605,6 +6505,7 @@ def Daily_Planner():
                         sourceId.append(wcgr["sourceId"])
                         source_rake.append(wcgr["rake"])
                         sourceRH.append(wcgr["virtualCode"])
+                        sourceMergingId.append(wcgr["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6615,6 +6516,7 @@ def Daily_Planner():
                         destinationId.append(wcgr["destinationId"])
                         destination_rake.append(wcgr["rake"])
                         destinationRH.append(wcgr["virtualCode"])
+                        destinationMergingId.append(wcgr["destinationMergingId"])
                         break
                 if not found_state:
                     for wcgr in wcgr_dest_inline1:
@@ -6656,6 +6558,7 @@ def Daily_Planner():
                         found_division = True
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6678,6 +6581,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Wheat+CGR':
                     From.append(org)
                     From_state.append(org_state)
@@ -6696,6 +6601,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wcgr1["SourceRailHead"] =  sourceRH
             df_wcgr1["SourceState"] = From_state
@@ -6715,6 +6622,8 @@ def Daily_Planner():
             df_wcgr1["DestinationRakeType"] = destination_rake
             df_wcgr1["sourceRH"] = From
             df_wcgr1["destinationRH"] = To
+            df_wcgr1["SourceMergingId"] = sourceMergingId
+            df_wcgr1["DestinationMergingId"] = destinationMergingId
 
             for i in dest_wcgr_inline1.keys():
                 for j in range(len(df_wcgr1["DestinationRailHead"])):
@@ -6744,6 +6653,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_rrc:
                 for j in dest_rrc:
@@ -6762,6 +6673,7 @@ def Daily_Planner():
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
                         sourceRH.append(rrc["virtualCode"])
+                        sourceMergingId.append(rrc["sourceMergingId"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline:
@@ -6771,6 +6683,7 @@ def Daily_Planner():
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
                         sourceRH.append(rrc["virtualCode"])
+                        sourceMergingId.append(rrc["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6780,6 +6693,7 @@ def Daily_Planner():
                         destinationId.append(rrc["destinationId"])
                         destination_rake.append(rrc["rake"])
                         destinationRH.append(rrc["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -6822,6 +6736,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6841,6 +6756,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'RRC':
                     From.append(org)
                     From_state.append(org_state)
@@ -6859,6 +6776,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_rrc["SourceRailHead"] =  sourceRH
             df_rrc["SourceState"] = From_state
@@ -6877,6 +6796,8 @@ def Daily_Planner():
             df_rrc["DestinationRakeType"] = destination_rake
             df_rrc["sourceRH"] = From
             df_rrc["destinationRH"] = To
+            df_rrc["SourceMergingId"] = sourceMergingId
+            df_rrc["DestinationMergingId"] = destinationMergingId
           
             for i in dest_rrc_inline.keys():
                 for j in range(len(df_rrc["DestinationRailHead"])):
@@ -6906,6 +6827,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_rrc1:
                 for j in dest_rrc1:
@@ -6924,6 +6847,7 @@ def Daily_Planner():
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
                         sourceRH.append(rrc["virtualCode"])
+                        sourceMergingId.append(rrc["sourceMergingId"])
 
             for i in range(len(From)):
                 for rrc in rrc_origin_inline1:
@@ -6933,6 +6857,7 @@ def Daily_Planner():
                         sourceId.append(rrc["sourceId"])
                         source_rake.append(rrc["rake"])
                         sourceRH.append(rrc["virtualCode"])
+                        sourceMergingId.append(rrc["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -6942,6 +6867,7 @@ def Daily_Planner():
                         destinationId.append(rrc["destinationId"])
                         destination_rake.append(rrc["rake"])
                         destinationRH.append(rrc["virtualCode"])
+                        destinationMergingId.append(rrc["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -6984,6 +6910,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7003,6 +6930,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'RRC':
                     From.append(org)
                     From_state.append(org_state)
@@ -7021,6 +6950,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_rrc1["SourceRailHead"] =  sourceRH
             df_rrc1["SourceState"] = From_state
@@ -7039,6 +6970,8 @@ def Daily_Planner():
             df_rrc1["DestinationRakeType"] = destination_rake
             df_rrc1["sourceRH"] = From
             df_rrc1["destinationRH"] = To
+            df_rrc1["SourceMergingId"] = sourceMergingId
+            df_rrc1["DestinationMergingId"] = destinationMergingId
           
             for i in dest_rrc_inline1.keys():
                 for j in range(len(df_rrc1["DestinationRailHead"])):
@@ -7068,6 +7001,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_ragi:
                 for j in dest_ragi:
@@ -7086,6 +7021,7 @@ def Daily_Planner():
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
                         sourceRH.append(ragi["virtualCode"])
+                        sourceMergingId.append(ragi["sourceMergingId"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline:
@@ -7095,6 +7031,7 @@ def Daily_Planner():
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
                         sourceRH.append(ragi["virtualCode"])
+                        sourceMergingId.append(ragi["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7105,6 +7042,7 @@ def Daily_Planner():
                         destinationId.append(ragi["destinationId"])
                         destination_rake.append(ragi["rake"])
                         destinationRH.append(ragi["virtualCode"])
+                        destinationMergingId.append(ragi["destinationMergingId"])
                         break
                 if not found_state:
                     for ragi in ragi_dest_inline:
@@ -7146,6 +7084,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7165,6 +7104,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Ragi':
                     From.append(org)
                     From_state.append(org_state)
@@ -7183,6 +7124,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_ragi["SourceRailHead"] = sourceRH
             df_ragi["SourceState"] = From_state
@@ -7201,6 +7144,8 @@ def Daily_Planner():
             df_ragi["DestinationRakeType"] = destination_rake
             df_ragi["sourceRH"] = From
             df_ragi["destinationRH"] = To
+            df_ragi["SourceMergingId"] = sourceMergingId
+            df_ragi["DestinationMergingId"] = destinationMergingId
 
             for i in dest_ragi_inline.keys():
                 for j in range(len(df_ragi["DestinationRailHead"])):
@@ -7230,6 +7175,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_ragi1:
                 for j in dest_ragi1:
@@ -7248,6 +7195,7 @@ def Daily_Planner():
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
                         sourceRH.append(ragi["virtualCode"])
+                        sourceMergingId.append(ragi["sourceMergingId"])
 
             for i in range(len(From)):
                 for ragi in ragi_origin_inline1:
@@ -7257,6 +7205,7 @@ def Daily_Planner():
                         sourceId.append(ragi["sourceId"])
                         source_rake.append(ragi["rake"])
                         sourceRH.append(ragi["virtualCode"])
+                        sourceMergingId.append(ragi["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7267,6 +7216,7 @@ def Daily_Planner():
                         destinationId.append(ragi["destinationId"])
                         destination_rake.append(ragi["rake"])
                         destinationRH.append(ragi["virtualCode"])
+                        destinationMergingId.append(ragi["destinationMergingId"])
                         break
                 if not found_state:
                     for ragi in ragi_dest_inline1:
@@ -7308,6 +7258,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7327,6 +7278,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Ragi':
                     From.append(org)
                     From_state.append(org_state)
@@ -7345,6 +7298,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_ragi1["SourceRailHead"] =  sourceRH
             df_ragi1["SourceState"] = From_state
@@ -7363,6 +7318,8 @@ def Daily_Planner():
             df_ragi1["DestinationRakeType"] = destination_rake
             df_ragi1["sourceRH"] = From
             df_ragi1["destinationRH"] = To
+            df_ragi1["SourceMergingId"] = sourceMergingId
+            df_ragi1["DestinationMergingId"] = destinationMergingId
 
             for i in dest_ragi_inline1.keys():
                 for j in range(len(df_ragi1["DestinationRailHead"])):
@@ -7393,6 +7350,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_jowar:
                 for j in dest_jowar:
@@ -7411,6 +7370,7 @@ def Daily_Planner():
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
                         sourceRH.append(jowar["virtualCode"])
+                        sourceMergingId.append(jowar["sourceMergingId"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline:
@@ -7420,6 +7380,7 @@ def Daily_Planner():
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
                         sourceRH.append(jowar["virtualCode"])
+                        sourceMergingId.append(jowar["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7429,6 +7390,7 @@ def Daily_Planner():
                         destinationId.append(jowar["destinationId"])
                         destination_rake.append(jowar["rake"])
                         destinationRH.append(jowar["virtualCode"])
+                        destinationMergingId.append(jowar["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -7471,6 +7433,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7490,6 +7453,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Jowar':
                     From.append(org)
                     From_state.append(org_state)
@@ -7508,6 +7473,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_jowar["SourceRailHead"] =  sourceRH
             df_jowar["SourceState"] = From_state
@@ -7526,6 +7493,8 @@ def Daily_Planner():
             df_jowar["DestinationRakeType"] = destination_rake
             df_jowar["sourceRH"] = From
             df_jowar["destinationRH"] = To
+            df_jowar["SourceMergingId"] = sourceMergingId
+            df_jowar["DestinationMergingId"] = destinationMergingId
 
             for i in dest_jowar_inline.keys():
                 for j in range(len(df_jowar["DestinationRailHead"])):
@@ -7555,6 +7524,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_jowar1:
                 for j in dest_jowar1:
@@ -7573,6 +7544,7 @@ def Daily_Planner():
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
                         sourceRH.append(jowar["virtualCode"])
+                        sourceMergingId.append(jowar["sourceMergingId"])
 
             for i in range(len(From)):
                 for jowar in jowar_origin_inline1:
@@ -7582,6 +7554,7 @@ def Daily_Planner():
                         sourceId.append(jowar["sourceId"])
                         source_rake.append(jowar["rake"])
                         sourceRH.append(jowar["virtualCode"])
+                        sourceMergingId.append(jowar["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7591,6 +7564,7 @@ def Daily_Planner():
                         destinationId.append(jowar["destinationId"])
                         destination_rake.append(jowar["rake"])
                         destinationRH.append(jowar["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -7633,6 +7607,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7652,6 +7627,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Ragi':
                     From.append(org)
                     From_state.append(org_state)
@@ -7670,6 +7647,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_jowar1["SourceRailHead"] =  sourceRH
             df_jowar1["SourceState"] = From_state
@@ -7688,6 +7667,8 @@ def Daily_Planner():
             df_jowar1["DestinationRakeType"] = destination_rake
             df_jowar1["sourceRH"] = From
             df_jowar1["destinationRH"] = To 
+            df_jowar1["SourceMergingId"] = sourceMergingId
+            df_jowar1["DestinationMergingId"] = destinationMergingId
 
             for i in dest_jowar_inline1.keys():
                 for j in range(len(df_jowar1["DestinationRailHead"])):
@@ -7717,6 +7698,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_bajra:
                 for j in dest_bajra:
@@ -7735,6 +7718,7 @@ def Daily_Planner():
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
                         sourceRH.append(bajra["virtualCode"])
+                        sourceMergingId.append(bajra["sourceMergingId"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline:
@@ -7744,6 +7728,7 @@ def Daily_Planner():
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
                         sourceRH.append(bajra["virtualCode"])
+                        sourceMergingId.append(bajra["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7754,6 +7739,7 @@ def Daily_Planner():
                         destinationId.append(bajra["destinationId"])
                         destination_rake.append(bajra["rake"])
                         destinationRH.append(bajra["virtualCode"])
+                        destinationMergingId.append(bajra["destinationMergingId"])
                         break
                 if not found_state:
                     for bajra in bajra_dest_inline:
@@ -7795,6 +7781,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(Wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7814,6 +7801,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Bajra':
                     From.append(org)
                     From_state.append(org_state)
@@ -7832,6 +7821,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_bajra["SourceRailHead"] = sourceRH 
             df_bajra["SourceState"] = From_state
@@ -7849,7 +7840,9 @@ def Daily_Planner():
             df_bajra["SourceRakeType"] = source_rake
             df_bajra["DestinationRakeType"] = destination_rake
             df_bajra["sourceRH"] = From
-            df_bajra["destinationRH"] = To 
+            df_bajra["destinationRH"] = To
+            df_bajra["SourceMergingId"] = sourceMergingId
+            df_bajra["DestinationMergingId"] = destinationMergingId 
             
             for i in dest_bajra_inline.keys():
                 for j in range(len(df_bajra["DestinationRailHead"])):
@@ -7879,6 +7872,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_bajra1:
                 for j in dest_bajra1:
@@ -7897,6 +7892,7 @@ def Daily_Planner():
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
                         sourceRH.append(bajra["virtualCode"])
+                        sourceMergingId.append(bajra["sourceMergingId"])
 
             for i in range(len(From)):
                 for bajra in bajra_origin_inline1:
@@ -7906,6 +7902,7 @@ def Daily_Planner():
                         sourceId.append(bajra["sourceId"])
                         source_rake.append(bajra["rake"])
                         sourceRH.append(bajra["virtualCode"])
+                        sourceMergingId.append(bajra["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -7916,6 +7913,7 @@ def Daily_Planner():
                         destinationId.append(bajra["destinationId"])
                         destination_rake.append(bajra["rake"])
                         destinationRH.append(bajra["virtualCode"])
+                        destinationMergingId.append(bajra["destinationMergingId"])
                         break
                 if not found_state:
                     for bajra in bajra_dest_inline1:
@@ -7957,6 +7955,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -7976,6 +7975,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Bajra':
                     From.append(org)
                     From_state.append(org_state)
@@ -7994,6 +7995,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_bajra1["SourceRailHead"] = sourceRH 
             df_bajra1["SourceState"] = From_state
@@ -8012,6 +8015,8 @@ def Daily_Planner():
             df_bajra1["DestinationRakeType"] = destination_rake
             df_bajra1["sourceRH"] = From
             df_bajra1["destinationRH"] = To
+            df_bajra1["SourceMergingId"] = sourceMergingId
+            df_bajra1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_bajra_inline1.keys():
                 for j in range(len(df_bajra1["DestinationRailHead"])):
@@ -8041,6 +8046,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_maize:
                 for j in dest_maize:
@@ -8059,6 +8066,7 @@ def Daily_Planner():
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
                         sourceRH.append(maize["virtualCode"])
+                        sourceMergingId.append(maize["sourceMergingId"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline:
@@ -8068,6 +8076,7 @@ def Daily_Planner():
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
                         sourceRH.append(maize["virtualCode"])
+                        sourceMergingId.append(maize["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8077,6 +8086,7 @@ def Daily_Planner():
                         destinationId.append(maize["destinationId"])
                         destination_rake.append(maize["rake"])
                         destinationRH.append(maize["virtualCode"])
+                        destinationMergingId.append(maize["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -8119,6 +8129,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8138,6 +8149,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Maize':
                     From.append(org)
                     From_state.append(org_state)
@@ -8156,6 +8169,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_maize["SourceRailHead"] = sourceRH 
             df_maize["SourceState"] = From_state
@@ -8174,6 +8189,8 @@ def Daily_Planner():
             df_maize["DestinationRakeType"] = destination_rake
             df_maize["sourceRH"] = From
             df_maize["destinationRH"] = To 
+            df_maize["SourceMergingId"] = sourceMergingId
+            df_maize["DestinationMergingId"] = destinationMergingId
             
             for i in dest_maize_inline.keys():
                 for j in range(len(df_maize["DestinationRailHead"])):
@@ -8203,6 +8220,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_maize1:
                 for j in dest_maize1:
@@ -8221,6 +8240,7 @@ def Daily_Planner():
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
                         sourceRH.append(maize["virtualCode"])
+                        sourceMergingId.append(maize["sourceMergingId"])
 
             for i in range(len(From)):
                 for maize in maize_origin_inline1:
@@ -8230,6 +8250,7 @@ def Daily_Planner():
                         sourceId.append(maize["sourceId"])
                         source_rake.append(maize["rake"])
                         sourceRH.append(maize["virtualCode"])
+                        sourceMergingId.append(maize["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8239,6 +8260,7 @@ def Daily_Planner():
                         destinationId.append(maize["destinationId"])
                         destination_rake.append(maize["rake"])
                         destinationRH.append(maize["virtualCode"])
+                        destinationMergingId.append(maize["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
@@ -8281,6 +8303,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8300,6 +8323,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Maize':
                     From.append(org)
                     From_state.append(org_state)
@@ -8318,6 +8343,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_maize1["SourceRailHead"] = sourceRH 
             df_maize1["SourceState"] = From_state
@@ -8336,6 +8363,8 @@ def Daily_Planner():
             df_maize1["DestinationRakeType"] = destination_rake
             df_maize1["sourceRH"] = From
             df_maize1["destinationRH"] = To
+            df_maize1["SourceMergingId"] = sourceMergingId
+            df_maize1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_maize_inline1.keys():
                 for j in range(len(df_maize1["DestinationRailHead"])):
@@ -8365,6 +8394,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc1:
                 for j in dest_misc1:
@@ -8383,6 +8414,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline:
@@ -8392,6 +8424,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8402,6 +8435,7 @@ def Daily_Planner():
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
                         destinationRH.append(misc1["virtualCode"])
+                        destinationMergingId.append(misc1["destinationMergingId"])
                         break
                 if not found_state:
                     for misc1 in misc1_dest_inline:
@@ -8443,6 +8477,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8462,6 +8497,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Misc1':
                     From.append(org)
                     From_state.append(org_state)
@@ -8480,6 +8517,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc1["SourceRailHead"] = sourceRH 
             df_misc1["SourceState"] = From_state
@@ -8498,6 +8537,8 @@ def Daily_Planner():
             df_misc1["DestinationRakeType"] = destination_rake
             df_misc1["sourceRH"] = From
             df_misc1["destinationRH"] = To
+            df_misc1["SourceMergingId"] = sourceMergingId
+            df_misc1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc1_inline.keys():
                 for j in range(len(df_misc1["DestinationRailHead"])):
@@ -8527,6 +8568,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc11:
                 for j in dest_misc11:
@@ -8545,6 +8588,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc1 in misc1_origin_inline1:
@@ -8554,6 +8598,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -8564,6 +8609,7 @@ def Daily_Planner():
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
                         destinationRH.append(misc1["virtualCode"])
+                        destinationMergingId.append(misc1["destinationMergingId"])
                         break
                 if not found_state:
                     for misc1 in misc1_dest_inline1:
@@ -8605,6 +8651,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8624,6 +8671,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Misc1':
                     From.append(org)
                     From_state.append(org_state)
@@ -8642,6 +8691,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc11["SourceRailHead"] = sourceRH 
             df_misc11["SourceState"] = From_state
@@ -8660,6 +8711,8 @@ def Daily_Planner():
             df_misc11["DestinationRakeType"] = destination_rake
             df_misc11["sourceRH"] = From
             df_misc11["destinationRH"] = To
+            df_misc11["SourceMergingId"] = sourceMergingId
+            df_misc11["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc1_inline1.keys():
                 for j in range(len(df_misc11["DestinationRailHead"])):
@@ -8689,6 +8742,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc2:
                 for j in dest_misc2:
@@ -8708,6 +8763,7 @@ def Daily_Planner():
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
                         sourceRH.append(misc2["virtualCode"])
+                        sourceMergingId.append(misc2["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline:
@@ -8718,6 +8774,7 @@ def Daily_Planner():
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
                         sourceRH.append(misc2["virtualCode"])
+                        sourceMergingId.append(misc2["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8728,6 +8785,7 @@ def Daily_Planner():
                         destinationId.append(misc2["destinationId"])
                         destination_rake.append(misc2["rake"])
                         destinationRH.append(misc2["virtualCode"])
+                        destinationMergingId.append(misc2["destinationMergingId"])
                         break
                 if not found_state:
                     for misc2 in misc2_dest_inline:
@@ -8769,6 +8827,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8788,6 +8847,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Misc2':
                     From.append(org)
                     From_state.append(org_state)
@@ -8806,6 +8867,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc2["SourceRailHead"] = sourceRH 
             df_misc2["SourceState"] = From_state
@@ -8824,6 +8887,8 @@ def Daily_Planner():
             df_misc2["DestinationRakeType"] = destination_rake
             df_misc2["sourceRH"] = From
             df_misc2["destinationRH"] = To
+            df_misc2["SourceMergingId"] = sourceMergingId
+            df_misc2["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc2_inline.keys():
                 for j in range(len(df_misc2["DestinationRailHead"])):
@@ -8853,6 +8918,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc21:
                 for j in dest_misc21:
@@ -8872,6 +8939,7 @@ def Daily_Planner():
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
                         sourceRH.append(misc2["virtualCode"])
+                        sourceMergingId.append(misc2["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc2 in misc2_origin_inline1:
@@ -8882,6 +8950,7 @@ def Daily_Planner():
                         sourceId.append(misc2["sourceId"])
                         source_rake.append(misc2["rake"])
                         sourceRH.append(misc2["virtualCode"])
+                        sourceMergingId.append(misc2["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -8892,6 +8961,7 @@ def Daily_Planner():
                         destinationId.append(misc2["destinationId"])
                         destination_rake.append(misc2["rake"])
                         destinationRH.append(misc2["virtualCode"])
+                        destinationMergingId.append(misc2["destinationMergingId"])
                         break
                 if not found_state:
                     for misc2 in misc2_dest_inline1:
@@ -8933,6 +9003,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -8952,6 +9023,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Misc2':
                     From.append(org)
                     From_state.append(org_state)
@@ -8970,6 +9043,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc21["SourceRailHead"] = sourceRH 
             df_misc21["SourceState"] = From_state
@@ -8988,6 +9063,8 @@ def Daily_Planner():
             df_misc21["DestinationRakeType"] = destination_rake
             df_misc21["sourceRH"] = From
             df_misc21["destinationRH"] = To
+            df_misc21["SourceMergingId"] = sourceMergingId
+            df_misc21["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc2_inline1.keys():
                 for j in range(len(df_misc21["DestinationRailHead"])):
@@ -9017,6 +9094,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wheaturs:
                 for j in dest_wheaturs:
@@ -9035,6 +9114,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in wheaturs_origin_inline:
@@ -9044,6 +9124,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -9054,6 +9135,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in wheaturs_dest_inline:
@@ -9095,6 +9177,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -9114,6 +9197,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Wheat(URS)':
                     From.append(org)
                     From_state.append(org_state)
@@ -9132,6 +9217,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wheaturs["SourceRailHead"] = sourceRH 
             df_wheaturs["SourceState"] = From_state
@@ -9150,6 +9237,8 @@ def Daily_Planner():
             df_wheaturs["DestinationRakeType"] = destination_rake
             df_wheaturs["sourceRH"] = From
             df_wheaturs["destinationRH"] = To
+            df_wheaturs["SourceMergingId"] = sourceMergingId
+            df_wheaturs["DestinationMergingId"] = destinationMergingId
             
             for i in dest_wheaturs_inline.keys():
                 for j in range(len(df_wheaturs["DestinationRailHead"])):
@@ -9179,6 +9268,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wheaturs1:
                 for j in dest_wheaturs1:
@@ -9197,6 +9288,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in wheaturs_origin_inline1:
@@ -9206,6 +9298,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -9216,6 +9309,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in wheaturs_dest_inline1:
@@ -9257,6 +9351,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -9276,6 +9371,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Wheat(URS)':
                     From.append(org)
                     From_state.append(org_state)
@@ -9294,6 +9391,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wheaturs1["SourceRailHead"] = sourceRH 
             df_wheaturs1["SourceState"] = From_state
@@ -9312,6 +9411,8 @@ def Daily_Planner():
             df_wheaturs1["DestinationRakeType"] = destination_rake
             df_wheaturs1["sourceRH"] = From
             df_wheaturs1["destinationRH"] = To
+            df_wheaturs1["SourceMergingId"] = sourceMergingId
+            df_wheaturs1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_wheaturs_inline1.keys():
                 for j in range(len(df_wheaturs1["DestinationRailHead"])):
@@ -9341,6 +9442,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wheatfaq:
                 for j in dest_wheatfaq:
@@ -9359,6 +9462,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in wheatfaq_origin_inline:
@@ -9368,6 +9472,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -9378,6 +9483,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in wheatfaq_dest_inline:
@@ -9419,6 +9525,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -9438,6 +9545,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Wheat(FAQ)':
                     From.append(org)
                     From_state.append(org_state)
@@ -9456,6 +9565,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wheatfaq["SourceRailHead"] = sourceRH 
             df_wheatfaq["SourceState"] = From_state
@@ -9474,6 +9585,8 @@ def Daily_Planner():
             df_wheatfaq["DestinationRakeType"] = destination_rake
             df_wheatfaq["sourceRH"] = From
             df_wheatfaq["destinationRH"] = To
+            df_wheatfaq["SourceMergingId"] = sourceMergingId
+            df_wheatfaq["DestinationMergingId"] = destinationMergingId
             
             for i in dest_wheatfaq_inline.keys():
                 for j in range(len(df_wheatfaq["DestinationRailHead"])):
@@ -9503,6 +9616,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wheatfaq1:
                 for j in dest_wheatfaq1:
@@ -9521,6 +9636,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in wheatfaq_origin_inline1:
@@ -9530,6 +9646,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(To)):
                 found_state = False
@@ -9540,6 +9657,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in wheatfaq_dest_inline1:
@@ -9581,6 +9699,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -9600,6 +9719,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Wheat(FAQ)':
                     From.append(org)
                     From_state.append(org_state)
@@ -9618,6 +9739,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wheatfaq1["SourceRailHead"] = sourceRH
             df_wheatfaq1["SourceState"] = From_state
@@ -9636,6 +9759,8 @@ def Daily_Planner():
             df_wheatfaq1["DestinationRakeType"] = destination_rake
             df_wheatfaq1["sourceRH"] = From
             df_wheatfaq1["destinationRH"] = To
+            df_wheatfaq1["SourceMergingId"] = sourceMergingId
+            df_wheatfaq1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_wheatfaq_inline1.keys():
                 for j in range(len(df_wheatfaq1["DestinationRailHead"])):
@@ -9665,6 +9790,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wheatrra:
                 for j in dest_wheatrra:
@@ -9683,6 +9810,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in wheatrra_origin_inline:
@@ -9692,6 +9820,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -9702,6 +9831,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in wheatrra_dest_inline:
@@ -9743,6 +9873,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(frkbr["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -9762,6 +9893,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Wheat+RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -9780,6 +9913,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wheatrra["SourceRailHead"] = sourceRH
             df_wheatrra["SourceState"] = From_state
@@ -9798,6 +9933,8 @@ def Daily_Planner():
             df_wheatrra["DestinationRakeType"] = destination_rake
             df_wheatrra["sourceRH"] = From
             df_wheatrra["destinationRH"] = To
+            df_wheatrra["SourceMergingId"] = sourceMergingId
+            df_wheatrra["DestinationMergingId"] = destinationMergingId
             
             for i in dest_wheatrra_inline.keys():
                 for j in range(len(df_wheatrra["DestinationRailHead"])):
@@ -9827,6 +9964,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_wheatrra1:
                 for j in dest_wheatrra1:
@@ -9845,6 +9984,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in wheatrra_origin_inline1:
@@ -9854,6 +9994,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -9864,6 +10005,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in wheatrra_dest_inline1:
@@ -9905,6 +10047,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -9924,6 +10067,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Wheat+RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -9942,6 +10087,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_wheatrra1["SourceRailHead"] = sourceRH
             df_wheatrra1["SourceState"] = From_state
@@ -9960,6 +10107,8 @@ def Daily_Planner():
             df_wheatrra1["DestinationRakeType"] = destination_rake
             df_wheatrra1["sourceRH"] = From
             df_wheatrra1["destinationRH"] = To
+            df_wheatrra1["SourceMergingId"] = sourceMergingId
+            df_wheatrra1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_wheatrra_inline1.keys():
                 for j in range(len(df_wheatrra1["DestinationRailHead"])):
@@ -9989,6 +10138,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frk_rra:
                 for j in dest_frk_rra:
@@ -10007,6 +10158,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in frk_rra_origin_inline:
@@ -10016,6 +10168,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10026,6 +10179,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in frk_rra_dest_inline:
@@ -10067,6 +10221,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -10086,6 +10241,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'FRK+RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -10104,6 +10261,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frk_rra["SourceRailHead"] = sourceRH
             df_frk_rra["SourceState"] = From_state
@@ -10121,7 +10280,9 @@ def Daily_Planner():
             df_frk_rra["SourceRakeType"] = source_rake
             df_frk_rra["DestinationRakeType"] = destination_rake
             df_frk_rra["sourceRH"] = From 
-            df_frk_rra["destinationRH"] = To 
+            df_frk_rra["destinationRH"] = To
+            df_frk_rra["SourceMergingId"] = sourceMergingId
+            df_frk_rra["DestinationMergingId"] = destinationMergingId 
             
             for i in dest_frk_rra_inline.keys():
                 for j in range(len(df_frk_rra["DestinationRailHead"])):
@@ -10151,6 +10312,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_frk_rra1:
                 for j in dest_frk_rra1:
@@ -10169,6 +10332,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
 
             for i in range(len(From)):
                 for wheat in frk_rra_origin_inline1:
@@ -10178,6 +10342,7 @@ def Daily_Planner():
                         sourceId.append(wheat["sourceId"])
                         source_rake.append(wheat["rake"])
                         sourceRH.append(wheat["virtualCode"])
+                        sourceMergingId.append(wheat["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10188,6 +10353,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_state:
                     for wheat in frk_rra_dest_inline1:
@@ -10229,6 +10395,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -10248,6 +10415,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'FRK+RRA':
                     From.append(org)
                     From_state.append(org_state)
@@ -10266,6 +10435,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_frk_rra1["SourceRailHead"] = sourceRH
             df_frk_rra1["SourceState"] = From_state
@@ -10284,6 +10455,8 @@ def Daily_Planner():
             df_frk_rra1["DestinationRakeType"] = destination_rake
             df_frk_rra1["sourceRH"] = From 
             df_frk_rra1["destinationRH"] = To
+            df_frk_rra1["SourceMergingId"] = sourceMergingId
+            df_frk_rra1["DestinationMergingId"] = destinationMergingId
             
             for i in dest_frk_rra_inline1.keys():
                 for j in range(len(df_frk_rra1["DestinationRailHead"])):
@@ -10313,6 +10486,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc3:
                 for j in dest_misc3:
@@ -10331,6 +10506,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc1 in misc3_origin_inline:
@@ -10340,6 +10516,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10350,6 +10527,7 @@ def Daily_Planner():
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
                         destinationRH.append(misc1["virtualCode"])
+                        destinationMergingId.append(misc1["destinationMergingId"])
                         break
                 if not found_state:
                     for misc1 in misc3_dest_inline:
@@ -10391,6 +10569,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -10410,6 +10589,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Misc3':
                     From.append(org)
                     From_state.append(org_state)
@@ -10428,6 +10609,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc3["SourceRailHead"] = sourceRH
             df_misc3["SourceState"] = From_state
@@ -10446,6 +10629,8 @@ def Daily_Planner():
             df_misc3["DestinationRakeType"] = destination_rake
             df_misc3["sourceRH"] = From 
             df_misc3["destinationRH"] = To
+            df_misc3["SourceMergingId"] = sourceMergingId
+            df_misc3["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc3_inline.keys():
                 for j in range(len(df_misc3["DestinationRailHead"])):
@@ -10475,6 +10660,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc31:
                 for j in dest_misc31:
@@ -10493,6 +10680,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc1 in misc3_origin_inline1:
@@ -10502,6 +10690,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10512,6 +10701,7 @@ def Daily_Planner():
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
                         destinationRH.append(misc1["virtualCode"])
+                        destinationMergingId.append(misc1["destinationMergingId"])
                         break
                 if not found_state:
                     for misc1 in misc3_dest_inline1:
@@ -10553,6 +10743,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -10572,6 +10763,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Misc3':
                     From.append(org)
                     From_state.append(org_state)
@@ -10590,6 +10783,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc31["SourceRailHead"] = sourceRH
             df_misc31["SourceState"] = From_state
@@ -10608,6 +10803,8 @@ def Daily_Planner():
             df_misc31["DestinationRakeType"] = destination_rake
             df_misc31["sourceRH"] = From
             df_misc31["destinationRH"] = To
+            df_misc31["SourceMergingId"] = sourceMergingId
+            df_misc31["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc3_inline1.keys():
                 for j in range(len(df_misc31["DestinationRailHead"])):
@@ -10637,6 +10834,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc4:
                 for j in dest_misc4:
@@ -10655,6 +10854,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc1 in misc4_origin_inline:
@@ -10664,6 +10864,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10674,6 +10875,7 @@ def Daily_Planner():
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
                         destinationRH.append(misc1["virtualCode"])
+                        destinationMergingId.append(misc1["destinationMergingId"])
                         break
                 if not found_state:
                     for misc1 in misc4_dest_inline:
@@ -10715,6 +10917,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -10734,6 +10937,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake[i]
                 orgRH = confirmed_org_RH[i]
                 destRH = confirmed_dest_RH[i]
+                org_merging_id = confirmed_sourceMergingId[i]
+                dest_merging_id = confirmed_destinationMergingId[i]
                 if Commodity == 'Misc4':
                     From.append(org)
                     From_state.append(org_state)
@@ -10752,6 +10957,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc4["SourceRailHead"] = sourceRH 
             df_misc4["SourceState"] = From_state
@@ -10770,6 +10977,8 @@ def Daily_Planner():
             df_misc4["DestinationRakeType"] = destination_rake
             df_misc4["sourceRH"] = From
             df_misc4["destinationRH"] = To 
+            df_misc4["SourceMergingId"] = sourceMergingId
+            df_misc4["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc4_inline.keys():
                 for j in range(len(df_misc4["DestinationRailHead"])):
@@ -10799,6 +11008,8 @@ def Daily_Planner():
             destination_rake = []
             sourceRH = []
             destinationRH = []
+            sourceMergingId = []
+            destinationMergingId = []
             
             for i in source_misc41:
                 for j in dest_misc41:
@@ -10817,6 +11028,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
 
             for i in range(len(From)):
                 for misc1 in misc4_origin_inline1:
@@ -10826,6 +11038,7 @@ def Daily_Planner():
                         sourceId.append(misc1["sourceId"])
                         source_rake.append(misc1["rake"])
                         sourceRH.append(misc1["virtualCode"])
+                        sourceMergingId.append(misc1["sourceMergingId"])
             
             for i in range(len(To)):
                 found_state = False
@@ -10836,6 +11049,7 @@ def Daily_Planner():
                         destinationId.append(misc1["destinationId"])
                         destination_rake.append(misc1["rake"])
                         destinationRH.append(misc1["virtualCode"])
+                        destinationMergingId.append(misc1["destinationMergingId"])
                         break
                 if not found_state:
                     for misc1 in misc4_dest_inline1:
@@ -10877,6 +11091,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
+                        destinationMergingId.append(wheat["destinationMergingId"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -10896,6 +11111,8 @@ def Daily_Planner():
                 dest_rake = confirmed_dest_rake1[i]
                 orgRH = confirmed_org_RH1[i]
                 destRH = confirmed_dest_RH1[i]
+                org_merging_id = confirmed_sourceMergingId1[i]
+                dest_merging_id = confirmed_destinationMergingId1[i]
                 if Commodity == 'Misc4':
                     From.append(org)
                     From_state.append(org_state)
@@ -10914,6 +11131,8 @@ def Daily_Planner():
                     destination_rake.append(dest_rake)
                     sourceRH.append(orgRH)
                     destinationRH.append(destRH)
+                    sourceMergingId.append(org_merging_id)
+                    destinationMergingId.append(dest_merging_id)
 
             df_misc41["SourceRailHead"] = sourceRH
             df_misc41["SourceState"] = From_state
@@ -10932,6 +11151,8 @@ def Daily_Planner():
             df_misc41["DestinationRakeType"] = destination_rake
             df_misc41["sourceRH"] = From
             df_misc41["destinationRH"] = To
+            df_misc41["SourceMergingId"] = sourceMergingId
+            df_misc41["DestinationMergingId"] = destinationMergingId
             
             for i in dest_misc4_inline1.keys():
                 for j in range(len(df_misc41["DestinationRailHead"])):
@@ -11008,7 +11229,7 @@ def Daily_Planner():
                 df_frk_rra1.to_excel(writer, sheet_name="frk+rra_58w", index=False)
                 df_misc31.to_excel(writer, sheet_name="misc3_58w", index=False)
                 df_misc41.to_excel(writer, sheet_name="misc4_58w", index=False)
-
+            data1["status"] = 1
         except Exception as e:
             print(e)
             data1["status"] = 0
