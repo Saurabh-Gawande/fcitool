@@ -508,14 +508,14 @@ def Monthly_Solution():
             prob+=0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity)
             print(0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity))
  
-            for i in supply["Railhead"]:
+            for i in supply.index:
                 for k in commodity:
                     prob+=lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=supply[cmd_match[k]][i]
                     print(lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=supply[cmd_match[k]][i])
                     prob+=lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=2*supply[cmd_match[k]][i]
                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
 
-            for i in demand["Railhead"]:
+            for i in demand.index:
                 for k in commodity:
                     prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])>=demand[cmd_match[k]][i]
                     prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==demand[cmd_match[k]][i]

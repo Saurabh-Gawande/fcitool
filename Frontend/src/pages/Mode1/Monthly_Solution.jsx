@@ -27,7 +27,6 @@ function Monthly_Solution() {
 
   //for import the data
   const ImportData = () => {
-   
     try {
       fetch(
         "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
@@ -43,7 +42,7 @@ function Monthly_Solution() {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-     
+
       fetch(
         "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward"
       )
@@ -58,7 +57,7 @@ function Monthly_Solution() {
           console.error("Error fetching data:", error);
         });
       set_type("Imported");
-     
+
       fetch(
         "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData"
       )
@@ -70,10 +69,9 @@ function Monthly_Solution() {
       )
         .then((res) => res.json())
         .then((data) => setMonthlyDataCollection(data));
-
     } catch (error) {
       console.error("Error fetching data:", error);
-    } 
+    }
   };
 
   useEffect(() => {
@@ -366,7 +364,7 @@ function Monthly_Solution() {
                     style={{
                       color: "white",
                       display: "flex",
-                      width: "42vw",
+                      width: "62vw",
                       justifyContent: "end",
                     }}
                   >
@@ -377,11 +375,11 @@ function Monthly_Solution() {
                       Import data
                     </button>
                   </div>
-                  <div style={{ fontSize: "20px", fontWeight: "700" }}>
+                  {/* <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
                     Template
-                  </div>
-                  <form
+                  </div> */}
+                  {/* <form
                     action=""
                     encType="multipart/form-data"
                     id="uploadForm"
@@ -431,7 +429,7 @@ function Monthly_Solution() {
                       />
                       <div style={{ marginTop: "-25px" }}>Click here</div>
                     </div>
-                  </form>
+                  </form> */}
                 </div>
                 <br />
                 <div style={{ marginLeft: "15px" }}>
