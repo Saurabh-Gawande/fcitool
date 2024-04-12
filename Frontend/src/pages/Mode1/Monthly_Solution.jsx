@@ -27,47 +27,53 @@ function Monthly_Solution() {
 
   //for import the data
   const ImportData = () => {
-    fetch(
-      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
-    )
-      .then((res) => res.blob())
-      .then(async (blob) => {
-        const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   
+    try {
+      fetch(
+        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
+      )
+        .then((res) => res.blob())
+        .then(async (blob) => {
+          const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+          setImportedFile1(excelFile);
+          setShowMessage(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
         });
-        setImportedFile1(excelFile);
-        setShowMessage(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-    fetch(
-      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward"
-    )
-      .then((res) => res.blob())
-      .then(async (blob) => {
-        const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+     
+      fetch(
+        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward"
+      )
+        .then((res) => res.blob())
+        .then(async (blob) => {
+          const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+          setImportedFile2(excelFile);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
         });
-        setImportedFile2(excelFile);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    set_type("Imported");
+      set_type("Imported");
+     
+      fetch(
+        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData"
+      )
+        .then((res) => res.json())
+        .then((data) => setCommodityCountData(data));
 
-    fetch(
-      "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData"
-    )
-      .then((res) => res.json())
-      .then((data) => setCommodityCountData(data));
+      fetch(
+        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel"
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthlyDataCollection(data));
 
-    fetch(
-      "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel"
-    )
-      .then((res) => res.json())
-      .then((data) => setMonthlyDataCollection(data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } 
   };
 
   useEffect(() => {
@@ -299,16 +305,15 @@ function Monthly_Solution() {
   return (
     <div
       className="page-container"
-      style={{ backgroundColor: "#ebab44b0", height: "100vh" }}
+      style={{ backgroundColor: "#ebab44b0", minHeight: "100vh" }}
     >
-      <div>
-        <Sidenav />
-      </div>
+      <Sidenav />
       <div
         className="page-content"
         style={{
           display: "flex",
           backgroundImage: "url('static/img/bg8.jpg')",
+          minHeight: "100vh",
         }}
       >
         <div>
@@ -471,37 +476,35 @@ function Monthly_Solution() {
                   {showMessage && (
                     <div className="container mt-5">
                       <div className="row">
-                        <div className="col-md-8">
-                          <div className="table-responsive">
-                            <table className="table table-sm table-bordered">
-                              <thead>
-                                <tr>
-                                  <th>Commodity</th>
-                                  <th>State</th>
-                                  <th>Inward</th>
-                                  <th>Outward</th>
-                                  <th>Surplus</th>
+                        <div className="table-responsive">
+                          <table className="table table-sm table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Commodity</th>
+                                <th>State</th>
+                                <th>Inward</th>
+                                <th>Outward</th>
+                                <th>Surplus</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {commodiyCountData.map((item, index) => (
+                                <tr
+                                  key={index}
+                                  className={getRowColor(
+                                    item.inward,
+                                    item.outward
+                                  )}
+                                >
+                                  <td>{item.commodity}</td>
+                                  <td>{item.state}</td>
+                                  <td>{item.inward}</td>
+                                  <td>{item.outward}</td>
+                                  <td>{item.surplus}</td>
                                 </tr>
-                              </thead>
-                              <tbody>
-                                {commodiyCountData.map((item, index) => (
-                                  <tr
-                                    key={index}
-                                    className={getRowColor(
-                                      item.inward,
-                                      item.outward
-                                    )}
-                                  >
-                                    <td>{item.commodity}</td>
-                                    <td>{item.state}</td>
-                                    <td>{item.inward}</td>
-                                    <td>{item.outward}</td>
-                                    <td>{item.surplus}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
@@ -714,7 +717,7 @@ function Monthly_Solution() {
             <br />
           </div>
         </div>
-        <div style={{ backgroundColor: "#ebab44b0", width: "20%" }}>
+        <div style={{ backgroundColor: "#ebab44b0", width: "29%" }}>
           <br />
 
           <span style={{ color: "black", fontSize: "32px", marginLeft: "5%" }}>

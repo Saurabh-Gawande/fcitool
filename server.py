@@ -471,14 +471,16 @@ def Monthly_Solution():
                 data=pd.ExcelFile("Input//Input_template_Monthly_Planner.xlsx")
                 supply = pd.read_excel(data,sheet_name="Supply",index_col=1)
                 demand = pd.read_excel(data,sheet_name="Demand",index_col=1)
+                print(supply, "supply")
+                print(demand, "damand")
             else: 
                 print('Imported')
                 data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx")
                 data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx")
                 supply = pd.read_excel(data2, sheet_name="MonthlyData")
-                print("supply")
+                print(supply, "supply")
                 demand = pd.read_excel(data1, sheet_name="MonthlyData")
-                print("demand")
+                print(demand, "demand")
             # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
@@ -500,26 +502,26 @@ def Monthly_Solution():
                     print(cmd_match[k],":","TRUE")
                 else:
                     print(cmd_match[k],":","FALSE")
-          
-            x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],0,cat="Integer")
-
-            prob+=0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
-            print(0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity))
+            
+            x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity],0,cat="Integer")
+            
+            prob+=0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity)
+            print(0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity))
  
-            for i in supply.index:
+            for i in supply["Railhead"]:
                 for k in commodity:
-                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
-                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
+                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=supply[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=supply[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=2*supply[cmd_match[k]][i]
                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
 
-            for i in demand.index:
+            for i in demand["Railhead"]:
                 for k in commodity:
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])>=demand[cmd_match[k]][i]
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==demand[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==demand[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==2*demand[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==2*demand[cmd_match[k]][i])
             
             # prob.writeLP("FCI_monthly_allocation.lp")
             prob.solve()
@@ -530,7 +532,7 @@ def Monthly_Solution():
             print("Total Number of Constraints:",len(prob.constraints))
             
             for k in commodity:
-                print(cmd_match[k],":",0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index).value())
+                print(cmd_match[k],":",0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply["Railhead"] for j in demand["Railhead"]).value())
 
             rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
             A=[]
@@ -541,8 +543,8 @@ def Monthly_Solution():
             F=[]
 
             for k in commodity:
-                for i in supply.index:
-                    for j in demand.index:
+                for i in supply["Railhead"]:
+                    for j in demand["Railhead"]:
                         if x_ijk[(i,j,k)].value()>0:
                             A.append(i)
                             E.append(supply["State"][i])
@@ -579,7 +581,7 @@ def Monthly_Solution():
                 rh_tag.to_excel(writer, sheet_name="RH_RH_tag",index=False)
             
         except Exception as e:
-            # print(e)
+            print(e)
             data1["status"] = 0
         json_data = json.dumps(data1)
         json_object = json.loads(json_data)
