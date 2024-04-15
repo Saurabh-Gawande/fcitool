@@ -6695,7 +6695,7 @@ def Daily_Planner():
                         destinationId.append(rrc["destinationId"])
                         destination_rake.append(rrc["rake"])
                         destinationRH.append(rrc["virtualCode"])
-                        destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationMergingId.append(rrc["destinationMergingId"])
                         found_state = True
                         break
                 if not found_state:
