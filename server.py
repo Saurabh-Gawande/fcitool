@@ -590,6 +590,7 @@ def Monthly_Solution():
     else:
         return ("error")
 
+all_commodity_data = {}
 @app.route("/Daily_Planner",methods = ["POST","GET"])
 def Daily_Planner():
     data1 = {}
@@ -3781,6 +3782,7 @@ def Daily_Planner():
             sourceMergingId = []
             destinationMergingId = []
 
+            print(source_wheat, dest_wheat)
             for i in source_wheat:
                 for j in dest_wheat:
                     if int(x_ij_wheat[(i, j)].value()) > 0:
@@ -3913,10 +3915,10 @@ def Daily_Planner():
             
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
-
-            df_wheat["SourceRailHead"] = sourceRH
+            
+            df_wheat["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_wheat["SourceState"] = From_state
-            df_wheat["DestinationRailHead"] =  destinationRH
+            df_wheat["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_wheat["DestinationState"] = To_state
             df_wheat["Commodity"] = commodity
             # df_wheat["Cost"] = Cost
@@ -3930,11 +3932,11 @@ def Daily_Planner():
             df_wheat["destinationId"] = destinationId
             df_wheat["SourceRakeType"] = source_rake
             df_wheat["DestinationRakeType"] = destination_rake
-            df_wheat["sourceRH"] =  From
-            df_wheat["destinationRH"] = To
+            df_wheat["sourceRH"] = sourceRH 
+            df_wheat["destinationRH"] = destinationRH
             df_wheat["SourceMergingId"] = sourceMergingId
             df_wheat["DestinationMergingId"] = destinationMergingId
-            print(df_wheat)
+            print(To)
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["DestinationRailHead"])):
@@ -4102,9 +4104,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wheat1["SourceRailHead"] = sourceRH 
+            df_wheat1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_wheat1["SourceState"] = From_state
-            df_wheat1["DestinationRailHead"] = destinationRH 
+            df_wheat1["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_wheat1["DestinationState"] = To_state
             df_wheat1["Commodity"] = commodity
             # df_wheat["Cost"] = Cost
@@ -4118,8 +4120,8 @@ def Daily_Planner():
             df_wheat1["destinationId"] = destinationId
             df_wheat1["SourceRakeType"] = source_rake
             df_wheat1["DestinationRakeType"] = destination_rake
-            df_wheat1["sourceRH"] = From
-            df_wheat1["destinationRH"] = To
+            df_wheat1["sourceRH"] =  sourceRH
+            df_wheat1["destinationRH"] =  destinationRH
             df_wheat1["SourceMergingId"] = sourceMergingId
             df_wheat1["DestinationMergingId"] = destinationMergingId
             
@@ -4281,9 +4283,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_rra["SourceRailHead"] = sourceRH
+            df_rra["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_rra["SourceState"] = From_state_rra
-            df_rra["DestinationRailHead"] = destinationRH 
+            df_rra["DestinationRailHead"] =  [item.split('_')[0] for item in To]
             df_rra["DestinationState"] = To_state_rra
             df_rra["Commodity"] = commodity
             # df_rra["Cost"] = Cost
@@ -4297,8 +4299,8 @@ def Daily_Planner():
             df_rra["destinationId"] = destinationId
             df_rra["SourceRakeType"] = source_rake
             df_rra["DestinationRakeType"] = destination_rake
-            df_rra["sourceRH"] =  From
-            df_rra["destinationRH"] = To 
+            df_rra["sourceRH"] =   sourceRH
+            df_rra["destinationRH"] =  destinationRH
             df_rra["SourceMergingId"] = sourceMergingId
             df_rra["DestinationMergingId"] = destinationMergingId
            
@@ -4461,9 +4463,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_rra1["SourceRailHead"] = sourceRH
+            df_rra1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_rra1["SourceState"] = From_state_rra
-            df_rra1["DestinationRailHead"] = destinationRH 
+            df_rra1["DestinationRailHead"] =  [item.split('_')[0] for item in To]
             df_rra1["DestinationState"] = To_state_rra
             df_rra1["Commodity"] = commodity
             # df_rra1["Cost"] = Cost
@@ -4477,8 +4479,8 @@ def Daily_Planner():
             df_rra1["destinationId"] = destinationId
             df_rra1["SourceRakeType"] = source_rake
             df_rra1["DestinationRakeType"] = destination_rake
-            df_rra1["sourceRH"] = From
-            df_rra1["destinationRH"] = To
+            df_rra1["sourceRH"] = sourceRH
+            df_rra1["destinationRH"] = destinationRH
             df_rra1["SourceMergingId"] = sourceMergingId
             df_rra1["DestinationMergingId"] = destinationMergingId
            
@@ -4639,9 +4641,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_CoarseGrain["SourceRailHead"] = From
+            df_CoarseGrain["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_CoarseGrain["SourceState"] = From_state
-            df_CoarseGrain["DestinationRailHead"] = To
+            df_CoarseGrain["DestinationRailHead"] =  [item.split('_')[0] for item in To]
             df_CoarseGrain["DestinationState"] = To_state
             df_CoarseGrain["Commodity"] = commodity
             # df_CoarseGrain["Cost"] = Cost
@@ -4817,9 +4819,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_CoarseGrain1["SourceRailHead"] =  sourceRH
+            df_CoarseGrain1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_CoarseGrain1["SourceState"] = From_state
-            df_CoarseGrain1["DestinationRailHead"] =  destinationRH
+            df_CoarseGrain1["DestinationRailHead"] =  [item.split('_')[0] for item in To]
             df_CoarseGrain1["DestinationState"] = To_state
             df_CoarseGrain1["Commodity"] = commodity
             # df_CoarseGrain1["Cost"] = Cost
@@ -4995,9 +4997,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frkrra["SourceRailHead"] = sourceRH
+            df_frkrra["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkrra["SourceState"] = From_state
-            df_frkrra["DestinationRailHead"] = destinationRH
+            df_frkrra["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frkrra["DestinationState"] = To_state
             df_frkrra["Commodity"] = commodity
             # df_frkrra["Cost"] = Cost
@@ -5173,9 +5175,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frkrra1["SourceRailHead"] =  sourceRH
+            df_frkrra1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frkrra1["SourceState"] = From_state
-            df_frkrra1["DestinationRailHead"] = destinationRH
+            df_frkrra1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frkrra1["DestinationState"] = To_state
             df_frkrra1["Commodity"] = commodity
             # df_frkrra["Cost"] = Cost
@@ -5352,9 +5354,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frkbr["SourceRailHead"] =  sourceRH
+            df_frkbr["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frkbr["SourceState"] = From_state
-            df_frkbr["DestinationRailHead"] = destinationRH
+            df_frkbr["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frkbr["DestinationState"] = To_state
             df_frkbr["Commodity"] = commodity
             # df_frkbr["Cost"] = Cost
@@ -5531,9 +5533,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frkbr1["SourceRailHead"] = sourceRH
+            df_frkbr1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkbr1["SourceState"] = From_state
-            df_frkbr1["DestinationRailHead"] = destinationRH
+            df_frkbr1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frkbr1["DestinationState"] = To_state
             df_frkbr1["Commodity"] = commodity
             # df_frkbr["Cost"] = Cost
@@ -5710,9 +5712,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frk["SourceRailHead"] =  sourceRH
+            df_frk["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frk["SourceState"] = From_state
-            df_frk["DestinationRailHead"] = destinationRH
+            df_frk["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frk["DestinationState"] = To_state
             df_frk["Commodity"] = commodity
             # df_frk["Cost"] = Cost
@@ -5890,9 +5892,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frk1["SourceRailHead"] =  sourceRH
+            df_frk1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frk1["SourceState"] = From_state
-            df_frk1["DestinationRailHead"] = destinationRH
+            df_frk1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frk1["DestinationState"] = To_state
             df_frk1["Commodity"] = commodity
             # df_frk["Cost"] = Cost
@@ -6069,9 +6071,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frkcgr["SourceRailHead"] = sourceRH
+            df_frkcgr["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkcgr["SourceState"] = From_state
-            df_frkcgr["DestinationRailHead"] = destinationRH
+            df_frkcgr["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frkcgr["DestinationState"] = To_state
             df_frkcgr["Commodity"] = commodity
             df_frkcgr["Rakes"] = values
@@ -6248,9 +6250,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frkcgr1["SourceRailHead"] = From
+            df_frkcgr1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkcgr1["SourceState"] = From_state
-            df_frkcgr1["DestinationRailHead"] = To
+            df_frkcgr1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frkcgr1["DestinationState"] = To_state
             df_frkcgr1["Commodity"] = commodity
             df_frkcgr1["Rakes"] = values
@@ -6427,9 +6429,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wcgr["SourceRailHead"] =  sourceRH
+            df_wcgr["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_wcgr["SourceState"] = From_state
-            df_wcgr["DestinationRailHead"] = destinationRH
+            df_wcgr["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_wcgr["DestinationState"] = To_state
             df_wcgr["Commodity"] = commodity
             df_wcgr["Rakes"] = values
@@ -6606,9 +6608,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wcgr1["SourceRailHead"] =  sourceRH
+            df_wcgr1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_wcgr1["SourceState"] = From_state
-            df_wcgr1["DestinationRailHead"] = destinationRH
+            df_wcgr1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_wcgr1["DestinationState"] = To_state
             df_wcgr1["Commodity"] = commodity
             df_wcgr1["Rakes"] = values
@@ -6781,9 +6783,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_rrc["SourceRailHead"] =  sourceRH
+            df_rrc["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_rrc["SourceState"] = From_state
-            df_rrc["DestinationRailHead"] = destinationRH
+            df_rrc["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_rrc["DestinationState"] = To_state
             df_rrc["Commodity"] = commodity
             df_rrc["Rakes"] = values
@@ -6955,9 +6957,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_rrc1["SourceRailHead"] =  sourceRH
+            df_rrc1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_rrc1["SourceState"] = From_state
-            df_rrc1["DestinationRailHead"] =  destinationRH
+            df_rrc1["DestinationRailHead"] =  [item.split('_')[0] for item in To]
             df_rrc1["DestinationState"] = To_state
             df_rrc1["Commodity"] = commodity
             df_rrc1["Rakes"] = values
@@ -7129,9 +7131,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_ragi["SourceRailHead"] = sourceRH
+            df_ragi["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_ragi["SourceState"] = From_state
-            df_ragi["DestinationRailHead"] = destinationRH
+            df_ragi["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_ragi["DestinationState"] = To_state
             df_ragi["Commodity"] = commodity
             df_ragi["Rakes"] = values
@@ -7303,9 +7305,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_ragi1["SourceRailHead"] =  sourceRH
+            df_ragi1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_ragi1["SourceState"] = From_state
-            df_ragi1["DestinationRailHead"] =  destinationRH
+            df_ragi1["DestinationRailHead"] =  [item.split('_')[0] for item in To]
             df_ragi1["DestinationState"] = To_state
             df_ragi1["Commodity"] = commodity
             df_ragi1["Rakes"] = values
@@ -7478,9 +7480,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_jowar["SourceRailHead"] =  sourceRH
+            df_jowar["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_jowar["SourceState"] = From_state
-            df_jowar["DestinationRailHead"] = destinationRH
+            df_jowar["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_jowar["DestinationState"] = To_state
             df_jowar["Commodity"] = commodity
             df_jowar["Rakes"] = values
@@ -7652,9 +7654,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_jowar1["SourceRailHead"] =  sourceRH
+            df_jowar1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_jowar1["SourceState"] = From_state
-            df_jowar1["DestinationRailHead"] = destinationRH
+            df_jowar1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_jowar1["DestinationState"] = To_state
             df_jowar1["Commodity"] = commodity
             df_jowar1["Rakes"] = values
@@ -7826,9 +7828,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_bajra["SourceRailHead"] = sourceRH 
+            df_bajra["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_bajra["SourceState"] = From_state
-            df_bajra["DestinationRailHead"] = destinationRH 
+            df_bajra["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_bajra["DestinationState"] = To_state
             df_bajra["Commodity"] = commodity
             df_bajra["Rakes"] = values
@@ -8000,9 +8002,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_bajra1["SourceRailHead"] = sourceRH 
+            df_bajra1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_bajra1["SourceState"] = From_state
-            df_bajra1["DestinationRailHead"] = destinationRH 
+            df_bajra1["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_bajra1["DestinationState"] = To_state
             df_bajra1["Commodity"] = commodity
             df_bajra1["Rakes"] = values
@@ -8174,9 +8176,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_maize["SourceRailHead"] = sourceRH 
+            df_maize["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_maize["SourceState"] = From_state
-            df_maize["DestinationRailHead"] = destinationRH
+            df_maize["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_maize["DestinationState"] = To_state
             df_maize["Commodity"] = commodity
             df_maize["Rakes"] = values
@@ -8348,9 +8350,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_maize1["SourceRailHead"] = sourceRH 
+            df_maize1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_maize1["SourceState"] = From_state
-            df_maize1["DestinationRailHead"] = destinationRH
+            df_maize1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_maize1["DestinationState"] = To_state
             df_maize1["Commodity"] = commodity
             df_maize1["Rakes"] = values
@@ -8522,9 +8524,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc1["SourceRailHead"] = sourceRH 
+            df_misc1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc1["SourceState"] = From_state
-            df_misc1["DestinationRailHead"] = destinationRH 
+            df_misc1["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_misc1["DestinationState"] = To_state
             df_misc1["Commodity"] = commodity
             df_misc1["Rakes"] = values
@@ -8696,9 +8698,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc11["SourceRailHead"] = sourceRH 
+            df_misc11["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc11["SourceState"] = From_state
-            df_misc11["DestinationRailHead"] =  destinationRH 
+            df_misc11["DestinationRailHead"] =  [item.split('_')[0] for item in To] 
             df_misc11["DestinationState"] = To_state
             df_misc11["Commodity"] = commodity
             df_misc11["Rakes"] = values
@@ -8872,9 +8874,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc2["SourceRailHead"] = sourceRH 
+            df_misc2["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc2["SourceState"] = From_state
-            df_misc2["DestinationRailHead"] = destinationRH 
+            df_misc2["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_misc2["DestinationState"] = To_state
             df_misc2["Commodity"] = commodity
             df_misc2["Rakes"] = values
@@ -9048,9 +9050,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc21["SourceRailHead"] = sourceRH 
+            df_misc21["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc21["SourceState"] = From_state
-            df_misc21["DestinationRailHead"] = destinationRH 
+            df_misc21["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_misc21["DestinationState"] = To_state
             df_misc21["Commodity"] = commodity
             df_misc21["Rakes"] = values
@@ -9222,9 +9224,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wheaturs["SourceRailHead"] = sourceRH 
+            df_wheaturs["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_wheaturs["SourceState"] = From_state
-            df_wheaturs["DestinationRailHead"] = destinationRH
+            df_wheaturs["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_wheaturs["DestinationState"] = To_state
             df_wheaturs["Commodity"] = commodity
             df_wheaturs["Rakes"] = values
@@ -9396,9 +9398,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wheaturs1["SourceRailHead"] = sourceRH 
+            df_wheaturs1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_wheaturs1["SourceState"] = From_state
-            df_wheaturs1["DestinationRailHead"] = destinationRH 
+            df_wheaturs1["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_wheaturs1["DestinationState"] = To_state
             df_wheaturs1["Commodity"] = commodity
             df_wheaturs1["Rakes"] = values
@@ -9570,9 +9572,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wheatfaq["SourceRailHead"] = sourceRH 
+            df_wheatfaq["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_wheatfaq["SourceState"] = From_state
-            df_wheatfaq["DestinationRailHead"] = destinationRH
+            df_wheatfaq["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_wheatfaq["DestinationState"] = To_state
             df_wheatfaq["Commodity"] = commodity
             df_wheatfaq["Rakes"] = values
@@ -9744,9 +9746,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wheatfaq1["SourceRailHead"] = sourceRH
+            df_wheatfaq1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_wheatfaq1["SourceState"] = From_state
-            df_wheatfaq1["DestinationRailHead"] = destinationRH
+            df_wheatfaq1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_wheatfaq1["DestinationState"] = To_state
             df_wheatfaq1["Commodity"] = commodity
             df_wheatfaq1["Rakes"] = values
@@ -9918,9 +9920,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wheatrra["SourceRailHead"] = sourceRH
+            df_wheatrra["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_wheatrra["SourceState"] = From_state
-            df_wheatrra["DestinationRailHead"] = destinationRH
+            df_wheatrra["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_wheatrra["DestinationState"] = To_state
             df_wheatrra["Commodity"] = commodity
             df_wheatrra["Rakes"] = values
@@ -10092,9 +10094,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_wheatrra1["SourceRailHead"] = sourceRH
+            df_wheatrra1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_wheatrra1["SourceState"] = From_state
-            df_wheatrra1["DestinationRailHead"] = destinationRH 
+            df_wheatrra1["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_wheatrra1["DestinationState"] = To_state
             df_wheatrra1["Commodity"] = commodity
             df_wheatrra1["Rakes"] = values
@@ -10266,9 +10268,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frk_rra["SourceRailHead"] = sourceRH
+            df_frk_rra["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frk_rra["SourceState"] = From_state
-            df_frk_rra["DestinationRailHead"] = destinationRH
+            df_frk_rra["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frk_rra["DestinationState"] = To_state
             df_frk_rra["Commodity"] = commodity
             df_frk_rra["Rakes"] = values
@@ -10440,9 +10442,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_frk_rra1["SourceRailHead"] = sourceRH
+            df_frk_rra1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frk_rra1["SourceState"] = From_state
-            df_frk_rra1["DestinationRailHead"] = destinationRH
+            df_frk_rra1["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_frk_rra1["DestinationState"] = To_state
             df_frk_rra1["Commodity"] = commodity
             df_frk_rra1["Rakes"] = values
@@ -10614,9 +10616,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc3["SourceRailHead"] = sourceRH
+            df_misc3["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_misc3["SourceState"] = From_state
-            df_misc3["DestinationRailHead"] = destinationRH
+            df_misc3["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_misc3["DestinationState"] = To_state
             df_misc3["Commodity"] = commodity
             df_misc3["Rakes"] = values
@@ -10788,9 +10790,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc31["SourceRailHead"] = sourceRH
+            df_misc31["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_misc31["SourceState"] = From_state
-            df_misc31["DestinationRailHead"] = destinationRH 
+            df_misc31["DestinationRailHead"] = [item.split('_')[0] for item in To] 
             df_misc31["DestinationState"] = To_state
             df_misc31["Commodity"] = commodity
             df_misc31["Rakes"] = values
@@ -10962,9 +10964,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc4["SourceRailHead"] = sourceRH 
+            df_misc4["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc4["SourceState"] = From_state
-            df_misc4["DestinationRailHead"] = destinationRH
+            df_misc4["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_misc4["DestinationState"] = To_state
             df_misc4["Commodity"] = commodity
             df_misc4["Rakes"] = values
@@ -11136,9 +11138,9 @@ def Daily_Planner():
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
 
-            df_misc41["SourceRailHead"] = sourceRH
+            df_misc41["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_misc41["SourceState"] = From_state
-            df_misc41["DestinationRailHead"] = destinationRH
+            df_misc41["DestinationRailHead"] = [item.split('_')[0] for item in To]
             df_misc41["DestinationState"] = To_state
             df_misc41["Commodity"] = commodity
             df_misc41["Rakes"] = values
@@ -11236,12 +11238,47 @@ def Daily_Planner():
             print(e)
             data1["status"] = 0
 
-        json_data = json.dumps(data1, default=lambda x: x.to_dict() if isinstance(x, pd.DataFrame) else x)
-        json_object = json.loads(json_data)
+        commodity_data = {
+        'wheat': [df_wheat, df_wheat1],
+        'rra': df_rra,
+        'coarse_grain': df_CoarseGrain,
+        'frk_rra': df_frkrra,
+        'frk_br': df_frkbr,
+        'wheat_frk': df_frk,
+        'frkcgr': df_frkcgr,
+        'wcgr': df_wcgr,
+        'rrc': df_rrc,
+        'ragi': df_ragi,
+        'bajra': df_bajra,
+        'jowar': df_jowar,
+        'maize': df_maize,
+        'wheat_faq' : df_wheatfaq,
+        'wheat_urs' : df_wheaturs,
+        'misc1': df_misc1,
+        'misc2': df_misc2,
+        'misc3': df_misc3,
+        'misc4': df_misc4,
+        'wheat_rra': df_wheatrra,
+        'frkPlusRRA': df_frk_rra,
+        }
 
-        return(json.dumps(json_object, indent = 1))
+        for name, df in commodity_data.items():
+            if isinstance(df, list):
+                # Merge DataFrames in the list into a single DataFrame
+                merged_df = pd.concat(df)
+                all_commodity_data[name] = merged_df.to_dict(orient='records')
+            else:
+                all_commodity_data[name] = df.to_dict(orient='records')
+
+        print(all_commodity_data)
+
+        return jsonify(all_commodity_data)
     else:
         return ("error")
+
+@app.route("/daily_planner_data",methods = ["GET"])
+def daily_planner_data():
+    return jsonify(all_commodity_data)
 
 @app.route("/Alternate_Railhead_Solve",methods = ["POST","GET"])
 def Alternate_Railhead_Solve():
