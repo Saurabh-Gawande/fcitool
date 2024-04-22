@@ -287,7 +287,7 @@ def read_Daily_Planner_S1():
              "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
              "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22 , "rra_58w": json_data23, 
              "coarse_grain_58w": json_data24, "frk_rra_58w": json_data25, "frk_br_58w": json_data26, "wheat_frk_58w": json_data27, "frkcgr_58w": json_data28, 
-             "wcgr_58w": json_data29, "wheat_urs_58": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data33,
+             "wcgr_58w": json_data29, "wheat_urs_58w": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data33,
              "ragi_58w": json_data34, "bajra_58w": json_data35, "maize_58w": json_data36, "misc1_58w": json_data37, "misc2_58w": json_data38, "wheat_rra_58w": json_data39,
              "frkPlusRRa_58w": json_data40, "misc3_58w": json_data41, "misc4_58": json_data42
              }
@@ -658,7 +658,7 @@ def Daily_Planner():
             rra_dest = fetched_data["rice_destination"]
             wheat_origin = fetched_data["wheat_origin"]
             wheat_dest = fetched_data["wheat_destination"]
-            print(wheat_origin, wheat_dest)
+           
             coarseGrain_origin = fetched_data["coarseGrain_origin"]
             coarseGrain_dest = fetched_data["coarseGrain_destination"]
             frkrra_origin = fetched_data["frkrra_origin"]
@@ -3717,10 +3717,10 @@ def Daily_Planner():
                 prob += lpSum(x_ij_misc21[(j, i)] for j in source_misc21.keys()) >= dest_misc21[i] 
 
             for i in source_wheaturs1.keys():
-                prob += lpSum(x_ij_wheaturs1[(i, j)] for j in dest_wheaturs1.keys()) <= source_wheaturs[i]
+                prob += lpSum(x_ij_wheaturs1[(i, j)] for j in dest_wheaturs1.keys()) <= source_wheaturs1[i]
 
             for i in dest_wheaturs1.keys():
-                prob += lpSum(x_ij_wheaturs1[(j, i)] for j in source_wheaturs1.keys()) >= dest_wheaturs[i] 
+                prob += lpSum(x_ij_wheaturs1[(j, i)] for j in source_wheaturs1.keys()) >= dest_wheaturs1[i] 
 
             for i in source_wheatfaq1.keys():
                 prob += lpSum(x_ij_wheatfaq1[(i, j)] for j in dest_wheatfaq1.keys()) <= source_wheatfaq1[i]
@@ -3936,7 +3936,7 @@ def Daily_Planner():
             df_wheat["destinationRH"] = destinationRH
             df_wheat["SourceMergingId"] = sourceMergingId
             df_wheat["DestinationMergingId"] = destinationMergingId
-            print(To)
+            
             # to add value1 + value2 for dstination
             for i in dest_wheat_inline.keys():
                 for j in range(len(df_wheat["DestinationRailHead"])):
@@ -9277,10 +9277,10 @@ def Daily_Planner():
             
             for i in source_wheaturs1:
                 for j in dest_wheaturs1:
-                    if int(x_ij_wheaturs[(i,j)].value()) > 0:
+                    if int(x_ij_wheaturs1[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
-                        values.append(x_ij_wheaturs[(i,j)].value())
+                        values.append(x_ij_wheaturs1[(i,j)].value())
                         commodity.append("Wheat(URS)")
                         Flag.append(region)
 
