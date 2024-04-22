@@ -11239,7 +11239,7 @@ def Daily_Planner():
             data1["status"] = 0
 
         commodity_data = {
-        'wheat': [df_wheat, df_wheat1],
+        'wheat': df_wheat,
         'rra': df_rra,
         'coarse_grain': df_CoarseGrain,
         'frk_rra': df_frkrra,
@@ -11347,8 +11347,8 @@ def create_road_plan():
             data=pd.ExcelFile("Input//Input_template_road_rail_scen2.xlsx")
             print(data.sheet_names)
 
-            supply=pd.read_excel(data,sheet_name="Supply",index_col=1)
-            demand=pd.read_excel(data,sheet_name="Demand",index_col=1)
+            # supply=pd.read_excel(data,sheet_name="Supply",index_col=1)
+            # demand=pd.read_excel(data,sheet_name="Demand",index_col=1)
             rh_list=pd.read_excel(data,sheet_name="Railhead",index_col=1)
             state_supply=pd.read_excel(data,sheet_name="State_supply",index_col=0)
             rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
@@ -11376,11 +11376,54 @@ def create_road_plan():
             x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
             x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_list.index for j in rh_list.index for k in commodity],0,cat="Integer")
             x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)    
+            
+            Punjab=["Haryana","Rajasthan","Uttarakhand","J&K","HP"]
+            Haryana=["HP","Uttarakhand","UP","Rajasthan","Delhi"]
+            MP=["Gujarat","Rajasthan","UP","Chattisgarh","Maharashtra"]
+            Chattisgarh=["MP","Maharashtra","Telangana","Odisha","Jharkhand","UP"]
+            Odisha=["West Bengal","Jharkhand","Chattisgarh","Telangana","AP"]
+            AP=["Telangana","Odisha","Karnataka","Tamil Nadu","Chattisgarh"]
+            Telangana=["Maharashtra","Chattisgarh","Odisha","AP","Karnataka"]
+            Uttarakhand=["HP","Haryana","UP"]
+
+            road={"Punjab":Punjab,"Haryana":Haryana,"MP":MP,"Chattisgarh":Chattisgarh,"Odisha":Odisha,"AP":AP,"Telangana":Telangana,"Uttarakhand":Uttarakhand}
+
+            for s in road:
+                print(s,":",road[s])
+
+            print ( road["Punjab"])
+
+            for s in road:
+                for u in supply.index:
+                    for v in demand.index:
+                        for k in commodity:
+                            if supply["State"][u]!=s:
+                                if demand["State"][v] not in road[s]:
+                                    prob+=x_uvk[(u,v,k)]==0
+                                    #print(x_uvk[(u,v,k)]==0)
+            
+            for s in road:
+                for u in supply.index:
+                    for v in demand.index:
+                        for k in commodity:
+                            if supply["State"][u]!=s:
+                                if demand["State"][v] in road[s]:
+                                    prob+=x_uvk[(u,v,k)]==0
+                                    #print(x_uvk[(u,v,k)]==0)
+
+            for s in road:
+                for u in supply.index:
+                    for v in demand.index:
+                        for k in commodity:
+                            if supply["State"][u]==s:
+                                if demand["State"][v] not in road[s]:
+                                    prob+=x_uvk[(u,v,k)]==0
+                                    #print(x_uvk[(u,v,k)]==0)
 
             var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
 
-            prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
-            print(lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity))
+            prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+            #print(lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity))
             
             for u in supply.index:
                 for v in demand.index:
