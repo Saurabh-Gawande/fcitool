@@ -51,12 +51,15 @@ function Sidenav() {
             <span className="xn-text">Alternate Railhead</span>
           </a>
         </li> */}
-        <li>
-          <a href="/Template">
-            <span className="fa fa-train"></span>{" "}
-            <span className="xn-text">Mode2</span>
-          </a>
-        </li>
+        {sessionStorage.getItem("region") === "admin" ||
+        sessionStorage.getItem("region") === "H.P." ? (
+          <li>
+            <a href="/Mode2">
+              <span className="fa fa-train"></span>{" "}
+              <span className="xn-text">Mode2</span>
+            </a>
+          </li>
+        ) : null}
         <li>
           <a href="/Reset_Password">
             <span className="fa fa-train"></span>{" "}

@@ -6,6 +6,8 @@ import pickle
 from flask_cors import CORS
 import xlsxwriter
 import numpy as np
+import json
+
 
 app = Flask(__name__)
 app.secret_key = 'aqswdefrgt'
@@ -18,6 +20,51 @@ def upload_Monthly_File_M01():
     try:
         file = request.files['uploadFile1']
         file.save("Input//Input_template_Monthly_Planner_Invard.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
+    
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
+
+    return(json.dumps(json_object, indent = 1))
+
+@app.route("/Import_Monthly_File_Outward",methods = ["POST"])
+def upload_Monthly_File_Outward():
+    data = {}
+    try:
+        file = request.files['uploadFile2']
+        file.save("Input//Input_template_Monthly_Planner_Outward.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
+    
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
+
+    return(json.dumps(json_object, indent = 1))
+
+@app.route("/Import_Mode2_Invard",methods = ["POST"])
+def upload_Mode2_Invard():
+    data = {}
+    try:
+        file = request.files['uploadFile1']
+        file.save("Input//Input_template_Road_Invard.xlsx")
+        data['status'] = 1
+    except:
+        data['status'] = 0
+    
+    json_data = json.dumps(data)
+    json_object = json.loads(json_data)
+
+    return(json.dumps(json_object, indent = 1))
+
+@app.route("/Import_Mode2_Outward",methods = ["POST"])
+def upload_Mode2_Outward():
+    data = {}
+    try:
+        file = request.files['uploadFile2']
+        file.save("Input//Input_template_Road_Outward.xlsx")
         data['status'] = 1
     except:
         data['status'] = 0
@@ -47,21 +94,6 @@ def Rail_cost_matrix():
     json_object = json.loads(json_data)
 
     return json.dumps(json_object, indent=1)
-
-@app.route("/Import_Monthly_File_Outward",methods = ["POST"])
-def upload_Monthly_File_Outward():
-    data = {}
-    try:
-        file = request.files['uploadFile2']
-        file.save("Input//Input_template_Monthly_Planner_Outward.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
-    
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
-
-    return(json.dumps(json_object, indent = 1))
 
 @app.route("/upload_Monthly_File",methods = ["POST"])
 def upload_Monthly_File_M02():
@@ -11239,27 +11271,27 @@ def Daily_Planner():
             data1["status"] = 0
 
         commodity_data = {
-        'wheat': df_wheat,
-        'rra': df_rra,
-        'coarse_grain': df_CoarseGrain,
-        'frk_rra': df_frkrra,
-        'frk_br': df_frkbr,
-        'wheat_frk': df_frk,
-        'frkcgr': df_frkcgr,
-        'wcgr': df_wcgr,
-        'rrc': df_rrc,
-        'ragi': df_ragi,
-        'bajra': df_bajra,
-        'jowar': df_jowar,
-        'maize': df_maize,
-        'wheat_faq' : df_wheatfaq,
-        'wheat_urs' : df_wheaturs,
-        'misc1': df_misc1,
-        'misc2': df_misc2,
-        'misc3': df_misc3,
-        'misc4': df_misc4,
-        'wheat_rra': df_wheatrra,
-        'frkPlusRRA': df_frk_rra,
+        'wheat': [df_wheat, df_wheat1],
+        'rra': [df_rra, df_rra1],
+        'coarse_grain': [df_CoarseGrain, df_CoarseGrain1],
+        'frk_rra': [df_frkrra, df_frkrra1],
+        'frk_br': [df_frkbr, df_frkbr1],
+        'wheat_frk': [df_frk, df_frk1],
+        'frkcgr': [df_frkcgr, df_frkcgr1],
+        'wcgr': [df_wcgr, df_wcgr1],
+        'rrc': [df_rrc, df_rrc1],
+        'ragi': [df_ragi, df_ragi1],
+        'bajra': [df_bajra, df_bajra1],
+        'jowar': [df_jowar, df_jowar1],
+        'maize': [df_maize, df_maize1],
+        'wheat_faq' : [df_wheatfaq, df_wheatfaq1],
+        'wheat_urs' : [df_wheaturs, df_wheaturs1],
+        'misc1': [df_misc1, df_misc11],
+        'misc2': [df_misc2, df_misc21],
+        'misc3': [df_misc3, df_misc31],
+        'misc4': [df_misc4, df_misc41],
+        'wheat_rra': [df_wheatrra, df_wheatrra1],
+        'frkPlusRRA': [df_frk_rra, df_frk_rra1],
         }
 
         for name, df in commodity_data.items():
@@ -11340,21 +11372,27 @@ def Alternate_Railhead_Solve():
     else:
         return ("error")
 
+dataframes = {}
 @app.route("/road_plan", methods = ["POST"])
 def create_road_plan():
     if request.method == "POST":
         try:
-            data=pd.ExcelFile("Input//Input_template_road_rail_scen2.xlsx")
-            print(data.sheet_names)
+            
+            fetched_data = request.get_json()
+            senerio = fetched_data["senerio"]
+            data=pd.ExcelFile("Input//Input_template_road_rail_commonscen.xlsx")
 
-            # supply=pd.read_excel(data,sheet_name="Supply",index_col=1)
-            # demand=pd.read_excel(data,sheet_name="Demand",index_col=1)
-            rh_list=pd.read_excel(data,sheet_name="Railhead",index_col=1)
+            supply=pd.read_excel(data,sheet_name="Supply",index_col=1)
+            demand=pd.read_excel(data,sheet_name="Demand",index_col=1)
+            rh_sup=pd.read_excel(data,sheet_name="Railhead_sup",index_col=1)
+            rh_dem=pd.read_excel(data,sheet_name="Railhead_dem",index_col=1)
             state_supply=pd.read_excel(data,sheet_name="State_supply",index_col=0)
             rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
             road_cost=pd.read_excel(data,sheet_name="Road_cost",index_col=0)
             print(supply.index, supply.columns)
-            # prob=LpProblem("FCI_monthly_allocation",LpMinimize)
+
+            prob=LpProblem("FCI_monthly_allocation",LpMinimize)
+
             commodity = ["w(tot)","r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
             cmd_match = {"w(tot)":"Wheat(Total)","r(rra)":"Rice(RRA)","r(frkrra)":"Rice(FRK RRA)","r(frkbr)":"Rice(FRK BR)","r(rrc)":"Rice(RRC)","m(bajra)":"Millets(Bajra)","m(ragi)":"Millets(Ragi)","m(jowar)":"Millets(Jowar)","m(maize)":"Millets(Maize)","misc1":"Misc 1 ","misc2":"Misc 2"}
 
@@ -11372,214 +11410,847 @@ def create_road_plan():
                 else:
                     print(cmd_match[k],":","FALSE") 
 
-            x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
-            x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
-            x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_list.index for j in rh_list.index for k in commodity],0,cat="Integer")
-            x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)    
-            
-            Punjab=["Haryana","Rajasthan","Uttarakhand","J&K","HP"]
-            Haryana=["HP","Uttarakhand","UP","Rajasthan","Delhi"]
-            MP=["Gujarat","Rajasthan","UP","Chattisgarh","Maharashtra"]
-            Chattisgarh=["MP","Maharashtra","Telangana","Odisha","Jharkhand","UP"]
-            Odisha=["West Bengal","Jharkhand","Chattisgarh","Telangana","AP"]
-            AP=["Telangana","Odisha","Karnataka","Tamil Nadu","Chattisgarh"]
-            Telangana=["Maharashtra","Chattisgarh","Odisha","AP","Karnataka"]
-            Uttarakhand=["HP","Haryana","UP"]
+            if senerio == "senerio2": 
+                print("senerio2")
 
-            road={"Punjab":Punjab,"Haryana":Haryana,"MP":MP,"Chattisgarh":Chattisgarh,"Odisha":Odisha,"AP":AP,"Telangana":Telangana,"Uttarakhand":Uttarakhand}
+                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
+                x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)    
+                
+                Punjab=["Haryana","Rajasthan","Uttarakhand","J&K","HP"]
+                Haryana=["HP","Uttarakhand","UP","Rajasthan","Delhi"]
+                MP=["Gujarat","Rajasthan","UP","Chattisgarh","Maharashtra"]
+                Chattisgarh=["MP","Maharashtra","Telangana","Odisha","Jharkhand","UP"]
+                Odisha=["West Bengal","Jharkhand","Chattisgarh","Telangana","AP"]
+                AP=["Telangana","Odisha","Karnataka","Tamil Nadu","Chattisgarh"]
+                Telangana=["Maharashtra","Chattisgarh","Odisha","AP","Karnataka"]
+                Uttarakhand=["HP","Haryana","UP"]
 
-            for s in road:
-                print(s,":",road[s])
+                road={"Punjab":Punjab,"Haryana":Haryana,"MP":MP,"Chattisgarh":Chattisgarh,"Odisha":Odisha,"AP":AP,"Telangana":Telangana,"Uttarakhand":Uttarakhand}
 
-            print ( road["Punjab"])
+                for s in road:
+                    print(s,":",road[s])
 
-            for s in road:
-                for u in supply.index:
-                    for v in demand.index:
-                        for k in commodity:
-                            if supply["State"][u]!=s:
-                                if demand["State"][v] not in road[s]:
-                                    prob+=x_uvk[(u,v,k)]==0
-                                    #print(x_uvk[(u,v,k)]==0)
-            
-            for s in road:
-                for u in supply.index:
-                    for v in demand.index:
-                        for k in commodity:
-                            if supply["State"][u]!=s:
-                                if demand["State"][v] in road[s]:
-                                    prob+=x_uvk[(u,v,k)]==0
-                                    #print(x_uvk[(u,v,k)]==0)
+                print ( road["Punjab"])
 
-            for s in road:
-                for u in supply.index:
-                    for v in demand.index:
-                        for k in commodity:
-                            if supply["State"][u]==s:
-                                if demand["State"][v] not in road[s]:
-                                    prob+=x_uvk[(u,v,k)]==0
-                                    #print(x_uvk[(u,v,k)]==0)
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+                                        #print(x_uvk[(u,v,k)]==0)
+                
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+                                        #print(x_uvk[(u,v,k)]==0)
 
-            var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]==s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+                                        #print(x_uvk[(u,v,k)]==0)
 
-            prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
-            #print(lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity))
-            
-            for u in supply.index:
-                for v in demand.index:
+                var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
+
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                #print(lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity))
+                
+                # for u in supply.index:
+                #     for v in demand.index:
+                #         for k in commodity:
+                #             prob+=x_uvk[(u,v,k)]==0
+                #             print(x_uvk[(u,v,k)]==0)
+
+                for w,r in zip(supply.index,supply["Connected_RHcode"]):
                     for k in commodity:
-                        prob+=x_uvk[(u,v,k)]==0
-                        print(x_uvk[(u,v,k)]==0)
+                        prob+=x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w]
+                        print(x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w])
+                
+                for i in rh_sup.index:
+                    for k in commodity:
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+                        # print(2.8*lpSum(x_ijk[(i,j,k)] for j in rh_list.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i))
+                
+                for j in rh_dem.index:
+                    for k in commodity:
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                        #print(lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index))
+                
+                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w]
+                        print(x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w])
+                
+                prob.writeLP("FCI_monthly_allocation.lp")
+                #prob.solve(CPLEX())
+                #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                print("Status:", LpStatus[prob.status])
+                print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
+                print("Total Number of Variables:",len(prob.variables()))
+                print("Total Number of Constraints:",len(prob.constraints))
 
-            for w,r in zip(supply.index,supply["Connected_RHcode"]):
                 for k in commodity:
-                    prob+=x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w]
-                    print(x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w])
-            
-            for i in rh_list.index:
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index for j in rh_sup.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
+                
                 for k in commodity:
-                    prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_list.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
-                    print(2.8*lpSum(x_ijk[(i,j,k)] for j in rh_list.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i))
-            
-            for j in rh_list.index:
-                for k in commodity:
-                    prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index)
-                    print(lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index))
-            
-            for w,r in zip(demand.index,demand["Connected_RHcode"]):
-                for k in commodity:
-                    prob+=x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w]
-                    print(x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w])
-            
-            prob.writeLP("FCI_monthly_allocation.lp")
-            #prob.solve(CPLEX())
-            #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
-            prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
-            print("Status:", LpStatus[prob.status])
-            print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
-            print("Total Number of Variables:",len(prob.variables()))
-            print("Total Number of Constraints:",len(prob.constraints))
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_sup.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
 
-            for k in commodity:
-                print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
-                print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
-                print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
-                print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
-            
-            for k in commodity:
-                print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
-                print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
-                print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
-                print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                A=[]
+                B=[]
+                C=[]
+                D=[]
+                E=[]
 
-            wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values(in MT)"])
-            A=[]
-            B=[]
-            C=[]
-            D=[]
-            E=[]
+                for k in commodity:
+                    for w in supply.index:
+                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                            A.append(w)
+                            B.append(supply["Connected_RHcode"][w])
+                            C.append(supply["State"][w])
+                            D.append(cmd_match[k])
+                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
+                            
+                wh_rh_tag["WH_ID"]=A
+                wh_rh_tag["Connected_RHcode"]=B
+                wh_rh_tag["State"]=C
+                wh_rh_tag["Commodity"]=D
+                wh_rh_tag["Values"]=E
 
-            for k in commodity:
+
+                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                F=[]
+                G=[]
+                H=[]
+                I=[]
+                J=[]
+
+                for k in commodity:
+                    for w in demand.index:
+                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
+                            F.append(demand["Connected_RHcode"][w])
+                            G.append(w)
+                            H.append(demand["State"][w])
+                            I.append(cmd_match[k])
+                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
+                            
+                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["WH_ID"]=G
+                rh_wh_tag["State"]=H
+                rh_wh_tag["Commodity"]=I
+                rh_wh_tag["Values"]=J
+
+                rh_rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values (in MT)"])
+                K=[]
+                L=[]
+                M=[]
+                N=[]
+                O=[]
+                P=[]
+
+                for k in commodity:
+                    for i in rh_sup.index:
+                        for j in rh_sup.index:
+                            if x_ijk[(i,j,k)].value()>0:
+                                K.append(i)
+                                L.append(rh_sup["State"][i])
+                                M.append(j)
+                                N.append(rh_sup["State"][j])
+                                O.append(cmd_match[k])
+                                P.append(x_ijk[(i,j,k)].value())
+                                
+                rh_rh_tag["From"]=K
+                rh_rh_tag["From_state"]=L
+                rh_rh_tag["To"]=M
+                rh_rh_tag["To_state"]=N
+                rh_rh_tag["Commodity"]=O
+                rh_rh_tag["Values (in MT)"]=P
+                
+                wh_wh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
+                Q=[]
+                R=[]
+                S=[]
+                T=[]
+                U=[]
+                V=[]
+
+                for k in commodity:
+                    for u in supply.index:
+                        for v in demand.index:
+                            if x_uvk[(u,v,k)].value()>0:
+                                Q.append(u)
+                                R.append(supply["State"][u])
+                                S.append(v)
+                                T.append(demand["State"][v])
+                                U.append(cmd_match[k])
+                                V.append(x_uvk[(u,v,k)].value())
+                                
+                wh_wh_tag["From"]=Q
+                wh_wh_tag["From_state"]=R
+                wh_wh_tag["To"]=S
+                wh_wh_tag["To_state"]=T
+                wh_wh_tag["Commodity"]=U
+                wh_wh_tag["Values"]=V
+
+                excel_file="Output_V12_newroadvarscode_preproc.xlsx"
+
+                with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
+                    wh_rh_tag.to_excel(writer, sheet_name="WH_RH_Tag",index=True)
+                    rh_wh_tag.to_excel(writer, sheet_name="RH_WH_Tag",index=True)
+                    rh_rh_tag.to_excel(writer, sheet_name="RH_RH_Tag",index=True)
+                    wh_wh_tag.to_excel(writer, sheet_name="WH_WH_Tag",index=True)
+
+                dataframes = {
+                'wh_rh_tag': wh_rh_tag.to_dict(orient='records'),
+                'rh_wh_tag': rh_wh_tag.to_dict(orient='records'),
+                'rh_rh_tag': rh_rh_tag.to_dict(orient='records'),
+                'wh_wh_tag': wh_wh_tag.to_dict(orient='records'),
+                }
+
+                print(dataframes)
+
+                return jsonify(dataframes)
+
+            elif senerio == "senerio3": 
+                print("senerio3")
+                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
+                x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)
+
+                Punjab=["Haryana","Rajasthan","Uttarakhand","J&K","HP"]
+                Haryana=["HP","Uttarakhand","UP","Rajasthan","Delhi"]
+                MP=["Gujarat","Rajasthan","UP","Chattisgarh","Maharashtra"]
+                Chattisgarh=["MP","Maharashtra","Telangana","Odisha","Jharkhand","UP"]
+                Odisha=["West Bengal","Jharkhand","Chattisgarh","Telangana","AP"]
+                AP=["Telangana","Odisha","Karnataka","Tamil Nadu","Chattisgarh"]
+                Telangana=["Maharashtra","Chattisgarh","Odisha","AP","Karnataka"]
+                Uttarakhand=["HP","Haryana","UP"]
+
+                road={"Punjab":Punjab,"Haryana":Haryana,"MP":MP,"Chattisgarh":Chattisgarh,"Odisha":Odisha,"AP":AP,"Telangana":Telangana,"Uttarakhand":Uttarakhand}
+
+                for s in road:
+                    print(s,":",road[s])
+                
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+ 
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]==s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+                
+                var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+
+                for w,r in zip(supply.index,supply["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w]
+
+                for i in rh_sup.index:
+                    for k in commodity:
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+
+                for j in rh_dem.index:
+                    for k in commodity:
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                
+                for k in commodity:
+                    for j in rh_dem.index:
+                        prob+=lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)<=Railhead_dem[cmd_match[k]][j]
+                
+                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w]
+
+                prob.writeLP("FCI_monthly_allocation.lp")
+                #prob.solve(CPLEX())
+                #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                print("Status:", LpStatus[prob.status])
+                print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
+                print("Total Number of Variables:",len(prob.variables()))
+                print("Total Number of Constraints:",len(prob.constraints))
+
+                for k in commodity:
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
+                
+                for k in commodity:
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
+                
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                A=[]
+                B=[]
+                C=[]
+                D=[]
+                E=[]
+
+                for k in commodity:
+                    for w in supply.index:
+                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                            A.append(w)
+                            B.append(supply["Connected_RHcode"][w])
+                            C.append(supply["State"][w])
+                            D.append(cmd_match[k])
+                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
+                            
+                wh_rh_tag["WH_ID"]=A
+                wh_rh_tag["Connected_RHcode"]=B
+                wh_rh_tag["State"]=C
+                wh_rh_tag["Commodity"]=D
+                wh_rh_tag["Values"]=E
+
+                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                F=[]
+                G=[]
+                H=[]
+                I=[]
+                J=[]
+
+                for k in commodity:
+                    for w in demand.index:
+                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
+                            F.append(demand["Connected_RHcode"][w])
+                            G.append(w)
+                            H.append(demand["State"][w])
+                            I.append(cmd_match[k])
+                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
+                            
+                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["WH_ID"]=G
+                rh_wh_tag["State"]=H
+                rh_wh_tag["Commodity"]=I
+                rh_wh_tag["Values"]=J
+
+                rh_rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values (in MT)"])
+                K=[]
+                L=[]
+                M=[]
+                N=[]
+                O=[]
+                P=[]
+
+                for k in commodity:
+                    for i in rh_list.index:
+                        for j in rh_list.index:
+                            if x_ijk[(i,j,k)].value()>0:
+                                K.append(i)
+                                L.append(rh_list["State"][i])
+                                M.append(j)
+                                N.append(rh_list["State"][j])
+                                O.append(cmd_match[k])
+                                P.append(x_ijk[(i,j,k)].value())
+                                
+                rh_rh_tag["From"]=K
+                rh_rh_tag["From_state"]=L
+                rh_rh_tag["To"]=M
+                rh_rh_tag["To_state"]=N
+                rh_rh_tag["Commodity"]=O
+                rh_rh_tag["Values (in MT)"]=P
+
+                wh_wh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
+                Q=[]
+                R=[]
+                S=[]
+                T=[]
+                U=[]
+                V=[]
+
+                for k in commodity:
+                    for u in supply.index:
+                        for v in demand.index:
+                            if x_uvk[(u,v,k)].value()>0:
+                                Q.append(u)
+                                R.append(supply["State"][u])
+                                S.append(v)
+                                T.append(demand["State"][v])
+                                U.append(cmd_match[k])
+                                V.append(x_uvk[(u,v,k)].value())
+                                
+                wh_wh_tag["From"]=Q
+                wh_wh_tag["From_state"]=R
+                wh_wh_tag["To"]=S
+                wh_wh_tag["To_state"]=T
+                wh_wh_tag["Commodity"]=U
+                wh_wh_tag["Values"]=V
+
+                excel_file="Output_V12_newroadvarscode_preproc.xlsx"
+
+                with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
+                    wh_rh_tag.to_excel(writer, sheet_name="WH_RH_Tag",index=True)
+                    rh_wh_tag.to_excel(writer, sheet_name="RH_WH_Tag",index=True)
+                    rh_rh_tag.to_excel(writer, sheet_name="RH_RH_Tag",index=True)
+                    wh_wh_tag.to_excel(writer, sheet_name="WH_WH_Tag",index=True)
+                
+                dataframes = {
+                'wh_rh_tag': wh_rh_tag.to_dict(orient='records'),
+                'rh_wh_tag': rh_wh_tag.to_dict(orient='records'),
+                'rh_rh_tag': rh_rh_tag.to_dict(orient='records'),
+                'wh_wh_tag': wh_wh_tag.to_dict(orient='records'),
+                }
+
+                print(dataframes)
+
+                return jsonify(dataframes)
+  
+            elif senerio == "senerio4":
+                print (senerio4)
+                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
+                x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)
+
+                Punjab=["Haryana","Rajasthan","Uttarakhand","J&K","HP"]
+                Haryana=["HP","Uttarakhand","UP","Rajasthan","Delhi"]
+                MP=["Gujarat","Rajasthan","UP","Chattisgarh","Maharashtra"]
+                Chattisgarh=["MP","Maharashtra","Telangana","Odisha","Jharkhand","UP"]
+                Odisha=["West Bengal","Jharkhand","Chattisgarh","Telangana","AP"]
+                AP=["Telangana","Odisha","Karnataka","Tamil Nadu","Chattisgarh"]
+                Telangana=["Maharashtra","Chattisgarh","Odisha","AP","Karnataka"]
+                Uttarakhand=["HP","Haryana","UP"]
+
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+                
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+                
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]==s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+
+                var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
+
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                
+                for w,r in zip(supply.index,supply["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w]
+                
+                for i in rh_sup.index:
+                    for k in commodity:
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+                
+                for k in commodity:
+                    for i in rh_sup.index:
+                        prob+=lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=Railhead_sup[cmd_match[k]][i]
+                
+                for j in rh_dem.index:
+                    for k in commodity:
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                
+                for k in commodity:
+                    for j in rh_dem.index:
+                        prob+=lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)<=Railhead_dem[cmd_match[k]][j]
+                
+                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w]
+                
+                prob.writeLP("FCI_monthly_allocation.lp")
+                #prob.solve(CPLEX())
+                #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                print("Status:", LpStatus[prob.status])
+                print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
+                print("Total Number of Variables:",len(prob.variables()))
+                print("Total Number of Constraints:",len(prob.constraints))
+
+                for k in commodity:
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
+
+                for k in commodity:
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
+
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                A=[]
+                B=[]
+                C=[]
+                D=[]
+                E=[]
+
+                for k in commodity:
+                    for w in supply.index:
+                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                            A.append(w)
+                            B.append(supply["Connected_RHcode"][w])
+                            C.append(supply["State"][w])
+                            D.append(cmd_match[k])
+                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
+                            
+                wh_rh_tag["WH_ID"]=A
+                wh_rh_tag["Connected_RHcode"]=B
+                wh_rh_tag["State"]=C
+                wh_rh_tag["Commodity"]=D
+                wh_rh_tag["Values"]=E
+
+                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                F=[]
+                G=[]
+                H=[]
+                I=[]
+                J=[]
+
+                for k in commodity:
+                    for w in demand.index:
+                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
+                            F.append(demand["Connected_RHcode"][w])
+                            G.append(w)
+                            H.append(demand["State"][w])
+                            I.append(cmd_match[k])
+                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
+                            
+                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["WH_ID"]=G
+                rh_wh_tag["State"]=H
+                rh_wh_tag["Commodity"]=I
+                rh_wh_tag["Values"]=J
+
+                rh_rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values (in MT)"])
+                K=[]
+                L=[]
+                M=[]
+                N=[]
+                O=[]
+                P=[]
+
+                for k in commodity:
+                    for i in rh_list.index:
+                        for j in rh_list.index:
+                            if x_ijk[(i,j,k)].value()>0:
+                                K.append(i)
+                                L.append(rh_list["State"][i])
+                                M.append(j)
+                                N.append(rh_list["State"][j])
+                                O.append(cmd_match[k])
+                                P.append(x_ijk[(i,j,k)].value())
+                                
+                rh_rh_tag["From"]=K
+                rh_rh_tag["From_state"]=L
+                rh_rh_tag["To"]=M
+                rh_rh_tag["To_state"]=N
+                rh_rh_tag["Commodity"]=O
+                rh_rh_tag["Values (in MT)"]=P
+
+                wh_wh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
+                Q=[]
+                R=[]
+                S=[]
+                T=[]
+                U=[]
+                V=[]
+
+                for k in commodity:
+                    for u in supply.index:
+                        for v in demand.index:
+                            if x_uvk[(u,v,k)].value()>0:
+                                Q.append(u)
+                                R.append(supply["State"][u])
+                                S.append(v)
+                                T.append(demand["State"][v])
+                                U.append(cmd_match[k])
+                                V.append(x_uvk[(u,v,k)].value())
+                                
+                wh_wh_tag["From"]=Q
+                wh_wh_tag["From_state"]=R
+                wh_wh_tag["To"]=S
+                wh_wh_tag["To_state"]=T
+                wh_wh_tag["Commodity"]=U
+                wh_wh_tag["Values"]=V
+                
+                excel_file="Output_V12_newroadvarscode_preproc.xlsx"
+
+                with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
+                    wh_rh_tag.to_excel(writer, sheet_name="WH_RH_Tag",index=True)
+                    rh_wh_tag.to_excel(writer, sheet_name="RH_WH_Tag",index=True)
+                    rh_rh_tag.to_excel(writer, sheet_name="RH_RH_Tag",index=True)
+                    wh_wh_tag.to_excel(writer, sheet_name="WH_WH_Tag",index=True)
+
+                dataframes = {
+                'wh_rh_tag': wh_rh_tag.to_dict(orient='records'),
+                'rh_wh_tag': rh_wh_tag.to_dict(orient='records'),
+                'rh_rh_tag': rh_rh_tag.to_dict(orient='records'),
+                'wh_wh_tag': wh_wh_tag.to_dict(orient='records'),
+                }
+
+                print(dataframes)
+
+                return jsonify(dataframes)
+
+            elif senerio == "senerio1" :
+                print("senerio1")
+                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
+                x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)
+
+                Punjab=["Haryana","Rajasthan","Uttarakhand","J&K","HP"]
+                Haryana=["HP","Uttarakhand","UP","Rajasthan","Delhi"]
+                MP=["Gujarat","Rajasthan","UP","Chattisgarh","Maharashtra"]
+                Chattisgarh=["MP","Maharashtra","Telangana","Odisha","Jharkhand","UP"]
+                Odisha=["West Bengal","Jharkhand","Chattisgarh","Telangana","AP"]
+                AP=["Telangana","Odisha","Karnataka","Tamil Nadu","Chattisgarh"]
+                Telangana=["Maharashtra","Chattisgarh","Odisha","AP","Karnataka"]
+                Uttarakhand=["HP","Haryana","UP"]
+
+                road={"Punjab":Punjab,"Haryana":Haryana,"MP":MP,"Chattisgarh":Chattisgarh,"Odisha":Odisha,"AP":AP,"Telangana":Telangana,"Uttarakhand":Uttarakhand}
+                
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]!=s:
+                                    if demand["State"][v] in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+ 
+                for s in road:
+                    for u in supply.index:
+                        for v in demand.index:
+                            for k in commodity:
+                                if supply["State"][u]==s:
+                                    if demand["State"][v] not in road[s]:
+                                        prob+=x_uvk[(u,v,k)]==0
+                
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                
+                for w,r in zip(supply.index,supply["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=x_wrk[w,r,k]<=supply[cmd_match_rail[k]][w]
+
                 for w in supply.index:
-                    if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
-                        A.append(w)
-                        B.append(supply["Connected_RHcode"][w])
-                        C.append(supply["State"][w])
-                        D.append(cmd_match[k])
-                        E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
-                        
-            wh_rh_tag["WH_ID"]=A
-            wh_rh_tag["Connected_RHcode"]=B
-            wh_rh_tag["State"]=C
-            wh_rh_tag["Commodity"]=D
-            wh_rh_tag["Values(in MT)"]=E
+                    for k in commodity:
+                        prob+=lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match_road[k]][w]
+                
+                for i in rh_sup.index:
+                    for k in commodity:
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+                
+                for j in rh_dem.index:
+                    for k in commodity:
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                
+                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=x_rwk[(r,w,k)]>=demand[cmd_match_rail[k]][w]
+                
+                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                    for k in commodity:
+                        prob+=lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match_road[k]][w]
 
+                prob.writeLP("FCI_monthly_allocation.lp")
+                #prob.solve(CPLEX())
+                #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+                print("Status:", LpStatus[prob.status])
+                print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
+                print("Total Number of Variables:",len(prob.variables()))
+                print("Total Number of Constraints:",len(prob.constraints))
+                
+                for k in commodity:
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
+                
+                for k in commodity:
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
 
-            rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values(in MT)"])
-            F=[]
-            G=[]
-            H=[]
-            I=[]
-            J=[]
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                A=[]
+                B=[]
+                C=[]
+                D=[]
+                E=[]
 
-            for k in commodity:
-                for w in demand.index:
-                    if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
-                        F.append(demand["Connected_RHcode"][w])
-                        G.append(w)
-                        H.append(demand["State"][w])
-                        I.append(cmd_match[k])
-                        J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
-                        
-            rh_wh_tag["Connected_RHcode"]=F
-            rh_wh_tag["WH_ID"]=G
-            rh_wh_tag["State"]=H
-            rh_wh_tag["Commodity"]=I
-            rh_wh_tag["Values(in MT)"]=J
-
-            rh_rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values (in MT)"])
-            K=[]
-            L=[]
-            M=[]
-            N=[]
-            O=[]
-            P=[]
-
-            for k in commodity:
-                for i in rh_list.index:
-                    for j in rh_list.index:
-                        if x_ijk[(i,j,k)].value()>0:
-                            K.append(i)
-                            L.append(rh_list["State"][i])
-                            M.append(j)
-                            N.append(rh_list["State"][j])
-                            O.append(cmd_match[k])
-                            P.append(x_ijk[(i,j,k)].value())
+                for k in commodity:
+                    for w in supply.index:
+                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                            A.append(w)
+                            B.append(supply["Connected_RHcode"][w])
+                            C.append(supply["State"][w])
+                            D.append(cmd_match[k])
+                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
                             
-            rh_rh_tag["From"]=K
-            rh_rh_tag["From_state"]=L
-            rh_rh_tag["To"]=M
-            rh_rh_tag["To_state"]=N
-            rh_rh_tag["Commodity"]=O
-            rh_rh_tag["Values (in MT)"]=P
-            
-            wh_wh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values(in MT)"])
-            Q=[]
-            R=[]
-            S=[]
-            T=[]
-            U=[]
-            V=[]
+                wh_rh_tag["WH_ID"]=A
+                wh_rh_tag["Connected_RHcode"]=B
+                wh_rh_tag["State"]=C
+                wh_rh_tag["Commodity"]=D
+                wh_rh_tag["Values"]=E
 
-            for k in commodity:
-                for u in supply.index:
-                    for v in demand.index:
-                        if x_uvk[(u,v,k)].value()>0:
-                            Q.append(u)
-                            R.append(supply["State"][u])
-                            S.append(v)
-                            T.append(demand["State"][v])
-                            U.append(cmd_match[k])
-                            V.append(x_uvk[(u,v,k)].value())
+                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                F=[]
+                G=[]
+                H=[]
+                I=[]
+                J=[]
+
+                for k in commodity:
+                    for w in demand.index:
+                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
+                            F.append(demand["Connected_RHcode"][w])
+                            G.append(w)
+                            H.append(demand["State"][w])
+                            I.append(cmd_match[k])
+                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
                             
-            wh_wh_tag["From"]=Q
-            wh_wh_tag["From_state"]=R
-            wh_wh_tag["To"]=S
-            wh_wh_tag["To_state"]=T
-            wh_wh_tag["Commodity"]=U
-            wh_wh_tag["Values(in MT)"]=V
+                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["WH_ID"]=G
+                rh_wh_tag["State"]=H
+                rh_wh_tag["Commodity"]=I
+                rh_wh_tag["Values"]=J
+                
+                rh_rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values (in MT)"])
+                K=[]
+                L=[]
+                M=[]
+                N=[]
+                O=[]
+                P=[]
 
-            excel_file="Output_realdata_approx_supply_V12_v03_noroad.xlsx"
+                for k in commodity:
+                    for i in rh_list.index:
+                        for j in rh_list.index:
+                            if x_ijk[(i,j,k)].value()>0:
+                                K.append(i)
+                                L.append(rh_list["State"][i])
+                                M.append(j)
+                                N.append(rh_list["State"][j])
+                                O.append(cmd_match[k])
+                                P.append(x_ijk[(i,j,k)].value())
+                                
+                rh_rh_tag["From"]=K
+                rh_rh_tag["From_state"]=L
+                rh_rh_tag["To"]=M
+                rh_rh_tag["To_state"]=N
+                rh_rh_tag["Commodity"]=O
+                rh_rh_tag["Values (in MT)"]=P
 
-            with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
-                wh_rh_tag.to_excel(writer, sheet_name="WH_RH_Tag",index=True)
-                rh_wh_tag.to_excel(writer, sheet_name="RH_WH_Tag",index=True)
-                rh_rh_tag.to_excel(writer, sheet_name="RH_RH_Tag",index=True)
-                wh_wh_tag.to_excel(writer, sheet_name="WH_WH_Tag",index=True)
+                wh_wh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
+                Q=[]
+                R=[]
+                S=[]
+                T=[]
+                U=[]
+                V=[]
 
+                for k in commodity:
+                    for u in supply.index:
+                        for v in demand.index:
+                            if x_uvk[(u,v,k)].value()>0:
+                                Q.append(u)
+                                R.append(supply["State"][u])
+                                S.append(v)
+                                T.append(demand["State"][v])
+                                U.append(cmd_match[k])
+                                V.append(x_uvk[(u,v,k)].value())
+                                
+                wh_wh_tag["From"]=Q
+                wh_wh_tag["From_state"]=R
+                wh_wh_tag["To"]=S
+                wh_wh_tag["To_state"]=T
+                wh_wh_tag["Commodity"]=U
+                wh_wh_tag["Values"]=V
+
+                excel_file="Output_V12_newroadvarscode_preproc.xlsx"
+
+                with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
+                    wh_rh_tag.to_excel(writer, sheet_name="WH_RH_Tag",index=True)
+                    rh_wh_tag.to_excel(writer, sheet_name="RH_WH_Tag",index=True)
+                    rh_rh_tag.to_excel(writer, sheet_name="RH_RH_Tag",index=True)
+                    wh_wh_tag.to_excel(writer, sheet_name="WH_WH_Tag",index=True)
+                
+                dataframes = {
+                'wh_rh_tag': wh_rh_tag.to_dict(orient='records'),
+                'rh_wh_tag': rh_wh_tag.to_dict(orient='records'),
+                'rh_rh_tag': rh_rh_tag.to_dict(orient='records'),
+                'wh_wh_tag': wh_wh_tag.to_dict(orient='records'),
+                }
+
+                print(dataframes)
+
+                return jsonify(dataframes)
+            return "Successfully created result"
         except Exception as e:
-                print(e)
+            print(e)
 
+@app.route("/get_roadData", methods=["GET"])
+def get_dataframes():
+    try:
+        return jsonify(dataframes)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
