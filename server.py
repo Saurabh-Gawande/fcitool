@@ -509,9 +509,9 @@ def Monthly_Solution():
                 print('Imported')
                 data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx")
                 data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx")
-                supply = pd.read_excel(data2, sheet_name="MonthlyData")
+                supply = pd.read_excel(data2, sheet_name="MonthlyData",index_col=1)
                 print(supply, "supply")
-                demand = pd.read_excel(data1, sheet_name="MonthlyData")
+                demand = pd.read_excel(data1, sheet_name="MonthlyData",index_col=1)
                 print(demand, "demand")
             # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
@@ -535,25 +535,25 @@ def Monthly_Solution():
                 else:
                     print(cmd_match[k],":","FALSE")
             
-            x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity],0,cat="Integer")
+            x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],0,cat="Integer")
             
-            prob+=0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity)
-            print(0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply["Railhead"] for j in demand["Railhead"] for k in commodity))
+            prob+=0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply.index for j in demand.index for k in commodity)
+            print(0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply.index for j in demand.index for k in commodity))
  
             for i in supply.index:
                 for k in commodity:
-                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=supply[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=supply[cmd_match[k]][i])
-                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand["Railhead"])<=2*supply[cmd_match[k]][i]
+                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
 
             for i in demand.index:
                 for k in commodity:
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])>=demand[cmd_match[k]][i]
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==demand[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==demand[cmd_match[k]][i])
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==2*demand[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(j,i,k)] for j in supply["Railhead"])==2*demand[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
+                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
+                    print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
             
             # prob.writeLP("FCI_monthly_allocation.lp")
             prob.solve()
@@ -564,7 +564,7 @@ def Monthly_Solution():
             print("Total Number of Constraints:",len(prob.constraints))
             
             for k in commodity:
-                print(cmd_match[k],":",0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply["Railhead"] for j in demand["Railhead"]).value())
+                print(cmd_match[k],":",0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index).value())
 
             rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
             A=[]
@@ -575,8 +575,8 @@ def Monthly_Solution():
             F=[]
 
             for k in commodity:
-                for i in supply["Railhead"]:
-                    for j in demand["Railhead"]:
+                for i in supply.index:
+                    for j in demand.index:
                         if x_ijk[(i,j,k)].value()>0:
                             A.append(i)
                             E.append(supply["State"][i])
@@ -618,7 +618,7 @@ def Monthly_Solution():
         json_data = json.dumps(data1)
         json_object = json.loads(json_data)
 
-        return(json.dumps(json_object, indent = 1))
+        return jsonify({"message": "Success"})
     else:
         return ("error")
 
@@ -673,6 +673,7 @@ def Daily_Planner():
             confirmed_destinationMergingId = []
 
             fetched_data = request.get_json()
+            print(fetched_data)
             blocked_data = fetched_data['blocked_data1']
             blocked_data1 = fetched_data['blocked_data2']
             
@@ -3673,7 +3674,7 @@ def Daily_Planner():
             for i in source_coarseGrain1.keys():
                 prob += lpSum(x_ij_coarseGrain1[(i, j)] for j in dest_coarseGrain1.keys()) <= source_coarseGrain1[i]
 
-            for i in dest_coarseGrain.keys():
+            for i in dest_coarseGrain1.keys():
                 prob += lpSum(x_ij_coarseGrain1[(j, i)] for j in source_coarseGrain1.keys()) >= dest_coarseGrain1[i]
             
             for i in source_frkrra1.keys():
@@ -3691,10 +3692,10 @@ def Daily_Planner():
             for i in source_frk1.keys():
                 prob += lpSum(x_ij_frk1[(i, j)] for j in dest_frk1.keys()) <= source_frk1[i]
 
-            for i in dest_frk.keys():
+            for i in dest_frk1.keys():
                 prob += lpSum(x_ij_frk1[(j, i)] for j in source_frk1.keys()) >= dest_frk1[i] 
 
-            for i in source_frkcgr.keys():
+            for i in source_frkcgr1.keys():
                 prob += lpSum(x_ij_frkcgr1[(i, j)] for j in dest_frkcgr1.keys()) <= source_frkcgr1[i]
 
             for i in dest_frkcgr1.keys():
@@ -3783,7 +3784,7 @@ def Daily_Planner():
 
             for i in dest_misc41.keys():
                 prob += lpSum(x_ij_misc41[(j, i)] for j in source_misc41.keys()) >= dest_misc41[i] 
-
+            
             # prob.solve(CPLEX())
             prob.solve()
             print("Status for 58w:", LpStatus[prob.status])
@@ -3814,7 +3815,6 @@ def Daily_Planner():
             sourceMergingId = []
             destinationMergingId = []
 
-            print(source_wheat, dest_wheat)
             for i in source_wheat:
                 for j in dest_wheat:
                     if int(x_ij_wheat[(i, j)].value()) > 0:
@@ -11302,7 +11302,7 @@ def Daily_Planner():
             else:
                 all_commodity_data[name] = df.to_dict(orient='records')
 
-        print(all_commodity_data)
+        # print(all_commodity_data)
 
         return jsonify(all_commodity_data)
     else:
@@ -11381,20 +11381,29 @@ def create_road_plan():
             fetched_data = request.get_json()
             senerio = fetched_data["senerio"]
             data=pd.ExcelFile("Input//Input_template_road_rail_commonscen.xlsx")
+            data1=pd.ExcelFile("Input//Input_template_Road_Invard.xlsx")
+            data2=pd.ExcelFile("Input//Input_template_Road_Outward.xlsx")
+            print(data1.sheet_names)
+            print(data2.sheet_names)
 
-            supply=pd.read_excel(data,sheet_name="Supply",index_col=1)
-            demand=pd.read_excel(data,sheet_name="Demand",index_col=1)
+            # supply=pd.read_excel(data,sheet_name="Supply",index_col=1)
+            # demand=pd.read_excel(data,sheet_name="Demand",index_col=1)
+
+            supply=pd.read_excel(data1,sheet_name="MonthlyData",index_col=1)
+            demand=pd.read_excel(data2,sheet_name="MonthlyData",index_col=1)
+
             rh_sup=pd.read_excel(data,sheet_name="Railhead_sup",index_col=1)
             rh_dem=pd.read_excel(data,sheet_name="Railhead_dem",index_col=1)
             state_supply=pd.read_excel(data,sheet_name="State_supply",index_col=0)
             rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
             road_cost=pd.read_excel(data,sheet_name="Road_cost",index_col=0)
+            print(road_cost)
             print(supply.index, supply.columns)
 
             prob=LpProblem("FCI_monthly_allocation",LpMinimize)
 
-            commodity = ["w(tot)","r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
-            cmd_match = {"w(tot)":"Wheat(Total)","r(rra)":"Rice(RRA)","r(frkrra)":"Rice(FRK RRA)","r(frkbr)":"Rice(FRK BR)","r(rrc)":"Rice(RRC)","m(bajra)":"Millets(Bajra)","m(ragi)":"Millets(Ragi)","m(jowar)":"Millets(Jowar)","m(maize)":"Millets(Maize)","misc1":"Misc 1 ","misc2":"Misc 2"}
+            commodity = ["r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
+            cmd_match = {"r(rra)":"Rice RRA","r(frkrra)":"Rice FRKRRA","r(frkbr)":"Rice FRKBR","r(rrc)":"Rice RRC","m(bajra)":"Millets Bajra","m(ragi)":"Millets Ragi","m(jowar)":"Millets Jowar","m(maize)":"Millets Maize","misc1":"Misc 1","misc2":"Misc 2"}
 
             for k in commodity:
                 supply[cmd_match[k]].sum()
@@ -11413,8 +11422,8 @@ def create_road_plan():
             if senerio == "senerio2": 
                 print("senerio2")
 
-                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
-                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                x_wrk=LpVariable.dicts("x",[(w,supply["Railhead"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Railhead"][w],w,k) for w in demand.index for k in commodity],0)
                 x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
                 x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)    
                 
@@ -11463,7 +11472,7 @@ def create_road_plan():
 
                 var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
 
-                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
                 #print(lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity))
                 
                 # for u in supply.index:
@@ -11472,22 +11481,22 @@ def create_road_plan():
                 #             prob+=x_uvk[(u,v,k)]==0
                 #             print(x_uvk[(u,v,k)]==0)
 
-                for w,r in zip(supply.index,supply["Connected_RHcode"]):
+                for w,r in zip(supply.index,supply["Railhead"]):
                     for k in commodity:
                         prob+=x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w]
                         print(x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w])
                 
                 for i in rh_sup.index:
                     for k in commodity:
-                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Railhead"][w]==i)
                         # print(2.8*lpSum(x_ijk[(i,j,k)] for j in rh_list.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i))
                 
                 for j in rh_dem.index:
                     for k in commodity:
-                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Railhead"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
                         #print(lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index))
                 
-                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                for w,r in zip(demand.index,demand["Railhead"]):
                     for k in commodity:
                         prob+=x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w]
                         print(x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w])
@@ -11502,18 +11511,18 @@ def create_road_plan():
                 print("Total Number of Constraints:",len(prob.constraints))
 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index for j in rh_sup.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
                 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_sup.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
 
-                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Railhead","State","Commodity","Values"])
                 A=[]
                 B=[]
                 C=[]
@@ -11522,12 +11531,12 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in supply.index:
-                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                        if x_wrk[(w,supply["Railhead"][w],k)].value()>0:
                             A.append(w)
-                            B.append(supply["Connected_RHcode"][w])
+                            B.append(supply["Railhead"][w])
                             C.append(supply["State"][w])
                             D.append(cmd_match[k])
-                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
+                            E.append(x_wrk[(w,supply["Railhead"][w],k)].value())
                             
                 wh_rh_tag["WH_ID"]=A
                 wh_rh_tag["Connected_RHcode"]=B
@@ -11536,7 +11545,7 @@ def create_road_plan():
                 wh_rh_tag["Values"]=E
 
 
-                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                rh_wh_tag=pd.DataFrame([],columns=["Railhead","WH_ID","State","Commodity","Values"])
                 F=[]
                 G=[]
                 H=[]
@@ -11545,14 +11554,14 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in demand.index:
-                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
-                            F.append(demand["Connected_RHcode"][w])
+                        if x_rwk[(demand["Railhead"][w],w,k)].value()>0:
+                            F.append(demand["Railhead"][w])
                             G.append(w)
                             H.append(demand["State"][w])
                             I.append(cmd_match[k])
-                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
+                            J.append(x_rwk[(demand["Railhead"][w],w,k)].value())
                             
-                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["Railhead"]=F
                 rh_wh_tag["WH_ID"]=G
                 rh_wh_tag["State"]=H
                 rh_wh_tag["Commodity"]=I
@@ -11675,7 +11684,7 @@ def create_road_plan():
                                         prob+=x_uvk[(u,v,k)]==0
                 
                 var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
-                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
 
                 for w,r in zip(supply.index,supply["Connected_RHcode"]):
                     for k in commodity:
@@ -11713,8 +11722,8 @@ def create_road_plan():
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
                 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
                 
@@ -11875,7 +11884,7 @@ def create_road_plan():
 
                 var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
 
-                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
                 
                 for w,r in zip(supply.index,supply["Connected_RHcode"]):
                     for k in commodity:
@@ -11917,8 +11926,8 @@ def create_road_plan():
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
 
@@ -12079,7 +12088,7 @@ def create_road_plan():
                                     if demand["State"][v] not in road[s]:
                                         prob+=x_uvk[(u,v,k)]==0
                 
-                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
                 
                 for w,r in zip(supply.index,supply["Connected_RHcode"]):
                     for k in commodity:
@@ -12121,8 +12130,8 @@ def create_road_plan():
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
                 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road_cost"][w] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road_cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
 
