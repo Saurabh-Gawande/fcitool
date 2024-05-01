@@ -673,7 +673,7 @@ def Daily_Planner():
             confirmed_destinationMergingId = []
 
             fetched_data = request.get_json()
-            print(fetched_data)
+            
             blocked_data = fetched_data['blocked_data1']
             blocked_data1 = fetched_data['blocked_data2']
             
@@ -2668,11 +2668,11 @@ def Daily_Planner():
             
             dest_maize_inline1 = {}
             for i in range(len(maize_dest_inline1)):
-                dest_maize_inline1[maize_dest_inline[i]["origin_railhead"]] = maize_dest_inline1[i]["destination_railhead"]
+                dest_maize_inline1[maize_dest_inline1[i]["origin_railhead"]] = maize_dest_inline1[i]["destination_railhead"]
 
             source_misc1_inline1 = {}
             for i in range(len(misc1_origin_inline1)):
-                source_misc1_inline1[misc1_origin_inline[i]["origin_railhead"]] = misc1_origin_inline1[i]["destination_railhead"]
+                source_misc1_inline1[misc1_origin_inline1[i]["origin_railhead"]] = misc1_origin_inline1[i]["destination_railhead"]
             
             dest_misc1_inline1 = {}
             for i in range(len(misc1_dest_inline1)):
@@ -2926,7 +2926,7 @@ def Daily_Planner():
                 dest_frkrra1[i] = 1
 
             list_src_frkbr1 = []
-            for i in L5:
+            for i in L51:
                 Value = {}
                 List_A = []
                 List_B = []
@@ -5058,7 +5058,7 @@ def Daily_Planner():
             for i in source_frkrra_inline.keys():
                 for j in range(len(df_frkrra["SourceRailHead"])):
                     if (i.split("_")[0] == df_frkrra.iloc[j]["SourceRailHead"] or source_frkrra_inline[i].split("_")[0] == df_frkrra.iloc[j]["SourceRailHead"]):
-                        df_frkrra.loc[j, 'SourceRailHead'] = (i + '+' + source_frkrra_inline[i])
+                        df_frkrra.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_frkrra_inline[i].split("_")[0])
             
             df_frkrra1 = pd.DataFrame()
             From = []
