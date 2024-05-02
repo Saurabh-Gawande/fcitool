@@ -4258,7 +4258,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4271,6 +4270,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_division = True
                         break
                 if not found_division:
