@@ -4436,7 +4436,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4449,6 +4448,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_division = True
                         break
                 if not found_division:
@@ -4617,7 +4617,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4630,6 +4629,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_division = True
                         break
                 if not found_division:
@@ -4795,7 +4795,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4808,6 +4807,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         found_division = True
                         break
                 if not found_division:
@@ -4973,7 +4973,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -4987,6 +4986,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5151,7 +5151,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -5165,6 +5164,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5330,7 +5330,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -5344,6 +5343,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5509,7 +5509,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -5523,6 +5522,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -5865,7 +5865,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             destinationMergingId.append(wheat["destinationMergingId"])
                             break
                     if not found_division:
@@ -5879,6 +5878,7 @@ def Daily_Planner():
                         found_division = True
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -6581,7 +6581,6 @@ def Daily_Planner():
                         if From[i] in {wheat["origin_railhead"], wheat["destination_railhead"]}:
                             From_inlineDivision.append(wheat.get("inlineSourceDivision", ""))
                             found_division = True
-                            destinationRH.append(wheat["virtualCode"])
                             break
                     if not found_division:
                         From_inlineDivision.append("")  
@@ -6595,6 +6594,7 @@ def Daily_Planner():
                         destinationId.append(wheat["destinationId"])
                         destination_rake.append(wheat["rake"])
                         destinationMergingId.append(wheat["destinationMergingId"])
+                        destinationRH.append(wheat["virtualCode"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
@@ -11397,7 +11397,9 @@ def create_road_plan():
             state_supply=pd.read_excel(data,sheet_name="State_supply",index_col=0)
             rail_cost=pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
             road_cost=pd.read_excel(data,sheet_name="Road_cost",index_col=0)
-            print(road_cost)
+            cmd_match_road={"w(tot)":"Wheat Road","r(rra)":"RRA Road","r(frkrra)":"FRKRRA Road","r(frkbr)":"FRKBR Road","r(rrc)":"Rice Road","m(bajra)":"Bajra Road","m(ragi)":"Ragi Road","m(jowar)":"Jowar Road","m(maize)":"Maize Road","misc1":"Misc Road","misc2":"Misc2 Road"}
+            cmd_match_rail={"w(tot)":"Wheat Rail","r(rra)":"RRA Rail","r(frkrra)":"FRKRRA Rail","r(frkbr)":"FRKBR Rail","r(rrc)":"RRC Rail","m(bajra)":"Bajra Rail","m(ragi)":"Ragi Rail","m(jowar)":"Jowar Rail","m(maize)":"Maize Rail","misc1":"Misc Rail","misc2":"Misc2 Rail"}
+            
             print(supply.index, supply.columns)
 
             prob=LpProblem("FCI_monthly_allocation",LpMinimize)
@@ -11640,8 +11642,8 @@ def create_road_plan():
 
             elif senerio == "senerio3": 
                 print("senerio3")
-                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
-                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                x_wrk=LpVariable.dicts("x",[(w,supply["Railhead"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Railhead"][w],w,k) for w in demand.index for k in commodity],0)
                 x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
                 x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)
 
@@ -11684,25 +11686,25 @@ def create_road_plan():
                                         prob+=x_uvk[(u,v,k)]==0
                 
                 var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
-                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
 
-                for w,r in zip(supply.index,supply["Connected_RHcode"]):
+                for w,r in zip(supply.index,supply["Railhead"]):
                     for k in commodity:
                         prob+=x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w]
 
                 for i in rh_sup.index:
                     for k in commodity:
-                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Railhead"][w]==i)
 
                 for j in rh_dem.index:
                     for k in commodity:
-                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Railhead"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
                 
                 for k in commodity:
                     for j in rh_dem.index:
                         prob+=lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)<=Railhead_dem[cmd_match[k]][j]
                 
-                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                for w,r in zip(demand.index,demand["Railhead"]):
                     for k in commodity:
                         prob+=x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w]
 
@@ -11716,18 +11718,18 @@ def create_road_plan():
                 print("Total Number of Constraints:",len(prob.constraints))
 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
                 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
                 
-                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Railhead","State","Commodity","Values"])
                 A=[]
                 B=[]
                 C=[]
@@ -11736,20 +11738,20 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in supply.index:
-                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                        if x_wrk[(w,supply["Railhead"][w],k)].value()>0:
                             A.append(w)
-                            B.append(supply["Connected_RHcode"][w])
+                            B.append(supply["Railhead"][w])
                             C.append(supply["State"][w])
                             D.append(cmd_match[k])
-                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
+                            E.append(x_wrk[(w,supply["Railhead"][w],k)].value())
                             
                 wh_rh_tag["WH_ID"]=A
-                wh_rh_tag["Connected_RHcode"]=B
+                wh_rh_tag["Railhead"]=B
                 wh_rh_tag["State"]=C
                 wh_rh_tag["Commodity"]=D
                 wh_rh_tag["Values"]=E
 
-                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                rh_wh_tag=pd.DataFrame([],columns=["Railhead","WH_ID","State","Commodity","Values"])
                 F=[]
                 G=[]
                 H=[]
@@ -11758,14 +11760,14 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in demand.index:
-                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
-                            F.append(demand["Connected_RHcode"][w])
+                        if x_rwk[(demand["Railhead"][w],w,k)].value()>0:
+                            F.append(demand["Railhead"][w])
                             G.append(w)
                             H.append(demand["State"][w])
                             I.append(cmd_match[k])
-                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
+                            J.append(x_rwk[(demand["Railhead"][w],w,k)].value())
                             
-                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["Railhead"]=F
                 rh_wh_tag["WH_ID"]=G
                 rh_wh_tag["State"]=H
                 rh_wh_tag["Commodity"]=I
@@ -11843,9 +11845,9 @@ def create_road_plan():
                 return jsonify(dataframes)
   
             elif senerio == "senerio4":
-                print (senerio4)
-                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
-                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                print ('senerio4')
+                x_wrk=LpVariable.dicts("x",[(w,supply["Railhead"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Railhead"][w],w,k) for w in demand.index for k in commodity],0)
                 x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
                 x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)
 
@@ -11857,6 +11859,8 @@ def create_road_plan():
                 AP=["Telangana","Odisha","Karnataka","Tamil Nadu","Chattisgarh"]
                 Telangana=["Maharashtra","Chattisgarh","Odisha","AP","Karnataka"]
                 Uttarakhand=["HP","Haryana","UP"]
+
+                road={"Punjab":Punjab,"Haryana":Haryana,"MP":MP,"Chattisgarh":Chattisgarh,"Odisha":Odisha,"AP":AP,"Telangana":Telangana,"Uttarakhand":Uttarakhand}
 
                 for s in road:
                     for u in supply.index:
@@ -11884,29 +11888,29 @@ def create_road_plan():
 
                 var_no=len(x_wrk)+len(x_rwk)+len(x_ijk)+len(x_uvk)
 
-                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
                 
-                for w,r in zip(supply.index,supply["Connected_RHcode"]):
+                for w,r in zip(supply.index,supply["Railhead"]):
                     for k in commodity:
                         prob+=x_wrk[w,r,k]+lpSum(x_uvk[(w,v,k)] for v in demand.index)<=supply[cmd_match[k]][w]
                 
                 for i in rh_sup.index:
                     for k in commodity:
-                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Railhead"][w]==i)
                 
                 for k in commodity:
                     for i in rh_sup.index:
-                        prob+=lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=Railhead_sup[cmd_match[k]][i]
+                        prob+=lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=rh_sup[cmd_match[k]][i]
                 
                 for j in rh_dem.index:
                     for k in commodity:
-                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Railhead"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
                 
                 for k in commodity:
                     for j in rh_dem.index:
                         prob+=lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)<=Railhead_dem[cmd_match[k]][j]
                 
-                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                for w,r in zip(demand.index,demand["Railhead"]):
                     for k in commodity:
                         prob+=x_rwk[(r,w,k)]+lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match[k]][w]
                 
@@ -11920,18 +11924,18 @@ def create_road_plan():
                 print("Total Number of Constraints:",len(prob.constraints))
 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
 
-                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Railhead","State","Commodity","Values"])
                 A=[]
                 B=[]
                 C=[]
@@ -11940,20 +11944,20 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in supply.index:
-                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                        if x_wrk[(w,supply["Railhead"][w],k)].value()>0:
                             A.append(w)
-                            B.append(supply["Connected_RHcode"][w])
+                            B.append(supply["Railhead"][w])
                             C.append(supply["State"][w])
                             D.append(cmd_match[k])
-                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
+                            E.append(x_wrk[(w,supply["Railhead"][w],k)].value())
                             
                 wh_rh_tag["WH_ID"]=A
-                wh_rh_tag["Connected_RHcode"]=B
+                wh_rh_tag["Railhead"]=B
                 wh_rh_tag["State"]=C
                 wh_rh_tag["Commodity"]=D
                 wh_rh_tag["Values"]=E
 
-                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                rh_wh_tag=pd.DataFrame([],columns=["Railhead","WH_ID","State","Commodity","Values"])
                 F=[]
                 G=[]
                 H=[]
@@ -11962,14 +11966,14 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in demand.index:
-                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
-                            F.append(demand["Connected_RHcode"][w])
+                        if x_rwk[(demand["Railhead"][w],w,k)].value()>0:
+                            F.append(demand["Railhead"][w])
                             G.append(w)
                             H.append(demand["State"][w])
                             I.append(cmd_match[k])
-                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
+                            J.append(x_rwk[(demand["Railhead"][w],w,k)].value())
                             
-                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["Railhead"]=F
                 rh_wh_tag["WH_ID"]=G
                 rh_wh_tag["State"]=H
                 rh_wh_tag["Commodity"]=I
@@ -12048,8 +12052,8 @@ def create_road_plan():
 
             elif senerio == "senerio1" :
                 print("senerio1")
-                x_wrk=LpVariable.dicts("x",[(w,supply["Connected_RHcode"][w],k) for w in supply.index for k in commodity],0)
-                x_rwk=LpVariable.dicts("x",[(demand["Connected_RHcode"][w],w,k) for w in demand.index for k in commodity],0)
+                x_wrk=LpVariable.dicts("x",[(w,supply["Railhead"][w],k) for w in supply.index for k in commodity],0)
+                x_rwk=LpVariable.dicts("x",[(demand["Railhead"][w],w,k) for w in demand.index for k in commodity],0)
                 x_ijk=LpVariable.dicts("x",[(i,j,k) for i in rh_sup.index for j in rh_dem.index for k in commodity],0,cat="Integer")
                 x_uvk=LpVariable.dicts("x",[(u,v,k) for u in supply.index for v in demand.index for k in commodity],0)
 
@@ -12088,9 +12092,9 @@ def create_road_plan():
                                     if demand["State"][v] not in road[s]:
                                         prob+=x_uvk[(u,v,k)]==0
                 
-                prob+=lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
+                prob+=lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index)) for k in commodity)+lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index)) for k in commodity)+2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_dem.index for k in commodity)+lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index for k in commodity)
                 
-                for w,r in zip(supply.index,supply["Connected_RHcode"]):
+                for w,r in zip(supply.index,supply["Railhead"]):
                     for k in commodity:
                         prob+=x_wrk[w,r,k]<=supply[cmd_match_rail[k]][w]
 
@@ -12100,17 +12104,17 @@ def create_road_plan():
                 
                 for i in rh_sup.index:
                     for k in commodity:
-                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Connected_RHcode"][w]==i)
+                        prob+=2.8*lpSum(x_ijk[(i,j,k)] for j in rh_dem.index)<=lpSum(x_wrk[(w,i,k)] for w in supply.index if supply["Railhead"][w]==i)
                 
                 for j in rh_dem.index:
                     for k in commodity:
-                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Connected_RHcode"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
+                        prob+=lpSum(x_rwk[(j,w,k)] for w in demand.index if demand["Railhead"][w]==j)<=2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index)
                 
-                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                for w,r in zip(demand.index,demand["Railhead"]):
                     for k in commodity:
                         prob+=x_rwk[(r,w,k)]>=demand[cmd_match_rail[k]][w]
                 
-                for w,r in zip(demand.index,demand["Connected_RHcode"]):
+                for w,r in zip(demand.index,demand["Railhead"]):
                     for k in commodity:
                         prob+=lpSum(x_uvk[(u,w,k)] for u in supply.index)>=demand[cmd_match_road[k]][w]
 
@@ -12124,18 +12128,18 @@ def create_road_plan():
                 print("Total Number of Constraints:",len(prob.constraints))
                 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
                 
                 for k in commodity:
-                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Connected_RHcode"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
-                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Connected_RHcode"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
+                    print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
+                    print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
                     print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
 
-                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Connected_RHcode","State","Commodity","Values"])
+                wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Railhead","State","Commodity","Values"])
                 A=[]
                 B=[]
                 C=[]
@@ -12144,20 +12148,20 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in supply.index:
-                        if x_wrk[(w,supply["Connected_RHcode"][w],k)].value()>0:
+                        if x_wrk[(w,supply["Railhead"][w],k)].value()>0:
                             A.append(w)
-                            B.append(supply["Connected_RHcode"][w])
+                            B.append(supply["Railhead"][w])
                             C.append(supply["State"][w])
                             D.append(cmd_match[k])
-                            E.append(x_wrk[(w,supply["Connected_RHcode"][w],k)].value())
+                            E.append(x_wrk[(w,supply["Railhead"][w],k)].value())
                             
                 wh_rh_tag["WH_ID"]=A
-                wh_rh_tag["Connected_RHcode"]=B
+                wh_rh_tag["Railhead"]=B
                 wh_rh_tag["State"]=C
                 wh_rh_tag["Commodity"]=D
                 wh_rh_tag["Values"]=E
 
-                rh_wh_tag=pd.DataFrame([],columns=["Connected_RHcode","WH_ID","State","Commodity","Values"])
+                rh_wh_tag=pd.DataFrame([],columns=["Railhead","WH_ID","State","Commodity","Values"])
                 F=[]
                 G=[]
                 H=[]
@@ -12166,14 +12170,14 @@ def create_road_plan():
 
                 for k in commodity:
                     for w in demand.index:
-                        if x_rwk[(demand["Connected_RHcode"][w],w,k)].value()>0:
-                            F.append(demand["Connected_RHcode"][w])
+                        if x_rwk[(demand["Railhead"][w],w,k)].value()>0:
+                            F.append(demand["Railhead"][w])
                             G.append(w)
                             H.append(demand["State"][w])
                             I.append(cmd_match[k])
-                            J.append(x_rwk[(demand["Connected_RHcode"][w],w,k)].value())
+                            J.append(x_rwk[(demand["Railhead"][w],w,k)].value())
                             
-                rh_wh_tag["Connected_RHcode"]=F
+                rh_wh_tag["Railhead"]=F
                 rh_wh_tag["WH_ID"]=G
                 rh_wh_tag["State"]=H
                 rh_wh_tag["Commodity"]=I
