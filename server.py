@@ -1,4 +1,5 @@
-import pandas as pd
+#import packages
+import pandas as pd 
 from pulp import *
 import json
 from flask import Flask, request, session, jsonify, send_file
@@ -8,27 +9,29 @@ import xlsxwriter
 import numpy as np
 import json
 
-
+# created flask app 
 app = Flask(__name__)
 app.secret_key = 'aqswdefrgt'
 CORS(app, supports_credentials=True)
 active_sessions = {}
 
+# created excel file for rail monthly invard deamand
 @app.route("/Import_Monthly_File_Invard",methods = ["POST"])
 def upload_Monthly_File_M01():
     data = {}
     try:
-        file = request.files['uploadFile1']
-        file.save("Input//Input_template_Monthly_Planner_Invard.xlsx")
-        data['status'] = 1
+        file = request.files['uploadFile1'] # import file
+        file.save("Input//Input_template_Monthly_Planner_Invard.xlsx") #save file with this name in input folder
+        data['status'] = 1 # on success get the code 1
     except:
-        data['status'] = 0
+        data['status'] = 0 # on failur get the code 0
     
     json_data = json.dumps(data)
     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+    return(json.dumps(json_object, indent = 1)) #return statement
 
+# created excel file for rail monthly outward deamand
 @app.route("/Import_Monthly_File_Outward",methods = ["POST"])
 def upload_Monthly_File_Outward():
     data = {}
@@ -44,6 +47,7 @@ def upload_Monthly_File_Outward():
 
     return(json.dumps(json_object, indent = 1))
 
+# created excel file for road monthly invard deamand
 @app.route("/Import_Mode2_Invard",methods = ["POST"])
 def upload_Mode2_Invard():
     data = {}
@@ -59,6 +63,7 @@ def upload_Mode2_Invard():
 
     return(json.dumps(json_object, indent = 1))
 
+# created excel file for road monthly invard deamand
 @app.route("/Import_Mode2_Outward",methods = ["POST"])
 def upload_Mode2_Outward():
     data = {}
@@ -74,27 +79,29 @@ def upload_Mode2_Outward():
 
     return(json.dumps(json_object, indent = 1))
 
+#creating cost matrix 
 @app.route("/rail_cost_matraix", methods=["POST"])
 def Rail_cost_matrix():
     data = {}
     try:
-        fetched_data = request.get_json()
-        TEFDdata = fetched_data['TEFDdata']
-        df = pd.DataFrame(TEFDdata["data"]["codes"])
+        fetched_data = request.get_json() 
+        TEFDdata = fetched_data['TEFDdata'] #fetch the json
+        df = pd.DataFrame(TEFDdata["data"]["codes"]) 
         df1 = pd.DataFrame(TEFDdata["data"]["columnData"])
-        rail_cost = pd.concat([df, df1], axis=1)  # Fix the variable name here
+        rail_cost = pd.concat([df, df1], axis=1)  # concat two dataframe 
         with pd.ExcelWriter("Input//Cost_matrix.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            rail_cost.to_excel(writer, sheet_name="Railhead_cost_matrix", index=False)
-        data['status'] = 1
+            rail_cost.to_excel(writer, sheet_name="Railhead_cost_matrix", index=False) # excel file created
+        data['status'] = 1 # status code on success
     except Exception as e:
         print(f"Error: {str(e)}")
-        data['status'] = 0
+        data['status'] = 0  # status code on failur
 
     json_data = json.dumps(data)
     json_object = json.loads(json_data)
 
     return json.dumps(json_object, indent=1)
 
+# not in use for now 
 @app.route("/upload_Monthly_File",methods = ["POST"])
 def upload_Monthly_File_M02():
     data = {}
@@ -110,50 +117,53 @@ def upload_Monthly_File_M02():
 
     return(json.dumps(json_object, indent = 1))
 
-@app.route("/uploadDailyFile_S2",methods = ["POST"])
-def uploadDailyFile_S2():
-    data = {}
-    try:
-        file = request.files['uploadFile']
-        file.save("Input//Temp_balanced_DPT_scen2.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+#not in use 
+# @app.route("/uploadDailyFile_S2",methods = ["POST"])
+# def uploadDailyFile_S2():
+#     data = {}
+#     try:
+#         file = request.files['uploadFile']
+#         file.save("Input//Temp_balanced_DPT_scen2.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
 
-@app.route("/uploadDailyFile_S1",methods = ["POST"])
-def uploadDailyFile_S1():
-    data = {}
-    try:
-        file = request.files['uploadFile']
-        file.save("Input//Temp_balanced_DPT_scen1.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+#not in use
+# @app.route("/uploadDailyFile_S1",methods = ["POST"])
+# def uploadDailyFile_S1():
+#     data = {}
+#     try:
+#         file = request.files['uploadFile']
+#         file.save("Input//Temp_balanced_DPT_scen1.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
 
-@app.route("/uploadDailyFile",methods = ["POST"])
-def uploadDailyFile():
-    data = {}
-    try:
-        file = request.files['file']
-        file.save("Input//Data_template.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+#not in use
+# @app.route("/uploadDailyFile",methods = ["POST"])
+# def uploadDailyFile():
+#     data = {}
+#     try:
+#         file = request.files['file']
+#         file.save("Input//Data_template.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
     
         
 @app.route("/read_Relevant_Result",methods = ["GET"])
@@ -204,291 +214,292 @@ def read_Relevant_Result():
         return ("error")
     
     
-@app.route("/read_Daily_Planner_S2",methods = ["POST","GET"])
-def read_Daily_Planner_S2():
-    if request.method == "POST":        
-        try: 
-            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra") 
-            df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
-            json_data1 = df1.to_json(orient='records', indent=1)
-            json_data2 = df2.to_json(orient='records', indent=1)
-            json_data = {"rra": json_data1, "wheat": json_data2}
-        except:
-            json_data = json.dumps({"Status": 0}, indent=1)
+# @app.route("/read_Daily_Planner_S2",methods = ["POST","GET"])
+# def read_Daily_Planner_S2():
+#     if request.method == "POST":        
+#         try: 
+#             df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra") 
+#             df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
+#             json_data1 = df1.to_json(orient='records', indent=1)
+#             json_data2 = df2.to_json(orient='records', indent=1)
+#             json_data = {"rra": json_data1, "wheat": json_data2}
+#         except:
+#             json_data = json.dumps({"Status": 0}, indent=1)
 
-        json_object = json.dumps(json_data)
-        return json_object
-    else:
-        return ("error")
+#         json_object = json.dumps(json_data)
+#         return json_object
+#     else:
+#         return ("error")
 
-@app.route("/read_Daily_Planner_S1",methods = ["POST","GET"])
-def read_Daily_Planner_S1():
-    if request.method == "GET":        
-        try: 
-            df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
-            df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
-            df3 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain") 
-            df4 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra") 
-            df5 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br") 
-            df6 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk") 
-            df7 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr")
-            df8 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr")
-            df9 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs")
-            df10 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq")
-            df11 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc")
-            df12 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar")
-            df13 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi")
-            df14 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra")
-            df15 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize")
-            df16 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1")
-            df17 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2")
-            df18 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra")
-            df19 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra")
-            df20 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
-            df21 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
+# for creating excel file for daily result (not in use anymore)
+# @app.route("/read_Daily_Planner_S1",methods = ["POST","GET"])
+# def read_Daily_Planner_S1():
+#     if request.method == "GET":        
+#         try: 
+#             df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
+#             df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
+#             df3 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain") 
+#             df4 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra") 
+#             df5 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br") 
+#             df6 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk") 
+#             df7 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr")
+#             df8 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr")
+#             df9 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs")
+#             df10 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq")
+#             df11 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc")
+#             df12 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar")
+#             df13 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi")
+#             df14 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra")
+#             df15 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize")
+#             df16 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1")
+#             df17 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2")
+#             df18 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra")
+#             df19 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra")
+#             df20 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
+#             df21 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
 
-            df22 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_58w")
-            df23 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra_58w")
-            df24 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain_58w") 
-            df25 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra_58w") 
-            df26 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br_58w") 
-            df27 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_58w") 
-            df28 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr_58w")
-            df29 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr_58w")
-            df30 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs_58w")
-            df31 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq_58w")
-            df32 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc_58w")
-            df33 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar_58w")
-            df34 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi_58w")
-            df35 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra_58w")
-            df36 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize_58w")
-            df37 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1_58w")
-            df38 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2_58w")
-            df39 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra_58w")
-            df40 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra_58w")
-            df41 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3_58w")
-            df42 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4_58w")
+#             df22 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_58w")
+#             df23 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra_58w")
+#             df24 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain_58w") 
+#             df25 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra_58w") 
+#             df26 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br_58w") 
+#             df27 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_58w") 
+#             df28 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr_58w")
+#             df29 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr_58w")
+#             df30 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs_58w")
+#             df31 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq_58w")
+#             df32 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc_58w")
+#             df33 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar_58w")
+#             df34 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi_58w")
+#             df35 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra_58w")
+#             df36 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize_58w")
+#             df37 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1_58w")
+#             df38 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2_58w")
+#             df39 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra_58w")
+#             df40 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra_58w")
+#             df41 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3_58w")
+#             df42 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4_58w")
 
-            json_data1 = df1.to_json(orient='records', indent=1)
-            json_data2 = df2.to_json(orient='records', indent=1)
-            json_data3 = df3.to_json(orient='records', indent=1)
-            json_data4 = df4.to_json(orient='records', indent=1)
-            json_data5 = df5.to_json(orient='records', indent=1)
-            json_data6 = df6.to_json(orient='records', indent=1)
-            json_data7 = df7.to_json(orient='records', indent=1)
-            json_data8 = df8.to_json(orient='records', indent=1)
-            json_data9 = df9.to_json(orient='records', indent=1)
-            json_data10 = df10.to_json(orient='records', indent=1)
-            json_data11 = df11.to_json(orient='records', indent=1)
-            json_data12 = df12.to_json(orient='records', indent=1)
-            json_data13 = df13.to_json(orient='records', indent=1)
-            json_data14 = df14.to_json(orient='records', indent=1)
-            json_data15 = df15.to_json(orient='records', indent=1)
-            json_data16 = df16.to_json(orient='records', indent=1)
-            json_data17 = df17.to_json(orient='records', indent=1)
-            json_data18 = df18.to_json(orient='records', indent=1)
-            json_data19 = df19.to_json(orient='records', indent=1)
-            json_data20 = df20.to_json(orient='records', indent=1)
-            json_data21 = df21.to_json(orient='records', indent=1)
+#             json_data1 = df1.to_json(orient='records', indent=1)
+#             json_data2 = df2.to_json(orient='records', indent=1)
+#             json_data3 = df3.to_json(orient='records', indent=1)
+#             json_data4 = df4.to_json(orient='records', indent=1)
+#             json_data5 = df5.to_json(orient='records', indent=1)
+#             json_data6 = df6.to_json(orient='records', indent=1)
+#             json_data7 = df7.to_json(orient='records', indent=1)
+#             json_data8 = df8.to_json(orient='records', indent=1)
+#             json_data9 = df9.to_json(orient='records', indent=1)
+#             json_data10 = df10.to_json(orient='records', indent=1)
+#             json_data11 = df11.to_json(orient='records', indent=1)
+#             json_data12 = df12.to_json(orient='records', indent=1)
+#             json_data13 = df13.to_json(orient='records', indent=1)
+#             json_data14 = df14.to_json(orient='records', indent=1)
+#             json_data15 = df15.to_json(orient='records', indent=1)
+#             json_data16 = df16.to_json(orient='records', indent=1)
+#             json_data17 = df17.to_json(orient='records', indent=1)
+#             json_data18 = df18.to_json(orient='records', indent=1)
+#             json_data19 = df19.to_json(orient='records', indent=1)
+#             json_data20 = df20.to_json(orient='records', indent=1)
+#             json_data21 = df21.to_json(orient='records', indent=1)
 
-            json_data22 = df22.to_json(orient='records', indent=1)
-            json_data23 = df23.to_json(orient='records', indent=1)
-            json_data24 = df24.to_json(orient='records', indent=1)
-            json_data25 = df25.to_json(orient='records', indent=1)
-            json_data26 = df26.to_json(orient='records', indent=1)
-            json_data27 = df27.to_json(orient='records', indent=1)
-            json_data28 = df28.to_json(orient='records', indent=1)
-            json_data29 = df29.to_json(orient='records', indent=1)
-            json_data30 = df30.to_json(orient='records', indent=1)
-            json_data31 = df31.to_json(orient='records', indent=1)
-            json_data32 = df32.to_json(orient='records', indent=1)
-            json_data33 = df33.to_json(orient='records', indent=1)
-            json_data34 = df34.to_json(orient='records', indent=1)
-            json_data35 = df35.to_json(orient='records', indent=1)
-            json_data36 = df36.to_json(orient='records', indent=1)
-            json_data37 = df37.to_json(orient='records', indent=1)
-            json_data38 = df38.to_json(orient='records', indent=1)
-            json_data39 = df39.to_json(orient='records', indent=1)
-            json_data40 = df40.to_json(orient='records', indent=1)
-            json_data41 = df41.to_json(orient='records', indent=1)
-            json_data42 = df42.to_json(orient='records', indent=1)
+#             json_data22 = df22.to_json(orient='records', indent=1)
+#             json_data23 = df23.to_json(orient='records', indent=1)
+#             json_data24 = df24.to_json(orient='records', indent=1)
+#             json_data25 = df25.to_json(orient='records', indent=1)
+#             json_data26 = df26.to_json(orient='records', indent=1)
+#             json_data27 = df27.to_json(orient='records', indent=1)
+#             json_data28 = df28.to_json(orient='records', indent=1)
+#             json_data29 = df29.to_json(orient='records', indent=1)
+#             json_data30 = df30.to_json(orient='records', indent=1)
+#             json_data31 = df31.to_json(orient='records', indent=1)
+#             json_data32 = df32.to_json(orient='records', indent=1)
+#             json_data33 = df33.to_json(orient='records', indent=1)
+#             json_data34 = df34.to_json(orient='records', indent=1)
+#             json_data35 = df35.to_json(orient='records', indent=1)
+#             json_data36 = df36.to_json(orient='records', indent=1)
+#             json_data37 = df37.to_json(orient='records', indent=1)
+#             json_data38 = df38.to_json(orient='records', indent=1)
+#             json_data39 = df39.to_json(orient='records', indent=1)
+#             json_data40 = df40.to_json(orient='records', indent=1)
+#             json_data41 = df41.to_json(orient='records', indent=1)
+#             json_data42 = df42.to_json(orient='records', indent=1)
 
-            json_data = {
-             "rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "wheat_frk": json_data6,
-             "frkcgr":json_data7 , "wcgr": json_data8, "wheat_urs": json_data9 , "wheat_faq": json_data10, "rrc": json_data11, "jowar": json_data12, 
-             "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
-             "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22 , "rra_58w": json_data23, 
-             "coarse_grain_58w": json_data24, "frk_rra_58w": json_data25, "frk_br_58w": json_data26, "wheat_frk_58w": json_data27, "frkcgr_58w": json_data28, 
-             "wcgr_58w": json_data29, "wheat_urs_58w": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data33,
-             "ragi_58w": json_data34, "bajra_58w": json_data35, "maize_58w": json_data36, "misc1_58w": json_data37, "misc2_58w": json_data38, "wheat_rra_58w": json_data39,
-             "frkPlusRRa_58w": json_data40, "misc3_58w": json_data41, "misc4_58": json_data42
-             }
+#             json_data = {
+#              "rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "wheat_frk": json_data6,
+#              "frkcgr":json_data7 , "wcgr": json_data8, "wheat_urs": json_data9 , "wheat_faq": json_data10, "rrc": json_data11, "jowar": json_data12, 
+#              "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
+#              "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22 , "rra_58w": json_data23, 
+#              "coarse_grain_58w": json_data24, "frk_rra_58w": json_data25, "frk_br_58w": json_data26, "wheat_frk_58w": json_data27, "frkcgr_58w": json_data28, 
+#              "wcgr_58w": json_data29, "wheat_urs_58w": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data33,
+#              "ragi_58w": json_data34, "bajra_58w": json_data35, "maize_58w": json_data36, "misc1_58w": json_data37, "misc2_58w": json_data38, "wheat_rra_58w": json_data39,
+#              "frkPlusRRa_58w": json_data40, "misc3_58w": json_data41, "misc4_58": json_data42
+#              }
              
-        except:
-            json_data = json.dumps({"Status": 0}, indent=1)
+#         except:
+#             json_data = json.dumps({"Status": 0}, indent=1)
 
-        json_object = json.dumps(json_data)
-        return json_object
-    else:
-        return ("error")
+#         json_object = json.dumps(json_data)
+#         return json_object
+#     else:
+#         return ("error")
     
-@app.route("/read_Monthly_Template_M1",methods = ["POST","GET"])
-def read_Monthly_Template_M1():
-    if request.method == "POST":        
-        try: 
-            df1 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_wheat") 
-            df2 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_wheat")
-            df3 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_rice")
-            df4 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_rice")
-            df5 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_supply")
-            df6 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_allocation")
-            df7 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Rail_cost_chart")
-            json_data1 = df1.to_json(orient='records', indent=1)
-            json_data2 = df2.to_json(orient='records', indent=1)
-            json_data3 = df3.to_json(orient='records', indent=1)
-            json_data4 = df4.to_json(orient='records', indent=1)
-            json_data5 = df5.to_json(orient='records', indent=1)
-            json_data6 = df6.to_json(orient='records', indent=1)
-            json_data7 = df7.to_json(orient='records', indent=1)
-            json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
-        except:
-            json_data = json.dumps({"Status": 0}, indent=1)
+# @app.route("/read_Monthly_Template_M1",methods = ["POST","GET"])
+# def read_Monthly_Template_M1():
+#     if request.method == "POST":        
+#         try: 
+#             df1 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_wheat") 
+#             df2 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_wheat")
+#             df3 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_rice")
+#             df4 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_rice")
+#             df5 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_supply")
+#             df6 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_allocation")
+#             df7 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Rail_cost_chart")
+#             json_data1 = df1.to_json(orient='records', indent=1)
+#             json_data2 = df2.to_json(orient='records', indent=1)
+#             json_data3 = df3.to_json(orient='records', indent=1)
+#             json_data4 = df4.to_json(orient='records', indent=1)
+#             json_data5 = df5.to_json(orient='records', indent=1)
+#             json_data6 = df6.to_json(orient='records', indent=1)
+#             json_data7 = df7.to_json(orient='records', indent=1)
+#             json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
+#         except:
+#             json_data = json.dumps({"Status": 0}, indent=1)
 
-        json_object = json.dumps(json_data)
-        return json_object
-    else:
-        return ("error")
+#         json_object = json.dumps(json_data)
+#         return json_object
+#     else:
+#         return ("error")
     
-@app.route("/read_Daily_Template_S1",methods = ["POST","GET"])
-def read_Daily_Template_S1():
-    if request.method == "POST":        
-        try: 
-            df1 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_wheat") 
-            df2 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_wheat")
-            df3 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_rice")
-            df4 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_rice")
-            df5 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_supply")
-            df6 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_allocation")
-            df7 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Rail_cost_chart")
-            json_data1 = df1.to_json(orient='records', indent=1)
-            json_data2 = df2.to_json(orient='records', indent=1)
-            json_data3 = df3.to_json(orient='records', indent=1)
-            json_data4 = df4.to_json(orient='records', indent=1)
-            json_data5 = df5.to_json(orient='records', indent=1)
-            json_data6 = df6.to_json(orient='records', indent=1)
-            json_data7 = df7.to_json(orient='records', indent=1)
-            json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
-        except:
-            json_data = json.dumps({"Status": 0}, indent=1)
+# @app.route("/read_Daily_Template_S1",methods = ["POST","GET"])
+# def read_Daily_Template_S1():
+#     if request.method == "POST":        
+#         try: 
+#             df1 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_wheat") 
+#             df2 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_wheat")
+#             df3 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_rice")
+#             df4 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_rice")
+#             df5 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_supply")
+#             df6 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_allocation")
+#             df7 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Rail_cost_chart")
+#             json_data1 = df1.to_json(orient='records', indent=1)
+#             json_data2 = df2.to_json(orient='records', indent=1)
+#             json_data3 = df3.to_json(orient='records', indent=1)
+#             json_data4 = df4.to_json(orient='records', indent=1)
+#             json_data5 = df5.to_json(orient='records', indent=1)
+#             json_data6 = df6.to_json(orient='records', indent=1)
+#             json_data7 = df7.to_json(orient='records', indent=1)
+#             json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
+#         except:
+#             json_data = json.dumps({"Status": 0}, indent=1)
 
-        json_object = json.dumps(json_data)
-        return json_object
-    else:
-        return ("error")
+#         json_object = json.dumps(json_data)
+#         return json_object
+#     else:
+#         return ("error")
     
-@app.route("/read_Daily_Template_S2",methods = ["POST","GET"])
-def read_Daily_Template_S2():
-    if request.method == "POST":        
-        try: 
-            df1 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_wheat") 
-            df2 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_wheat")
-            df3 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_rice")
-            df4 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_rice")
-            df5 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_supply")
-            df6 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_allocation")
-            df7 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Rail_cost_chart")
-            json_data1 = df1.to_json(orient='records', indent=1)
-            json_data2 = df2.to_json(orient='records', indent=1)
-            json_data3 = df3.to_json(orient='records', indent=1)
-            json_data4 = df4.to_json(orient='records', indent=1)
-            json_data5 = df5.to_json(orient='records', indent=1)
-            json_data6 = df6.to_json(orient='records', indent=1)
-            json_data7 = df7.to_json(orient='records', indent=1)
-            json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
-        except:
-            json_data = json.dumps({"Status": 0}, indent=1)
+# @app.route("/read_Daily_Template_S2",methods = ["POST","GET"])
+# def read_Daily_Template_S2():
+#     if request.method == "POST":        
+#         try: 
+#             df1 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_wheat") 
+#             df2 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_wheat")
+#             df3 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_rice")
+#             df4 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_rice")
+#             df5 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_supply")
+#             df6 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_allocation")
+#             df7 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Rail_cost_chart")
+#             json_data1 = df1.to_json(orient='records', indent=1)
+#             json_data2 = df2.to_json(orient='records', indent=1)
+#             json_data3 = df3.to_json(orient='records', indent=1)
+#             json_data4 = df4.to_json(orient='records', indent=1)
+#             json_data5 = df5.to_json(orient='records', indent=1)
+#             json_data6 = df6.to_json(orient='records', indent=1)
+#             json_data7 = df7.to_json(orient='records', indent=1)
+#             json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
+#         except:
+#             json_data = json.dumps({"Status": 0}, indent=1)
 
-        json_object = json.dumps(json_data)
-        return json_object
-    else:
-        return ("error")
+#         json_object = json.dumps(json_data)
+#         return json_object
+#     else:
+#         return ("error")
     
-@app.route("/Download_Template_to_add", methods=["POST", "GET"])
-def Download_Template_to_add():
-    if request.method == "POST":
-        try:
-            df1 = pd.read_excel('Input\\Non-TEFD.xlsx', sheet_name="Railhead_cost_matrix_1rake", index_col=0) 
-            df2 = pd.read_excel('Frontend\\public\\data\\Updated_railhead_list.xlsx', sheet_name="RH_Sheet") 
+# @app.route("/Download_Template_to_add", methods=["POST", "GET"])
+# def Download_Template_to_add():
+#     if request.method == "POST":
+#         try:
+#             df1 = pd.read_excel('Input\\Non-TEFD.xlsx', sheet_name="Railhead_cost_matrix_1rake", index_col=0) 
+#             df2 = pd.read_excel('Frontend\\public\\data\\Updated_railhead_list.xlsx', sheet_name="RH_Sheet") 
 
-            prev_col = list(df1.columns)
-            present_col = list(df2["RH_code"])
+#             prev_col = list(df1.columns)
+#             present_col = list(df2["RH_code"])
 
-            prev_st = set(prev_col)
+#             prev_st = set(prev_col)
 
-            add_rh = []
-            for rh in present_col:
-                if rh not in prev_st:
-                    add_rh.append(rh)
+#             add_rh = []
+#             for rh in present_col:
+#                 if rh not in prev_st:
+#                     add_rh.append(rh)
 
-            # Create a dictionary with "Railhead" as the first column
-            data = {"": add_rh}
+#             # Create a dictionary with "Railhead" as the first column
+#             data = {"": add_rh}
 
-            # Add other columns
-            for col in present_col:
-                data[col] = [""] * len(add_rh)
+#             # Add other columns
+#             for col in present_col:
+#                 data[col] = [""] * len(add_rh)
 
-            Excel_data = pd.DataFrame(data)
+#             Excel_data = pd.DataFrame(data)
 
-            json_data1 = Excel_data.to_json(orient='records', indent=1)
+#             json_data1 = Excel_data.to_json(orient='records', indent=1)
 
-            json_data = {
-                "Railhead_cost_matrix_1rake": json_data1,
-                "Railhead_dist_matrix": json_data1,
-                "Cost_matrix_Non_TEFD": json_data1,
-                "Cost_matrix_TEFD": json_data1,
-                "Cost_matrix_Non_TEFD+TC": json_data1,
-                "Cost_matrix_TEFD+TC": json_data1
-            }
-        except Exception as e:
-            json_data = {"Status": 0, "Error": str(e)}
-        json_object = json.dumps(json_data, indent=1)
-        return json_object
-    else:
-        return "error"
-
-
-@app.route("/Alternate_Railhead_readPickle",methods = ["POST","GET"])
-def Alternate_Railhead_readPickle():
-    try:
-        dbfile = open('Output\\Alternate_Railhead.pkl', 'rb')     
-        db = pickle.load(dbfile)
-        dbfile.close()
-        blank_data = []
-        with open('Output\\Alternate_Railhead.pkl', 'wb') as f:
-            pickle.dump(blank_data, f)
-    except:
-        db = {}
-        db["status"] = 0
-    return jsonify(db)
+#             json_data = {
+#                 "Railhead_cost_matrix_1rake": json_data1,
+#                 "Railhead_dist_matrix": json_data1,
+#                 "Cost_matrix_Non_TEFD": json_data1,
+#                 "Cost_matrix_TEFD": json_data1,
+#                 "Cost_matrix_Non_TEFD+TC": json_data1,
+#                 "Cost_matrix_TEFD+TC": json_data1
+#             }
+#         except Exception as e:
+#             json_data = {"Status": 0, "Error": str(e)}
+#         json_object = json.dumps(json_data, indent=1)
+#         return json_object
+#     else:
+#         return "error"
 
 
-@app.route('/getDaily1ExcelData')
-def get_daily_scen1_excel_data():
-    Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
-    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
-    return send_file(excel_path, as_attachment=True)
+# @app.route("/Alternate_Railhead_readPickle",methods = ["POST","GET"])
+# def Alternate_Railhead_readPickle():
+#     try:
+#         dbfile = open('Output\\Alternate_Railhead.pkl', 'rb')     
+#         db = pickle.load(dbfile)
+#         dbfile.close()
+#         blank_data = []
+#         with open('Output\\Alternate_Railhead.pkl', 'wb') as f:
+#             pickle.dump(blank_data, f)
+#     except:
+#         db = {}
+#         db["status"] = 0
+#     return jsonify(db)
 
-@app.route('/getDaily2ExcelData')
-def get_daily_scen2_excel_data():
-    Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
-    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
-    return send_file(excel_path, as_attachment=True)
 
-@app.route('/getDataTemplate')
-def data_template():
-    Monthly_Template_M1 = 'Input\\Data_template.xlsx'
-    excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
-    return send_file(excel_path, as_attachment=True)
+# @app.route('/getDaily1ExcelData')
+# def get_daily_scen1_excel_data():
+#     Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
+#     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
+#     return send_file(excel_path, as_attachment=True)
+
+# @app.route('/getDaily2ExcelData')
+# def get_daily_scen2_excel_data():
+#     Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
+#     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
+#     return send_file(excel_path, as_attachment=True)
+
+# @app.route('/getDataTemplate')
+# def data_template():
+#     Monthly_Template_M1 = 'Input\\Data_template.xlsx'
+#     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
+#     return send_file(excel_path, as_attachment=True)
 
 
 @app.route("/Monthly_Solution",methods = ["POST","GET"])
@@ -622,39 +633,43 @@ def Monthly_Solution():
     else:
         return ("error")
 
-all_commodity_data = {}
-@app.route("/Daily_Planner",methods = ["POST","GET"])
+all_commodity_data = {} #for collecting data related to daily_planner
+@app.route("/Daily_Planner",methods = ["POST","GET"]) # route for daily planner 
 def Daily_Planner():
     data1 = {}
-    if request.method == "POST":
+    if request.method == "POST": # post method
         try:
-            blocked_org_rhcode = []
-            blocked_dest_rhcode = []
-            blocked_org_state = []
-            blocked_dest_state = []
-
+            # for blocking 42w , 42/58w
+            blocked_org_rhcode = [] # source Railhead 
+            blocked_dest_rhcode = [] # destination Railhead
+            blocked_org_state = [] # source state
+            blocked_dest_state = [] # destination state
+            
+            # for blocking 58w (same as above)
             blocked_org_rhcode1 = []
             blocked_dest_rhcode1 = []
             blocked_org_state1 = []
             blocked_dest_state1 = []
-
-            confirmed_org_rhcode = []
-            confirmed_dest_rhcode = []
-            confirmed_org_state = []
-            confirmed_dest_state = []
-            confirmed_railhead_value = []
-            confirmed_railhead_commodities = []
-            confirmed_org_division = []
-            confirmed_dest_division=[]
-            confirmed_org_rake =[]
-            confirmed_dest_rake =[]
-            confirmed_sourceId = []
-            confirmed_destinationId = []
-            confirmed_org_RH = []
+            
+            # for route fixing 42w , 42/58w
+            confirmed_org_rhcode = [] # source railhead
+            confirmed_dest_rhcode = [] # destination railhead
+            confirmed_org_state = [] # source state
+            confirmed_dest_state = [] # destination state
+            confirmed_railhead_value = [] # rake values
+            confirmed_railhead_commodities = [] # commodity 
+            confirmed_org_division = [] # source division
+            confirmed_dest_division=[] # destiantion division
+            confirmed_org_rake =[] # source rake type
+            confirmed_dest_rake =[] # destination rake type 
+            confirmed_sourceId = [] # source Id
+            confirmed_destinationId = [] # destionation Id
+            confirmed_org_RH = [] 
             confirmed_dest_RH = []
-            confirmed_sourceMergingId = []
-            confirmed_destinationMergingId = []
-
+            confirmed_sourceMergingId = [] #source merging id 
+            confirmed_destinationMergingId = [] # destination merging id
+            
+            # for route fixing 58w (same as variables declared above)
             confirmed_org_rhcode1 = []
             confirmed_dest_rhcode1 = []
             confirmed_org_state1 = []
@@ -674,37 +689,36 @@ def Daily_Planner():
 
             fetched_data = request.get_json()
             
-            blocked_data = fetched_data['blocked_data1']
-            blocked_data1 = fetched_data['blocked_data2']
+            blocked_data = fetched_data['blocked_data1'] # fetched blocked 42w data
+            blocked_data1 = fetched_data['blocked_data2'] # fetched blocked 58w data
             
-            confirmed_data1 = fetched_data['confirmed_data1']
-            confirmed_data2 = fetched_data['confirmed_data2']
-            TEFD_fetched = fetched_data['TEFD']
-            TEFDdata = fetched_data['TEFDdata']
+            confirmed_data1 = fetched_data['confirmed_data1'] #route fixing 42w data
+            confirmed_data2 = fetched_data['confirmed_data2'] # route fixing 58w data
+            TEFD_fetched = fetched_data['TEFD'] #matrix type
+            # TEFDdata = fetched_data['TEFDdata'] 
             # df = pd.DataFrame(TEFD_fetched)
-            df1 = pd.DataFrame(TEFDdata["data"]["codes"])
-            df2 = pd.DataFrame(TEFDdata["data"]["columnData"])
+            # df1 = pd.DataFrame(TEFDdata["data"]["codes"])
+            # df2 = pd.DataFrame(TEFDdata["data"]["columnData"])
             # rail_cost = pd.concat([df1, df2], axis=1)
-            # print(rail_cost)
-            region = fetched_data['region']
-            rra_origin = fetched_data["rice_origin"]
-            rra_dest = fetched_data["rice_destination"]
-            wheat_origin = fetched_data["wheat_origin"]
-            wheat_dest = fetched_data["wheat_destination"]
-           
-            coarseGrain_origin = fetched_data["coarseGrain_origin"]
-            coarseGrain_dest = fetched_data["coarseGrain_destination"]
-            frkrra_origin = fetched_data["frkrra_origin"]
-            frkrra_dest = fetched_data["frkrra_destination"]
-            frkbr_origin = fetched_data["frkbr_origin"]
-            frkbr_dest = fetched_data["frkbr_destination"]
-            frk_origin = fetched_data["frk_origin"]
-            frk_dest = fetched_data["frk_destination"]
-            frkcgr_origin = fetched_data["frkcgr_origin"]
-            frkcgr_dest = fetched_data["frkcgr_destination"]
-            wcgr_origin = fetched_data["wcgr_origin"]
-            wcgr_dest = fetched_data["wcgr_destination"]
-            rrc_origin = fetched_data['rrc_Origin']
+          
+            region = fetched_data['region'] # login region
+            rra_origin = fetched_data["rice_origin"] # source list of rra data
+            rra_dest = fetched_data["rice_destination"] # destination list of rra data
+            wheat_origin = fetched_data["wheat_origin"] # source list of wheat data
+            wheat_dest = fetched_data["wheat_destination"] # destination list of wheat data
+            coarseGrain_origin = fetched_data["coarseGrain_origin"] # source list of coarse grain data
+            coarseGrain_dest = fetched_data["coarseGrain_destination"] # destination list of coarse grain data
+            frkrra_origin = fetched_data["frkrra_origin"] # source list of frk rra data
+            frkrra_dest = fetched_data["frkrra_destination"] # destiantion list of frk rra
+            frkbr_origin = fetched_data["frkbr_origin"] # source list of frk br 
+            frkbr_dest = fetched_data["frkbr_destination"] # destination list of frk br
+            frk_origin = fetched_data["frk_origin"] # source list of wheat+frk 
+            frk_dest = fetched_data["frk_destination"] # destination list of wheat+frk 
+            frkcgr_origin = fetched_data["frkcgr_origin"] # source list of frk+cgr
+            frkcgr_dest = fetched_data["frkcgr_destination"] # destination list of frk+cgr
+            wcgr_origin = fetched_data["wcgr_origin"] # source list of wheat+cgr
+            wcgr_dest = fetched_data["wcgr_destination"] # destination list of wheat+cgr
+            rrc_origin = fetched_data['rrc_Origin'] # source list of rrc
             rrc_dest = fetched_data["rrc_Destination"]
             ragi_origin = fetched_data['ragi_Origin']
             ragi_dest = fetched_data["ragi_Destination"]
@@ -3019,7 +3033,7 @@ def Daily_Planner():
                 source_wcgr1[i] = 1
             
             list_dest_wcgr1 = []
-            for i in L16:
+            for i in L161:
                 Value = {}
                 List_A = []
                 List_B = []
@@ -3455,7 +3469,7 @@ def Daily_Planner():
                 dest_wheatrra1[i] = 1
 
             list_src_frk_rra1 = []
-            for i in L37:
+            for i in L371:
                 Value = {}
                 List_A = []
                 List_B = []
@@ -9907,7 +9921,7 @@ def Daily_Planner():
                         To_inlineDivision.append(wheat.get("inlineDestinationDivision", ""))
                         found_division = True
                         destinationId.append(wheat["destinationId"])
-                        destination_rake.append(frkbr["rake"])
+                        destination_rake.append(wheat["rake"])
                         destinationRH.append(wheat["virtualCode"])
                         destinationMergingId.append(wheat["destinationMergingId"])
                         break
@@ -11312,65 +11326,65 @@ def Daily_Planner():
 def daily_planner_data():
     return jsonify(all_commodity_data)
 
-@app.route("/Alternate_Railhead_Solve",methods = ["POST","GET"])
-def Alternate_Railhead_Solve():
-    data = request.get_json()
-    rh_source = data['rh_source']
-    rh_dest = data['rh_dest']
-    # zone = data['zone']
-    # n = data['n']
-    Alternate_Railhead_source = rh_source.upper()
-    Alternate_Railhead_Destination = rh_dest.upper()
-    # Alternate_Railhead_zone = zone
-    # Alternate_Railhead_increment = 0.8
-    data1 = {}
-    if request.method == "POST":
-        try:
-            file = pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
-            matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
-            surplus_wheat = pd.read_excel(file, sheet_name="Surplus_wheat", index_col=0)
-            rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
-            alt_rh_state = surplus_wheat.loc[Alternate_Railhead_Destination]["State"]
+# @app.route("/Alternate_Railhead_Solve",methods = ["POST","GET"])
+# def Alternate_Railhead_Solve():
+#     data = request.get_json()
+#     rh_source = data['rh_source']
+#     rh_dest = data['rh_dest']
+#     # zone = data['zone']
+#     # n = data['n']
+#     Alternate_Railhead_source = rh_source.upper()
+#     Alternate_Railhead_Destination = rh_dest.upper()
+#     # Alternate_Railhead_zone = zone
+#     # Alternate_Railhead_increment = 0.8
+#     data1 = {}
+#     if request.method == "POST":
+#         try:
+#             file = pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
+#             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
+#             surplus_wheat = pd.read_excel(file, sheet_name="Surplus_wheat", index_col=0)
+#             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
+#             alt_rh_state = surplus_wheat.loc[Alternate_Railhead_Destination]["State"]
 
-            lst1 = []
+#             lst1 = []
 
-            for index, row in surplus_wheat.iterrows():
-                if row["State"] == alt_rh_state:
-                    lst1.append(index)
+#             for index, row in surplus_wheat.iterrows():
+#                 if row["State"] == alt_rh_state:
+#                     lst1.append(index)
 
-            lst2 = []
+#             lst2 = []
 
-            for j in lst1:
-                lst2.append(rail_cost.loc[Alternate_Railhead_source, j])
+#             for j in lst1:
+#                 lst2.append(rail_cost.loc[Alternate_Railhead_source, j])
 
-            keys = lst1
-            values = lst2
+#             keys = lst1
+#             values = lst2
 
-            dict_altrh = dict(zip(keys, values))
+#             dict_altrh = dict(zip(keys, values))
 
-            threshold = rail_cost.loc[Alternate_Railhead_source, Alternate_Railhead_Destination]
-            filt_dict_altrh = {k: v for k, v in dict_altrh.items() if k != Alternate_Railhead_Destination and v >= threshold}
-            sort_dict_altrh = dict(sorted(filt_dict_altrh.items(), key=lambda item: item[1]))
-            top_3_elements = list(sort_dict_altrh.items())[:3]
-            result_altrh = []
+#             threshold = rail_cost.loc[Alternate_Railhead_source, Alternate_Railhead_Destination]
+#             filt_dict_altrh = {k: v for k, v in dict_altrh.items() if k != Alternate_Railhead_Destination and v >= threshold}
+#             sort_dict_altrh = dict(sorted(filt_dict_altrh.items(), key=lambda item: item[1]))
+#             top_3_elements = list(sort_dict_altrh.items())[:3]
+#             result_altrh = []
 
-            for i in range(len(top_3_elements)):
-                result_altrh.append(top_3_elements[i][0])
+#             for i in range(len(top_3_elements)):
+#                 result_altrh.append(top_3_elements[i][0])
 
-            with open('Output\\Alternate_Railhead.pkl', 'wb') as f:
-                pickle.dump(result_altrh, f)
+#             with open('Output\\Alternate_Railhead.pkl', 'wb') as f:
+#                 pickle.dump(result_altrh, f)
                         
-            data1["status"] = 1
+#             data1["status"] = 1
                   
-        except Exception as e:
-            print(e)
-            data1["status"] = 0
-        json_data = json.dumps(data1)
-        json_object = json.loads(json_data)
+#         except Exception as e:
+#             print(e)
+#             data1["status"] = 0
+#         json_data = json.dumps(data1)
+#         json_object = json.loads(json_data)
 
-        return(json.dumps(json_object, indent = 1))
-    else:
-        return ("error")
+#         return(json.dumps(json_object, indent = 1))
+#     else:
+#         return ("error")
 
 dataframes = {}
 @app.route("/road_plan", methods = ["POST"])

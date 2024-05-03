@@ -7,7 +7,96 @@ function Template() {
   const [fileSelected, setFileSelected] = useState(false);
   const [importedFile1, setImportedFile1] = useState(null);
   const [importedFile2, setImportedFile2] = useState(null);
-  const [type, set_type] = useState("");
+  const [result, setResult] = useState([]);
+  const [senerio, setSenerio] = useState("senerio1");
+
+  const [result1, setResult1] = useState({
+    WH_RH_Tag: [
+      {
+        WarehouseId: "FCI37",
+        ConnectedRhcode: "FCP",
+        State: "Haryana",
+        Commodity: "Wheat(Total)",
+        Values: "0.952",
+        Type: "WH_RH",
+      },
+      {
+        WarehouseId: "FCI38",
+        ConnectedRhcode: "ABC",
+        State: "Haryana",
+        Commodity: "Wheat(Total)",
+        Values: "0.993",
+        Type: "WH_RH",
+      },
+    ],
+    RH_WH_Tag: [
+      {
+        WarehouseId: "FCI37",
+        ConnectedRhcode: "PQR",
+        State: "Haryana",
+        Commodity: "Wheat(Total)",
+        Values: "0.952",
+        Type: "RH_WH",
+      },
+      {
+        WarehouseId: "FCI31",
+        ConnectedRhcode: "XYZ",
+        State: "Haryana",
+        Commodity: "Wheat(Total)",
+        Values: "0.952",
+        Type: "RH_WH",
+      },
+    ],
+    RH_RH_Tag: [
+      {
+        From: "FCP",
+        FromState: "Haryana",
+        To: "RXL",
+        ToState: "Bihar",
+        Commodity: "Wheat(Total)",
+        Values: "0.952",
+        Type: "RH_RH",
+      },
+    ],
+    WH_Wh_Tag: [
+      {
+        From: "FCI38",
+        FromState: "Haryana",
+        To: "FCI45",
+        ToState: "Bihar",
+        Commodity: "Wheat(Total)",
+        Values: "0.952",
+        Type: "WH_WH",
+      },
+    ],
+  });
+
+  const ExportData = () => {
+    fetch(
+      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMode2MonthlyPlanner",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(result1),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          window.alert("File uploaded successfully!");
+          // setProgress((prev) => [
+          //   ...prev,
+          //   "Successfully exported the plan to portal",
+          // ]);
+        } else {
+          window.alert("File upload failed. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("An error occurred during file upload:", error);
+      });
+  };
 
   const ImportData = () => {
     try {
@@ -38,10 +127,25 @@ function Template() {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-      set_type("Imported");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const FetchResultData = () => {
+    fetch(ProjectIp + "/daily_planner_data", {
+      method: "GET",
+      credentials: "include",
+      // body: form,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setResult(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   useEffect(() => {
@@ -121,8 +225,11 @@ function Template() {
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify(payload),
+        body: JSON.stringify({
+          senerio: senerio,
+        }),
       });
+
       if (response.ok) {
         console.log("Solved route plan");
       } else {
@@ -228,7 +335,32 @@ function Template() {
               ></div>
               <div className="col-md-12">
                 <br />
-                <div className="row" style={{ marginLeft: "15px" }}>
+                <div
+                  style={{
+                    color: "white",
+                    display: "flex",
+                    width: "62vw",
+                    justifyContent: "end",
+                    marginBottom: 15,
+                  }}
+                >
+                  <div className="row ml-3">
+                    <div className="col-auto">
+                      <select
+                        className="form-select"
+                        id="senerio"
+                        onChange={(e) => setSenerio(e.target.value)}
+                      >
+                        <option value="senerio1">Scenario 1</option>
+                        <option value="senerio2">Scenario 2</option>
+                        <option value="senerio3">Scenario 3</option>
+                        <option value="senerio4">Scenario 4</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
                   <div
                     style={{
                       color: "white",
@@ -372,6 +504,13 @@ function Template() {
                   </div>
                   <br />
                   <br />
+                  <button onClick={FetchResultData}>Get result</button>
+                  <button
+                    className="btn btn-danger dropdown-toggle"
+                    onClick={ExportData}
+                  >
+                    Export plan
+                  </button>
                   {/* {solutionSolved && (
                     <div>
                       <button
