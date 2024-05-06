@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Sidenav from "./sidenav";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import background1 from "./../../assets/upload1_.png";
 import "./Monthly_sol.css";
 import config from "../../config";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -59,13 +58,13 @@ function Monthly_Solution() {
       set_type("Imported");
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData"
+        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData/Rail"
       )
         .then((res) => res.json())
         .then((data) => setCommodityCountData(data));
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel"
+        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel/Rail"
       )
         .then((res) => res.json())
         .then((data) => setMonthlyDataCollection(data));
@@ -516,7 +515,7 @@ function Monthly_Solution() {
                           <thead>
                             <tr>
                               <th>State</th>
-                              <th>Max Run ID</th>
+                              {/* <th>Max Run ID</th> */}
                               <th>Inward Wheat URS</th>
                               <th>Inward Wheat FAQ</th>
                               <th>Inward Wheat Total</th>
@@ -539,7 +538,7 @@ function Monthly_Solution() {
                             {monthlyDataCollection.map((region, index) => (
                               <tr key={index}>
                                 <td>{region.state}</td>
-                                <td>{region.maxRunId}</td>
+                                {/* <td>{region.maxRunId}</td> */}
                                 <td>{region.inward_Wheat_URS}</td>
                                 <td>{region.inward_Wheat_FAQ}</td>
                                 <td>{region.inward_Wheat_Total}</td>
@@ -563,6 +562,7 @@ function Monthly_Solution() {
                       </div>
                     </div>
                   )}
+
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
                     Optimal Plan

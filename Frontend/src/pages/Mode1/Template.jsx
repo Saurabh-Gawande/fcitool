@@ -9,6 +9,19 @@ function Template() {
   const [importedFile2, setImportedFile2] = useState(null);
   const [result, setResult] = useState([]);
   const [senerio, setSenerio] = useState("senerio1");
+  const [commodiyCountData, setCommodityCountData] = useState([]);
+  const [monthlyDataCollection, setMonthlyDataCollection] = useState([]);
+  const [showMessage, setShowMessage] = useState(false);
+
+  const getRowColor = (inward, outward) => {
+    if (outward > inward) {
+      return "table-success";
+    } else if (inward > outward) {
+      return "table-danger";
+    } else {
+      return "";
+    }
+  };
 
   const [result1, setResult1] = useState({
     WH_RH_Tag: [
@@ -108,6 +121,7 @@ function Template() {
           const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           });
+          setShowMessage(true);
           setImportedFile1(excelFile);
         })
         .catch((error) => {
@@ -127,6 +141,18 @@ function Template() {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
+
+      fetch(
+        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData/Road"
+      )
+        .then((res) => res.json())
+        .then((data) => setCommodityCountData(data));
+
+      fetch(
+        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel/Road"
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthlyDataCollection(data));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -434,6 +460,98 @@ function Template() {
                 </div>
                 <br />
                 <div style={{ marginLeft: "15px" }}>
+                  {showMessage && (
+                    <div className="container mt-5">
+                      <div className="row">
+                        <div className="table-responsive">
+                          <table className="table table-sm table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Commodity</th>
+                                <th>State</th>
+                                <th>Inward</th>
+                                <th>Outward</th>
+                                <th>Surplus</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {commodiyCountData.map((item, index) => (
+                                <tr
+                                  key={index}
+                                  className={getRowColor(
+                                    item.inward,
+                                    item.outward
+                                  )}
+                                >
+                                  <td>{item.commodity}</td>
+                                  <td>{item.state}</td>
+                                  <td>{item.inward}</td>
+                                  <td>{item.outward}</td>
+                                  <td>{item.surplus}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {showMessage && (
+                    <div className="container mt-5">
+                      <h2>Region Data</h2>
+                      <div className="table-responsive">
+                        <table className="table table-sm table-bordered">
+                          <thead>
+                            <tr>
+                              <th>State</th>
+                              {/* <th>Max Run ID</th> */}
+                              <th>Inward Wheat URS</th>
+                              <th>Inward Wheat FAQ</th>
+                              <th>Inward Wheat Total</th>
+                              <th>Inward Rice FRKBR</th>
+                              <th>Inward Rice RRA</th>
+                              <th>Inward Rice FRKRRA</th>
+                              <th>Inward G Total</th>
+                              <th>Outward Wheat URS</th>
+                              <th>Outward Wheat FAQ</th>
+                              <th>Outward Wheat Total</th>
+                              <th>Outward Rice FRKBR</th>
+                              <th>Outward Rice RRA</th>
+                              <th>Outward Rice FRKRRA</th>
+                              <th>Outward G Total</th>
+                              {/* <th>Created Date</th> */}
+                              {/* <th>Last Modified Date</th> */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {monthlyDataCollection.map((region, index) => (
+                              <tr key={index}>
+                                <td>{region.state}</td>
+                                {/* <td>{region.maxRunId}</td> */}
+                                <td>{region.inward_Wheat_URS}</td>
+                                <td>{region.inward_Wheat_FAQ}</td>
+                                <td>{region.inward_Wheat_Total}</td>
+                                <td>{region.inward_Rice_FRKBR}</td>
+                                <td>{region.inward_Rice_RRA}</td>
+                                <td>{region.inward_Rice_FRKRRA}</td>
+                                <td>{region.inward_G_Total}</td>
+                                <td>{region.outward_Wheat_URS}</td>
+                                <td>{region.outward_Wheat_FAQ}</td>
+                                <td>{region.outward_Wheat_Total}</td>
+                                <td>{region.outward_Rice_FRKBR}</td>
+                                <td>{region.outward_Rice_RRA}</td>
+                                <td>{region.outward_Rice_FRKRRA}</td>
+                                <td>{region.outward_G_Total}</td>
+                                {/* <td>{region.createdDate}</td> */}
+                                {/* <td>{region.lastModifiedDate}</td> */}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
                   {/* <div style={{ fontSize: "20px", fontWeight: "700" }}>
                   <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
                   Configurations
