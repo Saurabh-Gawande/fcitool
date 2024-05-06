@@ -1759,7 +1759,27 @@ function Daily_Planner() {
       misc1OriginValue < misc1DestinationValue ||
       misc2OriginValue < misc2DestinationValue ||
       wheatUrsOriginValue < wheatUrsDestinationValue ||
-      wheatFaqOriginValue < wheatFaqDestinationValue
+      wheatFaqOriginValue < wheatFaqDestinationValue || 
+
+      riceOriginvalue1 < riceDestinationValue1 ||
+      wheatOriginValue1 < wheatDestinationValue1 ||
+      coarseGrainOriginValue1 < coarseGrainDestinationValue1 ||
+      frkOriginValue1 < frkDestinationValue1 ||
+      frkcgrOriginValue1 < frkcgrDestinationValue1 ||
+      wcgrOriginValue1 < wcgrDestinationValue1 ||
+      frkrraOriginValue1 < frkrraDestinationValue1 ||
+      frkbrOriginValue1 < frkbrDestinationValue1 ||
+      wheat_rraOriginValue1 < wheat_rraDestinationValue1 ||
+      frk_rraOriginValue1 < frk_rraDestinationValue1 ||
+      rrcOriginValue1 < rrcDestinationValue1 ||
+      ragiOriginValue1 < ragiDestinationValue1 ||
+      jowarOriginValue1 < jowarDestinationValue1 ||
+      bajraOriginValue1 < bajraDestinationValue1 ||
+      maizeOriginValue1 < maizeDestinationValue1 ||
+      misc1OriginValue1 < misc1DestinationValue1 ||
+      misc2OriginValue1 < misc2DestinationValue1 ||
+      wheatUrsOriginValue1 < wheatUrsDestinationValue1 ||
+      wheatFaqOriginValue1 < wheatFaqDestinationValue1
     ) {
       setModalValue(
         "Destination indents more than Supply indents Please check."
