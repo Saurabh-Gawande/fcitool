@@ -1,23 +1,66 @@
 \* FCI_monthly_model_allocation_rr *\
 Minimize
-OBJ: 2241.1 x_frk_('AWB',_'FCSJ') + 1095.5 x_frkcgr_('HKG',_'BGTA')
- + 1441.3 x_frkcgr_('JJKR',_'BGTA') + 1897.2 x_rra_('BRCY',_'HSRA')
+OBJ: 2545.8 x_frkrra_('MET_SANGRUR_PB',_'BGSN_MUZAFFARPUR_BIH')
+ + 1785.9 x_wcgr_('JBD_FEROZEPUR_PB',_'JAG_PURNEA_BIH')
+ + 2747.3 x_wheat_('BRW_FARIDKOT_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + 2585.8 x_wheat_('BRW_FARIDKOT_PB',_'CTA_SHIVAMOGA_KAR')
+ + 2545.8 x_wheat_('BRW_FARIDKOT_PB',_'PFCB_RAICHUR_KAR')
+ + 2747.3 x_wheat_('FZP_FEROZEPUR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + 2585.8 x_wheat_('FZP_FEROZEPUR_PB',_'CTA_SHIVAMOGA_KAR')
+ + 2545.8 x_wheat_('FZP_FEROZEPUR_PB',_'PFCB_RAICHUR_KAR')
+ + 2747.3 x_wheat_('JUC_JALANDHHAR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + 2585.8 x_wheat_('JUC_JALANDHHAR_PB',_'CTA_SHIVAMOGA_KAR')
+ + 2545.8 x_wheat_('JUC_JALANDHHAR_PB',_'PFCB_RAICHUR_KAR')
+ + 1671.3 x_wheatfaq_('MQS_JALANDHHAR_PB',_'FCMI_DO_PATNA_BIH')
 Subject To
-_C1: x_rra_('BRCY',_'HSRA') <= 1
-_C2: x_rra_('BRCY',_'HSRA') >= 1
-_C3: x_frk_('AWB',_'FCSJ') <= 1
-_C4: x_frk_('AWB',_'FCSJ') >= 1
-_C5: x_frkcgr_('JJKR',_'BGTA') <= 1
-_C6: x_frkcgr_('HKG',_'BGTA') <= 1
-_C7: x_frkcgr_('HKG',_'BGTA') + x_frkcgr_('JJKR',_'BGTA') >= 2
+_C1: x_wheat_('BRW_FARIDKOT_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + x_wheat_('BRW_FARIDKOT_PB',_'CTA_SHIVAMOGA_KAR')
+ + x_wheat_('BRW_FARIDKOT_PB',_'PFCB_RAICHUR_KAR') <= 1
+_C10: x_wcgr_('JBD_FEROZEPUR_PB',_'JAG_PURNEA_BIH') >= 1
+_C11: x_wheatfaq_('MQS_JALANDHHAR_PB',_'FCMI_DO_PATNA_BIH') <= 1
+_C12: x_wheatfaq_('MQS_JALANDHHAR_PB',_'FCMI_DO_PATNA_BIH') >= 1
+_C2: x_wheat_('FZP_FEROZEPUR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + x_wheat_('FZP_FEROZEPUR_PB',_'CTA_SHIVAMOGA_KAR')
+ + x_wheat_('FZP_FEROZEPUR_PB',_'PFCB_RAICHUR_KAR') <= 1
+_C3: x_wheat_('JUC_JALANDHHAR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + x_wheat_('JUC_JALANDHHAR_PB',_'CTA_SHIVAMOGA_KAR')
+ + x_wheat_('JUC_JALANDHHAR_PB',_'PFCB_RAICHUR_KAR') <= 1
+_C4: x_wheat_('BRW_FARIDKOT_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + x_wheat_('FZP_FEROZEPUR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ + x_wheat_('JUC_JALANDHHAR_PB',_'CCPP_PNMB_PALAKKAD_KAR') >= 1
+_C5: x_wheat_('BRW_FARIDKOT_PB',_'PFCB_RAICHUR_KAR')
+ + x_wheat_('FZP_FEROZEPUR_PB',_'PFCB_RAICHUR_KAR')
+ + x_wheat_('JUC_JALANDHHAR_PB',_'PFCB_RAICHUR_KAR') >= 1
+_C6: x_wheat_('BRW_FARIDKOT_PB',_'CTA_SHIVAMOGA_KAR')
+ + x_wheat_('FZP_FEROZEPUR_PB',_'CTA_SHIVAMOGA_KAR')
+ + x_wheat_('JUC_JALANDHHAR_PB',_'CTA_SHIVAMOGA_KAR') >= 1
+_C7: x_frkrra_('MET_SANGRUR_PB',_'BGSN_MUZAFFARPUR_BIH') <= 1
+_C8: x_frkrra_('MET_SANGRUR_PB',_'BGSN_MUZAFFARPUR_BIH') >= 1
+_C9: x_wcgr_('JBD_FEROZEPUR_PB',_'JAG_PURNEA_BIH') <= 1
 Bounds
- 0 <= x_frk_('AWB',_'FCSJ')
- 0 <= x_frkcgr_('HKG',_'BGTA')
- 0 <= x_frkcgr_('JJKR',_'BGTA')
- 0 <= x_rra_('BRCY',_'HSRA')
+ 0 <= x_frkrra_('MET_SANGRUR_PB',_'BGSN_MUZAFFARPUR_BIH')
+ 0 <= x_wcgr_('JBD_FEROZEPUR_PB',_'JAG_PURNEA_BIH')
+ 0 <= x_wheat_('BRW_FARIDKOT_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ 0 <= x_wheat_('BRW_FARIDKOT_PB',_'CTA_SHIVAMOGA_KAR')
+ 0 <= x_wheat_('BRW_FARIDKOT_PB',_'PFCB_RAICHUR_KAR')
+ 0 <= x_wheat_('FZP_FEROZEPUR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ 0 <= x_wheat_('FZP_FEROZEPUR_PB',_'CTA_SHIVAMOGA_KAR')
+ 0 <= x_wheat_('FZP_FEROZEPUR_PB',_'PFCB_RAICHUR_KAR')
+ 0 <= x_wheat_('JUC_JALANDHHAR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+ 0 <= x_wheat_('JUC_JALANDHHAR_PB',_'CTA_SHIVAMOGA_KAR')
+ 0 <= x_wheat_('JUC_JALANDHHAR_PB',_'PFCB_RAICHUR_KAR')
+ 0 <= x_wheatfaq_('MQS_JALANDHHAR_PB',_'FCMI_DO_PATNA_BIH')
 Generals
-x_frk_('AWB',_'FCSJ')
-x_frkcgr_('HKG',_'BGTA')
-x_frkcgr_('JJKR',_'BGTA')
-x_rra_('BRCY',_'HSRA')
+x_frkrra_('MET_SANGRUR_PB',_'BGSN_MUZAFFARPUR_BIH')
+x_wcgr_('JBD_FEROZEPUR_PB',_'JAG_PURNEA_BIH')
+x_wheat_('BRW_FARIDKOT_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+x_wheat_('BRW_FARIDKOT_PB',_'CTA_SHIVAMOGA_KAR')
+x_wheat_('BRW_FARIDKOT_PB',_'PFCB_RAICHUR_KAR')
+x_wheat_('FZP_FEROZEPUR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+x_wheat_('FZP_FEROZEPUR_PB',_'CTA_SHIVAMOGA_KAR')
+x_wheat_('FZP_FEROZEPUR_PB',_'PFCB_RAICHUR_KAR')
+x_wheat_('JUC_JALANDHHAR_PB',_'CCPP_PNMB_PALAKKAD_KAR')
+x_wheat_('JUC_JALANDHHAR_PB',_'CTA_SHIVAMOGA_KAR')
+x_wheat_('JUC_JALANDHHAR_PB',_'PFCB_RAICHUR_KAR')
+x_wheatfaq_('MQS_JALANDHHAR_PB',_'FCMI_DO_PATNA_BIH')
 End

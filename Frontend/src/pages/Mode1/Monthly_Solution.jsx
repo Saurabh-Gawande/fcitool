@@ -241,6 +241,7 @@ function Monthly_Solution() {
 
   const ExportPlan = () => {
     const relevantData = Relevant_result["RH_RH_tag"];
+    console.log(relevantData);
     fetch(
       "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner",
       {
@@ -290,7 +291,7 @@ function Monthly_Solution() {
   };
 
   const getRowColor = (inward, outward) => {
-    if (outward > inward) {
+    if (outward >= inward) {
       return "table-success";
     } else if (inward > outward) {
       return "table-danger";

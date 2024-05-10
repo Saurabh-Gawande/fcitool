@@ -266,42 +266,6 @@ function Template() {
     }
   };
 
-  const handleUploadConfig = async () => {
-    if (!fileSelected) {
-      alert("Please Select The File First");
-      return;
-    }
-
-    try {
-      alert("Please Wait While we update matrices");
-      const files = document.getElementById("uploadFile").files;
-      const formData = new FormData();
-      formData.append("uploadFile", files[0]);
-
-      const response = await fetch(ProjectIp + "/Update_matrices", {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const jsonResponse = await response.json();
-
-      if (jsonResponse.status === 1) {
-        alert("Matrices Updated");
-      } else {
-        console.log(jsonResponse);
-        alert("Error uploading file");
-      }
-    } catch (error) {
-      console.error("Error during file upload:", error);
-      alert("An error occurred during file upload. Please try again later.");
-    }
-  };
-
   return (
     <div
       className="page-container"
@@ -402,61 +366,6 @@ function Template() {
                       Import data
                     </button>
                   </div>
-                  {/* <div style={{ fontSize: "20px", fontWeight: "700" }}>
-                  <i className="fa fa-file-excel-o" aria-hidden="true"></i>{" "}
-                  Template
-                </div> */}
-                  {/* <form
-                  action=""
-                  encType="multipart/form-data"
-                  id="uploadForm"
-                  className="form-horizontal"
-                >
-                  <div
-                    className="col-md-6"
-                    style={{ marginTop: "15px", marginLeft: "50px" }}
-                  >
-                    <div className="form-group">
-                      <div className="col-md-9">
-                        <div className="input-group">
-                          <span
-                            className="input-group-addon"
-                            style={{
-                              backgroundColor: "rgba(235, 171, 68, 0.69)",
-                            }}
-                          >
-                            <span className="fa fa-info" />
-                          </span>
-                          <input
-                            type="file"
-                            className="form-control"
-                            id="uploadFile"
-                            name="uploadFile"
-                            onChange={handleFileChange}
-                            defaultValue=""
-                            required
-                          />
-                        </div>
-                        <span
-                          className="help-block"
-                          style={{ color: "black" }}
-                        >
-                          Choose Data Template
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <img
-                      className="upload_class"
-                      src={background1}
-                      id="uploadConfig"
-                      onClick={handleUploadConfig}
-                      disabled={!fileSelected}
-                    />
-                    <div style={{ marginTop: "-25px" }}>Click here</div>
-                  </div>
-                </form> */}
                 </div>
                 <br />
                 <div style={{ marginLeft: "15px" }}>

@@ -11,7 +11,7 @@ import json
 
 # created flask app 
 app = Flask(__name__)
-app.secret_key = 'aqswdefrgt'
+# app.secret_key = 'aqswdefrgt'
 CORS(app, supports_credentials=True)
 active_sessions = {}
 
@@ -140,22 +140,6 @@ def upload_Monthly_File_M02():
 #     try:
 #         file = request.files['uploadFile']
 #         file.save("Input//Temp_balanced_DPT_scen1.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
-    
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
-
-#     return(json.dumps(json_object, indent = 1))
-
-#not in use
-# @app.route("/uploadDailyFile",methods = ["POST"])
-# def uploadDailyFile():
-#     data = {}
-#     try:
-#         file = request.files['file']
-#         file.save("Input//Data_template.xlsx")
 #         data['status'] = 1
 #     except:
 #         data['status'] = 0
@@ -495,16 +479,11 @@ def read_Relevant_Result():
 #     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
 #     return send_file(excel_path, as_attachment=True)
 
-# @app.route('/getDataTemplate')
-# def data_template():
-#     Monthly_Template_M1 = 'Input\\Data_template.xlsx'
-#     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
-#     return send_file(excel_path, as_attachment=True)
 
 
 @app.route("/Monthly_Solution",methods = ["POST","GET"])
+data1 = {}
 def Monthly_Solution():
-    data1 = {}
     if request.method == "POST":
         try:
             fetched_data = request.get_json()
@@ -525,7 +504,7 @@ def Monthly_Solution():
                 demand = pd.read_excel(data1, sheet_name="MonthlyData",index_col=1)
                 print(demand, "demand")
             # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
-            matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
+            matrices_data = pd.ExcelFile("Input\\Non-TEFD1.xlsx")
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
             prob=LpProblem("FCI_monthly_allocation",LpMinimize)
 
@@ -546,28 +525,29 @@ def Monthly_Solution():
                 else:
                     print(cmd_match[k],":","FALSE")
             
-            x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],0,cat="Integer")
+            x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],lowBound = 0,cat="Integer")
             
-            prob+=0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply.index for j in demand.index for k in commodity)
-            print(0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i.split('|')[0]][j.split('|')[0]] for i in supply.index for j in demand.index for k in commodity))
+            prob+=lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
+            print(lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity))
  
             for i in supply.index:
                 for k in commodity:
                     prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
                     print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
-                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
+                    # prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
 
             for i in demand.index:
                 for k in commodity:
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
+                    # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
                     prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i]
                     print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
-                    print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
+                    # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
+                    # print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
             
             # prob.writeLP("FCI_monthly_allocation.lp")
             prob.solve()
+            # prob.solve(CPLEX())
             #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
             print("Status:", LpStatus[prob.status])
             print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
@@ -626,12 +606,10 @@ def Monthly_Solution():
         except Exception as e:
             print(e)
             data1["status"] = 0
-        json_data = json.dumps(data1)
-        json_object = json.loads(json_data)
+        # json_data = json.dumps(data1)
+        # json_object = json.loads(json_data)
 
         return jsonify({"message": "Success"})
-    else:
-        return ("error")
 
 all_commodity_data = {} #for collecting data related to daily_planner
 @app.route("/Daily_Planner",methods = ["POST","GET"]) # route for daily planner 
@@ -719,32 +697,33 @@ def Daily_Planner():
             wcgr_origin = fetched_data["wcgr_origin"] # source list of wheat+cgr
             wcgr_dest = fetched_data["wcgr_destination"] # destination list of wheat+cgr
             rrc_origin = fetched_data['rrc_Origin'] # source list of rrc
-            rrc_dest = fetched_data["rrc_Destination"]
-            ragi_origin = fetched_data['ragi_Origin']
-            ragi_dest = fetched_data["ragi_Destination"]
-            jowar_origin = fetched_data['jowar_Origin']
-            jowar_dest = fetched_data['jowar_Destination']
-            bajra_origin = fetched_data['bajra_Origin']
-            bajra_dest = fetched_data['bajra_Destination']
-            maize_origin = fetched_data['maize_Origin']
-            maize_dest = fetched_data['maize_Destination']
-            misc1_origin = fetched_data['misc1_Origin']
-            misc1_dest = fetched_data['misc1_Destination']
-            misc2_origin = fetched_data['misc2_Origin']
-            misc2_dest = fetched_data['misc2_Destination']
-            wheaturs_origin = fetched_data['wheaturs_Origin']
-            wheaturs_dest = fetched_data['wheaturs_Destination']
-            wheatfaq_origin = fetched_data['wheatfaq_Origin']
-            wheatfaq_dest = fetched_data['wheatfaq_Destination']
-            wheatrra_origin = fetched_data['wheat_rra_Origin']
-            wheatrra_dest = fetched_data['wheat_rra_Destination']
-            frk_rra_origin = fetched_data['frk_rra_Origin']
-            frk_rra_dest = fetched_data['frk_rra_Destination']
-            misc3_origin = fetched_data['misc3_Origin']
-            misc3_dest = fetched_data['misc3_Destination']
-            misc4_origin = fetched_data['misc4_Origin']
-            misc4_dest = fetched_data['misc4_Destination']
+            rrc_dest = fetched_data["rrc_Destination"] # dest of rrc
+            ragi_origin = fetched_data['ragi_Origin'] #source list of ragi
+            ragi_dest = fetched_data["ragi_Destination"] # dest list of ragi
+            jowar_origin = fetched_data['jowar_Origin'] # source list of jowar
+            jowar_dest = fetched_data['jowar_Destination'] # dest list of jowar
+            bajra_origin = fetched_data['bajra_Origin'] # source list of bajra
+            bajra_dest = fetched_data['bajra_Destination'] # dest list of bajra
+            maize_origin = fetched_data['maize_Origin'] # source list of maize 
+            maize_dest = fetched_data['maize_Destination'] # dest list of maize
+            misc1_origin = fetched_data['misc1_Origin'] # source list of misc1
+            misc1_dest = fetched_data['misc1_Destination'] # dest list of misc1
+            misc2_origin = fetched_data['misc2_Origin'] # source list of misc2
+            misc2_dest = fetched_data['misc2_Destination'] # dest list of misc2 
+            wheaturs_origin = fetched_data['wheaturs_Origin'] # source list of wheat(urs)
+            wheaturs_dest = fetched_data['wheaturs_Destination'] # distination list of wheat(urs)
+            wheatfaq_origin = fetched_data['wheatfaq_Origin'] # source list of wheat(faq)
+            wheatfaq_dest = fetched_data['wheatfaq_Destination'] # destination list of wheat(faq)
+            wheatrra_origin = fetched_data['wheat_rra_Origin'] # source list of wheat wheat+rra
+            wheatrra_dest = fetched_data['wheat_rra_Destination'] # destination list of wheat+rra
+            frk_rra_origin = fetched_data['frk_rra_Origin'] # source list of frk+rra
+            frk_rra_dest = fetched_data['frk_rra_Destination'] # destination list of frk+rra
+            misc3_origin = fetched_data['misc3_Origin'] # source list of misc3
+            misc3_dest = fetched_data['misc3_Destination'] # destination list of misc3
+            misc4_origin = fetched_data['misc4_Origin'] # source list of misc4
+            misc4_dest = fetched_data['misc4_Destination'] # destination list of misc4
             
+            # list of respecitve commodities for 58w (same as above)
             rra_origin_inline = fetched_data["rice_inline"]
             rra_dest_inline = fetched_data["rice_dest_inline"]
             wheat_origin_inline = fetched_data["wheat_inline"]
@@ -788,18 +767,21 @@ def Daily_Planner():
             misc4_origin_inline = fetched_data["misc4_InlineOrigin"]
             misc4_dest_inline = fetched_data["misc4_InlineDestination"]
             
+            # seprating out data for route blocking for 42w , 42/58w
             for i in range(len(blocked_data)):
-                blocked_org_rhcode.append(blocked_data[i]["origin_railhead"])
-                blocked_dest_rhcode.append(blocked_data[i]["destination_railhead"])
-                blocked_org_state.append(blocked_data[i]["origin_state"])
-                blocked_dest_state.append(blocked_data[i]["destination_state"])
-
+                blocked_org_rhcode.append(blocked_data[i]["origin_railhead"]) # storing origin railhead in variable declared above 
+                blocked_dest_rhcode.append(blocked_data[i]["destination_railhead"]) # stroing destiantion railhead in variable
+                blocked_org_state.append(blocked_data[i]["origin_state"]) # ogigin state variable 
+                blocked_dest_state.append(blocked_data[i]["destination_state"]) # destination state
+            
+            # seprating out data for route blocking for 42w , 42/58w
             for i in range(len(blocked_data1)):
-                blocked_org_rhcode1.append(blocked_data1[i]["origin_railhead"])
+                blocked_org_rhcode1.append(blocked_data1[i]["origin_railhead"]) 
                 blocked_dest_rhcode1.append(blocked_data1[i]["destination_railhead"])
                 blocked_org_state1.append(blocked_data1[i]["origin_state"])
                 blocked_dest_state1.append(blocked_data1[i]["destination_state"])
-                
+
+            # route fixing vaiable sepration for 42w , 42/58w   
             for i in range(len(confirmed_data1)):
                 confirmed_org_rhcode.append(confirmed_data1[i]["origin_railhead"])
                 confirmed_dest_rhcode.append(confirmed_data1[i]["destination_railhead"])
@@ -818,6 +800,7 @@ def Daily_Planner():
                 confirmed_sourceMergingId.append(confirmed_data1[i]["sourceMergingId"])
                 confirmed_destinationMergingId.append(confirmed_data1[i]["destinationMergingId"])
             
+            # route fixing vaiable sepration for 58w   
             for i in range(len(confirmed_data2)):
                 confirmed_org_rhcode1.append(confirmed_data2[i]["origin_railhead"])
                 confirmed_dest_rhcode1.append(confirmed_data2[i]["destination_railhead"])
@@ -845,7 +828,8 @@ def Daily_Planner():
             distance_rh = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
 
             prob = LpProblem("FCI_monthly_model_allocation_rr", LpMinimize)
-
+            
+            # created dictionary and storing key/value pairs of railhead/value 
             source_wheat = {}
             for wheat in wheat_origin:
                 if wheat["Value"] > 0:
@@ -3994,7 +3978,7 @@ def Daily_Planner():
                 for j in range(len(df_wheat["SourceRailHead"])):
                     if (i.split("_")[0] == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i].split("_")[0] == df_wheat.iloc[j]["SourceRailHead"]):
                         df_wheat.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheat_inline[i].split("_")[0])
-            
+            print(df_wheat)
             df_wheat1 = pd.DataFrame()
             From = []
             To = []
@@ -11416,7 +11400,7 @@ def create_road_plan():
             
             print(supply.index, supply.columns)
 
-            prob=LpProblem("FCI_monthly_allocation",LpMinimize)
+            prob=LpProblem("FCI_monthly_allocation_rail",LpMinimize)
 
             commodity = ["r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
             cmd_match = {"r(rra)":"Rice RRA","r(frkrra)":"Rice FRKRRA","r(frkbr)":"Rice FRKBR","r(rrc)":"Rice RRC","m(bajra)":"Millets Bajra","m(ragi)":"Millets Ragi","m(jowar)":"Millets Jowar","m(maize)":"Millets Maize","misc1":"Misc 1","misc2":"Misc 2"}
@@ -11593,12 +11577,12 @@ def create_road_plan():
 
                 for k in commodity:
                     for i in rh_sup.index:
-                        for j in rh_sup.index:
+                        for j in rh_dem.index:
                             if x_ijk[(i,j,k)].value()>0:
                                 K.append(i)
                                 L.append(rh_sup["State"][i])
                                 M.append(j)
-                                N.append(rh_sup["State"][j])
+                                N.append(rh_dem["State"][j])
                                 O.append(cmd_match[k])
                                 P.append(x_ijk[(i,j,k)].value())
                                 
@@ -11734,13 +11718,13 @@ def create_road_plan():
                 for k in commodity:
                     print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)] for w in range(len(supply.index))).value())
                     print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)] for w in range(len(demand.index))).value())
-                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)] for i in rh_sup.index for j in rh_sup.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)] for u in supply.index for v in demand.index).value())
                 
                 for k in commodity:
                     print(cmd_match[k],"wr",":",lpSum(x_wrk[(supply.index[w],supply["Railhead"][w],k)]*supply["Road Cost"][w] for w in range(len(supply.index))).value())
                     print(cmd_match[k],"rw",":",lpSum(x_rwk[(demand["Railhead"][w],demand.index[w],k)]*demand["Road Cost"][w] for w in range(len(demand.index))).value())
-                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_list.index for j in rh_list.index).value())
+                    print(cmd_match[k],"rr",":",2.8*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in rh_sup.index for j in rh_sup.index).value())
                     print(cmd_match[k],"ww",":",lpSum(x_uvk[(u,v,k)]*road_cost.loc[u][v] for u in supply.index for v in demand.index).value())
                 
                 wh_rh_tag=pd.DataFrame([],columns=["WH_ID","Railhead","State","Commodity","Values"])
@@ -11796,13 +11780,13 @@ def create_road_plan():
                 P=[]
 
                 for k in commodity:
-                    for i in rh_list.index:
-                        for j in rh_list.index:
+                    for i in rh_sup.index:
+                        for j in rh_dem.index:
                             if x_ijk[(i,j,k)].value()>0:
                                 K.append(i)
-                                L.append(rh_list["State"][i])
+                                L.append(rh_sup["State"][i])
                                 M.append(j)
-                                N.append(rh_list["State"][j])
+                                N.append(rh_sup["State"][j])
                                 O.append(cmd_match[k])
                                 P.append(x_ijk[(i,j,k)].value())
                                 
@@ -12002,8 +11986,8 @@ def create_road_plan():
                 P=[]
 
                 for k in commodity:
-                    for i in rh_list.index:
-                        for j in rh_list.index:
+                    for i in rh_sup.index:
+                        for j in rh_dem.index:
                             if x_ijk[(i,j,k)].value()>0:
                                 K.append(i)
                                 L.append(rh_list["State"][i])

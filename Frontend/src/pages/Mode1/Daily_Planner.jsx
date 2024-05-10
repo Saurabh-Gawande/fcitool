@@ -1759,8 +1759,7 @@ function Daily_Planner() {
       misc1OriginValue < misc1DestinationValue ||
       misc2OriginValue < misc2DestinationValue ||
       wheatUrsOriginValue < wheatUrsDestinationValue ||
-      wheatFaqOriginValue < wheatFaqDestinationValue || 
-
+      wheatFaqOriginValue < wheatFaqDestinationValue ||
       riceOriginvalue1 < riceDestinationValue1 ||
       wheatOriginValue1 < wheatDestinationValue1 ||
       coarseGrainOriginValue1 < coarseGrainDestinationValue1 ||
@@ -2603,6 +2602,7 @@ function Daily_Planner() {
       })
       .then((data) => {
         if (data) {
+          console.log(data);
           setProgress((prev) => [
             ...prev,
             "Successfully imported data from portal",
