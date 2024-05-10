@@ -481,8 +481,8 @@ def read_Relevant_Result():
 
 
 
-@app.route("/Monthly_Solution",methods = ["POST","GET"])
 data1 = {}
+@app.route("/Monthly_Solution",methods = ["POST","GET"])
 def Monthly_Solution():
     if request.method == "POST":
         try:
