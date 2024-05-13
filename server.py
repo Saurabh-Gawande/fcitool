@@ -481,7 +481,7 @@ def read_Relevant_Result():
 
 
 
-data1 = {}
+dataMonthly_rail = {}
 @app.route("/Monthly_Solution",methods = ["POST","GET"])
 def Monthly_Solution():
     if request.method == "POST":
@@ -506,7 +506,7 @@ def Monthly_Solution():
             # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
             matrices_data = pd.ExcelFile("Input\\Non-TEFD1.xlsx")
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
-            prob=LpProblem("FCI_monthly_allocation",LpMinimize)
+            prob=LpProblem("FCI_monthly_allocation_rail",LpMinimize)
 
             commodity = ["w(urs)","w(faq)","r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
             cmd_match = {"w(urs)":"Wheat URS","w(faq)":"Wheat FAQ","r(rra)":"Rice RRA","r(frkrra)":"Rice FRKRRA","r(frkbr)":"Rice FRKBR","r(rrc)":"Rice RRC","m(bajra)":"Millets Bajra","m(ragi)":"Millets Ragi","m(jowar)":"Millets Jowar","m(maize)":"Millets Maize","misc1":"Misc 1","misc2":"Misc 2"}
@@ -605,7 +605,7 @@ def Monthly_Solution():
             
         except Exception as e:
             print(e)
-            data1["status"] = 0
+            dataMonthly_rail["status"] = 0
         # json_data = json.dumps(data1)
         # json_object = json.loads(json_data)
 
@@ -614,7 +614,7 @@ def Monthly_Solution():
 all_commodity_data = {} #for collecting data related to daily_planner
 @app.route("/Daily_Planner",methods = ["POST","GET"]) # route for daily planner 
 def Daily_Planner():
-    data1 = {}
+    dataDaily = {}
     if request.method == "POST": # post method
         try:
             # for blocking 42w , 42/58w
@@ -723,7 +723,6 @@ def Daily_Planner():
             misc4_origin = fetched_data['misc4_Origin'] # source list of misc4
             misc4_dest = fetched_data['misc4_Destination'] # destination list of misc4
             
-            # list of respecitve commodities for 58w (same as above)
             rra_origin_inline = fetched_data["rice_inline"]
             rra_dest_inline = fetched_data["rice_dest_inline"]
             wheat_origin_inline = fetched_data["wheat_inline"]
@@ -767,6 +766,93 @@ def Daily_Planner():
             misc4_origin_inline = fetched_data["misc4_InlineOrigin"]
             misc4_dest_inline = fetched_data["misc4_InlineDestination"]
             
+            # list of respecitve commodities for 58w (same as above)
+            rra_origin1 = fetched_data["rice_origin1"]
+            rra_dest1 = fetched_data["rice_destination1"]
+            wheat_origin1 = fetched_data["wheat_origin1"]
+            wheat_dest1 = fetched_data["wheat_destination1"]
+            coarseGrain_origin1 = fetched_data["coarseGrain_origin1"]
+            coarseGrain_dest1 = fetched_data["coarseGrain_destination1"]
+            frkrra_origin1 = fetched_data["frkrra_origin1"]
+            frkrra_dest1 = fetched_data["frkrra_destination1"]
+            frkbr_origin1 = fetched_data["frkbr_origin1"]
+            frkbr_dest1 = fetched_data["frkbr_destination1"]
+            frk_origin1 = fetched_data["frk_origin1"]
+            frk_dest1 = fetched_data["frk_destination1"]
+            frkcgr_origin1 = fetched_data["frkcgr_origin1"]
+            frkcgr_dest1 = fetched_data["frkcgr_destination1"]
+            wcgr_origin1 = fetched_data["wcgr_origin1"]
+            wcgr_dest1 = fetched_data["wcgr_destination1"]
+            rrc_origin1 = fetched_data['rrc_Origin1']
+            rrc_dest1 = fetched_data["rrc_Destination1"]
+            ragi_origin1 = fetched_data['ragi_Origin1']
+            ragi_dest1 = fetched_data["ragi_Destination1"]
+            jowar_origin1 = fetched_data['jowar_Origin1']
+            jowar_dest1 = fetched_data['jowar_Destination1']
+            bajra_origin1 = fetched_data['bajra_Origin1']
+            bajra_dest1 = fetched_data['bajra_Destination1']
+            maize_origin1 = fetched_data['maize_Origin1']
+            maize_dest1 = fetched_data['maize_Destination1']
+            misc1_origin1 = fetched_data['misc1_Origin1']
+            misc1_dest1 = fetched_data['misc1_Destination1']
+            misc2_origin1 = fetched_data['misc2_Origin1']
+            misc2_dest1 = fetched_data['misc2_Destination1']
+            wheaturs_origin1 = fetched_data['wheaturs_Origin1']
+            wheaturs_dest1 = fetched_data['wheaturs_Destination1']
+            wheatfaq_origin1 = fetched_data['wheatfaq_Origin1']
+            wheatfaq_dest1 = fetched_data['wheatfaq_Destination1']
+            wheatrra_origin1 = fetched_data['wheat_rra_Origin1']
+            wheatrra_dest1 = fetched_data['wheat_rra_Destination1']
+            frk_rra_origin1 = fetched_data['frk_rra_Origin1']
+            frk_rra_dest1 = fetched_data['frk_rra_Destination1']
+            misc3_origin1 = fetched_data['misc3_Origin1']
+            misc3_dest1 = fetched_data['misc3_Destination1']
+            misc4_origin1 = fetched_data['misc4_Origin1']
+            misc4_dest1 = fetched_data['misc4_Destination1']
+            
+            rra_origin_inline1 = fetched_data["rice_inline1"]
+            rra_dest_inline1 = fetched_data["rice_dest_inline1"]
+            wheat_origin_inline1 = fetched_data["wheat_inline1"]
+            wheat_dest_inline1 = fetched_data["wheat_dest_inline1"]
+            coarseGrain_origin_inline1 = fetched_data["coarseGrain_inline1"]
+            coarseGrain_dest_inline1 = fetched_data["coarseGrain_dest_inline1"]
+            frk_origin_inline1 = fetched_data["frk_inline1"]
+            frk_dest_inline1 = fetched_data["frk_dest_inline1"]
+            frkrra_origin_inline1 = fetched_data["frkrra_inline1"]
+            frkrra_dest_inline1 = fetched_data["frkrra_dest_inline1"]
+            frkbr_origin_inline1 = fetched_data["frkbr_inline1"]
+            frkbr_dest_inline1 = fetched_data["frkbr_dest_inline1"]
+            wcgr_origin_inline1 = fetched_data["wcgr_inline1"]
+            wcgr_dest_inline1 = fetched_data["wcgr_dest_inline1"]
+            frkcgr_origin_inline1 = fetched_data["frkcgr_inline1"]
+            frkcgr_dest_inline1 = fetched_data["frkcgr_dest_inline1"]
+            rrc_origin_inline1 = fetched_data["rrc_InlineOrigin1"]
+            rrc_dest_inline1 = fetched_data["rrc_InlineDestination1"]
+            wheatrra_origin_inline1 = fetched_data["wheat_rra_InlineOrigin1"]
+            wheatrra_dest_inline1 = fetched_data["wheat_rra_InlineDestination1"]
+            ragi_origin_inline1 = fetched_data["ragi_InlineOrigin1"]
+            ragi_dest_inline1 = fetched_data["ragi_InlineDestination1"]
+            jowar_origin_inline1 = fetched_data["jowar_InlineOrigin1"]
+            jowar_dest_inline1 = fetched_data["jowar_InlineDestination1"]
+            bajra_origin_inline1 = fetched_data["bajra_InlineOrigin1"]
+            bajra_dest_inline1 = fetched_data["bajra_InlineDestination1"]
+            maize_origin_inline1 = fetched_data["maize_InlineOrigin1"]
+            maize_dest_inline1 = fetched_data["maize_InlineDestination1"]
+            misc1_origin_inline1 = fetched_data["misc1_InlineOrigin1"]
+            misc1_dest_inline1 = fetched_data["misc1_InlineDestination1"]
+            misc2_origin_inline1 = fetched_data["misc2_InlineOrigin1"]
+            misc2_dest_inline1 = fetched_data["misc2_InlineDestination1"]
+            wheaturs_origin_inline1 = fetched_data["wheaturs_InlineOrigin1"]
+            wheaturs_dest_inline1 = fetched_data["wheaturs_InlineDestination1"]
+            wheatfaq_origin_inline1 = fetched_data["wheatfaq_InlineOrigin1"]
+            wheatfaq_dest_inline1 = fetched_data["wheatfaq_InlineDestination1"]
+            frk_rra_origin_inline1 = fetched_data["frk_rra_InlineOrigin1"]
+            frk_rra_dest_inline1 = fetched_data["frk_rra_InlineDestination1"]
+            misc3_origin_inline1 = fetched_data["misc3_InlineOrigin1"]
+            misc3_dest_inline1 = fetched_data["misc3_InlineDestination1"]
+            misc4_origin_inline1 = fetched_data["misc4_InlineOrigin1"]
+            misc4_dest_inline1 = fetched_data["misc4_InlineDestination1"]
+
             # seprating out data for route blocking for 42w , 42/58w
             for i in range(len(blocked_data)):
                 blocked_org_rhcode.append(blocked_data[i]["origin_railhead"]) # storing origin railhead in variable declared above 
@@ -827,7 +913,7 @@ def Daily_Planner():
             # distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
             distance_rh = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
 
-            prob = LpProblem("FCI_monthly_model_allocation_rr", LpMinimize)
+            prob = LpProblem("FCI_daily_model_allocation", LpMinimize)
             
             # created dictionary and storing key/value pairs of railhead/value 
             source_wheat = {}
@@ -1207,7 +1293,387 @@ def Daily_Planner():
             dest_misc4_inline = {}
             for i in range(len(misc4_dest_inline)):
                 dest_misc4_inline[misc4_dest_inline[i]["origin_railhead"]] = misc4_dest_inline[i]["destination_railhead"]
+            
+            # storing data for 58w in key value pairs
+            source_wheat1 = {}
+            for wheat in wheat_origin1:
+                if wheat["Value"] > 0:
+                    source_wheat1[wheat["origin_railhead"]] = wheat["Value"]
 
+            dest_wheat1 = {}
+            for i in range(len(wheat_dest1)):
+                if int(wheat_dest1[i]["Value"]) > 0:
+                    dest_wheat1[wheat_dest1[i]["origin_railhead"]] = int(wheat_dest1[i]["Value"])
+            
+            source_rra1 = {}
+            for rra in rra_origin1:
+                if rra["Value"] > 0:
+                    source_rra1[rra["origin_railhead"]] = rra["Value"]
+
+            dest_rra1 = {}
+            for i in range(len(rra_dest1)):
+                if int(rra_dest1[i]["Value"]) > 0:
+                    dest_rra1[rra_dest1[i]["origin_railhead"]] = int(rra_dest1[i]["Value"]) 
+
+            source_coarseGrain1 = {}
+            for coarseGrain in coarseGrain_origin1:
+                if coarseGrain["Value"] > 0:
+                    source_coarseGrain1[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
+
+            dest_coarseGrain1 = {}
+            for coarseGrain in coarseGrain_dest1:
+                if coarseGrain["Value"] > 0:
+                    dest_coarseGrain1[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
+                     
+            source_frkrra1 = {}
+            for frkrra in frkrra_origin1:
+                if frkrra["Value"] > 0:
+                    source_frkrra1[frkrra["origin_railhead"]] = frkrra["Value"]
+
+            dest_frkrra1 = {}
+            for frkrra in frkrra_dest1:
+                if frkrra["Value"] > 0:
+                    dest_frkrra1[frkrra["origin_railhead"]] = frkrra["Value"]
+ 
+            source_frkbr1 = {}
+            for frkbr in frkbr_origin1:
+                if frkbr["Value"] > 0:
+                    source_frkbr1[frkbr["origin_railhead"]] = frkbr["Value"]
+
+            dest_frkbr1 = {}
+            for frkbr in  frkbr_dest1:
+                if frkbr["Value"] > 0:
+                    dest_frkbr1[frkbr["origin_railhead"]] = frkbr["Value"]
+
+            source_frk1 = {}
+            for frk in frk_origin1:
+                if frk["Value"] > 0:
+                    source_frk1[frk["origin_railhead"]] = frk["Value"]
+
+            dest_frk1 = {}
+            for frk in  frk_dest1:
+                if frk["Value"] > 0:
+                    dest_frk1[frk["origin_railhead"]] = frk["Value"]
+
+            source_frkcgr1 = {}
+            for frkcgr in frkcgr_origin1:
+                if frkcgr["Value"] > 0:
+                    source_frkcgr1[frkcgr["origin_railhead"]] = frkcgr["Value"]
+
+            dest_frkcgr1 = {}
+            for frkcgr in  frkcgr_dest1:
+                if frkcgr["Value"] > 0:
+                    dest_frkcgr1[frkcgr["origin_railhead"]] = frkcgr["Value"]
+
+            source_wcgr1 = {}
+            for wcgr in wcgr_origin1:
+                if wcgr["Value"] > 0:
+                    source_wcgr1[wcgr["origin_railhead"]] = wcgr["Value"]
+
+            dest_wcgr1 = {}
+            for wcgr in  wcgr_dest1:
+                if wcgr["Value"] > 0:
+                    dest_wcgr1[wcgr["origin_railhead"]] = wcgr["Value"]
+
+            source_rrc1 = {}
+            for rrc in rrc_origin1:
+                if rrc["Value"] > 0:
+                    source_rrc1[rrc["origin_railhead"]] = rrc["Value"]
+
+            dest_rrc1 = {}
+            for rrc in rrc_dest1:
+                if rrc["Value"] > 0:
+                    dest_rrc1[rrc["origin_railhead"]] = rrc["Value"]
+
+            source_ragi1 = {}
+            for ragi in ragi_origin1:
+                if ragi["Value"] > 0:
+                    source_ragi1[ragi["origin_railhead"]] = ragi["Value"]
+
+            dest_ragi1 = {}
+            for ragi in ragi_dest1:
+                if ragi["Value"] > 0:
+                    dest_ragi1[ragi["origin_railhead"]] = ragi["Value"]
+
+            source_jowar1 = {}
+            for jowar in jowar_origin1:
+                if jowar["Value"] > 0:
+                    source_jowar1[jowar["origin_railhead"]] = jowar["Value"]
+
+            dest_jowar1 = {}
+            for jowar in jowar_dest1:
+                if jowar["Value"] > 0:
+                    dest_jowar1[jowar["origin_railhead"]] = jowar["Value"]
+
+            source_bajra1 = {}
+            for bajra in bajra_origin1:
+                if bajra["Value"] > 0:
+                    source_bajra1[bajra["origin_railhead"]] = bajra["Value"]
+
+            dest_bajra1 = {}
+            for bajra in bajra_dest:
+                if bajra["Value"] > 0:
+                    dest_bajra1[bajra["origin_railhead"]] = bajra["Value"]
+
+            source_maize1 = {}
+            for maize in maize_origin1:
+                if maize["Value"] > 0:
+                    source_maize1[maize["origin_railhead"]] = maize["Value"]
+
+            dest_maize1 = {}
+            for maize in maize_dest1:
+                if maize["Value"] > 0:
+                    dest_maize1[maize["origin_railhead"]] = maize["Value"]
+
+            source_misc11 = {}
+            for misc1 in misc1_origin1:
+                if misc1["Value"] > 0:
+                    source_misc11[misc1["origin_railhead"]] = misc1["Value"]
+
+            dest_misc11 = {}
+            for misc1 in misc1_dest1:
+                if misc1["Value"] > 0:
+                    dest_misc11[misc1["origin_railhead"]] = misc1["Value"]
+
+            source_misc21 = {}
+            for misc2 in misc2_origin1:
+                if misc2["Value"] > 0:
+                    source_misc21[misc2["origin_railhead"]] = misc2["Value"]
+
+            dest_misc21 = {}
+            for misc2 in misc2_dest1:
+                if misc2["Value"] > 0:
+                    dest_misc21[misc2["origin_railhead"]] = misc2["Value"]
+
+            source_wheaturs1 = {}
+            for wheat in wheaturs_origin1:
+                if wheat["Value"] > 0:
+                    source_wheaturs1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheaturs1 = {}
+            for wheat in wheaturs_dest1:
+                if wheat["Value"] > 0:
+                    dest_wheaturs1[wheat["origin_railhead"]] = wheat["Value"]
+
+            source_wheatfaq1 = {}
+            for wheat in wheatfaq_origin1:
+                if wheat["Value"] > 0:
+                    source_wheatfaq1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheatfaq1 = {}
+            for wheat in wheatfaq_dest1:
+                if wheat["Value"] > 0:
+                    dest_wheatfaq1[wheat["origin_railhead"]] = wheat["Value"]
+
+            source_wheatrra1 = {}
+            for wheat in wheatrra_origin1:
+                if wheat["Value"] > 0:
+                    source_wheatrra1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_wheatrra1 = {}
+            for wheat in wheatrra_dest1:
+                if wheat["Value"] > 0:
+                    dest_wheatrra1[wheat["origin_railhead"]] = wheat["Value"]
+
+            source_frk_rra1 = {}
+            for wheat in frk_rra_origin1:
+                if wheat["Value"] > 0:
+                    source_frk_rra1[wheat["origin_railhead"]] = wheat["Value"]
+
+            dest_frk_rra1 = {}
+            for wheat in frk_rra_dest1:
+                if wheat["Value"] > 0:
+                    dest_frk_rra1[wheat["origin_railhead"]] = wheat["Value"]
+            
+            source_misc31 = {}
+            for misc3 in misc3_origin1:
+                if misc3["Value"] > 0:
+                    source_misc31[misc3["origin_railhead"]] = misc3["Value"]
+
+            dest_misc31 = {}
+            for misc3 in misc3_dest1:
+                if misc3["Value"] > 0:
+                    dest_misc31[misc3["origin_railhead"]] = misc3["Value"]
+            
+            source_misc41 = {}
+            for misc4 in misc4_origin1:
+                if misc4["Value"] > 0:
+                    source_misc41[misc4["origin_railhead"]] = misc4["Value"]
+
+            dest_misc41 = {}
+            for misc4 in misc4_dest1:
+                if misc4["Value"] > 0:
+                    dest_misc41[misc4["origin_railhead"]] = misc4["Value"]
+            
+            source_wheat_inline1 = {}
+            for i in range(len(wheat_origin_inline1)):
+                source_wheat_inline1[wheat_origin_inline1[i]["origin_railhead"]] = wheat_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheat_inline1 = {}
+            for i in range(len(wheat_dest_inline1)):
+                dest_wheat_inline1[wheat_dest_inline1[i]["origin_railhead"]] = wheat_dest_inline1[i]["destination_railhead"]
+            
+            source_rra_inline1 = {}
+            for i in range(len(rra_origin_inline1)):
+                source_rra_inline1[rra_origin_inline1[i]["origin_railhead"]] = rra_origin_inline1[i]["destination_railhead"]
+
+            dest_rra_inline1 = {}
+            for i in range(len(rra_dest_inline1)):
+                dest_rra_inline1[rra_dest_inline1[i]["origin_railhead"]] = rra_dest_inline1[i]["destination_railhead"]
+
+            source_coarseGrain_inline1 = {}
+            for i in range(len(coarseGrain_origin_inline1)):
+                source_coarseGrain_inline1[coarseGrain_origin_inline1[i]["origin_railhead"]] = coarseGrain_origin_inline1[i]["destination_railhead"]
+            
+            dest_coarseGrain_inline1 = {}
+            for i in range(len(coarseGrain_dest_inline1)):
+                dest_coarseGrain_inline1[coarseGrain_dest_inline1[i]["origin_railhead"]] = coarseGrain_dest_inline1[i]["destination_railhead"]
+            
+            source_frkrra_inline1 = {}
+            for i in range(len(frkrra_origin_inline1)):
+                source_frkrra_inline1[frkrra_origin_inline1[i]["origin_railhead"]] = frkrra_origin_inline1[i]["destination_railhead"]
+            
+            dest_frkrra_inline1 = {}
+            for i in range(len(frkrra_dest_inline1)):
+                dest_frkrra_inline1[frkrra_dest_inline1[i]["origin_railhead"]] = frkrra_dest_inline1[i]["destination_railhead"]
+
+            source_frkbr_inline1 = {}
+            for i in range(len(frkbr_origin_inline1)):
+                source_frkbr_inline1[frkbr_origin_inline1[i]["origin_railhead"]] = frkbr_origin_inline1[i]["destination_railhead"]
+            
+            dest_frkbr_inline1 = {}
+            for i in range(len(frkbr_dest_inline1)):
+                dest_frkbr_inline1[frkbr_dest_inline1[i]["origin_railhead"]] = frkbr_dest_inline1[i]["destination_railhead"]
+
+            source_frk_inline1 = {}
+            for i in range(len(frk_origin_inline1)):
+                source_frk_inline1[frk_origin_inline1[i]["origin_railhead"]] = frk_origin_inline1[i]["destination_railhead"]
+            
+            dest_frk_inline1 = {}
+            for i in range(len(frk_dest_inline1)):
+                dest_frk_inline1[frk_dest_inline1[i]["origin_railhead"]] = frk_dest_inline1[i]["destination_railhead"]
+
+            source_frkcgr_inline1 = {}
+            for i in range(len(frkcgr_origin_inline1)):
+                source_frkcgr_inline1[frkcgr_origin_inline1[i]["origin_railhead"]] = frkcgr_origin_inline1[i]["destination_railhead"]
+            
+            dest_frkcgr_inline1 = {}
+            for i in range(len(frkcgr_dest_inline1)):
+                dest_frkcgr_inline1[frkcgr_dest_inline1[i]["origin_railhead"]] = frkcgr_dest_inline1[i]["destination_railhead"]
+
+            source_wcgr_inline1 = {}
+            for i in range(len(wcgr_origin_inline1)):
+                source_wcgr_inline1[wcgr_origin_inline1[i]["origin_railhead"]] = wcgr_origin_inline1[i]["destination_railhead"]
+            
+            dest_wcgr_inline1 = {}
+            for i in range(len(wcgr_dest_inline1)):
+                dest_wcgr_inline1[wcgr_dest_inline1[i]["origin_railhead"]] = wcgr_dest_inline1[i]["destination_railhead"]
+
+            source_rrc_inline1 = {}
+            for i in range(len(rrc_origin_inline1)):
+                source_rrc_inline1[rrc_origin_inline1[i]["origin_railhead"]] = rrc_origin_inline1[i]["destination_railhead"]
+            
+            dest_rrc_inline1 = {}
+            for i in range(len(rrc_dest_inline1)):
+                dest_rrc_inline1[rrc_dest_inline1[i]["origin_railhead"]] = rrc_dest_inline1[i]["destination_railhead"]
+                
+            source_ragi_inline1 = {}
+            for i in range(len(ragi_origin_inline1)):
+                source_ragi_inline1[ragi_origin_inline1[i]["origin_railhead"]] = ragi_origin_inline1[i]["destination_railhead"]
+            
+            dest_ragi_inline1 = {}
+            for i in range(len(ragi_dest_inline1)):
+                dest_ragi_inline1[ragi_dest_inline1[i]["origin_railhead"]] = ragi_dest_inline1[i]["destination_railhead"]
+
+            source_jowar_inline1 = {}
+            for i in range(len(jowar_origin_inline1)):
+                source_jowar_inline[jowar_origin_inline1[i]["origin_railhead"]] = jowar_origin_inline1[i]["destination_railhead"]
+            
+            dest_jowar_inline1 = {}
+            for i in range(len(jowar_dest_inline1)):
+                dest_jowar_inline1[jowar_dest_inline1[i]["origin_railhead"]] = jowar_dest_inline1[i]["destination_railhead"]
+
+            source_bajra_inline1 = {}
+            for i in range(len(bajra_origin_inline1)):
+                source_bajra_inline1[bajra_origin_inline1[i]["origin_railhead"]] = bajra_origin_inline1[i]["destination_railhead"]
+            
+            dest_bajra_inline1 = {}
+            for i in range(len(bajra_dest_inline1)):
+                dest_bajra_inline1[bajra_dest_inline1[i]["origin_railhead"]] = bajra_dest_inline1[i]["destination_railhead"]
+
+            source_maize_inline1 = {}
+            for i in range(len(maize_origin_inline1)):
+                source_maize_inline1[maize_origin_inline1[i]["origin_railhead"]] = maize_origin_inline1[i]["destination_railhead"]
+            
+            dest_maize_inline1 = {}
+            for i in range(len(maize_dest_inline1)):
+                dest_maize_inline1[maize_dest_inline1[i]["origin_railhead"]] = maize_dest_inline1[i]["destination_railhead"]
+
+            source_misc1_inline1 = {}
+            for i in range(len(misc1_origin_inline1)):
+                source_misc1_inline1[misc1_origin_inline1[i]["origin_railhead"]] = misc1_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc1_inline1 = {}
+            for i in range(len(misc1_dest_inline1)):
+                dest_misc1_inline1[misc1_dest_inline1[i]["origin_railhead"]] = misc1_dest_inline1[i]["destination_railhead"]
+
+            source_misc2_inline1 = {}
+            for i in range(len(misc2_origin_inline1)):
+                source_misc2_inline1[misc2_origin_inline1[i]["origin_railhead"]] = misc2_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc2_inline1 = {}
+            for i in range(len(misc2_dest_inline1)):
+                dest_misc2_inline1[misc2_dest_inline1[i]["origin_railhead"]] = misc2_dest_inline1[i]["destination_railhead"]
+
+            source_wheaturs_inline1 = {}
+            for i in range(len(wheaturs_origin_inline1)):
+                source_wheaturs_inline1[wheaturs_origin_inline1[i]["origin_railhead"]] = wheaturs_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheaturs_inline1 = {}
+            for i in range(len(wheaturs_dest_inline1)):
+                dest_wheaturs_inline1[wheaturs_dest_inline1[i]["origin_railhead"]] = wheaturs_dest_inline1[i]["destination_railhead"]
+
+            source_wheatfaq_inline1 = {}
+            for i in range(len(wheatfaq_origin_inline1)):
+                source_wheatfaq_inline1[wheatfaq_origin_inline1[i]["origin_railhead"]] = wheatfaq_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheatfaq_inline1 = {}
+            for i in range(len(wheatfaq_dest_inline1)):
+                dest_wheatfaq_inline1[wheatfaq_dest_inline1[i]["origin_railhead"]] = wheatfaq_dest_inline1[i]["destination_railhead"]
+
+            source_wheatrra_inline1 = {}
+            for i in range(len(wheatrra_origin_inline1)):
+                source_wheatrra_inline1[wheatrra_origin_inline1[i]["origin_railhead"]] = wheatrra_origin_inline1[i]["destination_railhead"]
+            
+            dest_wheatrra_inline1 = {}
+            for i in range(len(wheatrra_dest_inline1)):
+                dest_wheatrra_inline1[wheatrra_dest_inline1[i]["origin_railhead"]] = wheatrra_dest_inline1[i]["destination_railhead"]
+
+            source_frk_rra_inline1 = {}
+            for i in range(len(frk_rra_origin_inline1)):
+                source_frk_rra_inline1[frk_rra_origin_inline1[i]["origin_railhead"]] = frk_rra_origin_inline1[i]["destination_railhead"]
+            
+            dest_frk_rra_inline1 = {}
+            for i in range(len(frk_rra_dest_inline1)):
+                dest_frk_rra_inline1[frk_rra_dest_inline1[i]["origin_railhead"]] = frk_rra_dest_inline1[i]["destination_railhead"]
+            
+            source_misc3_inline1 = {}
+            for i in range(len(misc3_origin_inline1)):
+                source_misc3_inline1[misc3_origin_inline1[i]["origin_railhead"]] = misc3_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc3_inline1 = {}
+            for i in range(len(misc3_dest_inline1)):
+                dest_misc3_inline1[misc3_dest_inline1[i]["origin_railhead"]] = misc3_dest_inline1[i]["destination_railhead"]
+            
+            source_misc4_inline1 = {}
+            for i in range(len(misc4_origin_inline1)):
+                source_misc4_inline1[misc4_origin_inline1[i]["origin_railhead"]] = misc4_origin_inline1[i]["destination_railhead"]
+            
+            dest_misc4_inline1 = {}
+            for i in range(len(misc4_dest_inline1)):
+                dest_misc4_inline1[misc4_dest_inline1[i]["origin_railhead"]] = misc4_dest_inline1[i]["destination_railhead"]
+
+            # variable declaration for 42w
             L1 = list(source_wheat_inline.keys())
             L2 = list(source_rra_inline.keys())
             L3 = list(source_coarseGrain_inline.keys())
@@ -1252,6 +1718,52 @@ def Daily_Planner():
             L41 = list(source_misc4_inline.keys())
             L42 = list(dest_misc4_inline.keys())
 
+            # variable declaration for 58w
+            L110 = list(source_wheat_inline1.keys())
+            L210 = list(source_rra_inline1.keys())
+            L310 = list(source_coarseGrain_inline1.keys())
+            L410 = list(source_frkrra_inline1.keys())
+            L51 = list(source_frkbr_inline1.keys())
+            L61 = list(source_frk_inline1.keys())
+            L71 = list(source_frkcgr_inline1.keys())
+            L81 = list(source_wcgr_inline1.keys())
+            L91 = list(dest_wheat_inline1.keys())
+            L101 = list(dest_rra_inline1.keys())
+            L111 = list(dest_coarseGrain_inline1.keys())
+            L121 = list(dest_frkrra_inline1.keys())
+            L131 = list(dest_frkbr_inline1.keys())
+            L141 = list(dest_frk_inline1.keys())
+            L151 = list(dest_frkcgr_inline1.keys())
+            L161 = list(dest_wcgr_inline1.keys())
+
+            L171= list(source_rrc_inline1.keys())
+            L181 = list(dest_rrc_inline1.keys())
+            L191 = list(source_ragi_inline1.keys())
+            L201 = list(dest_ragi_inline1.keys())
+            L211 = list(source_jowar_inline1.keys())
+            L221 = list(dest_jowar_inline1.keys())
+            L231 = list(source_bajra_inline1.keys())
+            L241 = list(dest_bajra_inline1.keys())
+            L251 = list(source_maize_inline1.keys())
+            L261 = list(dest_maize_inline1.keys())
+            L271 = list(source_misc1_inline1.keys())
+            L281 = list(dest_misc1_inline1.keys())
+            L291 = list(source_misc2_inline1.keys())
+            L301 = list(dest_misc2_inline1.keys())
+            L311 = list(source_wheaturs_inline1.keys())
+            L321 = list(dest_wheaturs_inline1.keys())
+            L331 = list(source_wheatfaq_inline1.keys())
+            L341 = list(dest_wheatfaq_inline1.keys())
+            L351 = list(source_wheatrra_inline1.keys())
+            L361 = list(dest_wheatrra_inline1.keys())
+            L371 = list(source_frk_rra_inline1.keys())
+            L381 = list(dest_frk_rra_inline1.keys())
+            L391 = list(source_misc3_inline1.keys())
+            L401 = list(dest_misc3_inline1.keys())
+            L411 = list(source_misc4_inline1.keys())
+            L421 = list(dest_misc4_inline1.keys())
+            
+            # for storing 42w inline data in original format
             list_src_wheat = []
             for i in L1:
                 Value = {}
@@ -2041,741 +2553,8 @@ def Daily_Planner():
             
             for i in list_dest_misc4:
                 dest_misc4[i] = 1
-
-            x_ij_wheat = LpVariable.dicts("x_wheat", [(i, j) for i in source_wheat.keys() for j in dest_wheat.keys()],lowBound = 0, cat="Integer")
-            x_ij_rra = LpVariable.dicts("x_rra", [(i, j) for i in source_rra.keys() for j in dest_rra.keys()],lowBound = 0, cat="Integer")
-            x_ij_coarseGrain = LpVariable.dicts("x_coarsegrain", [(i, j) for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()],lowBound = 0, cat="Integer")
-            x_ij_frkrra = LpVariable.dicts("x_frkrra", [(i, j) for i in source_frkrra.keys() for j in dest_frkrra.keys()],lowBound = 0, cat="Integer")
-            x_ij_frk_br=LpVariable.dicts("x_frk_br",[(i,j) for i in source_frkbr.keys() for j in dest_frkbr.keys()],lowBound = 0,cat="Integer")
-            x_ij_frk=LpVariable.dicts("x_frk",[(i,j) for i in source_frk.keys() for j in dest_frk.keys()],lowBound = 0,cat="Integer")
-            x_ij_frkcgr=LpVariable.dicts("x_frkcgr",[(i,j) for i in source_frkcgr.keys() for j in dest_frkcgr.keys()],lowBound = 0,cat="Integer")
-            x_ij_wcgr=LpVariable.dicts("x_wcgr",[(i,j) for i in source_wcgr.keys() for j in dest_wcgr.keys()],lowBound = 0,cat="Integer")
-            x_ij_rrc=LpVariable.dicts("x_rrc",[(i,j) for i in source_rrc.keys() for j in dest_rrc.keys()],lowBound = 0,cat="Integer")
-            x_ij_ragi=LpVariable.dicts("x_ragi",[(i,j) for i in source_ragi.keys() for j in dest_ragi.keys()],lowBound = 0,cat="Integer")
-            x_ij_jowar=LpVariable.dicts("x_jowar",[(i,j) for i in source_jowar.keys() for j in dest_jowar.keys()],lowBound = 0,cat="Integer")
-            x_ij_bajra=LpVariable.dicts("x_bajra",[(i,j) for i in source_bajra.keys() for j in dest_bajra.keys()],lowBound = 0,cat="Integer")
-            x_ij_maize=LpVariable.dicts("x_maize",[(i,j) for i in source_maize.keys() for j in dest_maize.keys()],lowBound = 0,cat="Integer")
-            x_ij_misc1=LpVariable.dicts("x_misc1",[(i,j) for i in source_misc1.keys() for j in dest_misc1.keys()],lowBound = 0,cat="Integer")
-            x_ij_misc2=LpVariable.dicts("x_misc2",[(i,j) for i in source_misc2.keys() for j in dest_misc2.keys()],lowBound = 0,cat="Integer")
-            x_ij_wheaturs=LpVariable.dicts("x_wheaturs",[(i,j) for i in source_wheaturs.keys() for j in dest_wheaturs.keys()],lowBound = 0,cat="Integer")
-            x_ij_wheatfaq=LpVariable.dicts("x_wheatfaq",[(i,j) for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()],lowBound = 0,cat="Integer")
-            x_ij_wheatrra=LpVariable.dicts("x_wheatrra",[(i,j) for i in source_wheatrra.keys() for j in dest_wheatrra.keys()],lowBound = 0,cat="Integer")
-            x_ij_frk_rra=LpVariable.dicts("x_frk_rra",[(i,j) for i in source_frk_rra.keys() for j in dest_frk_rra.keys()],lowBound = 0,cat="Integer")
-            x_ij_misc3=LpVariable.dicts("x_misc3",[(i,j) for i in source_misc3.keys() for j in dest_misc3.keys()],lowBound = 0,cat="Integer")
-            x_ij_misc4=LpVariable.dicts("x_misc4",[(i,j) for i in source_misc4.keys() for j in dest_misc4.keys()],lowBound = 0,cat="Integer")
             
-            prob += (
-                lpSum(x_ij_wheat[(i, j)] * rail_cost.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
-                lpSum(x_ij_rra[(i, j)] * rail_cost.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
-                lpSum(x_ij_coarseGrain[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()) +
-                lpSum(x_ij_frkrra[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
-                lpSum(x_ij_frk_br[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
-                lpSum(x_ij_frk[(i, j)] * rail_cost.loc[i][j] for i in source_frk.keys() for j in dest_frk.keys()) +
-                lpSum(x_ij_frkcgr[(i, j)] * rail_cost.loc[i][j] for i in source_frkcgr.keys() for j in dest_frkcgr.keys()) +
-                lpSum(x_ij_wcgr[(i, j)] * rail_cost.loc[i][j] for i in source_wcgr.keys() for j in dest_wcgr.keys()) +
-                lpSum(x_ij_rrc[(i, j)] * rail_cost.loc[i][j] for i in source_rrc.keys() for j in dest_rrc.keys()) +
-                lpSum(x_ij_ragi[(i, j)] * rail_cost.loc[i][j] for i in source_ragi.keys() for j in dest_ragi.keys()) +
-                lpSum(x_ij_jowar[(i, j)] * rail_cost.loc[i][j] for i in source_jowar.keys() for j in dest_jowar.keys()) +
-                lpSum(x_ij_bajra[(i, j)] * rail_cost.loc[i][j] for i in source_bajra.keys() for j in dest_bajra.keys()) +
-                lpSum(x_ij_maize[(i, j)] * rail_cost.loc[i][j] for i in source_maize.keys() for j in dest_maize.keys()) +
-                lpSum(x_ij_misc1[(i, j)] * rail_cost.loc[i][j] for i in source_misc1.keys() for j in dest_misc1.keys()) +
-                lpSum(x_ij_misc2[(i, j)] * rail_cost.loc[i][j] for i in source_misc2.keys() for j in dest_misc2.keys()) +
-                lpSum(x_ij_wheaturs[(i, j)] * rail_cost.loc[i][j] for i in source_wheaturs.keys() for j in dest_wheaturs.keys()) +
-                lpSum(x_ij_wheatfaq[(i, j)] * rail_cost.loc[i][j] for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()) +
-                lpSum(x_ij_wheatrra[(i, j)] * rail_cost.loc[i][j] for i in source_wheatrra.keys() for j in dest_wheatrra.keys()) +
-                lpSum(x_ij_frk_rra[(i, j)] * rail_cost.loc[i][j] for i in source_frk_rra.keys() for j in dest_frk_rra.keys()) +
-                lpSum(x_ij_misc3[(i, j)] * rail_cost.loc[i][j] for i in source_misc3.keys() for j in dest_misc3.keys()) +
-                lpSum(x_ij_misc4[(i, j)] * rail_cost.loc[i][j] for i in source_misc4.keys() for j in dest_misc4.keys()) 
-            )
-            
-            for i in range(len(blocked_org_rhcode)):
-                commodity = blocked_data[i]["Commodity"]
-                if commodity == "Wheat":
-                    prob += x_ij_wheat[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "RRA":
-                    prob += x_ij_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Coarse Grains":
-                    prob += x_ij_coarseGrain[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK RRA":
-                    prob += x_ij_frkrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK BR":
-                    prob += x_ij_frk_br[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat+FRK":
-                    prob += x_ij_frk[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK+CGR":
-                    prob += x_ij_frkcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "RRC":
-                    prob += x_ij_rrc[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat+CGR":
-                    prob += x_ij_wcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Ragi":
-                    prob += x_ij_ragi[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Jowar":
-                    prob += x_ij_jowar[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Bajra":
-                    prob += x_ij_bajra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Maize":
-                    prob += x_ij_maize[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc1":
-                    prob += x_ij_misc1[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc2":
-                    prob += x_ij_misc2[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat(URS)":
-                    prob += x_ij_wheaturs[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat(FAQ)":
-                    prob += x_ij_wheatfaq[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat+RRA":
-                    prob += x_ij_wheatrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK+RRA":
-                    prob += x_ij_frk_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc3":
-                    prob += x_ij_misc3[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc4":
-                    prob += x_ij_misc4[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-
-            for i in source_wheat.keys():
-                prob += lpSum(x_ij_wheat[(i, j)] for j in dest_wheat.keys()) <= source_wheat[i]
-             
-            for i in dest_wheat.keys():
-                prob += lpSum(x_ij_wheat[(j, i)] for j in source_wheat.keys()) >= dest_wheat[i]
-
-            for i in source_rra.keys():
-                prob += lpSum(x_ij_rra[(i, j)] for j in dest_rra.keys()) <= source_rra[i]
-
-            for i in dest_rra.keys():
-                prob += lpSum(x_ij_rra[(j, i)] for j in source_rra.keys()) >= dest_rra[i]
-
-            for i in source_coarseGrain.keys():
-                prob += lpSum(x_ij_coarseGrain[(i, j)] for j in dest_coarseGrain.keys()) <= source_coarseGrain[i]
-
-            for i in dest_coarseGrain.keys():
-                prob += lpSum(x_ij_coarseGrain[(j, i)] for j in source_coarseGrain.keys()) >= dest_coarseGrain[i]
-            
-            for i in source_frkrra.keys():
-                prob += lpSum(x_ij_frkrra[(i, j)] for j in dest_frkrra.keys()) <= source_frkrra[i]
-            
-            for i in dest_frkrra.keys():
-                prob += lpSum(x_ij_frkrra[(j, i)] for j in source_frkrra.keys()) >= dest_frkrra[i]
-
-            for i in source_frkbr.keys():
-                prob += lpSum(x_ij_frk_br[(i, j)] for j in dest_frkbr.keys()) <= source_frkbr[i]
-
-            for i in dest_frkbr.keys():
-                prob += lpSum(x_ij_frk_br[(j, i)] for j in source_frkbr.keys()) >= dest_frkbr[i] 
-
-            for i in source_frk.keys():
-                prob += lpSum(x_ij_frk[(i, j)] for j in dest_frk.keys()) <= source_frk[i]
-
-            for i in dest_frk.keys():
-                prob += lpSum(x_ij_frk[(j, i)] for j in source_frk.keys()) >= dest_frk[i] 
-
-            for i in source_frkcgr.keys():
-                prob += lpSum(x_ij_frkcgr[(i, j)] for j in dest_frkcgr.keys()) <= source_frkcgr[i]
-
-            for i in dest_frkcgr.keys():
-                prob += lpSum(x_ij_frkcgr[(j, i)] for j in source_frkcgr.keys()) >= dest_frkcgr[i] 
-
-            for i in source_wcgr.keys():
-                prob += lpSum(x_ij_wcgr[(i, j)] for j in dest_wcgr.keys()) <= source_wcgr[i]
-
-            for i in dest_wcgr.keys():
-                prob += lpSum(x_ij_wcgr[(j, i)] for j in source_wcgr.keys()) >= dest_wcgr[i] 
-
-            for i in source_rrc.keys():
-                prob += lpSum(x_ij_rrc[(i, j)] for j in dest_rrc.keys()) <= source_rrc[i]
-
-            for i in dest_rrc.keys():
-                prob += lpSum(x_ij_rrc[(j, i)] for j in source_rrc.keys()) >= dest_rrc[i] 
-
-            for i in source_ragi.keys():
-                prob += lpSum(x_ij_ragi[(i, j)] for j in dest_ragi.keys()) <= source_ragi[i]
-
-            for i in dest_ragi.keys():
-                prob += lpSum(x_ij_ragi[(j, i)] for j in source_ragi.keys()) >= dest_ragi[i] 
-                
-            for i in source_jowar.keys():
-                prob += lpSum(x_ij_jowar[(i, j)] for j in dest_jowar.keys()) <= source_jowar[i]
-
-            for i in dest_jowar.keys():
-                prob += lpSum(x_ij_jowar[(j, i)] for j in source_jowar.keys()) >= dest_jowar[i] 
-
-            for i in source_bajra.keys():
-                prob += lpSum(x_ij_bajra[(i, j)] for j in dest_bajra.keys()) <= source_bajra[i]
-
-            for i in dest_bajra.keys():
-                prob += lpSum(x_ij_bajra[(j, i)] for j in source_bajra.keys()) >= dest_bajra[i] 
-
-            for i in source_maize.keys():
-                prob += lpSum(x_ij_maize[(i, j)] for j in dest_maize.keys()) <= source_maize[i]
-
-            for i in dest_maize.keys():
-                prob += lpSum(x_ij_maize[(j, i)] for j in source_maize.keys()) >= dest_maize[i] 
-
-            for i in source_misc1.keys():
-                prob += lpSum(x_ij_misc1[(i, j)] for j in dest_misc1.keys()) <= source_misc1[i]
-
-            for i in dest_misc1.keys():
-                prob += lpSum(x_ij_misc1[(j, i)] for j in source_misc1.keys()) >= dest_misc1[i] 
-
-            for i in source_misc2.keys():
-                prob += lpSum(x_ij_misc2[(i, j)] for j in dest_misc2.keys()) <= source_misc2[i]
-
-            for i in dest_misc2.keys():
-                prob += lpSum(x_ij_misc2[(j, i)] for j in source_misc2.keys()) >= dest_misc2[i] 
-
-            for i in source_wheaturs.keys():
-                prob += lpSum(x_ij_wheaturs[(i, j)] for j in dest_wheaturs.keys()) <= source_wheaturs[i]
-
-            for i in dest_wheaturs.keys():
-                prob += lpSum(x_ij_wheaturs[(j, i)] for j in source_wheaturs.keys()) >= dest_wheaturs[i] 
-
-            for i in source_wheatfaq.keys():
-                prob += lpSum(x_ij_wheatfaq[(i, j)] for j in dest_wheatfaq.keys()) <= source_wheatfaq[i]
-
-            for i in dest_wheatfaq.keys():
-                prob += lpSum(x_ij_wheatfaq[(j, i)] for j in source_wheatfaq.keys()) >= dest_wheatfaq[i] 
-
-            for i in source_wheatrra.keys():
-                prob += lpSum(x_ij_wheatrra[(i, j)] for j in dest_wheatrra.keys()) <= source_wheatrra[i]
-
-            for i in dest_wheatrra.keys():
-                prob += lpSum(x_ij_wheatrra[(j, i)] for j in source_wheatrra.keys()) >= dest_wheatrra[i] 
-
-            for i in source_frk_rra.keys():
-                prob += lpSum(x_ij_frk_rra[(i, j)] for j in dest_frk_rra.keys()) <= source_frk_rra[i]
-
-            for i in dest_frk_rra.keys():
-                prob += lpSum(x_ij_frk_rra[(j, i)] for j in source_frk_rra.keys()) >= dest_frk_rra[i] 
-            
-            for i in source_misc3.keys():
-                prob += lpSum(x_ij_misc3[(i, j)] for j in dest_misc3.keys()) <= source_misc3[i]
-
-            for i in dest_misc3.keys():
-                prob += lpSum(x_ij_misc3[(j, i)] for j in source_misc3.keys()) >= dest_misc3[i] 
-            
-            for i in source_misc4.keys():
-                prob += lpSum(x_ij_misc4[(i, j)] for j in dest_misc4.keys()) <= source_misc4[i]
-
-            for i in dest_misc4.keys():
-                prob += lpSum(x_ij_misc4[(j, i)] for j in source_misc4.keys()) >= dest_misc4[i] 
-
-            prob.writeLP("FCI_monthly_model_allocation_rr.lp")
-            # prob.solve(CPLEX())
-            prob.solve()
-            print("Status for 42w:", LpStatus[prob.status])
-            print("Minimum Cost of Transportation for 42w = Rs.", prob.objective.value(), "Lakh")
-            print("Total Number of Variables for 42w:", len(prob.variables()))
-            print("Total Number of Constraints for 42w:", len(prob.constraints))
-            
-            # for 58 wagon variable sepration
-            rra_origin1 = fetched_data["rice_origin1"]
-            rra_dest1 = fetched_data["rice_destination1"]
-            wheat_origin1 = fetched_data["wheat_origin1"]
-            wheat_dest1 = fetched_data["wheat_destination1"]
-            coarseGrain_origin1 = fetched_data["coarseGrain_origin1"]
-            coarseGrain_dest1 = fetched_data["coarseGrain_destination1"]
-            frkrra_origin1 = fetched_data["frkrra_origin1"]
-            frkrra_dest1 = fetched_data["frkrra_destination1"]
-            frkbr_origin1 = fetched_data["frkbr_origin1"]
-            frkbr_dest1 = fetched_data["frkbr_destination1"]
-            frk_origin1 = fetched_data["frk_origin1"]
-            frk_dest1 = fetched_data["frk_destination1"]
-            frkcgr_origin1 = fetched_data["frkcgr_origin1"]
-            frkcgr_dest1 = fetched_data["frkcgr_destination1"]
-            wcgr_origin1 = fetched_data["wcgr_origin1"]
-            wcgr_dest1 = fetched_data["wcgr_destination1"]
-            rrc_origin1 = fetched_data['rrc_Origin1']
-            rrc_dest1 = fetched_data["rrc_Destination1"]
-            ragi_origin1 = fetched_data['ragi_Origin1']
-            ragi_dest1 = fetched_data["ragi_Destination1"]
-            jowar_origin1 = fetched_data['jowar_Origin1']
-            jowar_dest1 = fetched_data['jowar_Destination1']
-            bajra_origin1 = fetched_data['bajra_Origin1']
-            bajra_dest1 = fetched_data['bajra_Destination1']
-            maize_origin1 = fetched_data['maize_Origin1']
-            maize_dest1 = fetched_data['maize_Destination1']
-            misc1_origin1 = fetched_data['misc1_Origin1']
-            misc1_dest1 = fetched_data['misc1_Destination1']
-            misc2_origin1 = fetched_data['misc2_Origin1']
-            misc2_dest1 = fetched_data['misc2_Destination1']
-            wheaturs_origin1 = fetched_data['wheaturs_Origin1']
-            wheaturs_dest1 = fetched_data['wheaturs_Destination1']
-            wheatfaq_origin1 = fetched_data['wheatfaq_Origin1']
-            wheatfaq_dest1 = fetched_data['wheatfaq_Destination1']
-            wheatrra_origin1 = fetched_data['wheat_rra_Origin1']
-            wheatrra_dest1 = fetched_data['wheat_rra_Destination1']
-            frk_rra_origin1 = fetched_data['frk_rra_Origin1']
-            frk_rra_dest1 = fetched_data['frk_rra_Destination1']
-            misc3_origin1 = fetched_data['misc3_Origin1']
-            misc3_dest1 = fetched_data['misc3_Destination1']
-            misc4_origin1 = fetched_data['misc4_Origin1']
-            misc4_dest1 = fetched_data['misc4_Destination1']
-            
-            rra_origin_inline1 = fetched_data["rice_inline1"]
-            rra_dest_inline1 = fetched_data["rice_dest_inline1"]
-            wheat_origin_inline1 = fetched_data["wheat_inline1"]
-            wheat_dest_inline1 = fetched_data["wheat_dest_inline1"]
-            coarseGrain_origin_inline1 = fetched_data["coarseGrain_inline1"]
-            coarseGrain_dest_inline1 = fetched_data["coarseGrain_dest_inline1"]
-            frk_origin_inline1 = fetched_data["frk_inline1"]
-            frk_dest_inline1 = fetched_data["frk_dest_inline1"]
-            frkrra_origin_inline1 = fetched_data["frkrra_inline1"]
-            frkrra_dest_inline1 = fetched_data["frkrra_dest_inline1"]
-            frkbr_origin_inline1 = fetched_data["frkbr_inline1"]
-            frkbr_dest_inline1 = fetched_data["frkbr_dest_inline1"]
-            wcgr_origin_inline1 = fetched_data["wcgr_inline1"]
-            wcgr_dest_inline1 = fetched_data["wcgr_dest_inline1"]
-            frkcgr_origin_inline1 = fetched_data["frkcgr_inline1"]
-            frkcgr_dest_inline1 = fetched_data["frkcgr_dest_inline1"]
-            rrc_origin_inline1 = fetched_data["rrc_InlineOrigin1"]
-            rrc_dest_inline1 = fetched_data["rrc_InlineDestination1"]
-            wheatrra_origin_inline1 = fetched_data["wheat_rra_InlineOrigin1"]
-            wheatrra_dest_inline1 = fetched_data["wheat_rra_InlineDestination1"]
-            ragi_origin_inline1 = fetched_data["ragi_InlineOrigin1"]
-            ragi_dest_inline1 = fetched_data["ragi_InlineDestination1"]
-            jowar_origin_inline1 = fetched_data["jowar_InlineOrigin1"]
-            jowar_dest_inline1 = fetched_data["jowar_InlineDestination1"]
-            bajra_origin_inline1 = fetched_data["bajra_InlineOrigin1"]
-            bajra_dest_inline1 = fetched_data["bajra_InlineDestination1"]
-            maize_origin_inline1 = fetched_data["maize_InlineOrigin1"]
-            maize_dest_inline1 = fetched_data["maize_InlineDestination1"]
-            misc1_origin_inline1 = fetched_data["misc1_InlineOrigin1"]
-            misc1_dest_inline1 = fetched_data["misc1_InlineDestination1"]
-            misc2_origin_inline1 = fetched_data["misc2_InlineOrigin1"]
-            misc2_dest_inline1 = fetched_data["misc2_InlineDestination1"]
-            wheaturs_origin_inline1 = fetched_data["wheaturs_InlineOrigin1"]
-            wheaturs_dest_inline1 = fetched_data["wheaturs_InlineDestination1"]
-            wheatfaq_origin_inline1 = fetched_data["wheatfaq_InlineOrigin1"]
-            wheatfaq_dest_inline1 = fetched_data["wheatfaq_InlineDestination1"]
-            frk_rra_origin_inline1 = fetched_data["frk_rra_InlineOrigin1"]
-            frk_rra_dest_inline1 = fetched_data["frk_rra_InlineDestination1"]
-            misc3_origin_inline1 = fetched_data["misc3_InlineOrigin1"]
-            misc3_dest_inline1 = fetched_data["misc3_InlineDestination1"]
-            misc4_origin_inline1 = fetched_data["misc4_InlineOrigin1"]
-            misc4_dest_inline1 = fetched_data["misc4_InlineDestination1"]
-
-            source_wheat1 = {}
-            for wheat in wheat_origin1:
-                if wheat["Value"] > 0:
-                    source_wheat1[wheat["origin_railhead"]] = wheat["Value"]
-
-            dest_wheat1 = {}
-            for i in range(len(wheat_dest1)):
-                if int(wheat_dest1[i]["Value"]) > 0:
-                    dest_wheat1[wheat_dest1[i]["origin_railhead"]] = int(wheat_dest1[i]["Value"])
-            
-            source_rra1 = {}
-            for rra in rra_origin1:
-                if rra["Value"] > 0:
-                    source_rra1[rra["origin_railhead"]] = rra["Value"]
-
-            dest_rra1 = {}
-            for i in range(len(rra_dest1)):
-                if int(rra_dest1[i]["Value"]) > 0:
-                    dest_rra1[rra_dest1[i]["origin_railhead"]] = int(rra_dest1[i]["Value"]) 
-
-            source_coarseGrain1 = {}
-            for coarseGrain in coarseGrain_origin1:
-                if coarseGrain["Value"] > 0:
-                    source_coarseGrain1[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
-
-            dest_coarseGrain1 = {}
-            for coarseGrain in coarseGrain_dest1:
-                if coarseGrain["Value"] > 0:
-                    dest_coarseGrain1[coarseGrain["origin_railhead"]] = coarseGrain["Value"]
-                     
-            source_frkrra1 = {}
-            for frkrra in frkrra_origin1:
-                if frkrra["Value"] > 0:
-                    source_frkrra1[frkrra["origin_railhead"]] = frkrra["Value"]
-
-            dest_frkrra1 = {}
-            for frkrra in frkrra_dest1:
-                if frkrra["Value"] > 0:
-                    dest_frkrra1[frkrra["origin_railhead"]] = frkrra["Value"]
- 
-            source_frkbr1 = {}
-            for frkbr in frkbr_origin1:
-                if frkbr["Value"] > 0:
-                    source_frkbr1[frkbr["origin_railhead"]] = frkbr["Value"]
-
-            dest_frkbr1 = {}
-            for frkbr in  frkbr_dest1:
-                if frkbr["Value"] > 0:
-                    dest_frkbr1[frkbr["origin_railhead"]] = frkbr["Value"]
-
-            source_frk1 = {}
-            for frk in frk_origin1:
-                if frk["Value"] > 0:
-                    source_frk1[frk["origin_railhead"]] = frk["Value"]
-
-            dest_frk1 = {}
-            for frk in  frk_dest1:
-                if frk["Value"] > 0:
-                    dest_frk1[frk["origin_railhead"]] = frk["Value"]
-
-            source_frkcgr1 = {}
-            for frkcgr in frkcgr_origin1:
-                if frkcgr["Value"] > 0:
-                    source_frkcgr1[frkcgr["origin_railhead"]] = frkcgr["Value"]
-
-            dest_frkcgr1 = {}
-            for frkcgr in  frkcgr_dest1:
-                if frkcgr["Value"] > 0:
-                    dest_frkcgr1[frkcgr["origin_railhead"]] = frkcgr["Value"]
-
-            source_wcgr1 = {}
-            for wcgr in wcgr_origin1:
-                if wcgr["Value"] > 0:
-                    source_wcgr1[wcgr["origin_railhead"]] = wcgr["Value"]
-
-            dest_wcgr1 = {}
-            for wcgr in  wcgr_dest1:
-                if wcgr["Value"] > 0:
-                    dest_wcgr1[wcgr["origin_railhead"]] = wcgr["Value"]
-
-            source_rrc1 = {}
-            for rrc in rrc_origin1:
-                if rrc["Value"] > 0:
-                    source_rrc1[rrc["origin_railhead"]] = rrc["Value"]
-
-            dest_rrc1 = {}
-            for rrc in rrc_dest1:
-                if rrc["Value"] > 0:
-                    dest_rrc1[rrc["origin_railhead"]] = rrc["Value"]
-
-            source_ragi1 = {}
-            for ragi in ragi_origin1:
-                if ragi["Value"] > 0:
-                    source_ragi1[ragi["origin_railhead"]] = ragi["Value"]
-
-            dest_ragi1 = {}
-            for ragi in ragi_dest1:
-                if ragi["Value"] > 0:
-                    dest_ragi1[ragi["origin_railhead"]] = ragi["Value"]
-
-            source_jowar1 = {}
-            for jowar in jowar_origin1:
-                if jowar["Value"] > 0:
-                    source_jowar1[jowar["origin_railhead"]] = jowar["Value"]
-
-            dest_jowar1 = {}
-            for jowar in jowar_dest1:
-                if jowar["Value"] > 0:
-                    dest_jowar1[jowar["origin_railhead"]] = jowar["Value"]
-
-            source_bajra1 = {}
-            for bajra in bajra_origin1:
-                if bajra["Value"] > 0:
-                    source_bajra1[bajra["origin_railhead"]] = bajra["Value"]
-
-            dest_bajra1 = {}
-            for bajra in bajra_dest:
-                if bajra["Value"] > 0:
-                    dest_bajra1[bajra["origin_railhead"]] = bajra["Value"]
-
-            source_maize1 = {}
-            for maize in maize_origin1:
-                if maize["Value"] > 0:
-                    source_maize1[maize["origin_railhead"]] = maize["Value"]
-
-            dest_maize1 = {}
-            for maize in maize_dest1:
-                if maize["Value"] > 0:
-                    dest_maize1[maize["origin_railhead"]] = maize["Value"]
-
-            source_misc11 = {}
-            for misc1 in misc1_origin1:
-                if misc1["Value"] > 0:
-                    source_misc11[misc1["origin_railhead"]] = misc1["Value"]
-
-            dest_misc11 = {}
-            for misc1 in misc1_dest1:
-                if misc1["Value"] > 0:
-                    dest_misc11[misc1["origin_railhead"]] = misc1["Value"]
-
-            source_misc21 = {}
-            for misc2 in misc2_origin1:
-                if misc2["Value"] > 0:
-                    source_misc21[misc2["origin_railhead"]] = misc2["Value"]
-
-            dest_misc21 = {}
-            for misc2 in misc2_dest1:
-                if misc2["Value"] > 0:
-                    dest_misc21[misc2["origin_railhead"]] = misc2["Value"]
-
-            source_wheaturs1 = {}
-            for wheat in wheaturs_origin1:
-                if wheat["Value"] > 0:
-                    source_wheaturs1[wheat["origin_railhead"]] = wheat["Value"]
-
-            dest_wheaturs1 = {}
-            for wheat in wheaturs_dest1:
-                if wheat["Value"] > 0:
-                    dest_wheaturs1[wheat["origin_railhead"]] = wheat["Value"]
-
-            source_wheatfaq1 = {}
-            for wheat in wheatfaq_origin1:
-                if wheat["Value"] > 0:
-                    source_wheatfaq1[wheat["origin_railhead"]] = wheat["Value"]
-
-            dest_wheatfaq1 = {}
-            for wheat in wheatfaq_dest1:
-                if wheat["Value"] > 0:
-                    dest_wheatfaq1[wheat["origin_railhead"]] = wheat["Value"]
-
-            source_wheatrra1 = {}
-            for wheat in wheatrra_origin1:
-                if wheat["Value"] > 0:
-                    source_wheatrra1[wheat["origin_railhead"]] = wheat["Value"]
-
-            dest_wheatrra1 = {}
-            for wheat in wheatrra_dest1:
-                if wheat["Value"] > 0:
-                    dest_wheatrra1[wheat["origin_railhead"]] = wheat["Value"]
-
-            source_frk_rra1 = {}
-            for wheat in frk_rra_origin1:
-                if wheat["Value"] > 0:
-                    source_frk_rra1[wheat["origin_railhead"]] = wheat["Value"]
-
-            dest_frk_rra1 = {}
-            for wheat in frk_rra_dest1:
-                if wheat["Value"] > 0:
-                    dest_frk_rra1[wheat["origin_railhead"]] = wheat["Value"]
-            
-            source_misc31 = {}
-            for misc3 in misc3_origin1:
-                if misc3["Value"] > 0:
-                    source_misc31[misc3["origin_railhead"]] = misc3["Value"]
-
-            dest_misc31 = {}
-            for misc3 in misc3_dest1:
-                if misc3["Value"] > 0:
-                    dest_misc31[misc3["origin_railhead"]] = misc3["Value"]
-            
-            source_misc41 = {}
-            for misc4 in misc4_origin1:
-                if misc4["Value"] > 0:
-                    source_misc41[misc4["origin_railhead"]] = misc4["Value"]
-
-            dest_misc41 = {}
-            for misc4 in misc4_dest1:
-                if misc4["Value"] > 0:
-                    dest_misc41[misc4["origin_railhead"]] = misc4["Value"]
-            
-            source_wheat_inline1 = {}
-            for i in range(len(wheat_origin_inline1)):
-                source_wheat_inline1[wheat_origin_inline1[i]["origin_railhead"]] = wheat_origin_inline1[i]["destination_railhead"]
-            
-            dest_wheat_inline1 = {}
-            for i in range(len(wheat_dest_inline1)):
-                dest_wheat_inline1[wheat_dest_inline1[i]["origin_railhead"]] = wheat_dest_inline1[i]["destination_railhead"]
-            
-            source_rra_inline1 = {}
-            for i in range(len(rra_origin_inline1)):
-                source_rra_inline1[rra_origin_inline1[i]["origin_railhead"]] = rra_origin_inline1[i]["destination_railhead"]
-
-            dest_rra_inline1 = {}
-            for i in range(len(rra_dest_inline1)):
-                dest_rra_inline1[rra_dest_inline1[i]["origin_railhead"]] = rra_dest_inline1[i]["destination_railhead"]
-
-            source_coarseGrain_inline1 = {}
-            for i in range(len(coarseGrain_origin_inline1)):
-                source_coarseGrain_inline1[coarseGrain_origin_inline1[i]["origin_railhead"]] = coarseGrain_origin_inline1[i]["destination_railhead"]
-            
-            dest_coarseGrain_inline1 = {}
-            for i in range(len(coarseGrain_dest_inline1)):
-                dest_coarseGrain_inline1[coarseGrain_dest_inline1[i]["origin_railhead"]] = coarseGrain_dest_inline1[i]["destination_railhead"]
-            
-            source_frkrra_inline1 = {}
-            for i in range(len(frkrra_origin_inline1)):
-                source_frkrra_inline1[frkrra_origin_inline1[i]["origin_railhead"]] = frkrra_origin_inline1[i]["destination_railhead"]
-            
-            dest_frkrra_inline1 = {}
-            for i in range(len(frkrra_dest_inline1)):
-                dest_frkrra_inline1[frkrra_dest_inline1[i]["origin_railhead"]] = frkrra_dest_inline1[i]["destination_railhead"]
-
-            source_frkbr_inline1 = {}
-            for i in range(len(frkbr_origin_inline1)):
-                source_frkbr_inline1[frkbr_origin_inline1[i]["origin_railhead"]] = frkbr_origin_inline1[i]["destination_railhead"]
-            
-            dest_frkbr_inline1 = {}
-            for i in range(len(frkbr_dest_inline1)):
-                dest_frkbr_inline1[frkbr_dest_inline1[i]["origin_railhead"]] = frkbr_dest_inline1[i]["destination_railhead"]
-
-            source_frk_inline1 = {}
-            for i in range(len(frk_origin_inline1)):
-                source_frk_inline1[frk_origin_inline1[i]["origin_railhead"]] = frk_origin_inline1[i]["destination_railhead"]
-            
-            dest_frk_inline1 = {}
-            for i in range(len(frk_dest_inline1)):
-                dest_frk_inline1[frk_dest_inline1[i]["origin_railhead"]] = frk_dest_inline1[i]["destination_railhead"]
-
-            source_frkcgr_inline1 = {}
-            for i in range(len(frkcgr_origin_inline1)):
-                source_frkcgr_inline1[frkcgr_origin_inline1[i]["origin_railhead"]] = frkcgr_origin_inline1[i]["destination_railhead"]
-            
-            dest_frkcgr_inline1 = {}
-            for i in range(len(frkcgr_dest_inline1)):
-                dest_frkcgr_inline1[frkcgr_dest_inline1[i]["origin_railhead"]] = frkcgr_dest_inline1[i]["destination_railhead"]
-
-            source_wcgr_inline1 = {}
-            for i in range(len(wcgr_origin_inline1)):
-                source_wcgr_inline1[wcgr_origin_inline1[i]["origin_railhead"]] = wcgr_origin_inline1[i]["destination_railhead"]
-            
-            dest_wcgr_inline1 = {}
-            for i in range(len(wcgr_dest_inline1)):
-                dest_wcgr_inline1[wcgr_dest_inline1[i]["origin_railhead"]] = wcgr_dest_inline1[i]["destination_railhead"]
-
-            source_rrc_inline1 = {}
-            for i in range(len(rrc_origin_inline1)):
-                source_rrc_inline1[rrc_origin_inline1[i]["origin_railhead"]] = rrc_origin_inline1[i]["destination_railhead"]
-            
-            dest_rrc_inline1 = {}
-            for i in range(len(rrc_dest_inline1)):
-                dest_rrc_inline1[rrc_dest_inline1[i]["origin_railhead"]] = rrc_dest_inline1[i]["destination_railhead"]
-                
-            source_ragi_inline1 = {}
-            for i in range(len(ragi_origin_inline1)):
-                source_ragi_inline1[ragi_origin_inline1[i]["origin_railhead"]] = ragi_origin_inline1[i]["destination_railhead"]
-            
-            dest_ragi_inline1 = {}
-            for i in range(len(ragi_dest_inline1)):
-                dest_ragi_inline1[ragi_dest_inline1[i]["origin_railhead"]] = ragi_dest_inline1[i]["destination_railhead"]
-
-            source_jowar_inline1 = {}
-            for i in range(len(jowar_origin_inline1)):
-                source_jowar_inline[jowar_origin_inline1[i]["origin_railhead"]] = jowar_origin_inline1[i]["destination_railhead"]
-            
-            dest_jowar_inline1 = {}
-            for i in range(len(jowar_dest_inline1)):
-                dest_jowar_inline1[jowar_dest_inline1[i]["origin_railhead"]] = jowar_dest_inline1[i]["destination_railhead"]
-
-            source_bajra_inline1 = {}
-            for i in range(len(bajra_origin_inline1)):
-                source_bajra_inline1[bajra_origin_inline1[i]["origin_railhead"]] = bajra_origin_inline1[i]["destination_railhead"]
-            
-            dest_bajra_inline1 = {}
-            for i in range(len(bajra_dest_inline1)):
-                dest_bajra_inline1[bajra_dest_inline1[i]["origin_railhead"]] = bajra_dest_inline1[i]["destination_railhead"]
-
-            source_maize_inline1 = {}
-            for i in range(len(maize_origin_inline1)):
-                source_maize_inline1[maize_origin_inline1[i]["origin_railhead"]] = maize_origin_inline1[i]["destination_railhead"]
-            
-            dest_maize_inline1 = {}
-            for i in range(len(maize_dest_inline1)):
-                dest_maize_inline1[maize_dest_inline1[i]["origin_railhead"]] = maize_dest_inline1[i]["destination_railhead"]
-
-            source_misc1_inline1 = {}
-            for i in range(len(misc1_origin_inline1)):
-                source_misc1_inline1[misc1_origin_inline1[i]["origin_railhead"]] = misc1_origin_inline1[i]["destination_railhead"]
-            
-            dest_misc1_inline1 = {}
-            for i in range(len(misc1_dest_inline1)):
-                dest_misc1_inline1[misc1_dest_inline1[i]["origin_railhead"]] = misc1_dest_inline1[i]["destination_railhead"]
-
-            source_misc2_inline1 = {}
-            for i in range(len(misc2_origin_inline1)):
-                source_misc2_inline1[misc2_origin_inline1[i]["origin_railhead"]] = misc2_origin_inline1[i]["destination_railhead"]
-            
-            dest_misc2_inline1 = {}
-            for i in range(len(misc2_dest_inline1)):
-                dest_misc2_inline1[misc2_dest_inline1[i]["origin_railhead"]] = misc2_dest_inline1[i]["destination_railhead"]
-
-            source_wheaturs_inline1 = {}
-            for i in range(len(wheaturs_origin_inline1)):
-                source_wheaturs_inline1[wheaturs_origin_inline1[i]["origin_railhead"]] = wheaturs_origin_inline1[i]["destination_railhead"]
-            
-            dest_wheaturs_inline1 = {}
-            for i in range(len(wheaturs_dest_inline1)):
-                dest_wheaturs_inline1[wheaturs_dest_inline1[i]["origin_railhead"]] = wheaturs_dest_inline1[i]["destination_railhead"]
-
-            source_wheatfaq_inline1 = {}
-            for i in range(len(wheatfaq_origin_inline1)):
-                source_wheatfaq_inline1[wheatfaq_origin_inline1[i]["origin_railhead"]] = wheatfaq_origin_inline1[i]["destination_railhead"]
-            
-            dest_wheatfaq_inline1 = {}
-            for i in range(len(wheatfaq_dest_inline1)):
-                dest_wheatfaq_inline1[wheatfaq_dest_inline1[i]["origin_railhead"]] = wheatfaq_dest_inline1[i]["destination_railhead"]
-
-            source_wheatrra_inline1 = {}
-            for i in range(len(wheatrra_origin_inline1)):
-                source_wheatrra_inline1[wheatrra_origin_inline1[i]["origin_railhead"]] = wheatrra_origin_inline1[i]["destination_railhead"]
-            
-            dest_wheatrra_inline1 = {}
-            for i in range(len(wheatrra_dest_inline1)):
-                dest_wheatrra_inline1[wheatrra_dest_inline1[i]["origin_railhead"]] = wheatrra_dest_inline1[i]["destination_railhead"]
-
-            source_frk_rra_inline1 = {}
-            for i in range(len(frk_rra_origin_inline1)):
-                source_frk_rra_inline1[frk_rra_origin_inline1[i]["origin_railhead"]] = frk_rra_origin_inline1[i]["destination_railhead"]
-            
-            dest_frk_rra_inline1 = {}
-            for i in range(len(frk_rra_dest_inline1)):
-                dest_frk_rra_inline1[frk_rra_dest_inline1[i]["origin_railhead"]] = frk_rra_dest_inline1[i]["destination_railhead"]
-            
-            source_misc3_inline1 = {}
-            for i in range(len(misc3_origin_inline1)):
-                source_misc3_inline1[misc3_origin_inline1[i]["origin_railhead"]] = misc3_origin_inline1[i]["destination_railhead"]
-            
-            dest_misc3_inline1 = {}
-            for i in range(len(misc3_dest_inline1)):
-                dest_misc3_inline1[misc3_dest_inline1[i]["origin_railhead"]] = misc3_dest_inline1[i]["destination_railhead"]
-            
-            source_misc4_inline1 = {}
-            for i in range(len(misc4_origin_inline1)):
-                source_misc4_inline1[misc4_origin_inline1[i]["origin_railhead"]] = misc4_origin_inline1[i]["destination_railhead"]
-            
-            dest_misc4_inline1 = {}
-            for i in range(len(misc4_dest_inline1)):
-                dest_misc4_inline1[misc4_dest_inline1[i]["origin_railhead"]] = misc4_dest_inline1[i]["destination_railhead"]
-
-            L110 = list(source_wheat_inline1.keys())
-            L210 = list(source_rra_inline1.keys())
-            L310 = list(source_coarseGrain_inline1.keys())
-            L410 = list(source_frkrra_inline1.keys())
-            L51 = list(source_frkbr_inline1.keys())
-            L61 = list(source_frk_inline1.keys())
-            L71 = list(source_frkcgr_inline1.keys())
-            L81 = list(source_wcgr_inline1.keys())
-            L91 = list(dest_wheat_inline1.keys())
-            L101 = list(dest_rra_inline1.keys())
-            L111 = list(dest_coarseGrain_inline1.keys())
-            L121 = list(dest_frkrra_inline1.keys())
-            L131 = list(dest_frkbr_inline1.keys())
-            L141 = list(dest_frk_inline1.keys())
-            L151 = list(dest_frkcgr_inline1.keys())
-            L161 = list(dest_wcgr_inline1.keys())
-
-            L171= list(source_rrc_inline1.keys())
-            L181 = list(dest_rrc_inline1.keys())
-            L191 = list(source_ragi_inline1.keys())
-            L201 = list(dest_ragi_inline1.keys())
-            L211 = list(source_jowar_inline1.keys())
-            L221 = list(dest_jowar_inline1.keys())
-            L231 = list(source_bajra_inline1.keys())
-            L241 = list(dest_bajra_inline1.keys())
-            L251 = list(source_maize_inline1.keys())
-            L261 = list(dest_maize_inline1.keys())
-            L271 = list(source_misc1_inline1.keys())
-            L281 = list(dest_misc1_inline1.keys())
-            L291 = list(source_misc2_inline1.keys())
-            L301 = list(dest_misc2_inline1.keys())
-            L311 = list(source_wheaturs_inline1.keys())
-            L321 = list(dest_wheaturs_inline1.keys())
-            L331 = list(source_wheatfaq_inline1.keys())
-            L341 = list(dest_wheatfaq_inline1.keys())
-            L351 = list(source_wheatrra_inline1.keys())
-            L361 = list(dest_wheatrra_inline1.keys())
-            L371 = list(source_frk_rra_inline1.keys())
-            L381 = list(dest_frk_rra_inline1.keys())
-            L391 = list(source_misc3_inline1.keys())
-            L401 = list(dest_misc3_inline1.keys())
-            L411 = list(source_misc4_inline1.keys())
-            L421 = list(dest_misc4_inline1.keys())
-
+            # storing inline data 58w in original format 
             list_src_wheat1 = []
             for i in L110:
                 Value = {}
@@ -3565,7 +3344,31 @@ def Daily_Planner():
             
             for i in list_dest_misc41:
                 dest_misc41[i] = 1
+
+            # LpVariables for 42w 
+            x_ij_wheat = LpVariable.dicts("x_wheat", [(i, j) for i in source_wheat.keys() for j in dest_wheat.keys()],lowBound = 0, cat="Integer")
+            x_ij_rra = LpVariable.dicts("x_rra", [(i, j) for i in source_rra.keys() for j in dest_rra.keys()],lowBound = 0, cat="Integer")
+            x_ij_coarseGrain = LpVariable.dicts("x_coarsegrain", [(i, j) for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()],lowBound = 0, cat="Integer")
+            x_ij_frkrra = LpVariable.dicts("x_frkrra", [(i, j) for i in source_frkrra.keys() for j in dest_frkrra.keys()],lowBound = 0, cat="Integer")
+            x_ij_frk_br=LpVariable.dicts("x_frk_br",[(i,j) for i in source_frkbr.keys() for j in dest_frkbr.keys()],lowBound = 0,cat="Integer")
+            x_ij_frk=LpVariable.dicts("x_frk",[(i,j) for i in source_frk.keys() for j in dest_frk.keys()],lowBound = 0,cat="Integer")
+            x_ij_frkcgr=LpVariable.dicts("x_frkcgr",[(i,j) for i in source_frkcgr.keys() for j in dest_frkcgr.keys()],lowBound = 0,cat="Integer")
+            x_ij_wcgr=LpVariable.dicts("x_wcgr",[(i,j) for i in source_wcgr.keys() for j in dest_wcgr.keys()],lowBound = 0,cat="Integer")
+            x_ij_rrc=LpVariable.dicts("x_rrc",[(i,j) for i in source_rrc.keys() for j in dest_rrc.keys()],lowBound = 0,cat="Integer")
+            x_ij_ragi=LpVariable.dicts("x_ragi",[(i,j) for i in source_ragi.keys() for j in dest_ragi.keys()],lowBound = 0,cat="Integer")
+            x_ij_jowar=LpVariable.dicts("x_jowar",[(i,j) for i in source_jowar.keys() for j in dest_jowar.keys()],lowBound = 0,cat="Integer")
+            x_ij_bajra=LpVariable.dicts("x_bajra",[(i,j) for i in source_bajra.keys() for j in dest_bajra.keys()],lowBound = 0,cat="Integer")
+            x_ij_maize=LpVariable.dicts("x_maize",[(i,j) for i in source_maize.keys() for j in dest_maize.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc1=LpVariable.dicts("x_misc1",[(i,j) for i in source_misc1.keys() for j in dest_misc1.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc2=LpVariable.dicts("x_misc2",[(i,j) for i in source_misc2.keys() for j in dest_misc2.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheaturs=LpVariable.dicts("x_wheaturs",[(i,j) for i in source_wheaturs.keys() for j in dest_wheaturs.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheatfaq=LpVariable.dicts("x_wheatfaq",[(i,j) for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()],lowBound = 0,cat="Integer")
+            x_ij_wheatrra=LpVariable.dicts("x_wheatrra",[(i,j) for i in source_wheatrra.keys() for j in dest_wheatrra.keys()],lowBound = 0,cat="Integer")
+            x_ij_frk_rra=LpVariable.dicts("x_frk_rra",[(i,j) for i in source_frk_rra.keys() for j in dest_frk_rra.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc3=LpVariable.dicts("x_misc3",[(i,j) for i in source_misc3.keys() for j in dest_misc3.keys()],lowBound = 0,cat="Integer")
+            x_ij_misc4=LpVariable.dicts("x_misc4",[(i,j) for i in source_misc4.keys() for j in dest_misc4.keys()],lowBound = 0,cat="Integer")
             
+            # LpVariable for 58w 
             x_ij_wheat1 = LpVariable.dicts("x_wheat1", [(i, j) for i in source_wheat1.keys() for j in dest_wheat1.keys()],lowBound = 0, cat="Integer")
             x_ij_rra1 = LpVariable.dicts("x_rra1", [(i, j) for i in source_rra1.keys() for j in dest_rra1.keys()],lowBound = 0, cat="Integer")
             x_ij_coarseGrain1 = LpVariable.dicts("x_coarsegrain1", [(i, j) for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()],lowBound = 0, cat="Integer")
@@ -3589,6 +3392,27 @@ def Daily_Planner():
             x_ij_misc41 = LpVariable.dicts("x_misc41",[(i,j) for i in source_misc41.keys() for j in dest_misc41.keys()],lowBound = 0,cat="Integer")
             
             prob += (
+                lpSum(x_ij_wheat[(i, j)] * rail_cost.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
+                lpSum(x_ij_rra[(i, j)] * rail_cost.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
+                lpSum(x_ij_coarseGrain[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()) +
+                lpSum(x_ij_frkrra[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
+                lpSum(x_ij_frk_br[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
+                lpSum(x_ij_frk[(i, j)] * rail_cost.loc[i][j] for i in source_frk.keys() for j in dest_frk.keys()) +
+                lpSum(x_ij_frkcgr[(i, j)] * rail_cost.loc[i][j] for i in source_frkcgr.keys() for j in dest_frkcgr.keys()) +
+                lpSum(x_ij_wcgr[(i, j)] * rail_cost.loc[i][j] for i in source_wcgr.keys() for j in dest_wcgr.keys()) +
+                lpSum(x_ij_rrc[(i, j)] * rail_cost.loc[i][j] for i in source_rrc.keys() for j in dest_rrc.keys()) +
+                lpSum(x_ij_ragi[(i, j)] * rail_cost.loc[i][j] for i in source_ragi.keys() for j in dest_ragi.keys()) +
+                lpSum(x_ij_jowar[(i, j)] * rail_cost.loc[i][j] for i in source_jowar.keys() for j in dest_jowar.keys()) +
+                lpSum(x_ij_bajra[(i, j)] * rail_cost.loc[i][j] for i in source_bajra.keys() for j in dest_bajra.keys()) +
+                lpSum(x_ij_maize[(i, j)] * rail_cost.loc[i][j] for i in source_maize.keys() for j in dest_maize.keys()) +
+                lpSum(x_ij_misc1[(i, j)] * rail_cost.loc[i][j] for i in source_misc1.keys() for j in dest_misc1.keys()) +
+                lpSum(x_ij_misc2[(i, j)] * rail_cost.loc[i][j] for i in source_misc2.keys() for j in dest_misc2.keys()) +
+                lpSum(x_ij_wheaturs[(i, j)] * rail_cost.loc[i][j] for i in source_wheaturs.keys() for j in dest_wheaturs.keys()) +
+                lpSum(x_ij_wheatfaq[(i, j)] * rail_cost.loc[i][j] for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()) +
+                lpSum(x_ij_wheatrra[(i, j)] * rail_cost.loc[i][j] for i in source_wheatrra.keys() for j in dest_wheatrra.keys()) +
+                lpSum(x_ij_frk_rra[(i, j)] * rail_cost.loc[i][j] for i in source_frk_rra.keys() for j in dest_frk_rra.keys()) +
+                lpSum(x_ij_misc3[(i, j)] * rail_cost.loc[i][j] for i in source_misc3.keys() for j in dest_misc3.keys()) +
+                lpSum(x_ij_misc4[(i, j)] * rail_cost.loc[i][j] for i in source_misc4.keys() for j in dest_misc4.keys()) +
                 lpSum(x_ij_wheat1[(i, j)] * rail_cost.loc[i][j] for i in source_wheat1.keys() for j in dest_wheat1.keys()) +
                 lpSum(x_ij_rra1[(i, j)] * rail_cost.loc[i][j] for i in source_rra1.keys() for j in dest_rra1.keys()) +
                 lpSum(x_ij_coarseGrain1[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()) +
@@ -3612,6 +3436,53 @@ def Daily_Planner():
                 lpSum(x_ij_misc41[(i, j)] * rail_cost.loc[i][j] for i in source_misc41.keys() for j in dest_misc41.keys()) 
             )
             
+            # for route blocking 42w indents 
+            for i in range(len(blocked_org_rhcode)):
+                commodity = blocked_data[i]["Commodity"]
+                if commodity == "Wheat":
+                    prob += x_ij_wheat[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "RRA":
+                    prob += x_ij_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Coarse Grains":
+                    prob += x_ij_coarseGrain[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK RRA":
+                    prob += x_ij_frkrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK BR":
+                    prob += x_ij_frk_br[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat+FRK":
+                    prob += x_ij_frk[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK+CGR":
+                    prob += x_ij_frkcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "RRC":
+                    prob += x_ij_rrc[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat+CGR":
+                    prob += x_ij_wcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Ragi":
+                    prob += x_ij_ragi[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Jowar":
+                    prob += x_ij_jowar[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Bajra":
+                    prob += x_ij_bajra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Maize":
+                    prob += x_ij_maize[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc1":
+                    prob += x_ij_misc1[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc2":
+                    prob += x_ij_misc2[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat(URS)":
+                    prob += x_ij_wheaturs[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat(FAQ)":
+                    prob += x_ij_wheatfaq[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat+RRA":
+                    prob += x_ij_wheatrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK+RRA":
+                    prob += x_ij_frk_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc3":
+                    prob += x_ij_misc3[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc4":
+                    prob += x_ij_misc4[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+            
+            # for route blocking of 58w
             for i in range(len(blocked_org_rhcode1)):
                 commodity = blocked_data1[i]["Commodity"]
                 if commodity == "Wheat":
@@ -3656,6 +3527,144 @@ def Daily_Planner():
                     prob += x_ij_misc31[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
                 elif commodity == "Misc4":
                     prob += x_ij_misc41[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+
+            for i in source_wheat.keys():
+                prob += lpSum(x_ij_wheat[(i, j)] for j in dest_wheat.keys()) <= source_wheat[i]
+             
+            for i in dest_wheat.keys():
+                prob += lpSum(x_ij_wheat[(j, i)] for j in source_wheat.keys()) >= dest_wheat[i]
+
+            for i in source_rra.keys():
+                prob += lpSum(x_ij_rra[(i, j)] for j in dest_rra.keys()) <= source_rra[i]
+
+            for i in dest_rra.keys():
+                prob += lpSum(x_ij_rra[(j, i)] for j in source_rra.keys()) >= dest_rra[i]
+
+            for i in source_coarseGrain.keys():
+                prob += lpSum(x_ij_coarseGrain[(i, j)] for j in dest_coarseGrain.keys()) <= source_coarseGrain[i]
+
+            for i in dest_coarseGrain.keys():
+                prob += lpSum(x_ij_coarseGrain[(j, i)] for j in source_coarseGrain.keys()) >= dest_coarseGrain[i]
+            
+            for i in source_frkrra.keys():
+                prob += lpSum(x_ij_frkrra[(i, j)] for j in dest_frkrra.keys()) <= source_frkrra[i]
+            
+            for i in dest_frkrra.keys():
+                prob += lpSum(x_ij_frkrra[(j, i)] for j in source_frkrra.keys()) >= dest_frkrra[i]
+
+            for i in source_frkbr.keys():
+                prob += lpSum(x_ij_frk_br[(i, j)] for j in dest_frkbr.keys()) <= source_frkbr[i]
+
+            for i in dest_frkbr.keys():
+                prob += lpSum(x_ij_frk_br[(j, i)] for j in source_frkbr.keys()) >= dest_frkbr[i] 
+
+            for i in source_frk.keys():
+                prob += lpSum(x_ij_frk[(i, j)] for j in dest_frk.keys()) <= source_frk[i]
+
+            for i in dest_frk.keys():
+                prob += lpSum(x_ij_frk[(j, i)] for j in source_frk.keys()) >= dest_frk[i] 
+
+            for i in source_frkcgr.keys():
+                prob += lpSum(x_ij_frkcgr[(i, j)] for j in dest_frkcgr.keys()) <= source_frkcgr[i]
+
+            for i in dest_frkcgr.keys():
+                prob += lpSum(x_ij_frkcgr[(j, i)] for j in source_frkcgr.keys()) >= dest_frkcgr[i] 
+
+            for i in source_wcgr.keys():
+                prob += lpSum(x_ij_wcgr[(i, j)] for j in dest_wcgr.keys()) <= source_wcgr[i]
+
+            for i in dest_wcgr.keys():
+                prob += lpSum(x_ij_wcgr[(j, i)] for j in source_wcgr.keys()) >= dest_wcgr[i] 
+
+            for i in source_rrc.keys():
+                prob += lpSum(x_ij_rrc[(i, j)] for j in dest_rrc.keys()) <= source_rrc[i]
+
+            for i in dest_rrc.keys():
+                prob += lpSum(x_ij_rrc[(j, i)] for j in source_rrc.keys()) >= dest_rrc[i] 
+
+            for i in source_ragi.keys():
+                prob += lpSum(x_ij_ragi[(i, j)] for j in dest_ragi.keys()) <= source_ragi[i]
+
+            for i in dest_ragi.keys():
+                prob += lpSum(x_ij_ragi[(j, i)] for j in source_ragi.keys()) >= dest_ragi[i] 
+                
+            for i in source_jowar.keys():
+                prob += lpSum(x_ij_jowar[(i, j)] for j in dest_jowar.keys()) <= source_jowar[i]
+
+            for i in dest_jowar.keys():
+                prob += lpSum(x_ij_jowar[(j, i)] for j in source_jowar.keys()) >= dest_jowar[i] 
+
+            for i in source_bajra.keys():
+                prob += lpSum(x_ij_bajra[(i, j)] for j in dest_bajra.keys()) <= source_bajra[i]
+
+            for i in dest_bajra.keys():
+                prob += lpSum(x_ij_bajra[(j, i)] for j in source_bajra.keys()) >= dest_bajra[i] 
+
+            for i in source_maize.keys():
+                prob += lpSum(x_ij_maize[(i, j)] for j in dest_maize.keys()) <= source_maize[i]
+
+            for i in dest_maize.keys():
+                prob += lpSum(x_ij_maize[(j, i)] for j in source_maize.keys()) >= dest_maize[i] 
+
+            for i in source_misc1.keys():
+                prob += lpSum(x_ij_misc1[(i, j)] for j in dest_misc1.keys()) <= source_misc1[i]
+
+            for i in dest_misc1.keys():
+                prob += lpSum(x_ij_misc1[(j, i)] for j in source_misc1.keys()) >= dest_misc1[i] 
+
+            for i in source_misc2.keys():
+                prob += lpSum(x_ij_misc2[(i, j)] for j in dest_misc2.keys()) <= source_misc2[i]
+
+            for i in dest_misc2.keys():
+                prob += lpSum(x_ij_misc2[(j, i)] for j in source_misc2.keys()) >= dest_misc2[i] 
+
+            for i in source_wheaturs.keys():
+                prob += lpSum(x_ij_wheaturs[(i, j)] for j in dest_wheaturs.keys()) <= source_wheaturs[i]
+
+            for i in dest_wheaturs.keys():
+                prob += lpSum(x_ij_wheaturs[(j, i)] for j in source_wheaturs.keys()) >= dest_wheaturs[i] 
+
+            for i in source_wheatfaq.keys():
+                prob += lpSum(x_ij_wheatfaq[(i, j)] for j in dest_wheatfaq.keys()) <= source_wheatfaq[i]
+
+            for i in dest_wheatfaq.keys():
+                prob += lpSum(x_ij_wheatfaq[(j, i)] for j in source_wheatfaq.keys()) >= dest_wheatfaq[i] 
+
+            for i in source_wheatrra.keys():
+                prob += lpSum(x_ij_wheatrra[(i, j)] for j in dest_wheatrra.keys()) <= source_wheatrra[i]
+
+            for i in dest_wheatrra.keys():
+                prob += lpSum(x_ij_wheatrra[(j, i)] for j in source_wheatrra.keys()) >= dest_wheatrra[i] 
+
+            for i in source_frk_rra.keys():
+                prob += lpSum(x_ij_frk_rra[(i, j)] for j in dest_frk_rra.keys()) <= source_frk_rra[i]
+
+            for i in dest_frk_rra.keys():
+                prob += lpSum(x_ij_frk_rra[(j, i)] for j in source_frk_rra.keys()) >= dest_frk_rra[i] 
+            
+            for i in source_misc3.keys():
+                prob += lpSum(x_ij_misc3[(i, j)] for j in dest_misc3.keys()) <= source_misc3[i]
+
+            for i in dest_misc3.keys():
+                prob += lpSum(x_ij_misc3[(j, i)] for j in source_misc3.keys()) >= dest_misc3[i] 
+            
+            for i in source_misc4.keys():
+                prob += lpSum(x_ij_misc4[(i, j)] for j in dest_misc4.keys()) <= source_misc4[i]
+
+            for i in dest_misc4.keys():
+                prob += lpSum(x_ij_misc4[(j, i)] for j in source_misc4.keys()) >= dest_misc4[i] 
+
+            # prob.writeLP("FCI_daily_model_allocation.lp")
+            # # prob.solve(CPLEX())
+            # prob.solve()
+            # print("Status for 42w:", LpStatus[prob.status])
+            # print("Minimum Cost of Transportation for 42w = Rs.", prob.objective.value(), "Lakh")
+            # print("Total Number of Variables for 42w:", len(prob.variables()))
+            # print("Total Number of Constraints for 42w:", len(prob.constraints))
+
+            # prob += (
+                
+            # )
 
             for i in source_wheat1.keys():
                 prob += lpSum(x_ij_wheat1[(i, j)] for j in dest_wheat1.keys()) <= source_wheat1[i]
@@ -3784,11 +3793,12 @@ def Daily_Planner():
                 prob += lpSum(x_ij_misc41[(j, i)] for j in source_misc41.keys()) >= dest_misc41[i] 
             
             # prob.solve(CPLEX())
+            prob.writeLP("FCI_daily_model_allocation.lp")
             prob.solve()
-            print("Status for 58w:", LpStatus[prob.status])
-            print("Minimum Cost of Transportation for 58w= Rs.", prob.objective.value(), "Lakh")
-            print("Total Number of Variables for 58w:", len(prob.variables()))
-            print("Total Number of Constraints for 58w:", len(prob.constraints))
+            print("Status: ", LpStatus[prob.status])
+            print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
+            print("Total Number of Variables:", len(prob.variables()))
+            print("Total Number of Constraints:", len(prob.constraints))
            
             # dataframe for 42 wagon
             df_wheat = pd.DataFrame()
@@ -3978,7 +3988,7 @@ def Daily_Planner():
                 for j in range(len(df_wheat["SourceRailHead"])):
                     if (i.split("_")[0] == df_wheat.iloc[j]["SourceRailHead"] or source_wheat_inline[i].split("_")[0] == df_wheat.iloc[j]["SourceRailHead"]):
                         df_wheat.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_wheat_inline[i].split("_")[0])
-            print(df_wheat)
+            
             df_wheat1 = pd.DataFrame()
             From = []
             To = []
@@ -11198,27 +11208,27 @@ def Daily_Planner():
                     if (i.split("_")[0] == df_misc41.iloc[j]["SourceRailHead"] or source_misc4_inline1[i].split("_")[0] == df_misc41.iloc[j]["SourceRailHead"]):
                         df_misc41.loc[j, 'SourceRailHead'] = (i.split("_")[0] + '+' + source_misc4_inline1[i].split("_")[0])
 
-            data1["rra"] = df_rra
-            data1["wheat"] = df_wheat
-            data1["coarse grain"] = df_CoarseGrain
-            data1["FRK RRA"] = df_frkrra
-            data1["FRK BR"] = df_frkbr
-            data1["FRK"] = df_frk
-            data1["FRK+CGR"] = df_frkcgr
-            data1["W+CGR"] = df_wcgr
-            data1["RRC"] = df_rrc
-            data1["wheat_urs"] = df_wheaturs
-            data1["wheat_faq"] = df_wheatfaq
-            data1["Ragi"] = df_ragi
-            data1["Jowar"] = df_jowar
-            data1["Bajra"] = df_bajra
-            data1["Maize"] = df_maize
-            data1["Misc1"] = df_misc1
-            data1["Misc2"] = df_misc2
-            data1["Wheat+RRA"] = df_wheatrra
-            data1["FRK+RRA"] = df_frk_rra
-            data1["Misc3"] = df_misc3
-            data1["Misc4"] = df_misc4
+            dataDaily["rra"] = df_rra
+            dataDaily["wheat"] = df_wheat
+            dataDaily["coarse grain"] = df_CoarseGrain
+            dataDaily["FRK RRA"] = df_frkrra
+            dataDaily["FRK BR"] = df_frkbr
+            dataDaily["FRK"] = df_frk
+            dataDaily["FRK+CGR"] = df_frkcgr
+            dataDaily["W+CGR"] = df_wcgr
+            dataDaily["RRC"] = df_rrc
+            dataDaily["wheat_urs"] = df_wheaturs
+            dataDaily["wheat_faq"] = df_wheatfaq
+            dataDaily["Ragi"] = df_ragi
+            dataDaily["Jowar"] = df_jowar
+            dataDaily["Bajra"] = df_bajra
+            dataDaily["Maize"] = df_maize
+            dataDaily["Misc1"] = df_misc1
+            dataDaily["Misc2"] = df_misc2
+            dataDaily["Wheat+RRA"] = df_wheatrra
+            dataDaily["FRK+RRA"] = df_frk_rra
+            dataDaily["Misc3"] = df_misc3
+            dataDaily["Misc4"] = df_misc4
             
             with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                 df_wheat.to_excel(writer, sheet_name="wheat", index=False)
@@ -11263,10 +11273,12 @@ def Daily_Planner():
                 df_frk_rra1.to_excel(writer, sheet_name="frk+rra_58w", index=False)
                 df_misc31.to_excel(writer, sheet_name="misc3_58w", index=False)
                 df_misc41.to_excel(writer, sheet_name="misc4_58w", index=False)
-            data1["status"] = 1
+
+            dataDaily["status"] = 1
+
         except Exception as e:
             print(e)
-            data1["status"] = 0
+            dataDaily["status"] = 0
 
         commodity_data = {
         'wheat': [df_wheat, df_wheat1],
@@ -11400,7 +11412,7 @@ def create_road_plan():
             
             print(supply.index, supply.columns)
 
-            prob=LpProblem("FCI_monthly_allocation_rail",LpMinimize)
+            prob=LpProblem("FCI_monthly_allocation_road",LpMinimize)
 
             commodity = ["r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
             cmd_match = {"r(rra)":"Rice RRA","r(frkrra)":"Rice FRKRRA","r(frkbr)":"Rice FRKBR","r(rrc)":"Rice RRC","m(bajra)":"Millets Bajra","m(ragi)":"Millets Ragi","m(jowar)":"Millets Jowar","m(maize)":"Millets Maize","misc1":"Misc 1","misc2":"Misc 2"}
