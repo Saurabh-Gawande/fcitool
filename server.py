@@ -600,8 +600,8 @@ def Monthly_Solution():
 
             with pd.ExcelWriter(excel_file_name, engine="openpyxl") as writer:
                 for k in commodity:
-                    df_k[k].to_excel(writer,sheet_name=cmd_match[k],index=False)
-                rh_tag.to_excel(writer, sheet_name="RH_RH_tag",index=False)
+                    df_k[k].to_excel(writer,sheet_name=cmd_match[k],index=True)
+                rh_tag.to_excel(writer, sheet_name="RH_RH_tag",index=True)
             
         except Exception as e:
             print(e)
@@ -612,6 +612,7 @@ def Monthly_Solution():
         return jsonify({"message": "Success"})
 
 all_commodity_data = {} #for collecting data related to daily_planner
+status ={}
 @app.route("/Daily_Planner",methods = ["POST","GET"]) # route for daily planner 
 def Daily_Planner():
     dataDaily = {}
@@ -3435,99 +3436,7 @@ def Daily_Planner():
                 lpSum(x_ij_misc31[(i, j)] * rail_cost.loc[i][j] for i in source_misc31.keys() for j in dest_misc31.keys()) +
                 lpSum(x_ij_misc41[(i, j)] * rail_cost.loc[i][j] for i in source_misc41.keys() for j in dest_misc41.keys()) 
             )
-            
-            # for route blocking 42w indents 
-            for i in range(len(blocked_org_rhcode)):
-                commodity = blocked_data[i]["Commodity"]
-                if commodity == "Wheat":
-                    prob += x_ij_wheat[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "RRA":
-                    prob += x_ij_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Coarse Grains":
-                    prob += x_ij_coarseGrain[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK RRA":
-                    prob += x_ij_frkrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK BR":
-                    prob += x_ij_frk_br[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat+FRK":
-                    prob += x_ij_frk[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK+CGR":
-                    prob += x_ij_frkcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "RRC":
-                    prob += x_ij_rrc[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat+CGR":
-                    prob += x_ij_wcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Ragi":
-                    prob += x_ij_ragi[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Jowar":
-                    prob += x_ij_jowar[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Bajra":
-                    prob += x_ij_bajra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Maize":
-                    prob += x_ij_maize[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc1":
-                    prob += x_ij_misc1[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc2":
-                    prob += x_ij_misc2[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat(URS)":
-                    prob += x_ij_wheaturs[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat(FAQ)":
-                    prob += x_ij_wheatfaq[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Wheat+RRA":
-                    prob += x_ij_wheatrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "FRK+RRA":
-                    prob += x_ij_frk_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc3":
-                    prob += x_ij_misc3[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-                elif commodity == "Misc4":
-                    prob += x_ij_misc4[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
-            
-            # for route blocking of 58w
-            for i in range(len(blocked_org_rhcode1)):
-                commodity = blocked_data1[i]["Commodity"]
-                if commodity == "Wheat":
-                    prob += x_ij_wheat1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "RRA":
-                    prob += x_ij_rra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Coarse Grains":
-                    prob += x_ij_coarseGrain1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "FRK RRA":
-                    prob += x_ij_frkrra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "FRK BR":
-                    prob += x_ij_frk_br1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Wheat+FRK":
-                    prob += x_ij_frk1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "FRK+CGR":
-                    prob += x_ij_frkcgr1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "RRC":
-                    prob += x_ij_rrc1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Wheat+CGR":
-                    prob += x_ij_wcgr1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Ragi":
-                    prob += x_ij_ragi1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Jowar":
-                    prob += x_ij_jowar1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Bajra":
-                    prob += x_ij_bajra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Maize":
-                    prob += x_ij_maize1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Misc1":
-                    prob += x_ij_misc11[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Misc2":
-                    prob += x_ij_misc21[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Wheat(URS)":
-                    prob += x_ij_wheaturs1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Wheat(FAQ)":
-                    prob += x_ij_wheatfaq1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Wheat+RRA":
-                    prob += x_ij_wheatrra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "FRK+RRA":
-                    prob += x_ij_frk_rra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Misc3":
-                    prob += x_ij_misc31[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-                elif commodity == "Misc4":
-                    prob += x_ij_misc41[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
-
+             
             for i in source_wheat.keys():
                 prob += lpSum(x_ij_wheat[(i, j)] for j in dest_wheat.keys()) <= source_wheat[i]
              
@@ -3653,18 +3562,6 @@ def Daily_Planner():
 
             for i in dest_misc4.keys():
                 prob += lpSum(x_ij_misc4[(j, i)] for j in source_misc4.keys()) >= dest_misc4[i] 
-
-            # prob.writeLP("FCI_daily_model_allocation.lp")
-            # # prob.solve(CPLEX())
-            # prob.solve()
-            # print("Status for 42w:", LpStatus[prob.status])
-            # print("Minimum Cost of Transportation for 42w = Rs.", prob.objective.value(), "Lakh")
-            # print("Total Number of Variables for 42w:", len(prob.variables()))
-            # print("Total Number of Constraints for 42w:", len(prob.constraints))
-
-            # prob += (
-                
-            # )
 
             for i in source_wheat1.keys():
                 prob += lpSum(x_ij_wheat1[(i, j)] for j in dest_wheat1.keys()) <= source_wheat1[i]
@@ -3792,10 +3689,104 @@ def Daily_Planner():
             for i in dest_misc41.keys():
                 prob += lpSum(x_ij_misc41[(j, i)] for j in source_misc41.keys()) >= dest_misc41[i] 
             
+            # for route blocking 42w indents 
+            for i in range(len(blocked_org_rhcode)):
+                commodity = blocked_data[i]["Commodity"]
+                print(commodity)
+                if commodity == "Wheat":
+                    prob += x_ij_wheat[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "RRA": 
+                    prob += x_ij_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Coarse Grains":
+                    prob += x_ij_coarseGrain[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK RRA":
+                    prob += x_ij_frkrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK BR":
+                    prob += x_ij_frk_br[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat+FRK":
+                    prob += x_ij_frk[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK+CGR":
+                    prob += x_ij_frkcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "RRC":
+                    prob += x_ij_rrc[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat+CGR":
+                    prob += x_ij_wcgr[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Ragi":
+                    prob += x_ij_ragi[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Jowar":
+                    prob += x_ij_jowar[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Bajra":
+                    prob += x_ij_bajra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Maize":
+                    prob += x_ij_maize[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc1":
+                    prob += x_ij_misc1[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc2":
+                    prob += x_ij_misc2[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat(URS)":
+                    prob += x_ij_wheaturs[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat(FAQ)":
+                    prob += x_ij_wheatfaq[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Wheat+RRA":
+                    prob += x_ij_wheatrra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "FRK+RRA":
+                    prob += x_ij_frk_rra[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc3":
+                    prob += x_ij_misc3[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+                elif commodity == "Misc4":
+                    prob += x_ij_misc4[(blocked_org_rhcode[i], blocked_dest_rhcode[i])] == 0
+            
+            # for route blocking of 58w
+            for i in range(len(blocked_org_rhcode1)):
+                commodity = blocked_data1[i]["Commodity"]
+                if commodity == "Wheat":
+                    prob += x_ij_wheat1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "RRA":
+                    prob += x_ij_rra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Coarse Grains":
+                    prob += x_ij_coarseGrain1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK RRA":
+                    prob += x_ij_frkrra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK BR":
+                    prob += x_ij_frk_br1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat+FRK":
+                    prob += x_ij_frk1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK+CGR":
+                    prob += x_ij_frkcgr1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "RRC":
+                    prob += x_ij_rrc1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat+CGR":
+                    prob += x_ij_wcgr1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Ragi":
+                    prob += x_ij_ragi1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Jowar":
+                    prob += x_ij_jowar1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Bajra":
+                    prob += x_ij_bajra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Maize":
+                    prob += x_ij_maize1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc1":
+                    prob += x_ij_misc11[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc2":
+                    prob += x_ij_misc21[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat(URS)":
+                    prob += x_ij_wheaturs1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat(FAQ)":
+                    prob += x_ij_wheatfaq1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Wheat+RRA":
+                    prob += x_ij_wheatrra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "FRK+RRA":
+                    prob += x_ij_frk_rra1[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc3":
+                    prob += x_ij_misc31[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+                elif commodity == "Misc4":
+                    prob += x_ij_misc41[(blocked_org_rhcode1[i], blocked_dest_rhcode1[i])] == 0
+
             # prob.solve(CPLEX())
             prob.writeLP("FCI_daily_model_allocation.lp")
             prob.solve()
-            print("Status: ", LpStatus[prob.status])
+            status = LpStatus[prob.status]
+            print("Status: ", status)
             print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
             print("Total Number of Variables:", len(prob.variables()))
             print("Total Number of Constraints:", len(prob.constraints))
@@ -11311,8 +11302,7 @@ def Daily_Planner():
                 all_commodity_data[name] = merged_df.to_dict(orient='records')
             else:
                 all_commodity_data[name] = df.to_dict(orient='records')
-
-        # print(all_commodity_data)
+        all_commodity_data['status'] = LpStatus[prob.status]
 
         return jsonify(all_commodity_data)
     else:

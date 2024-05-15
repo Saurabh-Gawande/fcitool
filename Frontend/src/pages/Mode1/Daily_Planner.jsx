@@ -44,6 +44,7 @@ function Daily_Planner() {
   const [totalDeficitInlineRailhead2, setTotalDeficitInlineRailhead2] =
     useState([]);
   const [deficitInlineCommodity, setDeficitInlineCommodity] = useState();
+  const [status, setStaus] = useState();
 
   const ProjectIp = config.serverUrl;
   const [fixed_data, setFixeddata] = useState([]);
@@ -2250,7 +2251,9 @@ function Daily_Planner() {
     })
       .then((response) => response.json())
       .then((data) => {
-        set_Total_Result(data);
+        const { status, ...filteredData } = data;
+        set_Total_Result(filteredData);
+        setStaus(status);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -7071,7 +7074,7 @@ function Daily_Planner() {
                   <p>{misc4DestinationValue1}</p>
                 </div>
               ) : null}
-
+              <div style={{ fontWeight: "bold" }}>{status}</div>
               {progress.map((progress) => (
                 <div>{progress}</div>
               ))}
