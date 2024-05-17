@@ -2252,13 +2252,32 @@ function Daily_Planner() {
       .then((response) => response.json())
       .then((data) => {
         const { status, ...filteredData } = data;
-        set_Total_Result(filteredData);
+        // set_Total_Result(filteredData);
         setStaus(status);
+        const split = splitObjects(filteredData);
+        set_Total_Result(split);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
+
+  function splitObjects(commodityData) {
+    const result = {};
+
+    for (const commodity in commodityData) {
+      const commodityArray = commodityData[commodity];
+      result[commodity] = [];
+
+      commodityArray.forEach((obj) => {
+        for (let i = 0; i < obj.Rakes; i++) {
+          result[commodity].push({ ...obj, Rakes: 1 });
+        }
+      });
+    }
+
+    return result;
+  }
 
   const fetchReservationId_Revelant_result = () => {
     var form = new FormData();
