@@ -19,6 +19,7 @@ function Monthly_Solution() {
   const [showMessage, setShowMessage] = useState(false);
   const [commodiyCountData, setCommodityCountData] = useState([]);
   const [monthlyDataCollection, setMonthlyDataCollection] = useState([]);
+  const [stateRestrictionList, setStateRestrictionList] = useState([]);
 
   const handleFileChange = (e) => {
     setFileSelected(e.target.files[0]);
@@ -68,11 +69,17 @@ function Monthly_Solution() {
       )
         .then((res) => res.json())
         .then((data) => setMonthlyDataCollection(data));
+
+      fetch(
+        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/StateRestrictionList"
+      )
+        .then((res) => res.json())
+        .then((data) => setStateRestrictionList(data));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
+  console.log(stateRestrictionList);
   useEffect(() => {
     if (importedFile1) {
       const uploadFile = async () => {
@@ -193,6 +200,7 @@ function Monthly_Solution() {
     const payload = {
       TEFD: TEFD,
       type: type,
+      stateRestrictionList,
     };
 
     try {
@@ -232,6 +240,7 @@ function Monthly_Solution() {
       .then((response) => response.json())
       .then((data) => {
         const fetched_Relevant_Result = data;
+        console.log(data);
         set_Relevant_Result(fetched_Relevant_Result);
       })
       .catch((error) => {

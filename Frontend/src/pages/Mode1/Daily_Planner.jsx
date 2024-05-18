@@ -2252,7 +2252,6 @@ function Daily_Planner() {
       .then((response) => response.json())
       .then((data) => {
         const { status, ...filteredData } = data;
-        // set_Total_Result(filteredData);
         setStaus(status);
         const split = splitObjects(filteredData);
         set_Total_Result(split);
@@ -2271,7 +2270,14 @@ function Daily_Planner() {
 
       commodityArray.forEach((obj) => {
         for (let i = 0; i < obj.Rakes; i++) {
-          result[commodity].push({ ...obj, Rakes: 1 });
+          const newObject = { ...obj, Rakes: 1 };
+          newObject.SourceIndentId = obj.SourceIndentId
+            ? obj.SourceIndentId[i]
+            : undefined;
+          newObject.DestinationIndentId = obj.DestinationIndentId
+            ? obj.DestinationIndentId[i]
+            : undefined;
+          result[commodity].push(newObject);
         }
       });
     }
@@ -2644,6 +2650,7 @@ function Daily_Planner() {
               sourceId: item.sourceId,
               rake: item.rake,
               sourceMergingId: item.sourceMergingId,
+              sourceIndentIds: item.sourceIndentIds,
             }));
             setSurplus(updatedSurplus);
           }
@@ -2659,6 +2666,7 @@ function Daily_Planner() {
               destinationId: item.destinationId,
               rake: item.rake,
               destinationMergingId: item.destinationMergingId,
+              destinationIndentIds: item.destinationIndentIds,
             }));
             setDeficit(updatedDeficit);
           }
@@ -2679,6 +2687,7 @@ function Daily_Planner() {
                 sourceId: item.sourceId,
                 rake: item.rake,
                 sourceMergingId: item.sourceMergingId,
+                sourceIndentIds: item.sourceIndentIds,
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -2700,6 +2709,7 @@ function Daily_Planner() {
                 destinationId: item.destinationId,
                 rake: item.rake,
                 destinationMergingId: item.destinationMergingId,
+                destinationIndentIds: item.destinationIndentIds,
               })
             );
             setDeficitInline(updatedDeficitInline);
