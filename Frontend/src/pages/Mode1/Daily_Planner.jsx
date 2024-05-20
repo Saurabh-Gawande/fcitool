@@ -2263,6 +2263,8 @@ function Daily_Planner() {
 
   function splitObjects(commodityData) {
     const result = {};
+    const usedSourceIndentIds = new Set();
+    const usedDestinationIndentIds = new Set();
 
     for (const commodity in commodityData) {
       const commodityArray = commodityData[commodity];
@@ -2271,12 +2273,31 @@ function Daily_Planner() {
       commodityArray.forEach((obj) => {
         for (let i = 0; i < obj.Rakes; i++) {
           const newObject = { ...obj, Rakes: 1 };
-          newObject.SourceIndentId = obj.SourceIndentId
-            ? obj.SourceIndentId[i]
-            : undefined;
-          newObject.DestinationIndentId = obj.DestinationIndentId
-            ? obj.DestinationIndentId[i]
-            : undefined;
+
+          if (obj.SourceIndentId && obj.SourceIndentId.length > 0) {
+            let sourceIndentId;
+            for (const id of obj.SourceIndentId) {
+              if (!usedSourceIndentIds.has(id)) {
+                sourceIndentId = id;
+                usedSourceIndentIds.add(id);
+                break;
+              }
+            }
+            newObject.SourceIndentId = sourceIndentId;
+          }
+
+          if (obj.DestinationIndentId && obj.DestinationIndentId.length > 0) {
+            let destinationIndentId;
+            for (const id of obj.DestinationIndentId) {
+              if (!usedDestinationIndentIds.has(id)) {
+                destinationIndentId = id;
+                usedDestinationIndentIds.add(id);
+                break;
+              }
+            }
+            newObject.DestinationIndentId = destinationIndentId;
+          }
+
           result[commodity].push(newObject);
         }
       });
