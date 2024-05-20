@@ -2733,6 +2733,8 @@ function Daily_Planner() {
               destinationId: item.destinationId,
               destinationMergingId: item.destinationMergingId,
               sourceMergingId: item.sourceMergingId,
+              sourceIndentIds: item.sourceIndentIds,
+              destinationIndentIds: item.destinationIndentIds,
             }));
             setFixeddata(updatedRouteFixing);
           }
