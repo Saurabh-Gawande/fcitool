@@ -127,9 +127,9 @@ function Login() {
             </form>
           </div>
           <div className="login-footer">
-            <div className="pull-left" style={{ color: "white" }}>
+            {/* <div className="pull-left" style={{ color: "white" }}>
               &copy; DEVELOPED BY IIT-DELHI v4.0
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
