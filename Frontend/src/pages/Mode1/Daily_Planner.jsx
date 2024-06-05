@@ -2228,7 +2228,7 @@ function Daily_Planner() {
         body: JSON.stringify(payload),
       });
       fetchReservationId_Total_result();
-      fetchReservationId_Revelant_result();
+      // fetchReservationId_Revelant_result();
       if (response.ok) {
         setSolutionSolved(true);
       } else {
@@ -2255,6 +2255,7 @@ function Daily_Planner() {
         setStaus(status);
         const split = splitObjects(filteredData);
         set_Total_Result(split);
+        console.log(split)
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -2651,7 +2652,6 @@ function Daily_Planner() {
       })
       .then((data) => {
         if (data) {
-          console.log(data);
           setProgress((prev) => [
             ...prev,
             "Successfully imported data from portal",
@@ -2672,6 +2672,7 @@ function Daily_Planner() {
               rake: item.rake,
               sourceMergingId: item.sourceMergingId,
               sourceIndentIds: item.sourceIndentIds,
+              sourceRailHeadName: item.sourceRailHeadName,
             }));
             setSurplus(updatedSurplus);
           }
@@ -2688,6 +2689,7 @@ function Daily_Planner() {
               rake: item.rake,
               destinationMergingId: item.destinationMergingId,
               destinationIndentIds: item.destinationIndentIds,
+              destinationRailHeadName: item.destinationRailHeadName,
             }));
             setDeficit(updatedDeficit);
           }
@@ -2709,6 +2711,8 @@ function Daily_Planner() {
                 rake: item.rake,
                 sourceMergingId: item.sourceMergingId,
                 sourceIndentIds: item.sourceIndentIds,
+                sourceRailHeadName: item.sourceRailHeadName,
+                sourceInlineRailHeadName: item.sourceInlineRailHeadName,
               })
             );
             setSurplusInline(updatedSurplusInline);
@@ -2731,6 +2735,9 @@ function Daily_Planner() {
                 rake: item.rake,
                 destinationMergingId: item.destinationMergingId,
                 destinationIndentIds: item.destinationIndentIds,
+                destinationRailHeadName: item.destinationRailHeadName,
+                destinationInlineRailHeadName:
+                  item.destinationInlineRailHeadName,
               })
             );
             setDeficitInline(updatedDeficitInline);
@@ -2756,6 +2763,8 @@ function Daily_Planner() {
               sourceMergingId: item.sourceMergingId,
               sourceIndentIds: item.sourceIndentIds,
               destinationIndentIds: item.destinationIndentIds,
+              destinationRailHeadName: item.destinationRailHeadName,
+              sourceRailHeadName: item.sourceRailHeadName,
             }));
             setFixeddata(updatedRouteFixing);
           }
