@@ -2255,7 +2255,6 @@ function Daily_Planner() {
         setStaus(status);
         const split = splitObjects(filteredData);
         set_Total_Result(split);
-        console.log(split)
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -4390,6 +4389,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -4399,6 +4406,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -4431,8 +4446,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4471,7 +4488,7 @@ function Daily_Planner() {
                                       <th
                                         style={{
                                           padding: "10px",
-                                          width: "200px",
+                                          width: "205px",
                                         }}
                                       >
                                         Src RH
@@ -4479,7 +4496,15 @@ function Daily_Planner() {
                                       <th
                                         style={{
                                           padding: "10px",
-                                          width: "200px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
                                         }}
                                       >
                                         Src state
@@ -4487,7 +4512,7 @@ function Daily_Planner() {
                                       <th
                                         style={{
                                           padding: "10px",
-                                          width: "200px",
+                                          width: "205px",
                                         }}
                                       >
                                         Dest RH
@@ -4495,7 +4520,15 @@ function Daily_Planner() {
                                       <th
                                         style={{
                                           padding: "10px",
-                                          width: "200px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Dest RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
                                         }}
                                       >
                                         Dest State
@@ -4503,7 +4536,7 @@ function Daily_Planner() {
                                       <th
                                         style={{
                                           padding: "10px",
-                                          width: "200px",
+                                          width: "205px",
                                         }}
                                       >
                                         commodity
@@ -4519,7 +4552,7 @@ function Daily_Planner() {
                                       <th
                                         style={{
                                           padding: "10px",
-                                          width: "350px",
+                                          width: "205px",
                                         }}
                                       >
                                         Rakes
@@ -4531,8 +4564,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         {/* <td>{item.Cost}</td> */}
@@ -4583,6 +4618,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -4592,6 +4635,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -4624,8 +4675,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4675,6 +4728,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -4684,6 +4745,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -4716,8 +4785,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4767,6 +4838,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -4776,6 +4855,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -4808,8 +4895,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4859,6 +4948,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -4868,6 +4965,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -4900,8 +5005,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -4951,6 +5058,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -4960,6 +5075,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -4992,8 +5115,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5043,6 +5168,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5052,6 +5185,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5084,8 +5225,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5135,6 +5278,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5144,6 +5295,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5176,8 +5335,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5227,6 +5388,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5236,6 +5405,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5268,8 +5445,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5319,6 +5498,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5328,6 +5515,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5360,8 +5555,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5411,6 +5608,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5420,6 +5625,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5452,8 +5665,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5503,6 +5718,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5512,6 +5735,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5544,8 +5775,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5595,6 +5828,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5604,6 +5845,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5636,8 +5885,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5687,6 +5938,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5696,6 +5955,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5728,8 +5995,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5779,6 +6048,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5788,6 +6065,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5820,8 +6105,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5871,6 +6158,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5880,6 +6175,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -5912,8 +6215,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -5963,6 +6268,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -5972,6 +6285,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -6004,8 +6325,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -6055,6 +6378,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -6064,6 +6395,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -6096,8 +6435,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -6148,6 +6489,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -6157,6 +6506,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -6189,8 +6546,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>
@@ -6241,6 +6600,14 @@ function Daily_Planner() {
                                           width: "200px",
                                         }}
                                       >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
                                         Src state
                                       </th>
                                       <th
@@ -6250,6 +6617,14 @@ function Daily_Planner() {
                                         }}
                                       >
                                         Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Dest RH Name
                                       </th>
                                       <th
                                         style={{
@@ -6282,8 +6657,10 @@ function Daily_Planner() {
                                       <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
                                         <td>{item.SourceState}</td>
                                         <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
                                         <td>{item.DestinationState}</td>
                                         <td>{item.Commodity}</td>
                                         <td>{item.Rakes}</td>

@@ -3994,8 +3994,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
             
             # for from_station, to_station in zip(From, To):
             #     Cost.append(rail_cost.loc[from_station][to_station])
@@ -4209,8 +4209,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wheat1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_wheat1["SourceState"] = From_state
@@ -4412,8 +4412,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
                     
 
             df_rra["SourceRailHead"] =  [item.split('_')[0] for item in From]
@@ -4616,8 +4616,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_rra1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_rra1["SourceState"] = From_state_rra
@@ -4818,8 +4818,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_CoarseGrain["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_CoarseGrain["SourceState"] = From_state
@@ -5020,8 +5020,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_CoarseGrain1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_CoarseGrain1["SourceState"] = From_state
@@ -5222,8 +5222,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frkrra["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkrra["SourceState"] = From_state
@@ -5424,8 +5424,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frkrra1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frkrra1["SourceState"] = From_state
@@ -5627,8 +5627,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frkbr["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frkbr["SourceState"] = From_state
@@ -5830,8 +5830,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frkbr1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkbr1["SourceState"] = From_state
@@ -6033,8 +6033,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frk["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frk["SourceState"] = From_state
@@ -6236,8 +6236,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frk1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_frk1["SourceState"] = From_state
@@ -6439,8 +6439,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frkcgr["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkcgr["SourceState"] = From_state
@@ -6642,8 +6642,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frkcgr1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frkcgr1["SourceState"] = From_state
@@ -6845,8 +6845,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wcgr["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_wcgr["SourceState"] = From_state
@@ -7048,8 +7048,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wcgr1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_wcgr1["SourceState"] = From_state
@@ -7247,8 +7247,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_rrc["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_rrc["SourceState"] = From_state
@@ -7443,8 +7443,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_rrc1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_rrc1["SourceState"] = From_state
@@ -7641,8 +7641,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_ragi["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_ragi["SourceState"] = From_state
@@ -7839,8 +7839,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_ragi1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_ragi1["SourceState"] = From_state
@@ -8038,8 +8038,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_jowar["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_jowar["SourceState"] = From_state
@@ -8236,8 +8236,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_jowar1["SourceRailHead"] =  [item.split('_')[0] for item in From]
             df_jowar1["SourceState"] = From_state
@@ -8434,8 +8434,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_bajra["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_bajra["SourceState"] = From_state
@@ -8632,8 +8632,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_bajra1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_bajra1["SourceState"] = From_state
@@ -8830,8 +8830,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_maize["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_maize["SourceState"] = From_state
@@ -9028,8 +9028,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_maize1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_maize1["SourceState"] = From_state
@@ -9226,8 +9226,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc1["SourceState"] = From_state
@@ -9424,8 +9424,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc11["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc11["SourceState"] = From_state
@@ -9624,8 +9624,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc2["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc2["SourceState"] = From_state
@@ -9824,8 +9824,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc21["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc21["SourceState"] = From_state
@@ -10022,8 +10022,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wheaturs["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_wheaturs["SourceState"] = From_state
@@ -10220,8 +10220,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wheaturs1["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_wheaturs1["SourceState"] = From_state
@@ -10418,8 +10418,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wheatfaq["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_wheatfaq["SourceState"] = From_state
@@ -10616,8 +10616,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wheatfaq1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_wheatfaq1["SourceState"] = From_state
@@ -10814,8 +10814,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wheatrra["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_wheatrra["SourceState"] = From_state
@@ -11012,8 +11012,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_wheatrra1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_wheatrra1["SourceState"] = From_state
@@ -11210,8 +11210,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frk_rra["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frk_rra["SourceState"] = From_state
@@ -11408,8 +11408,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_frk_rra1["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_frk_rra1["SourceState"] = From_state
@@ -11606,8 +11606,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc3["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_misc3["SourceState"] = From_state
@@ -11804,8 +11804,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc31["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_misc31["SourceState"] = From_state
@@ -12002,8 +12002,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc4["SourceRailHead"] = [item.split('_')[0] for item in From] 
             df_misc4["SourceState"] = From_state
@@ -12200,8 +12200,8 @@ def Daily_Planner():
                     destinationMergingId.append(dest_merging_id)
                     sourceIndentId.append(org_IndentId)
                     destinationIndentId.append(dest_IndentId)
-                    sourceRailHeadName.append(conf_orgRailHeadName)
-                    destinationRailHeadName.append(conf_destRailHeadName)
+                    SourceRailHeadName.append(conf_orgRailHeadName)
+                    DestinationRailHeadName.append(conf_destRailHeadName)
 
             df_misc41["SourceRailHead"] = [item.split('_')[0] for item in From]
             df_misc41["SourceState"] = From_state
