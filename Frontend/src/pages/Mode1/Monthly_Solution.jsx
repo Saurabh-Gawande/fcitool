@@ -240,7 +240,6 @@ function Monthly_Solution() {
       .then((response) => response.json())
       .then((data) => {
         const fetched_Relevant_Result = data;
-        console.log(data);
         set_Relevant_Result(fetched_Relevant_Result);
       })
       .catch((error) => {
@@ -249,31 +248,26 @@ function Monthly_Solution() {
   };
 
   const ExportPlan = () => {
-    const relevantData = Relevant_result["RH_RH_tag"];
-    console.log(relevantData);
-    fetch(
-      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: relevantData,
-      }
-    )
+    fetch(ProjectIp + "/MonthlyDataSend", {
+      method: "GET",
+      credentials: "include",
+    })
       .then((response) => {
+        // Check if the response is OK (status code 200-299)
         if (response.ok) {
-          window.alert("File uploaded successfully!");
-          // setProgress((prev) => [
-          //   ...prev,
-          //   "Successfully exported the plan to portal",
-          // ]);
+          return response.json(); // Parse the response as JSON
         } else {
-          window.alert("File upload failed. Please try again.");
+          throw new Error("File upload failed. Please try again.");
         }
       })
+      .then((data) => {
+        // Handle the success response here
+        alert("File uploaded successfully!");
+        console.log(data); // Optional: log the response data
+      })
       .catch((error) => {
-        console.error("An error occurred during file upload:", error);
+        console.error("An error occurred during the file upload:", error);
+        alert("File upload failed. Please try again.");
       });
   };
 

@@ -3,6 +3,7 @@ import pandas as pd
 from pulp import *
 import json
 from flask import Flask, request, session, jsonify, send_file
+import requests
 import pickle
 from flask_cors import CORS
 import xlsxwriter
@@ -627,6 +628,50 @@ def Monthly_Solution():
         # json_object = json.loads(json_data)
 
         return jsonify({"message": "Success"})
+
+def generate_monthly_solution():
+    try:
+        df = pd.read_excel('Output/Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
+        # Remove the 'Unnamed: 0' column if it exists
+        if 'Unnamed: 0' in df.columns:
+            df = df.drop('Unnamed: 0', axis=1)
+        return df.to_dict(orient='records')
+    except Exception as e:
+        print(f"Error occurred while generating monthly solution: {e}")
+        return []
+
+@app.route("/MonthlyDataSend", methods=['GET'])
+def export_plan():
+    url = "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner"
+    
+    # Generate the monthly solution
+    relevant_data = generate_monthly_solution()
+
+    # Check if relevant_data is not empty
+    if not relevant_data:
+        print("No data to send.")
+        return jsonify({"error": "No relevant data to send."}), 400
+    
+    # Convert the relevant_data list to a JSON string
+    relevant_data_json = json.dumps(relevant_data)
+    
+    headers = {
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, data=relevant_data_json)
+        if response.ok:
+            print("File uploaded successfully!")
+            return jsonify({"message": "File uploaded successfully!"}), 200
+        else:
+            print("File upload failed. Please try again.")
+            print("Status Code:", response.status_code)
+            print("Response:", response.text)
+            return jsonify({"error": "File upload failed. Please try again.", "status_code": response.status_code, "response_text": response.text}), response.status_code
+    except Exception as e:
+        print(f"Error occurred during file upload: {e}")
+        return jsonify({"error": "An error occurred during file upload.", "details": str(e)}), 500
 
 all_commodity_data = {} #for collecting data related to daily_planner
 status ={}
