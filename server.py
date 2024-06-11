@@ -495,6 +495,7 @@ def Monthly_Solution():
             fixed_src = [item['sourceState'] for item in stateRestrictionList["data"]]
             dest_src = [item['destinationState'] for item in stateRestrictionList["data"]]
             commo = [item['commodity'] for item in stateRestrictionList["data"]]
+            # commo1 = ['w(urs)']
 
             print (stateRestrictionList["data"])
             print(fixed_src, dest_src, commo)
@@ -545,7 +546,7 @@ def Monthly_Solution():
                 for j in demand.index:
                     for k in commo:
                         if supply["State"][i] in fixed_src and demand["State"][j] in dest_src:
-                            prob+=x_ijk[(i,j,k)]==0
+                            prob += x_ijk[(i, j, k)] == 0
                             # print(x_ijk[(i,j,k)]==0)
 
             for i in supply.index:
@@ -598,7 +599,7 @@ def Monthly_Solution():
             rh_tag["To"]=B
             rh_tag["Commodity"]=C
             rh_tag["Values"]=D
-            rh_tag["Values"]=rh_tag["Values"]/2
+            rh_tag["Values"]=rh_tag["Values"]
             rh_tag["From_state"]=E
             rh_tag["To_state"]=F
             
