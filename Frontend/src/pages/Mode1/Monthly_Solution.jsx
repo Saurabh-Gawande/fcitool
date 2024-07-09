@@ -489,7 +489,7 @@ function Monthly_Solution() {
                               </tr>
                             </thead>
                             <tbody>
-                              {commodiyCountData.map((item, index) => (
+                              {commodiyCountData.slice(2).map((item, index) => (
                                 <tr
                                   key={index}
                                   className={getRowColor(
@@ -520,8 +520,8 @@ function Monthly_Solution() {
                             <tr>
                               <th>State</th>
                               {/* <th>Max Run ID</th> */}
-                              <th>Inward Wheat URS</th>
-                              <th>Inward Wheat FAQ</th>
+                              {/* <th>Inward Wheat URS</th> */}
+                              {/* <th>Inward Wheat FAQ</th> */}
                               <th>Inward Wheat Total</th>
                               <th>Inward Rice FRKBR</th>
                               <th>Inward Rice RRA</th>
@@ -543,8 +543,8 @@ function Monthly_Solution() {
                               <tr key={index}>
                                 <td>{region.state}</td>
                                 {/* <td>{region.maxRunId}</td> */}
-                                <td>{region.inward_Wheat_URS}</td>
-                                <td>{region.inward_Wheat_FAQ}</td>
+                                {/* <td>{region.inward_Wheat_URS}</td> */}
+                                {/* <td>{region.inward_Wheat_FAQ}</td> */}
                                 <td>{region.inward_Wheat_Total}</td>
                                 <td>{region.inward_Rice_FRKBR}</td>
                                 <td>{region.inward_Rice_RRA}</td>
