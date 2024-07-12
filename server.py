@@ -542,11 +542,11 @@ def Monthly_Solution():
             prob+=lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
             # print(lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity))
             
-            for i in supply.index:
-                for j in demand.index:
-                    for k in commo:
-                        if supply["State"][i] in fixed_src and demand["State"][j] in dest_src:
-                            prob += x_ijk[(i, j, k)] == 0
+            # for i in supply.index:
+            #     for j in demand.index:
+            #         for k in commo:
+            #             if supply["State"][i] in fixed_src and demand["State"][j] in dest_src:
+            #                 prob += x_ijk[(i, j, k)] == 0
                             # print(x_ijk[(i,j,k)]==0)
 
             for i in supply.index:
@@ -673,6 +673,94 @@ def export_plan():
     except Exception as e:
         print(f"Error occurred during file upload: {e}")
         return jsonify({"error": "An error occurred during file upload.", "details": str(e)}), 500
+
+
+@app.route("/MonthlyDataSendMode2", methods=['GET'])
+def MonthlyDataSendMode2():
+    url = "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMode2MonthlyPlanner"
+    
+    relevant_data = { 
+        "WH_RH_Tag": [
+            {
+                "WarehouseId": "FCI37",
+                "ConnectedRhcode": "FCP",
+                "State": "Haryana",
+                "Commodity": "Wheat(Total)",
+                "Values": "0.952",
+                "Type": "WH_RH",
+            },
+            {
+                "WarehouseId": "FCI38",
+                "ConnectedRhcode": "ABC",
+                "State": "Haryana",
+                "Commodity": "Wheat(Total)",
+                "Values": "0.993",
+                "Type": "WH_RH",
+            },
+        ],
+        "RH_WH_Tag": [
+            {
+                "WarehouseId": "FCI37",
+                "ConnectedRhcode": "PQR",
+                "State": "Haryana",
+                "Commodity": "Wheat(Total)",
+                "Values": "0.952",
+                "Type": "RH_WH",
+            },
+            {
+                "WarehouseId": "FCI31",
+                "ConnectedRhcode": "XYZ",
+                "State": "Haryana",
+                "Commodity": "Wheat(Total)",
+                "Values": "0.952",
+                "Type": "RH_WH",
+            },
+        ],
+        "RH_RH_Tag": [
+            {
+                "From": "FCP",
+                "FromState": "Haryana",
+                "To": "RXL",
+                "ToState": "Bihar",
+                "Commodity": "Wheat(Total)",
+                "Values": "0.952",
+                "Type": "RH_RH",
+            },
+        ],
+        "WH_WH_Tag": [
+            {
+                "From": "FCI38",
+                "FromState": "Haryana",
+                "To": "FCI45",
+                "ToState": "Bihar",
+                "Commodity": "Wheat(Total)",
+                "Values": "0.952",
+                "Type": "WH_WH",
+            },
+        ]
+    }
+    
+    # Convert the relevant_data dictionary to a JSON string
+    relevant_data_json = json.dumps(relevant_data)
+    
+    headers = {
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, data=relevant_data_json)
+        if response.ok:
+            print("File uploaded successfully!")
+            return jsonify({"message": "File uploaded successfully!"}), 200
+        else:
+            print("File upload failed. Please try again.")
+            print("Status Code:", response.status_code)
+            print("Response:", response.text)
+            return jsonify({"error": "File upload failed. Please try again.", "status_code": response.status_code, "response_text": response.text}), response.status_code
+    except Exception as e:
+        print(f"Error occurred during file upload: {e}")
+        return jsonify({"error": "An error occurred during file upload.", "details": str(e)}), 500
+
 
 all_commodity_data = {} #for collecting data related to daily_planner
 status ={}
@@ -3496,7 +3584,7 @@ def Daily_Planner():
                 lpSum(x_ij_wheat1[(i, j)] * rail_cost.loc[i][j] for i in source_wheat1.keys() for j in dest_wheat1.keys()) +
                 lpSum(x_ij_rra1[(i, j)] * rail_cost.loc[i][j] for i in source_rra1.keys() for j in dest_rra1.keys()) +
                 lpSum(x_ij_coarseGrain1[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()) +
-                lpSum(x_ij_frkrra1[(i, j)] * rail_cost.loc1[i][j] for i in source_frkrra1.keys() for j in dest_frkrra1.keys()) +
+                lpSum(x_ij_frkrra1[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra1.keys() for j in dest_frkrra1.keys()) +
                 lpSum(x_ij_frk_br1[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr1.keys() for j in dest_frkbr1.keys()) +
                 lpSum(x_ij_frk1[(i, j)] * rail_cost.loc[i][j] for i in source_frk1.keys() for j in dest_frk1.keys()) +
                 lpSum(x_ij_frkcgr1[(i, j)] * rail_cost.loc[i][j] for i in source_frkcgr1.keys() for j in dest_frkcgr1.keys()) +
