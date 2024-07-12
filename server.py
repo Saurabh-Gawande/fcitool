@@ -11408,10 +11408,10 @@ def Daily_Planner():
             
             for i in source_frk_rra1:
                 for j in dest_frk_rra1:
-                    if int(x_ij_frk_rra[(i,j)].value()) > 0:
+                    if int(x_ij_frk_rra1[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
-                        values.append(x_ij_frk_rra[(i,j)].value())
+                        values.append(x_ij_frk_rra1[(i,j)].value())
                         commodity.append("FRK+RRA")
                         Flag.append(region)
 
@@ -11804,10 +11804,10 @@ def Daily_Planner():
             
             for i in source_misc31:
                 for j in dest_misc31:
-                    if int(x_ij_misc3[(i,j)].value()) > 0:
+                    if int(x_ij_misc31[(i,j)].value()) > 0:
                         From.append(i)
                         To.append(j)
-                        values.append(x_ij_misc3[(i,j)].value())
+                        values.append(x_ij_misc31[(i,j)].value())
                         commodity.append("Misc3")
                         Flag.append(region)
 
