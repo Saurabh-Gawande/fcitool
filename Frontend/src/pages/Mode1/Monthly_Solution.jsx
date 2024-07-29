@@ -4,10 +4,12 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import "./Monthly_sol.css";
 import config from "../../config";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 
 function Monthly_Solution() {
   const ProjectIp = config.serverUrl;
+  const portalUrl = config.portalUrl;
+
   const [fileSelected, setFileSelected] = useState(false);
   const [importedFile1, setImportedFile1] = useState(null);
   const [importedFile2, setImportedFile2] = useState(null);
@@ -28,9 +30,7 @@ function Monthly_Solution() {
   //for import the data
   const ImportData = () => {
     try {
-      fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward"
-      )
+      fetch(`${portalUrl}/ToolOptimizerWebApi/MonthlyPlanforTool?status=Inward`)
         .then((res) => res.blob())
         .then(async (blob) => {
           const excelFile = new File([blob], "MonthlyPlanforTool.xlsx", {
@@ -44,7 +44,7 @@ function Monthly_Solution() {
         });
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward"
+        `${portalUrl}/ToolOptimizerWebApi/MonthlyPlanforTool?status=Outward`
       )
         .then((res) => res.blob())
         .then(async (blob) => {
@@ -59,19 +59,19 @@ function Monthly_Solution() {
       set_type("Imported");
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData/Rail"
+        `${portalUrl}/MonthlyDataCollectionWebApi/GetCommodityCountData/Rail`
       )
         .then((res) => res.json())
         .then((data) => setCommodityCountData(data));
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel/Rail"
+        `${portalUrl}/MonthlyDataCollectionWebApi/GetAllRegionData/excel/Rail`
       )
         .then((res) => res.json())
         .then((data) => setMonthlyDataCollection(data));
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/StateRestrictionList"
+        `${portalUrl}/ToolOptimizerWebApi/StateRestrictionList`
       )
         .then((res) => res.json())
         .then((data) => setStateRestrictionList(data));

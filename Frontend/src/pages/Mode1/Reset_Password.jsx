@@ -1,7 +1,10 @@
 import React, { useRef, useState } from "react";
 import Sidenav from "./sidenav";
+import config from "../../config";
 
 function Reset_Password() {
+  const portalUrl = config.portalUrl;
+
   const [showModal, setShowModal] = useState(false);
   const [modalValue, setModalValue] = useState("");
   const [credential, setCredential] = useState({
@@ -50,7 +53,7 @@ function Reset_Password() {
     }
 
     fetch(
-      `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/UpdateToolUserPassword?username=${username}&oldpassword=${oldpassword}&newpassword=${newpassword}`,
+      `${portalUrl}/ToolOptimizerWebApi/UpdateToolUserPassword?username=${username}&oldpassword=${oldpassword}&newpassword=${newpassword}`,
       {
         method: "POST",
       }

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./Login.css";
 import config from "../config";
-import UserContext from "../Context/userContext";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const portalUrl = config.portalUrl;
+  
   const navigate = useNavigate();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -13,7 +14,7 @@ function Login() {
   const [modalValue, setModalValue] = useState("");
 
   const images = ["static/img/slider1.jpg", "static/img/slider6.jpg"];
-  const ProjectIp = config.serverUrl;
+  
   const totalImages = images.length;
   const autoSlideInterval = 3000;
 
@@ -39,7 +40,7 @@ function Login() {
   const handleLogin = async () => {
     try {
       fetch(
-        `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/LoginforTool?username=${username}&password=${password}`
+        `${portalUrl}/ToolOptimizerWebApi/LoginforTool?username=${username}&password=${password}`
       )
         .then((response) => {
           if (response.status === 200) {

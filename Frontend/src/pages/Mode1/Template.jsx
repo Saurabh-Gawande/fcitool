@@ -4,6 +4,8 @@ import config from "../../config";
 
 function Template() {
   const ProjectIp = config.serverUrl;
+  const portalUrl = config.portalUrl;
+
   const [fileSelected, setFileSelected] = useState(false);
   const [importedFile1, setImportedFile1] = useState(null);
   const [importedFile2, setImportedFile2] = useState(null);
@@ -23,98 +25,61 @@ function Template() {
     }
   };
 
-  const [result1, setResult1] = useState({
-    WH_RH_Tag: [
-      {
-        WarehouseId: "FCI37",
-        ConnectedRhcode: "FCP",
-        State: "Haryana",
-        Commodity: "Wheat(Total)",
-        Values: "0.952",
-        Type: "WH_RH",
-      },
-      {
-        WarehouseId: "FCI38",
-        ConnectedRhcode: "ABC",
-        State: "Haryana",
-        Commodity: "Wheat(Total)",
-        Values: "0.993",
-        Type: "WH_RH",
-      },
-    ],
-    RH_WH_Tag: [
-      {
-        WarehouseId: "FCI37",
-        ConnectedRhcode: "PQR",
-        State: "Haryana",
-        Commodity: "Wheat(Total)",
-        Values: "0.952",
-        Type: "RH_WH",
-      },
-      {
-        WarehouseId: "FCI31",
-        ConnectedRhcode: "XYZ",
-        State: "Haryana",
-        Commodity: "Wheat(Total)",
-        Values: "0.952",
-        Type: "RH_WH",
-      },
-    ],
-    RH_RH_Tag: [
-      {
-        From: "FCP",
-        FromState: "Haryana",
-        To: "RXL",
-        ToState: "Bihar",
-        Commodity: "Wheat(Total)",
-        Values: "0.952",
-        Type: "RH_RH",
-      },
-    ],
-    WH_Wh_Tag: [
-      {
-        From: "FCI38",
-        FromState: "Haryana",
-        To: "FCI45",
-        ToState: "Bihar",
-        Commodity: "Wheat(Total)",
-        Values: "0.952",
-        Type: "WH_WH",
-      },
-    ],
-  });
-
   const ExportData = () => {
-    fetch(
-      "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMode2MonthlyPlanner",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(result1),
-      }
-    )
+    fetch(ProjectIp + "/MonthlyDataSendMode2", {
+      method: "GET",
+      credentials: "include",
+    })
       .then((response) => {
+        // Check if the response is OK (status code 200-299)
         if (response.ok) {
-          window.alert("File uploaded successfully!");
-          // setProgress((prev) => [
-          //   ...prev,
-          //   "Successfully exported the plan to portal",
-          // ]);
+          return response.json(); // Parse the response as JSON
         } else {
-          window.alert("File upload failed. Please try again.");
+          throw new Error("File upload failed. Please try again.");
         }
       })
+      .then((data) => {
+        // Handle the success response here
+        alert("File uploaded successfully!");
+        console.log(data); // Optional: log the response data
+      })
       .catch((error) => {
-        console.error("An error occurred during file upload:", error);
+        console.error("An error occurred during the file upload:", error);
+        alert("File upload failed. Please try again.");
       });
   };
+
+  // const ExportData = () => {
+  //   fetch(
+  //     `${portalUrl}/ToolOptimizerWebApi/PostMode2MonthlyPlanner`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(result1),
+  //     }
+  //   )
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         window.alert("File uploaded successfully!");
+  //         // setProgress((prev) => [
+  //         //   ...prev,
+  //         //   "Successfully exported the plan to portal",
+  //         // ]);
+  //       } else {
+  //         window.alert("File upload failed. Please try again.");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("An error occurred during file upload:", error);
+  //     });
+  // };
 
   const ImportData = () => {
     try {
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/Mode2MonthlyPlanforTool?status=Inward"
+        `${portalUrl}/ToolOptimizerWebApi/Mode2MonthlyPlanforTool?status=Inward`
       )
         .then((res) => res.blob())
         .then(async (blob) => {
@@ -129,7 +94,7 @@ function Template() {
         });
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/Mode2MonthlyPlanforTool?status=Outward"
+        `${portalUrl}/ToolOptimizerWebApi/Mode2MonthlyPlanforTool?status=Outward`
       )
         .then((res) => res.blob())
         .then(async (blob) => {
@@ -143,13 +108,13 @@ function Template() {
         });
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetCommodityCountData/Road"
+        `${portalUrl}/MonthlyDataCollectionWebApi/GetCommodityCountData/Road`
       )
         .then((res) => res.json())
         .then((data) => setCommodityCountData(data));
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/MonthlyDataCollectionWebApi/GetAllRegionData/excel/Road"
+        `${portalUrl}/MonthlyDataCollectionWebApi/GetAllRegionData/excel/Road`
       )
         .then((res) => res.json())
         .then((data) => setMonthlyDataCollection(data));

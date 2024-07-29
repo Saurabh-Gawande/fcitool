@@ -8,6 +8,9 @@ import "jspdf-autotable";
 import "./Daily_Planner.css";
 
 function Daily_Planner() {
+  const ProjectIp = config.serverUrl;
+  const portalUrl = config.portalUrl;
+
   const [surplus, setSurplus] = useState([]);
   const [surplusInline, setSurplusInline] = useState([]);
   const [deficit, setDeficit] = useState([]);
@@ -46,7 +49,6 @@ function Daily_Planner() {
   const [deficitInlineCommodity, setDeficitInlineCommodity] = useState();
   const [status, setStaus] = useState();
 
-  const ProjectIp = config.serverUrl;
   const [fixed_data, setFixeddata] = useState([]);
   const [blocked_data, setBlockeddata] = useState([]);
   const [selectedOption_fixed, setSelectedOption_fixed] = useState("default");
@@ -198,9 +200,7 @@ function Daily_Planner() {
 
   useEffect(() => {
     try {
-      fetch(
-        `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/RailHeadCodesforTool`
-      )
+      fetch(`${portalUrl}/ToolOptimizerWebApi/RailHeadCodesforTool`)
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -218,7 +218,7 @@ function Daily_Planner() {
     const fetchTefdData = async () => {
       try {
         const response = await fetch(
-          `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=${TEFD}`
+          `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=TEFD`
         );
 
         if (!response.ok) {
@@ -246,49 +246,7 @@ function Daily_Planner() {
       }
     };
     fetchTefdData();
-  }, [TEFD]);
-
-  const processSheetData = (workbook, sheetIndices) => {
-    const jsonData = [];
-    sheetIndices.forEach((sheetIndex) => {
-      const sheetName = workbook.SheetNames[sheetIndex];
-      const sheet = workbook.Sheets[sheetName];
-      const sheetData = XLSX.utils.sheet_to_json(sheet);
-      sheetData.forEach((row) => {
-        if (row.Value > 0) {
-          let surplusCommodity = "";
-          switch (sheetIndex) {
-            case 0:
-            case 1:
-              surplusCommodity = "Wheat";
-              break;
-            case 2:
-            case 3:
-              surplusCommodity = "RRA";
-              break;
-            case 4:
-            case 5:
-              surplusCommodity = "FRK RRA";
-              break;
-            case 6:
-            case 7:
-              surplusCommodity = "FRK BR";
-              break;
-            case 8:
-            case 9:
-              surplusCommodity = "Coarse Grain";
-              break;
-            default:
-              break;
-          }
-
-          row.Commodity = surplusCommodity;
-          jsonData.push(row);
-        }
-      });
-    });
-    return jsonData;
-  };
+  }, []);
 
   const handleSurplusStateChange = async (e) => {
     const selectedValue = e.target.value;
@@ -1999,7 +1957,7 @@ function Daily_Planner() {
     setIsLoading(true);
 
     const payload = {
-      TEFD: TEFD,
+      // TEFD: TEFD,
       confirmed_data1: fixed_data1, // fixing all data
       confirmed_data2: fixed_data2, // fixing all data
       blocked_data1: blocked_data1,
@@ -2578,7 +2536,7 @@ function Daily_Planner() {
     setExcelFileData(excelBlob);
 
     // fetch(
-    //   "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostDailyPlanner'",
+    //   `${portalUrl}"/ToolOptimizerWebApi/PostDailyPlanner`,
     //   {
     //     method: "POST",
     //     credentials: "include",
@@ -2611,7 +2569,7 @@ function Daily_Planner() {
       formData.append("file", excelfiledata, fileName);
 
       fetch(
-        "https://test.rakeplanner.callippus.co.uk/api/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile",
+        `${portalUrl}/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile`,
         {
           method: "POST",
           body: formData,
@@ -2637,7 +2595,7 @@ function Daily_Planner() {
   const fetchData = (event) => {
     event.preventDefault();
     fetch(
-      `https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region=${sessionStorage.getItem(
+      `${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region=${sessionStorage.getItem(
         "region"
       )}`
     )
@@ -2920,7 +2878,7 @@ function Daily_Planner() {
                   </div>
                   <br />
                   <form style={{ marginLeft: "50px" }}>
-                    {/* <label>
+                    <label>
                       <strong
                         style={{
                           fontSize: "20px",
@@ -2947,7 +2905,7 @@ function Daily_Planner() {
                         <option value="Non_TEFD_TC">Non-TEFD + TC</option>
                         <option value="TEFD_TC">TEFD + TC</option>
                       </select>
-                    </label> */}
+                    </label>
                     <br />
                     <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
                       <strong

@@ -8,7 +8,6 @@ import pickle
 from flask_cors import CORS
 import xlsxwriter
 import numpy as np
-import json
 
 # created flask app 
 app = Flask(__name__)
@@ -832,7 +831,7 @@ def Daily_Planner():
             
             confirmed_data1 = fetched_data['confirmed_data1'] #route fixing 42w data
             confirmed_data2 = fetched_data['confirmed_data2'] # route fixing 58w data
-            TEFD_fetched = fetched_data['TEFD'] #matrix type
+            # TEFD_fetched = fetched_data['TEFD'] #matrix type
             # TEFDdata = fetched_data['TEFDdata'] 
             # df = pd.DataFrame(TEFD_fetched)
             # df1 = pd.DataFrame(TEFDdata["data"]["codes"])
