@@ -215,37 +215,40 @@ function Daily_Planner() {
   }, []);
 
   useEffect(() => {
-    const fetchTefdData = async () => {
-      try {
-        const response = await fetch(
-          `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=TEFD`
-        );
+    const fetchData = async () => {
+      const urls = [
+        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Wheat",
+        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Rice",
+        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Wheat",
+        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Rice",
+      ];
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+      try {
+        const responses = await Promise.all(
+          urls.map((url) => fetch(url).then((response) => response.json()))
+        );
+        const data = responses.map((response) => response);
+
+        const response = await fetch(`${ProjectIp}/cost_matrix`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ data }),
+        });
+
         const result = await response.json();
-        set_TEFDdata(result);
-        try {
-          if (TEFD === null) {
-            return;
-          }
-          fetch(ProjectIp + "/rail_cost_matraix", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              credentials: "include",
-            },
-            body: JSON.stringify({ TEFDdata: result }),
-          });
-        } catch (error) {
-          console.error("file is not created for TEFD", error);
+
+        if (result.status === 1) {
+          console.log(result.message);
+        } else {
+          console.log(result.error);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      } catch (err) {
+        console.log("Error fetching or sending data");
       }
     };
-    fetchTefdData();
+    fetchData();
   }, []);
 
   const handleSurplusStateChange = async (e) => {

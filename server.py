@@ -15,6 +15,31 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 active_sessions = {}
 
+def process_data(data):
+    df_list = []
+    for item in data:
+        df_codes = pd.DataFrame(item["data"]["codes"])
+        df_column_data = pd.DataFrame(item["data"]["columnData"])
+        df_list.append(pd.concat([df_codes, df_column_data], axis=1))
+    return df_list
+
+def save_to_excel(dfs, file_path):
+    with pd.ExcelWriter(file_path, mode='w', engine='openpyxl') as writer:
+        for i, df in enumerate(dfs):
+            sheet_name = f"Sheet{i+1}"
+            df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+@app.route('/cost_matrix', methods=['POST'])
+def cost_matrix1():
+    try:
+        fetched_data = request.get_json()
+        data = fetched_data['data']
+        processed_data = process_data(data)
+        save_to_excel(processed_data, "Input//Cost_matrix1.xlsx")
+        return jsonify({'status': 1, 'message': 'Data saved to Cost_matrix.xlsx'})
+    except Exception as e:
+        return jsonify({'status': 0, 'error': str(e)})
+
 # created excel file for rail monthly invard deamand
 @app.route("/Import_Monthly_File_Invard",methods = ["POST"])
 def upload_Monthly_File_M01():
@@ -102,20 +127,20 @@ def Rail_cost_matrix():
     return json.dumps(json_object, indent=1)
 
 # not in use for now 
-@app.route("/upload_Monthly_File",methods = ["POST"])
-def upload_Monthly_File_M02():
-    data = {}
-    try:
-        file = request.files['uploadFile']
-        file.save("Input//Input_template_Monthly_Planner.xlsx")
-        data['status'] = 1
-    except:
-        data['status'] = 0
+# @app.route("/upload_Monthly_File",methods = ["POST"])
+# def upload_Monthly_File_M02():
+#     data = {}
+#     try:
+#         file = request.files['uploadFile']
+#         file.save("Input//Input_template_Monthly_Planner.xlsx")
+#         data['status'] = 1
+#     except:
+#         data['status'] = 0
     
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
+#     json_data = json.dumps(data)
+#     json_object = json.loads(json_data)
 
-    return(json.dumps(json_object, indent = 1))
+#     return(json.dumps(json_object, indent = 1))
 
 #not in use 
 # @app.route("/uploadDailyFile_S2",methods = ["POST"])
@@ -501,11 +526,11 @@ def Monthly_Solution():
 
             if type == "Uploaded":
                 print("upload")
-                data=pd.ExcelFile("Input//Input_template_Monthly_Planner.xlsx")
-                supply = pd.read_excel(data,sheet_name="Supply",index_col=1)
-                demand = pd.read_excel(data,sheet_name="Demand",index_col=1)
-                print(supply, "supply")
-                print(demand, "damand")
+                # data=pd.ExcelFile("Input//Input_template_Monthly_Planner.xlsx")
+                # supply = pd.read_excel(data,sheet_name="Supply",index_col=1)
+                # demand = pd.read_excel(data,sheet_name="Demand",index_col=1)
+                # print(supply, "supply")
+                # print(demand, "damand")
             else: 
                 print('Imported')
                 data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx")
@@ -515,7 +540,7 @@ def Monthly_Solution():
                 demand = pd.read_excel(data1, sheet_name="MonthlyData",index_col=1)
                 print(demand, "demand")
             # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
-            matrices_data = pd.ExcelFile("Input\\Non-TEFD1.xlsx")
+            matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
             prob=LpProblem("FCI_monthly_allocation_rail",LpMinimize)
 
@@ -1074,7 +1099,13 @@ def Daily_Planner():
 
             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
             matrices_data1 = pd.ExcelFile("Input\\Cost_matrix.xlsx")
+            matrix = pd.ExcelFile("Input\\Cost_matrix1.xlsx", engine='openpyxl')
             
+            wheat_42w = pd.read_excel(matrix, sheet_name="Sheet1", index_col=0)
+            rice_42w = pd.read_excel(matrix, sheet_name="Sheet2", index_col=0)
+            wheat_58w = pd.read_excel(matrix, sheet_name="Sheet3", index_col=0)
+            rice_58w = pd.read_excel(matrix, sheet_name="Sheet4", index_col=0)
+
             rail_cost = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
            
             # distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
@@ -3559,8 +3590,8 @@ def Daily_Planner():
             x_ij_misc41 = LpVariable.dicts("x_misc41",[(i,j) for i in source_misc41.keys() for j in dest_misc41.keys()],lowBound = 0,cat="Integer")
             
             prob += (
-                lpSum(x_ij_wheat[(i, j)] * rail_cost.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
-                lpSum(x_ij_rra[(i, j)] * rail_cost.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
+                lpSum(x_ij_wheat[(i, j)] * wheat_42w.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
+                lpSum(x_ij_rra[(i, j)] * rice_42w.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
                 lpSum(x_ij_coarseGrain[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()) +
                 lpSum(x_ij_frkrra[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
                 lpSum(x_ij_frk_br[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
@@ -3580,8 +3611,8 @@ def Daily_Planner():
                 lpSum(x_ij_frk_rra[(i, j)] * rail_cost.loc[i][j] for i in source_frk_rra.keys() for j in dest_frk_rra.keys()) +
                 lpSum(x_ij_misc3[(i, j)] * rail_cost.loc[i][j] for i in source_misc3.keys() for j in dest_misc3.keys()) +
                 lpSum(x_ij_misc4[(i, j)] * rail_cost.loc[i][j] for i in source_misc4.keys() for j in dest_misc4.keys()) +
-                lpSum(x_ij_wheat1[(i, j)] * rail_cost.loc[i][j] for i in source_wheat1.keys() for j in dest_wheat1.keys()) +
-                lpSum(x_ij_rra1[(i, j)] * rail_cost.loc[i][j] for i in source_rra1.keys() for j in dest_rra1.keys()) +
+                lpSum(x_ij_wheat1[(i, j)] * wheat_58w.loc[i][j] for i in source_wheat1.keys() for j in dest_wheat1.keys()) +
+                lpSum(x_ij_rra1[(i, j)] * rice_58w.loc[i][j] for i in source_rra1.keys() for j in dest_rra1.keys()) +
                 lpSum(x_ij_coarseGrain1[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()) +
                 lpSum(x_ij_frkrra1[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra1.keys() for j in dest_frkrra1.keys()) +
                 lpSum(x_ij_frk_br1[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr1.keys() for j in dest_frkbr1.keys()) +
