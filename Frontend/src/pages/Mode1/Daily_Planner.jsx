@@ -230,21 +230,21 @@ function Daily_Planner() {
         );
         const data = responses.map((response) => response);
 
-        const response = await fetch(`${ProjectIp}/cost_matrix`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ data }),
-        });
+        // const response = await fetch(`${ProjectIp}/cost_matrix`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({ data }),
+        // });
 
-        const result = await response.json();
+        // const result = await response.json();
 
-        if (result.status === 1) {
-          console.log(result.message);
-        } else {
-          console.log(result.error);
-        }
+        // if (result.status === 1) {
+        //   console.log(result.message);
+        // } else {
+        //   console.log(result.error);
+        // }
       } catch (err) {
         console.log("Error fetching or sending data");
       } finally {
