@@ -11,6 +11,7 @@ function Daily_Planner() {
   const ProjectIp = config.serverUrl;
   const portalUrl = config.portalUrl;
 
+  const [loading, setLoading] = useState(true);
   const [surplus, setSurplus] = useState([]);
   const [surplusInline, setSurplusInline] = useState([]);
   const [deficit, setDeficit] = useState([]);
@@ -217,10 +218,10 @@ function Daily_Planner() {
   useEffect(() => {
     const fetchData = async () => {
       const urls = [
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Wheat",
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Rice",
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Wheat",
-        "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Rice",
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Wheat`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Rice`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Wheat`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Rice`,
       ];
 
       try {
@@ -246,6 +247,8 @@ function Daily_Planner() {
         }
       } catch (err) {
         console.log("Error fetching or sending data");
+      } finally {
+        setLoading(false); // Set loading to false after the fetch is complete
       }
     };
     fetchData();
@@ -2754,6 +2757,11 @@ function Daily_Planner() {
 
   return (
     <div className="page-container" style={{ backgroundColor: "#E7A63D" }}>
+      {loading && (
+        <div className="spinner-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
       <Sidenav />
       <div
         className="page-content"
@@ -2881,7 +2889,7 @@ function Daily_Planner() {
                   </div>
                   <br />
                   <form style={{ marginLeft: "50px" }}>
-                    <label>
+                    {/* <label>
                       <strong
                         style={{
                           fontSize: "20px",
@@ -2908,7 +2916,7 @@ function Daily_Planner() {
                         <option value="Non_TEFD_TC">Non-TEFD + TC</option>
                         <option value="TEFD_TC">TEFD + TC</option>
                       </select>
-                    </label>
+                    </label> */}
                     <br />
                     <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
                       <strong

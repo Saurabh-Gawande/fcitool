@@ -3592,46 +3592,46 @@ def Daily_Planner():
             prob += (
                 lpSum(x_ij_wheat[(i, j)] * wheat_42w.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
                 lpSum(x_ij_rra[(i, j)] * rice_42w.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
-                lpSum(x_ij_coarseGrain[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()) +
-                lpSum(x_ij_frkrra[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
-                lpSum(x_ij_frk_br[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
-                lpSum(x_ij_frk[(i, j)] * rail_cost.loc[i][j] for i in source_frk.keys() for j in dest_frk.keys()) +
-                lpSum(x_ij_frkcgr[(i, j)] * rail_cost.loc[i][j] for i in source_frkcgr.keys() for j in dest_frkcgr.keys()) +
-                lpSum(x_ij_wcgr[(i, j)] * rail_cost.loc[i][j] for i in source_wcgr.keys() for j in dest_wcgr.keys()) +
-                lpSum(x_ij_rrc[(i, j)] * rail_cost.loc[i][j] for i in source_rrc.keys() for j in dest_rrc.keys()) +
-                lpSum(x_ij_ragi[(i, j)] * rail_cost.loc[i][j] for i in source_ragi.keys() for j in dest_ragi.keys()) +
-                lpSum(x_ij_jowar[(i, j)] * rail_cost.loc[i][j] for i in source_jowar.keys() for j in dest_jowar.keys()) +
-                lpSum(x_ij_bajra[(i, j)] * rail_cost.loc[i][j] for i in source_bajra.keys() for j in dest_bajra.keys()) +
-                lpSum(x_ij_maize[(i, j)] * rail_cost.loc[i][j] for i in source_maize.keys() for j in dest_maize.keys()) +
-                lpSum(x_ij_misc1[(i, j)] * rail_cost.loc[i][j] for i in source_misc1.keys() for j in dest_misc1.keys()) +
-                lpSum(x_ij_misc2[(i, j)] * rail_cost.loc[i][j] for i in source_misc2.keys() for j in dest_misc2.keys()) +
-                lpSum(x_ij_wheaturs[(i, j)] * rail_cost.loc[i][j] for i in source_wheaturs.keys() for j in dest_wheaturs.keys()) +
-                lpSum(x_ij_wheatfaq[(i, j)] * rail_cost.loc[i][j] for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()) +
-                lpSum(x_ij_wheatrra[(i, j)] * rail_cost.loc[i][j] for i in source_wheatrra.keys() for j in dest_wheatrra.keys()) +
-                lpSum(x_ij_frk_rra[(i, j)] * rail_cost.loc[i][j] for i in source_frk_rra.keys() for j in dest_frk_rra.keys()) +
-                lpSum(x_ij_misc3[(i, j)] * rail_cost.loc[i][j] for i in source_misc3.keys() for j in dest_misc3.keys()) +
-                lpSum(x_ij_misc4[(i, j)] * rail_cost.loc[i][j] for i in source_misc4.keys() for j in dest_misc4.keys()) +
+                lpSum(x_ij_coarseGrain[(i, j)] * rice_42w.loc[i][j] for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()) +
+                lpSum(x_ij_frkrra[(i, j)] * wheat_42w.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
+                lpSum(x_ij_frk_br[(i, j)] * wheat_42w.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
+                lpSum(x_ij_frk[(i, j)] * wheat_42w.loc[i][j] for i in source_frk.keys() for j in dest_frk.keys()) +
+                lpSum(x_ij_frkcgr[(i, j)] * wheat_42w.loc[i][j] for i in source_frkcgr.keys() for j in dest_frkcgr.keys()) +
+                lpSum(x_ij_wcgr[(i, j)] * wheat_42w.loc[i][j] for i in source_wcgr.keys() for j in dest_wcgr.keys()) +
+                lpSum(x_ij_rrc[(i, j)] * wheat_42w.loc[i][j] for i in source_rrc.keys() for j in dest_rrc.keys()) +
+                lpSum(x_ij_ragi[(i, j)] * rice_42w.loc[i][j] for i in source_ragi.keys() for j in dest_ragi.keys()) +
+                lpSum(x_ij_jowar[(i, j)] * rice_42w.loc[i][j] for i in source_jowar.keys() for j in dest_jowar.keys()) +
+                lpSum(x_ij_bajra[(i, j)] * rice_42w.loc[i][j] for i in source_bajra.keys() for j in dest_bajra.keys()) +
+                lpSum(x_ij_maize[(i, j)] * rice_42w.loc[i][j] for i in source_maize.keys() for j in dest_maize.keys()) +
+                lpSum(x_ij_misc1[(i, j)] * rice_42w.loc[i][j] for i in source_misc1.keys() for j in dest_misc1.keys()) +
+                lpSum(x_ij_misc2[(i, j)] * rice_42w.loc[i][j] for i in source_misc2.keys() for j in dest_misc2.keys()) +
+                lpSum(x_ij_wheaturs[(i, j)] * wheat_42w.loc[i][j] for i in source_wheaturs.keys() for j in dest_wheaturs.keys()) +
+                lpSum(x_ij_wheatfaq[(i, j)] * wheat_42w.loc[i][j] for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()) +
+                lpSum(x_ij_wheatrra[(i, j)] * wheat_42w.loc[i][j] for i in source_wheatrra.keys() for j in dest_wheatrra.keys()) +
+                lpSum(x_ij_frk_rra[(i, j)] * wheat_42w.loc[i][j] for i in source_frk_rra.keys() for j in dest_frk_rra.keys()) +
+                lpSum(x_ij_misc3[(i, j)] * wheat_42w.loc[i][j] for i in source_misc3.keys() for j in dest_misc3.keys()) +
+                lpSum(x_ij_misc4[(i, j)] * wheat_42w.loc[i][j] for i in source_misc4.keys() for j in dest_misc4.keys()) +
                 lpSum(x_ij_wheat1[(i, j)] * wheat_58w.loc[i][j] for i in source_wheat1.keys() for j in dest_wheat1.keys()) +
                 lpSum(x_ij_rra1[(i, j)] * rice_58w.loc[i][j] for i in source_rra1.keys() for j in dest_rra1.keys()) +
-                lpSum(x_ij_coarseGrain1[(i, j)] * rail_cost.loc[i][j] for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()) +
-                lpSum(x_ij_frkrra1[(i, j)] * rail_cost.loc[i][j] for i in source_frkrra1.keys() for j in dest_frkrra1.keys()) +
-                lpSum(x_ij_frk_br1[(i, j)] * rail_cost.loc[i][j] for i in source_frkbr1.keys() for j in dest_frkbr1.keys()) +
-                lpSum(x_ij_frk1[(i, j)] * rail_cost.loc[i][j] for i in source_frk1.keys() for j in dest_frk1.keys()) +
-                lpSum(x_ij_frkcgr1[(i, j)] * rail_cost.loc[i][j] for i in source_frkcgr1.keys() for j in dest_frkcgr1.keys()) +
-                lpSum(x_ij_wcgr1[(i, j)] * rail_cost.loc[i][j] for i in source_wcgr1.keys() for j in dest_wcgr1.keys()) +
-                lpSum(x_ij_rrc1[(i, j)] * rail_cost.loc[i][j] for i in source_rrc1.keys() for j in dest_rrc1.keys()) +
-                lpSum(x_ij_ragi1[(i, j)] * rail_cost.loc[i][j] for i in source_ragi1.keys() for j in dest_ragi1.keys()) +
-                lpSum(x_ij_jowar1[(i, j)] * rail_cost.loc[i][j] for i in source_jowar1.keys() for j in dest_jowar1.keys()) +
-                lpSum(x_ij_bajra1[(i, j)] * rail_cost.loc[i][j] for i in source_bajra1.keys() for j in dest_bajra1.keys()) +
-                lpSum(x_ij_maize1[(i, j)] * rail_cost.loc[i][j] for i in source_maize1.keys() for j in dest_maize1.keys()) +
-                lpSum(x_ij_misc11[(i, j)] * rail_cost.loc[i][j] for i in source_misc11.keys() for j in dest_misc11.keys()) +
-                lpSum(x_ij_misc21[(i, j)] * rail_cost.loc[i][j] for i in source_misc21.keys() for j in dest_misc21.keys()) +
-                lpSum(x_ij_wheaturs1[(i, j)] * rail_cost.loc[i][j] for i in source_wheaturs1.keys() for j in dest_wheaturs1.keys()) +
-                lpSum(x_ij_wheatfaq1[(i, j)] * rail_cost.loc[i][j] for i in source_wheatfaq1.keys() for j in dest_wheatfaq1.keys()) +
-                lpSum(x_ij_wheatrra1[(i, j)] * rail_cost.loc[i][j] for i in source_wheatrra1.keys() for j in dest_wheatrra1.keys()) +
-                lpSum(x_ij_frk_rra1[(i, j)] * rail_cost.loc[i][j] for i in source_frk_rra1.keys() for j in dest_frk_rra1.keys()) +
-                lpSum(x_ij_misc31[(i, j)] * rail_cost.loc[i][j] for i in source_misc31.keys() for j in dest_misc31.keys()) +
-                lpSum(x_ij_misc41[(i, j)] * rail_cost.loc[i][j] for i in source_misc41.keys() for j in dest_misc41.keys()) 
+                lpSum(x_ij_coarseGrain1[(i, j)] * rice_58w.loc[i][j] for i in source_coarseGrain1.keys() for j in dest_coarseGrain1.keys()) +
+                lpSum(x_ij_frkrra1[(i, j)] * rice_58w.loc[i][j] for i in source_frkrra1.keys() for j in dest_frkrra1.keys()) +
+                lpSum(x_ij_frk_br1[(i, j)] * rice_58w.loc[i][j] for i in source_frkbr1.keys() for j in dest_frkbr1.keys()) +
+                lpSum(x_ij_frk1[(i, j)] * rice_58w.loc[i][j] for i in source_frk1.keys() for j in dest_frk1.keys()) +
+                lpSum(x_ij_frkcgr1[(i, j)] * rice_58w.loc[i][j] for i in source_frkcgr1.keys() for j in dest_frkcgr1.keys()) +
+                lpSum(x_ij_wcgr1[(i, j)] * rice_58w.loc[i][j] for i in source_wcgr1.keys() for j in dest_wcgr1.keys()) +
+                lpSum(x_ij_rrc1[(i, j)] * rice_58w.loc[i][j] for i in source_rrc1.keys() for j in dest_rrc1.keys()) +
+                lpSum(x_ij_ragi1[(i, j)] * rice_58w.loc[i][j] for i in source_ragi1.keys() for j in dest_ragi1.keys()) +
+                lpSum(x_ij_jowar1[(i, j)] * rice_58w.loc[i][j] for i in source_jowar1.keys() for j in dest_jowar1.keys()) +
+                lpSum(x_ij_bajra1[(i, j)] * rice_58w.loc[i][j] for i in source_bajra1.keys() for j in dest_bajra1.keys()) +
+                lpSum(x_ij_maize1[(i, j)] * rice_58w.loc[i][j] for i in source_maize1.keys() for j in dest_maize1.keys()) +
+                lpSum(x_ij_misc11[(i, j)] * rice_58w.loc[i][j] for i in source_misc11.keys() for j in dest_misc11.keys()) +
+                lpSum(x_ij_misc21[(i, j)] * rice_58w.loc[i][j] for i in source_misc21.keys() for j in dest_misc21.keys()) +
+                lpSum(x_ij_wheaturs1[(i, j)] * wheat_58w.loc[i][j] for i in source_wheaturs1.keys() for j in dest_wheaturs1.keys()) +
+                lpSum(x_ij_wheatfaq1[(i, j)] * wheat_58w.loc[i][j] for i in source_wheatfaq1.keys() for j in dest_wheatfaq1.keys()) +
+                lpSum(x_ij_wheatrra1[(i, j)] * rice_58w.loc[i][j] for i in source_wheatrra1.keys() for j in dest_wheatrra1.keys()) +
+                lpSum(x_ij_frk_rra1[(i, j)] * rice_58w.loc[i][j] for i in source_frk_rra1.keys() for j in dest_frk_rra1.keys()) +
+                lpSum(x_ij_misc31[(i, j)] * rice_58w.loc[i][j] for i in source_misc31.keys() for j in dest_misc31.keys()) +
+                lpSum(x_ij_misc41[(i, j)] * rice_58w.loc[i][j] for i in source_misc41.keys() for j in dest_misc41.keys()) 
             )
              
             for i in source_wheat.keys():
