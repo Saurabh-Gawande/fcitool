@@ -667,7 +667,7 @@ def generate_monthly_solution():
 
 @app.route("/MonthlyDataSend", methods=['GET'])
 def export_plan():
-    url = "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner"
+    url = "https://fcitest.ncorps.in/api/ToolOptimizerWebApi/PostMonthlyPlanner"
     
     # Generate the monthly solution
     relevant_data = generate_monthly_solution()
@@ -701,7 +701,7 @@ def export_plan():
 
 @app.route("/MonthlyDataSendMode2", methods=['GET'])
 def MonthlyDataSendMode2():
-    url = "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMode2MonthlyPlanner"
+    url = "https://fcitest.ncorps.in/api/ToolOptimizerWebApi/PostMode2MonthlyPlanner"
     
     relevant_data = { 
         "WH_RH_Tag": [
@@ -4156,8 +4156,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
             
@@ -4371,8 +4371,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -4574,8 +4574,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
                     
@@ -4778,8 +4778,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -4980,8 +4980,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -5182,8 +5182,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -5384,8 +5384,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -5586,8 +5586,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -5789,8 +5789,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -5992,8 +5992,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -6195,8 +6195,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -6398,8 +6398,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -6601,8 +6601,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -6804,8 +6804,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -7007,8 +7007,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -7210,8 +7210,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -7409,8 +7409,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -7437,7 +7437,7 @@ def Daily_Planner():
             df_rrc["DestinationIndentId"] =destinationIndentId
             df_rrc["SourceRailHeadName"] = SourceRailHeadName
             df_rrc["DestinationRailHeadName"] = DestinationRailHeadName
-          
+            print(df_rrc)
             for i in dest_rrc_inline.keys():
                 for j in range(len(df_rrc["DestinationRailHead"])):
                     if (i.split("_")[0] == df_rrc.iloc[j]["DestinationRailHead"] or dest_rrc_inline[i].split("_")[0] == df_rrc.iloc[j]["DestinationRailHead"]):
@@ -7605,8 +7605,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -7803,8 +7803,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -8001,8 +8001,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -8200,8 +8200,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -8398,8 +8398,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -8596,8 +8596,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -8794,8 +8794,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -8992,8 +8992,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -9190,8 +9190,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -9388,8 +9388,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
@@ -9586,8 +9586,8 @@ def Daily_Planner():
                     destinationRH.append(destRH)
                     sourceMergingId.append(org_merging_id)
                     destinationMergingId.append(dest_merging_id)
-                    sourceIndentId.append(org_IndentId)
-                    destinationIndentId.append(dest_IndentId)
+                    sourceIndentId.append([org_IndentId])
+                    destinationIndentId.append([dest_IndentId])
                     SourceRailHeadName.append(conf_orgRailHeadName)
                     DestinationRailHeadName.append(conf_destRailHeadName)
 
