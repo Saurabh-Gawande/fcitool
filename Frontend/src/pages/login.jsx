@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const portalUrl = config.portalUrl;
-  
+
   const navigate = useNavigate();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -14,7 +14,7 @@ function Login() {
   const [modalValue, setModalValue] = useState("");
 
   const images = ["static/img/slider1.jpg", "static/img/slider6.jpg"];
-  
+
   const totalImages = images.length;
   const autoSlideInterval = 3000;
 
@@ -49,7 +49,7 @@ function Login() {
         })
         .then((data) => {
           if (data && data.response && data.response.region) {
-            sessionStorage.setItem("region", data.response.region);
+            localStorage.getItem("region", data.response.region);
             if (data.response.region === "H.P.") {
               navigate("/Monthly_Solution");
             } else {

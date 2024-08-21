@@ -189,6 +189,25 @@ function Daily_Planner() {
   const [disableAfterImport, setDisableAfterImport] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalValue, setModalValue] = useState("");
+  const [state, setState] = useState(null);
+
+  useEffect(() => {
+    // Get the current URL from the browser's address bar
+    let currentUrl = window.location.href;
+
+    // Create a URL object based on the current URL
+    let urlObj = new URL(currentUrl);
+
+    // Extract the 'state' parameter
+    let stateParam = urlObj.searchParams.get("state");
+
+    // Set the extracted state in the local state
+    if (stateParam) {
+      localStorage.setItem("region", stateParam);
+    }
+
+    setState(stateParam);
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   const closeModal = () => {
     setShowModal(false);
@@ -2075,7 +2094,7 @@ function Daily_Planner() {
       misc4_InlineDestination: misc4_InlineDestination,
 
       TEFDdata: TEFDdata,
-      region: sessionStorage.getItem("region"),
+      region: state || localStorage.getItem("region"),
 
       rice_origin1: riceOrigin1, // rice origin data
       rice_destination1: riceDestination1, //rice destination data
@@ -2305,7 +2324,7 @@ function Daily_Planner() {
 
       const timestamp = `${year}/${month}/${date} |  Time: ${hours}:${minutes}:${seconds}`;
 
-      const region = sessionStorage.getItem("region") || "Unknown Region"; // Provide a default value if region is not set
+      const region = localStorage.getItem("region") || "Unknown Region"; // Provide a default value if region is not set
 
       pdfDoc.setFontSize(10);
       pdfDoc.text(`Region: ${region}  |  Date: ${timestamp}`, 15, 10);
@@ -2601,9 +2620,7 @@ function Daily_Planner() {
   const fetchData = (event) => {
     event.preventDefault();
     fetch(
-      `${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region=${sessionStorage.getItem(
-        "region"
-      )}`
+      `${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region=${state}`
     )
       .then((response) => {
         if (response.status === 200) {

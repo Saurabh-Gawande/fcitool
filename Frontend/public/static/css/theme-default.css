@@ -6818,7 +6818,7 @@ div.tagsinput div {
 }
 /* END Tocify */
 /* Filetree */
-ul.jqueryFileTree {
+/* ul.jqueryFileTree {
   font-size: 11px;
   line-height: 18px;
   padding: 0px;
@@ -6839,7 +6839,7 @@ ul.jqueryFileTree a {
 }
 ul.jqueryFileTree a:hover {
   background: #e9edf1;
-}
+} */
 li.directory {
   background: url(../img/filetree/directory.png) left top no-repeat;
 }

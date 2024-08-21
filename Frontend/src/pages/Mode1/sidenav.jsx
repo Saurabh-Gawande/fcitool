@@ -5,7 +5,7 @@ function Sidenav() {
     <div className="page-sidebar">
       <ul className="x-navigation" style={{ backgroundColor: "#ebab44b0" }}>
         <li className="xn-logo">
-          <a href="#">{sessionStorage.getItem("region")}</a>
+          <a href="#">{localStorage.getItem("region")}</a>
           <a href="#" className="x-navigation-control"></a>
         </li>
         <li className="xn-profile">
@@ -28,8 +28,8 @@ function Sidenav() {
             <span className="xn-text">Home</span>
           </a>
         </li> */}
-        {sessionStorage.getItem("region") === "admin" ||
-        sessionStorage.getItem("region") === "H.P." ? (
+        {localStorage.getItem("region") === "admin" ||
+        localStorage.getItem("region") === "H.P." ? (
           <li>
             <a href="/Monthly_Solution">
               <span className="fa fa-calendar"></span>
@@ -37,7 +37,7 @@ function Sidenav() {
             </a>
           </li>
         ) : null}
-        {sessionStorage.getItem("region") === "H.P." ? null : (
+        {localStorage.getItem("region") === "H.P." ? null : (
           <li>
             <a href="/Daily_Planner">
               <span className="fa fa-desktop"></span>{" "}
@@ -51,8 +51,8 @@ function Sidenav() {
             <span className="xn-text">Alternate Railhead</span>
           </a>
         </li> */}
-        {sessionStorage.getItem("region") === "admin" ||
-        sessionStorage.getItem("region") === "H.P." ? (
+        {localStorage.getItem("region") === "admin" ||
+        localStorage.getItem("region") === "H.P." ? (
           <li>
             <a href="/Mode2">
               <span className="fa fa-train"></span>{" "}
