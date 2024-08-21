@@ -28,7 +28,7 @@ function Sidenav() {
             <span className="xn-text">Home</span>
           </a>
         </li> */}
-        {localStorage.getItem("region") === "admin" ||
+        {localStorage.getItem("region") === "India" ||
         localStorage.getItem("region") === "H.P." ? (
           <li>
             <a href="/Monthly_Solution">
@@ -51,7 +51,7 @@ function Sidenav() {
             <span className="xn-text">Alternate Railhead</span>
           </a>
         </li> */}
-        {localStorage.getItem("region") === "admin" ||
+        {localStorage.getItem("region") === "India" ||
         localStorage.getItem("region") === "H.P." ? (
           <li>
             <a href="/Mode2">
