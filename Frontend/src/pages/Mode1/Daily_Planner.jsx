@@ -2632,6 +2632,7 @@ function Daily_Planner() {
       })
       .then((data) => {
         if (data) {
+          console.log("data", data);
           setProgress((prev) => [
             ...prev,
             "Successfully imported data from portal",
@@ -2745,6 +2746,10 @@ function Daily_Planner() {
               destinationIndentIds: item.destinationIndentIds,
               destinationRailHeadName: item.destinationRailHeadName,
               sourceRailHeadName: item.sourceRailHeadName,
+              sourceInlineRailHead: item.sourceInlineRailHead,
+              destinationInlineRailHead: item.destinationInlineRailHead,
+              destinationInlineRailHeadName: item.destinationInlineRailHeadName,
+              sourceInlineRailHeadName: item.sourceInlineRailHeadName,
             }));
             setFixeddata(updatedRouteFixing);
           }
@@ -4026,14 +4031,29 @@ function Daily_Planner() {
                             {fixed_data.map((item) => (
                               <tr key={item.id}>
                                 <td>{item.origin_state}</td>
-                                <td>{item.sourceVirtualCode}</td>
+                                <td>
+                                  {item.sourceVirtualCode &&
+                                  item.sourceInlineRailHead
+                                    ? item.sourceVirtualCode +
+                                      "+" +
+                                      item.sourceInlineRailHead
+                                    : item.sourceVirtualCode}
+                                </td>
                                 {/* <td>{item.origin_railhead}</td> */}
                                 <td>{item.destination_state}</td>
-                                <td>{item.destinationVirtualCode}</td>
+                                <td>
+                                  {item.destinationVirtualCode &&
+                                  item.destinationInlineRailHead
+                                    ? item.destinationVirtualCode +
+                                      "+" +
+                                      item.destinationInlineRailHead
+                                    : item.destinationVirtualCode}
+                                </td>
                                 {/* <td>{item.destination_railhead}</td> */}
                                 <td>{item.sourceRakeType}</td>
                                 <td>{item.Commodity}</td>
                                 <td>{item.value}</td>
+
                                 {/* <td>
                                   <span
                                     style={{
