@@ -21,7 +21,7 @@ function App() {
           {/* <Route path="/logout" element={<Logout />} /> */}
           <Route path="/Monthly_Solution" element={<Monthly_Solution />} />
           <Route path="/Mode2" element={<Template />} />
-          <Route path="/Daily_Planner" element={<Daily_Planner />} />
+          <Route path="/Movement_Planner" element={<Daily_Planner />} />
           {/* <Route path="/Reset_Password" element={<Reset_Password />} /> */}
         </Routes>
       </UserState>

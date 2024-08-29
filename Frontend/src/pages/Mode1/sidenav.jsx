@@ -39,7 +39,7 @@ function Sidenav() {
         ) : null}
         {localStorage.getItem("region") === "H.P." ? null : (
           <li>
-            <a href="/Daily_Planner">
+            <a href="/Movement_Planner">
               <span className="fa fa-desktop"></span>{" "}
               <span className="xn-text">Daily Planner</span>
             </a>
