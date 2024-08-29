@@ -8,6 +8,7 @@ import pickle
 from flask_cors import CORS
 import xlsxwriter
 import numpy as np
+import threading
 
 # created flask app 
 app = Flask(__name__)
@@ -175,54 +176,54 @@ def Rail_cost_matrix():
 #     return(json.dumps(json_object, indent = 1))
     
         
-@app.route("/read_Relevant_Result",methods = ["GET"])
-def read_Relevant_Result():
-    if request.method == "GET":        
-        try: 
-            df1 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Wheat URS")
-            df2 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Wheat FAQ")    
-            df3 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice RRA")    
-            df4 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice FRKRRA")    
-            df5 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice FRKBR")    
-            df6 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice RRC")    
-            df7 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Bajra")    
-            df8 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Ragi")    
-            df9 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Jowar")    
-            df10 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Maize")    
-            df11 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Misc 1")    
-            df12 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Misc 2")    
-            df13 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
-            if 'Unnamed: 0' in df13.columns:
-                df13.drop(columns=['Unnamed: 0'], inplace=True)  
+# @app.route("/read_Relevant_Result",methods = ["GET"])
+# def read_Relevant_Result():
+#     if request.method == "GET":        
+#         try: 
+#             df1 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Wheat URS")
+#             df2 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Wheat FAQ")    
+#             df3 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice RRA")    
+#             df4 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice FRKRRA")    
+#             df5 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice FRKBR")    
+#             df6 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice RRC")    
+#             df7 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Bajra")    
+#             df8 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Ragi")    
+#             df9 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Jowar")    
+#             df10 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Maize")    
+#             df11 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Misc 1")    
+#             df12 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Misc 2")    
+#             df13 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
+#             if 'Unnamed: 0' in df13.columns:
+#                 df13.drop(columns=['Unnamed: 0'], inplace=True)  
 
-            json_data1 = df1.to_json(orient='records', indent=1)
-            json_data2 = df2.to_json(orient='records', indent=1)
-            json_data3 = df3.to_json(orient='records', indent=1)
-            json_data4 = df4.to_json(orient='records', indent=1)
-            json_data5 = df5.to_json(orient='records', indent=1)
-            json_data6 = df6.to_json(orient='records', indent=1)
-            json_data7 = df7.to_json(orient='records', indent=1)
-            json_data8 = df8.to_json(orient='records', indent=1)
-            json_data9 = df9.to_json(orient='records', indent=1)
-            json_data10 = df10.to_json(orient='records', indent=1)
-            json_data11 = df11.to_json(orient='records', indent=1)
-            json_data12 = df12.to_json(orient='records', indent=1)
-            json_data13 = df13.to_json(orient='records', indent=1)
+#             json_data1 = df1.to_json(orient='records', indent=1)
+#             json_data2 = df2.to_json(orient='records', indent=1)
+#             json_data3 = df3.to_json(orient='records', indent=1)
+#             json_data4 = df4.to_json(orient='records', indent=1)
+#             json_data5 = df5.to_json(orient='records', indent=1)
+#             json_data6 = df6.to_json(orient='records', indent=1)
+#             json_data7 = df7.to_json(orient='records', indent=1)
+#             json_data8 = df8.to_json(orient='records', indent=1)
+#             json_data9 = df9.to_json(orient='records', indent=1)
+#             json_data10 = df10.to_json(orient='records', indent=1)
+#             json_data11 = df11.to_json(orient='records', indent=1)
+#             json_data12 = df12.to_json(orient='records', indent=1)
+#             json_data13 = df13.to_json(orient='records', indent=1)
            
-            json_data = {"Wheat_urs": json_data1, "Wheat_faq": json_data2, "RRA": json_data3, "frk_rra": json_data4 , "frk_br": json_data5 ,
-                         "RRC": json_data6, "Bajra": json_data7, "Ragi": json_data8, "Jowar": json_data9, "Maize": json_data10, "Misc1": json_data11,
-                         "Misc2": json_data12, "RH_RH_tag": json_data13  }
-        except Exception as e:
-            print(f"Error occurred: {e}")  # Log the error for debugging purposes
-            json_data = {
-                "Status": 0,
-                "Error": str(e)  # Include the error message for debugging
-            }
+#             json_data = {"Wheat_urs": json_data1, "Wheat_faq": json_data2, "RRA": json_data3, "frk_rra": json_data4 , "frk_br": json_data5 ,
+#                          "RRC": json_data6, "Bajra": json_data7, "Ragi": json_data8, "Jowar": json_data9, "Maize": json_data10, "Misc1": json_data11,
+#                          "Misc2": json_data12, "RH_RH_tag": json_data13  }
+#         except Exception as e:
+#             print(f"Error occurred: {e}")  # Log the error for debugging purposes
+#             json_data = {
+#                 "Status": 0,
+#                 "Error": str(e)  # Include the error message for debugging
+#             }
 
-        json_object = json.dumps(json_data)
-        return json_object
-    else:
-        return ("error")
+#         json_object = json.dumps(json_data)
+#         return json_object
+#     else:
+#         return ("error")
     
     
 # @app.route("/read_Daily_Planner_S2",methods = ["POST","GET"])
@@ -508,155 +509,430 @@ def read_Relevant_Result():
 
 
 
-dataMonthly_rail = {}
-@app.route("/Monthly_Solution",methods = ["POST","GET"])
+# dataMonthly_rail = {}
+# @app.route("/Monthly_Solution",methods = ["POST","GET"])
+# def Monthly_Solution():
+#     if request.method == "POST":
+#         try:
+#             # fetched_data = request.get_json()
+#             # type = fetched_data["type"]
+#             # stateRestrictionList = fetched_data["stateRestrictionList"]
+#             # fixed_src = [item['sourceState'] for item in stateRestrictionList["data"]]
+#             # dest_src = [item['destinationState'] for item in stateRestrictionList["data"]]
+#             # commo = [item['commodity'] for item in stateRestrictionList["data"]]
+#             # commo1 = ['w(urs)']
+
+#             # print (stateRestrictionList["data"])
+#             # print(fixed_src, dest_src, commo)
+
+#             # if type == "Uploaded":
+#             #     print("upload")
+#                 # data=pd.ExcelFile("Input//Input_template_Monthly_Planner.xlsx")
+#                 # supply = pd.read_excel(data,sheet_name="Supply",index_col=1)
+#                 # demand = pd.read_excel(data,sheet_name="Demand",index_col=1)
+#                 # print(supply, "supply")
+#                 # print(demand, "damand")
+#             # else: 
+#             print('Imported')
+#             data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx")
+#             data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx")
+#             supply = pd.read_excel(data2, sheet_name="MonthlyData",index_col=1)
+#             print(supply, "supply")
+#             demand = pd.read_excel(data1, sheet_name="MonthlyData",index_col=1)
+#             print(demand, "demand")
+#             # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
+#             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
+#             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
+#             prob=LpProblem("FCI_monthly_allocation_rail",LpMinimize)
+
+#             commodity = ["w(urs)","w(faq)","r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
+#             cmd_match = {"w(urs)":"Wheat URS","w(faq)":"Wheat FAQ","r(rra)":"Rice RRA","r(frkrra)":"Rice FRKRRA","r(frkbr)":"Rice FRKBR","r(rrc)":"Rice RRC","m(bajra)":"Millets Bajra","m(ragi)":"Millets Ragi","m(jowar)":"Millets Jowar","m(maize)":"Millets Maize","misc1":"Misc 1","misc2":"Misc 2"}
+            
+#             for k in commodity:
+#                 supply[cmd_match[k]].sum()
+#                 print(supply[cmd_match[k]].sum(),k)
+           
+#             for k in commodity:
+#                 demand[cmd_match[k]].sum()
+#                 print(demand[cmd_match[k]].sum(), k)
+           
+#             for k in commodity:
+#                 if demand[cmd_match[k]].sum() <= supply[cmd_match[k]].sum():
+#                     print(cmd_match[k],":","TRUE")
+#                 else:
+#                     print(cmd_match[k],":","FALSE")
+            
+#             x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],lowBound = 0,cat="Integer")
+            
+#             prob+=lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
+#             # print(lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity))
+            
+#             # for i in supply.index:
+#             #     for j in demand.index:
+#             #         for k in commo:
+#             #             if supply["State"][i] in fixed_src and demand["State"][j] in dest_src:
+#             #                 prob += x_ijk[(i, j, k)] == 0
+#                             # print(x_ijk[(i,j,k)]==0)
+
+#             for i in supply.index:
+#                 for k in commodity:
+#                     prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
+#                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
+#                     # prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
+#                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
+
+#             for i in demand.index:
+#                 for k in commodity:
+#                     # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
+#                     prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i]
+#                     # print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
+#                     # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
+#                     # print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
+            
+#             prob.writeLP("FCI_monthly_allocation.lp")
+#             prob.solve()
+#             # prob.solve(CPLEX())
+#             #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
+#             print("Status:", LpStatus[prob.status])
+#             print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
+#             print("Total Number of Variables:",len(prob.variables()))
+#             print("Total Number of Constraints:",len(prob.constraints))
+            
+#             # for k in commodity:
+#             #     print(cmd_match[k],":",0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index).value())
+
+#             rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
+#             A=[]
+#             B=[]
+#             C=[]
+#             D=[]
+#             E=[]
+#             F=[]
+
+#             for k in commodity:
+#                 for i in supply.index:
+#                     for j in demand.index:
+#                         if x_ijk[(i,j,k)].value()>0:
+#                             A.append(i)
+#                             E.append(supply["State"][i])
+#                             B.append(j)
+#                             F.append(demand["State"][j])
+#                             C.append(cmd_match[k])
+#                             D.append(x_ijk[(i,j,k)].value())
+                                    
+#             rh_tag["From"]=A
+#             rh_tag["To"]=B
+#             rh_tag["Commodity"]=C
+#             rh_tag["Values"]=D
+#             rh_tag["Values"]=rh_tag["Values"]
+#             rh_tag["From_state"]=E
+#             rh_tag["To_state"]=F
+            
+#             Dict_df={}
+
+#             for k in commodity:
+#                 df=rh_tag[rh_tag["Commodity"]==cmd_match[k]]
+#                 Dict_df[k]=df
+            
+#             df_k={}
+            
+#             for k in commodity:
+#                 df_k[k]=Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum")
+#                 print(Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum"))
+            
+#             excel_file_name="Output//Output_monthly_planner.xlsx"
+
+#             with pd.ExcelWriter(excel_file_name, engine="openpyxl") as writer:
+#                 for k in commodity:
+#                     df_k[k].to_excel(writer,sheet_name=cmd_match[k],index=True)
+#                 rh_tag.to_excel(writer, sheet_name="RH_RH_tag")
+            
+#         except Exception as e:
+#             print(e)
+#             dataMonthly_rail["status"] = 0
+#         # json_data = json.dumps(data1)
+#         # json_object = json.loads(json_data)
+
+#         return jsonify({"message": "Success"})
+
+#------------------------------------------------ async --------------------------------------------------------
+
+# dataMonthly_rail = {}
+
+# @app.route("/Monthly_Solution", methods=["POST", "GET"])
+# def Monthly_Solution():
+#     if request.method == "POST":
+#         data = request.get_json()
+
+#         def process_monthly_solution(fetched_data):
+#             try:
+#                 # type = fetched_data["type"]
+#                 # stateRestrictionList = fetched_data["stateRestrictionList"]
+#                 # fixed_src = [item['sourceState'] for item in stateRestrictionList["data"]]
+#                 # dest_src = [item['destinationState'] for item in stateRestrictionList["data"]]
+#                 # commo = [item['commodity'] for item in stateRestrictionList["data"]]
+
+#                 # print(stateRestrictionList["data"])
+#                 # print(fixed_src, dest_src, commo)
+
+#                 # print('Imported')
+#                 data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx", engine='openpyxl')
+#                 data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx", engine='openpyxl')
+#                 supply = pd.read_excel(data2, sheet_name="MonthlyData", index_col=1)
+#                 print(supply, "supply")
+#                 demand = pd.read_excel(data1, sheet_name="MonthlyData", index_col=1)
+#                 print(demand, "demand")
+#                 matrices_data = pd.ExcelFile("Input//Non-TEFD.xlsx", engine='openpyxl')
+#                 rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
+#                 print(rail_cost)
+#                 prob = LpProblem("FCI_monthly_allocation_rail", LpMinimize)
+
+#                 commodity = ["w(urs)", "w(faq)", "r(rra)", "r(frkrra)", "r(frkbr)", "r(rrc)", "m(bajra)", "m(ragi)", "m(jowar)", "m(maize)", "misc1", "misc2"]
+#                 cmd_match = {
+#                     "w(urs)": "Wheat URS", "w(faq)": "Wheat FAQ", "r(rra)": "Rice RRA", "r(frkrra)": "Rice FRKRRA", 
+#                     "r(frkbr)": "Rice FRKBR", "r(rrc)": "Rice RRC", "m(bajra)": "Millets Bajra", "m(ragi)": "Millets Ragi", 
+#                     "m(jowar)": "Millets Jowar", "m(maize)": "Millets Maize", "misc1": "Misc 1", "misc2": "Misc 2"
+#                 }
+
+#                 for k in commodity:
+#                     supply[cmd_match[k]].sum()
+#                     print(supply[cmd_match[k]].sum(), k)
+
+#                 for k in commodity:
+#                     demand[cmd_match[k]].sum()
+#                     print(demand[cmd_match[k]].sum(), k)
+
+#                 for k in commodity:
+#                     if demand[cmd_match[k]].sum() <= supply[cmd_match[k]].sum():
+#                         print(cmd_match[k], ":", "TRUE")
+#                     else:
+#                         print(cmd_match[k], ":", "FALSE")
+#                 print(rail_cost.loc['KNGK']['EE'])
+#                 print('1')
+#                 x_ijk = LpVariable.dicts("x", [(i, j, k) for i in supply.index for j in demand.index for k in commodity], lowBound=0, cat="Integer")
+#                 print('2')
+#                 prob += lpSum(x_ijk[(i, j, k)] * rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
+
+#                 for i in supply.index:
+#                     for k in commodity:
+#                         prob += lpSum(x_ijk[(i, j, k)] for j in demand.index) <= supply[cmd_match[k]][i]
+
+#                 print('4')
+#                 for i in demand.index:
+#                     for k in commodity:
+#                         prob += lpSum(x_ijk[(j, i, k)] for j in supply.index) == demand[cmd_match[k]][i]
+
+#                 print('5')
+#                 prob.writeLP("FCI_monthly_allocation.lp")
+#                 prob.solve()
+#                 print("Status:", LpStatus[prob.status])
+#                 print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
+#                 print("Total Number of Variables:", len(prob.variables()))
+#                 print("Total Number of Constraints:", len(prob.constraints))
+
+#                 print('6')
+#                 rh_tag = pd.DataFrame([], columns=["From", "From_state", "To", "To_state", "Commodity", "Values"])
+#                 A, B, C, D, E, F = [], [], [], [], [], []
+
+#                 for k in commodity:
+#                     for i in supply.index:
+#                         for j in demand.index:
+#                             if x_ijk[(i, j, k)].value() > 0:
+#                                 A.append(i)
+#                                 E.append(supply["State"][i])
+#                                 B.append(j)
+#                                 F.append(demand["State"][j])
+#                                 C.append(cmd_match[k])
+#                                 D.append(x_ijk[(i, j, k)].value())
+
+#                 rh_tag["From"] = A
+#                 rh_tag["To"] = B
+#                 rh_tag["Commodity"] = C
+#                 rh_tag["Values"] = D
+#                 rh_tag["From_state"] = E
+#                 rh_tag["To_state"] = F
+
+#                 Dict_df = {}
+
+#                 for k in commodity:
+#                     df = rh_tag[rh_tag["Commodity"] == cmd_match[k]]
+#                     Dict_df[k] = df
+
+#                 df_k = {}
+#                 print('7')
+#                 for k in commodity:
+#                     df_k[k] = Dict_df[k].pivot_table(index="From_state", columns="To_state", values="Values", aggfunc="sum")
+#                     print(Dict_df[k].pivot_table(index="From_state", columns="To_state", values="Values", aggfunc="sum"))
+
+#                 print('8')
+#                 with pd.ExcelWriter("Output//Output_monthly_planner.xlsx", engine="openpyxl", if_sheet_exists='replace') as writer:
+#                     for k in commodity:
+#                         df_k[k].to_excel(writer, sheet_name=cmd_match[k], index=True)
+#                     rh_tag.to_excel(writer, sheet_name="RH_RH_tag")
+#                 print('9')
+#                 dataMonthly_rail["status"] = 1
+
+#             except Exception as e:
+#                 print(e)
+#                 dataMonthly_rail["status"] = 0
+
+#         thread = threading.Thread(target=process_monthly_solution, args=(data,))
+#         thread.start()
+#         return jsonify({"message": "Processing started"}), 202
+#------------------------------------------- stop -------------------------------------------------------------------------------------
+
+task_status = {}
+
+@app.route("/Monthly_Solution", methods=["POST"])
 def Monthly_Solution():
     if request.method == "POST":
-        try:
-            fetched_data = request.get_json()
-            type = fetched_data["type"]
-            stateRestrictionList = fetched_data["stateRestrictionList"]
-            fixed_src = [item['sourceState'] for item in stateRestrictionList["data"]]
-            dest_src = [item['destinationState'] for item in stateRestrictionList["data"]]
-            commo = [item['commodity'] for item in stateRestrictionList["data"]]
-            # commo1 = ['w(urs)']
+        data = request.get_json()
 
-            print (stateRestrictionList["data"])
-            print(fixed_src, dest_src, commo)
+        # Generate a unique task ID
+        task_id = str(uuid.uuid4())
+        task_status[task_id] = "processing"
 
-            if type == "Uploaded":
-                print("upload")
-                # data=pd.ExcelFile("Input//Input_template_Monthly_Planner.xlsx")
-                # supply = pd.read_excel(data,sheet_name="Supply",index_col=1)
-                # demand = pd.read_excel(data,sheet_name="Demand",index_col=1)
-                # print(supply, "supply")
-                # print(demand, "damand")
-            else: 
-                print('Imported')
-                data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx")
-                data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx")
-                supply = pd.read_excel(data2, sheet_name="MonthlyData",index_col=1)
+        def process_monthly_solution(fetched_data, task_id):
+            try:
+                # type = fetched_data["type"]
+                # stateRestrictionList = fetched_data["stateRestrictionList"]
+                # fixed_src = [item['sourceState'] for item in stateRestrictionList["data"]]
+                # dest_src = [item['destinationState'] for item in stateRestrictionList["data"]]
+                # commo = [item['commodity'] for item in stateRestrictionList["data"]]
+
+                # print(stateRestrictionList["data"])
+                # print(fixed_src, dest_src, commo)
+
+                # print('Imported')
+                data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx", engine='openpyxl')
+                data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx", engine='openpyxl')
+                supply = pd.read_excel(data2, sheet_name="MonthlyData", index_col=1)
                 print(supply, "supply")
-                demand = pd.read_excel(data1, sheet_name="MonthlyData",index_col=1)
+                demand = pd.read_excel(data1, sheet_name="MonthlyData", index_col=1)
                 print(demand, "demand")
-            # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
-            matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
-            rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
-            prob=LpProblem("FCI_monthly_allocation_rail",LpMinimize)
+                matrices_data = pd.ExcelFile("Input//Non-TEFD.xlsx", engine='openpyxl')
+                rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
+                print(rail_cost)
+                prob = LpProblem("FCI_monthly_allocation_rail", LpMinimize)
 
-            commodity = ["w(urs)","w(faq)","r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
-            cmd_match = {"w(urs)":"Wheat URS","w(faq)":"Wheat FAQ","r(rra)":"Rice RRA","r(frkrra)":"Rice FRKRRA","r(frkbr)":"Rice FRKBR","r(rrc)":"Rice RRC","m(bajra)":"Millets Bajra","m(ragi)":"Millets Ragi","m(jowar)":"Millets Jowar","m(maize)":"Millets Maize","misc1":"Misc 1","misc2":"Misc 2"}
-            
-            for k in commodity:
-                supply[cmd_match[k]].sum()
-                print(supply[cmd_match[k]].sum(),k)
-           
-            for k in commodity:
-                demand[cmd_match[k]].sum()
-                print(demand[cmd_match[k]].sum(), k)
-           
-            for k in commodity:
-                if demand[cmd_match[k]].sum() <= supply[cmd_match[k]].sum():
-                    print(cmd_match[k],":","TRUE")
-                else:
-                    print(cmd_match[k],":","FALSE")
-            
-            x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],lowBound = 0,cat="Integer")
-            
-            prob+=lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
-            # print(lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity))
-            
-            # for i in supply.index:
-            #     for j in demand.index:
-            #         for k in commo:
-            #             if supply["State"][i] in fixed_src and demand["State"][j] in dest_src:
-            #                 prob += x_ijk[(i, j, k)] == 0
-                            # print(x_ijk[(i,j,k)]==0)
+                commodity = ["w(urs)", "w(faq)", "r(rra)", "r(frkrra)", "r(frkbr)", "r(rrc)", "m(bajra)", "m(ragi)", "m(jowar)", "m(maize)", "misc1", "misc2"]
+                cmd_match = {
+                    "w(urs)": "Wheat URS", "w(faq)": "Wheat FAQ", "r(rra)": "Rice RRA", "r(frkrra)": "Rice FRKRRA", 
+                    "r(frkbr)": "Rice FRKBR", "r(rrc)": "Rice RRC", "m(bajra)": "Millets Bajra", "m(ragi)": "Millets Ragi", 
+                    "m(jowar)": "Millets Jowar", "m(maize)": "Millets Maize", "misc1": "Misc 1", "misc2": "Misc 2"
+                }
 
-            for i in supply.index:
                 for k in commodity:
-                    prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
-                    # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
-                    # prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
-                    # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
+                    supply[cmd_match[k]].sum()
+                    print(supply[cmd_match[k]].sum(), k)
 
-            for i in demand.index:
                 for k in commodity:
-                    # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
-                    prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i]
-                    # print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
-                    # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
-                    # print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
-            
-            prob.writeLP("FCI_monthly_allocation.lp")
-            prob.solve()
-            # prob.solve(CPLEX())
-            #prob.solve(CPLEX_CMD(options=['set mip tolerances mipgap 0.01']))
-            print("Status:", LpStatus[prob.status])
-            print("Minimum Cost of Transportation = Rs.", prob.objective.value(),"Lakh")
-            print("Total Number of Variables:",len(prob.variables()))
-            print("Total Number of Constraints:",len(prob.constraints))
-            
-            # for k in commodity:
-            #     print(cmd_match[k],":",0.5*lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index).value())
+                    demand[cmd_match[k]].sum()
+                    print(demand[cmd_match[k]].sum(), k)
 
-            rh_tag=pd.DataFrame([],columns=["From","From_state","To","To_state","Commodity","Values"])
-            A=[]
-            B=[]
-            C=[]
-            D=[]
-            E=[]
-            F=[]
+                for k in commodity:
+                    if demand[cmd_match[k]].sum() <= supply[cmd_match[k]].sum():
+                        print(cmd_match[k], ":", "TRUE")
+                    else:
+                        print(cmd_match[k], ":", "FALSE")
+                print(rail_cost.loc['KNGK']['EE'])
+                print('1')
+                x_ijk = LpVariable.dicts("x", [(i, j, k) for i in supply.index for j in demand.index for k in commodity], lowBound=0, cat="Integer")
+                print('2')
+                prob += lpSum(x_ijk[(i, j, k)] * rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
 
-            for k in commodity:
                 for i in supply.index:
-                    for j in demand.index:
-                        if x_ijk[(i,j,k)].value()>0:
-                            A.append(i)
-                            E.append(supply["State"][i])
-                            B.append(j)
-                            F.append(demand["State"][j])
-                            C.append(cmd_match[k])
-                            D.append(x_ijk[(i,j,k)].value())
-                                    
-            rh_tag["From"]=A
-            rh_tag["To"]=B
-            rh_tag["Commodity"]=C
-            rh_tag["Values"]=D
-            rh_tag["Values"]=rh_tag["Values"]
-            rh_tag["From_state"]=E
-            rh_tag["To_state"]=F
-            
-            Dict_df={}
+                    for k in commodity:
+                        prob += lpSum(x_ijk[(i, j, k)] for j in demand.index) <= supply[cmd_match[k]][i]
 
-            for k in commodity:
-                df=rh_tag[rh_tag["Commodity"]==cmd_match[k]]
-                Dict_df[k]=df
-            
-            df_k={}
-            
-            for k in commodity:
-                df_k[k]=Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum")
-                print(Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum"))
-            
-            excel_file_name="Output//Output_monthly_planner.xlsx"
+                print('4')
+                for i in demand.index:
+                    for k in commodity:
+                        prob += lpSum(x_ijk[(j, i, k)] for j in supply.index) == demand[cmd_match[k]][i]
 
-            with pd.ExcelWriter(excel_file_name, engine="openpyxl") as writer:
+                print('5')
+                prob.writeLP("FCI_monthly_allocation.lp")
+                prob.solve()
+                print("Status:", LpStatus[prob.status])
+                print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
+                print("Total Number of Variables:", len(prob.variables()))
+                print("Total Number of Constraints:", len(prob.constraints))
+
+                print('6')
+                rh_tag = pd.DataFrame([], columns=["From", "From_state", "To", "To_state", "Commodity", "Values"])
+                A, B, C, D, E, F = [], [], [], [], [], []
+
                 for k in commodity:
-                    df_k[k].to_excel(writer,sheet_name=cmd_match[k],index=True)
-                rh_tag.to_excel(writer, sheet_name="RH_RH_tag")
-            
-        except Exception as e:
-            print(e)
-            dataMonthly_rail["status"] = 0
-        # json_data = json.dumps(data1)
-        # json_object = json.loads(json_data)
+                    for i in supply.index:
+                        for j in demand.index:
+                            if x_ijk[(i, j, k)].value() > 0:
+                                A.append(i)
+                                E.append(supply["State"][i])
+                                B.append(j)
+                                F.append(demand["State"][j])
+                                C.append(cmd_match[k])
+                                D.append(x_ijk[(i, j, k)].value())
 
-        return jsonify({"message": "Success"})
+                rh_tag["From"] = A
+                rh_tag["To"] = B
+                rh_tag["Commodity"] = C
+                rh_tag["Values"] = D
+                rh_tag["From_state"] = E
+                rh_tag["To_state"] = F
+
+                Dict_df = {}
+
+                for k in commodity:
+                    df = rh_tag[rh_tag["Commodity"] == cmd_match[k]]
+                    Dict_df[k] = df
+
+                df_k = {}
+                print('7')
+                for k in commodity:
+                    df_k[k] = Dict_df[k].pivot_table(index="From_state", columns="To_state", values="Values", aggfunc="sum")
+                    print(Dict_df[k].pivot_table(index="From_state", columns="To_state", values="Values", aggfunc="sum"))                
+
+                with pd.ExcelWriter("Output//Output_monthly_planner.xlsx", engine="openpyxl", if_sheet_exists='replace') as writer:
+                    for k in commodity:
+                        df_k[k].to_excel(writer, sheet_name=cmd_match[k], index=True)
+                    rh_tag.to_excel(writer, sheet_name="RH_RH_tag")
+
+                # Mark task as completed
+                task_status[task_id] = "completed"
+
+            except Exception as e:
+                print(e)
+                # Mark task as failed
+                task_status[task_id] = "failed"
+
+        # Start the processing in a new thread
+        thread = threading.Thread(target=process_monthly_solution, args=(data, task_id))
+        thread.start()
+
+        return jsonify({"message": "Processing started", "task_id": task_id}), 202
+
+@app.route("/task_status/<task_id>", methods=["GET"])
+def task_status(task_id):
+    status = task_status.get(task_id, "not found")
+    return jsonify({"task_id": task_id, "status": status})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def generate_monthly_solution():
     try:
-        df = pd.read_excel('Output/Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
+        df = pd.read_excel('Output//Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
         # Remove the 'Unnamed: 0' column if it exists
         if 'Unnamed: 0' in df.columns:
             df = df.drop('Unnamed: 0', axis=1)
@@ -798,6 +1074,7 @@ def Daily_Planner():
             blocked_dest_rhcode = [] # destination Railhead
             blocked_org_state = [] # source state
             blocked_dest_state = [] # destination state
+            print("saurabh")
             
             # for blocking 58w (same as above)
             blocked_org_rhcode1 = []
