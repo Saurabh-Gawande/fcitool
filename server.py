@@ -1085,6 +1085,8 @@ def Daily_Planner():
             # for route fixing 42w , 42/58w
             confirmed_org_rhcode = [] # source railhead
             confirmed_dest_rhcode = [] # destination railhead
+            conf_org_inline_rhcode = [] # source inline railhead
+            conf_dest_inline_rhcode = [] # destination inline railhead
             confirmed_org_state = [] # source state
             confirmed_dest_state = [] # destination state
             confirmed_railhead_value = [] # rake values
@@ -1107,6 +1109,8 @@ def Daily_Planner():
             # for route fixing 58w (same as variables declared above)
             confirmed_org_rhcode1 = []
             confirmed_dest_rhcode1 = []
+            conf_org_inline_rhcode1 = [] # source inline railhead
+            conf_dest_inline_rhcode1 = [] # destination inline railhead
             confirmed_org_state1 = []
             confirmed_dest_state1 = []
             confirmed_railhead_value1 = []
@@ -1332,6 +1336,8 @@ def Daily_Planner():
             for i in range(len(confirmed_data1)):
                 confirmed_org_rhcode.append(confirmed_data1[i]["origin_railhead"])
                 confirmed_dest_rhcode.append(confirmed_data1[i]["destination_railhead"])
+                conf_org_inline_rhcode.append(confirmed_data1[i]["sourceInlineRailHead"])
+                conf_dest_inline_rhcode.append(confirmed_data1[i]["destinationInlineRailHead"])
                 confirmed_org_state.append(confirmed_data1[i]["origin_state"])
                 confirmed_dest_state.append(confirmed_data1[i]["destination_state"])
                 confirmed_railhead_value.append(confirmed_data1[i]["value"])
@@ -1355,6 +1361,8 @@ def Daily_Planner():
             for i in range(len(confirmed_data2)):
                 confirmed_org_rhcode1.append(confirmed_data2[i]["origin_railhead"])
                 confirmed_dest_rhcode1.append(confirmed_data2[i]["destination_railhead"])
+                conf_org_inline_rhcode1.append(confirmed_data2[i]["sourceInlineRailHead"])
+                conf_dest_inline_rhcode1.append(confirmed_data2[i]["destinationInlineRailHead"])
                 confirmed_org_state1.append(confirmed_data2[i]["origin_state"])
                 confirmed_dest_state1.append(confirmed_data2[i]["destination_state"])
                 confirmed_railhead_value1.append(confirmed_data2[i]["value"])
@@ -4397,6 +4405,8 @@ def Daily_Planner():
                 org_state = str(confirmed_org_state[i])
                 dest = str(confirmed_dest_rhcode[i])
                 dest_state = str(confirmed_dest_state[i])
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]                
                 Commodity = confirmed_railhead_commodities[i]
                 val = confirmed_railhead_value[i]
                 conf_sourceId = confirmed_sourceId[i]
@@ -4414,9 +4424,9 @@ def Daily_Planner():
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
                 if Commodity == 'Wheat':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     To_state.append(dest_state)
                     commodity.append("Wheat")
                     values.append(val)
@@ -4628,10 +4638,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Wheat':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat")
                     values.append(val)
@@ -4831,10 +4843,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state_rra.append(org_state)
-                    To.append(dest)
                     To_state_rra.append(dest_state)
                     commodity.append("RRA")
                     values.append(val)
@@ -5035,10 +5049,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state_rra.append(org_state)
-                    To.append(dest)
                     To_state_rra.append(dest_state)
                     commodity.append("RRA")
                     values.append(val)
@@ -5237,10 +5253,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Coarse Grains':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Coarse Grains")
                     values.append(val)
@@ -5439,10 +5457,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Coarse Grains':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Coarse Grains")
                     values.append(val)
@@ -5641,10 +5661,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'FRK RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK RRA")
                     values.append(val)
@@ -5843,10 +5865,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'FRK RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK RRA")
                     values.append(val)
@@ -6046,10 +6070,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'FRK BR':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK BR")
                     values.append(val)
@@ -6249,10 +6275,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'FRK BR':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK BR")
                     values.append(val)
@@ -6452,10 +6480,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Wheat+FRK':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat+FRK")
                     values.append(val)
@@ -6655,10 +6685,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Wheat+FRK':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat+FRK")
                     values.append(val)
@@ -6858,10 +6890,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'FRK+CGR':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK+CGR")
                     values.append(val)
@@ -7061,10 +7095,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'FRK+CGR':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK+CGR")
                     values.append(val)
@@ -7264,10 +7300,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Wheat+CGR':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat+CGR")
                     values.append(val)
@@ -7467,10 +7505,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Wheat+CGR':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat+CGR")
                     values.append(val)
@@ -7666,10 +7706,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'RRC':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("RRC")
                     values.append(val)
@@ -7862,10 +7904,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'RRC':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("RRC")
                     values.append(val)
@@ -8060,10 +8104,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Ragi':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Ragi")
                     values.append(val)
@@ -8258,10 +8304,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Ragi':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Ragi")
                     values.append(val)
@@ -8457,10 +8505,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Jowar':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Jowar")
                     values.append(val)
@@ -8655,10 +8705,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Ragi':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Ragi")
                     values.append(val)
@@ -8853,10 +8905,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Bajra':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Bajra")
                     values.append(val)
@@ -9051,10 +9105,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Bajra':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Bajra")
                     values.append(val)
@@ -9249,10 +9305,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Maize':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Maize")
                     values.append(val)
@@ -9447,10 +9505,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Maize':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Maize")
                     values.append(val)
@@ -9645,10 +9705,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Misc1':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc1")
                     values.append(val)
@@ -9843,10 +9905,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Misc1':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc1")
                     values.append(val)
@@ -10043,10 +10107,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Misc2':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc2")
                     values.append(val)
@@ -10243,10 +10309,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Misc2':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc2")
                     values.append(val)
@@ -10441,10 +10509,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Wheat(URS)':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat(URS)")
                     values.append(val)
@@ -10639,10 +10709,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Wheat(URS)':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat(URS)")
                     values.append(val)
@@ -10837,10 +10909,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Wheat(FAQ)':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat(FAQ)")
                     values.append(val)
@@ -11035,10 +11109,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Wheat(FAQ)':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat(FAQ)")
                     values.append(val)
@@ -11233,10 +11309,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Wheat+RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat+RRA")
                     values.append(val)
@@ -11431,10 +11509,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Wheat+RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Wheat+RRA")
                     values.append(val)
@@ -11629,10 +11709,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'FRK+RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK+RRA")
                     values.append(val)
@@ -11827,10 +11909,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'FRK+RRA':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("FRK+RRA")
                     values.append(val)
@@ -12025,10 +12109,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Misc3':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc3")
                     values.append(val)
@@ -12223,10 +12309,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Misc3':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc3")
                     values.append(val)
@@ -12421,10 +12509,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName[i]
                 conf_destRailHeadName = conf_destinationRailHeadName[i]
+                org_inline = conf_org_inline_rhcode[i]
+                dest_inline = conf_dest_inline_rhcode[i]
                 if Commodity == 'Misc4':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc4")
                     values.append(val)
@@ -12619,10 +12709,12 @@ def Daily_Planner():
                 dest_IndentId = conf_destinationIndentId1[i]
                 conf_orgRailHeadName = conf_sourceRailHeadName1[i]
                 conf_destRailHeadName = conf_destinationRailHeadName1[i]
+                org_inline = conf_org_inline_rhcode1[i]
+                dest_inline = conf_dest_inline_rhcode1[i]
                 if Commodity == 'Misc4':
-                    From.append(org)
+                    From.append(f"{org.split('_')[0]}+{org_inline}" if org and org_inline else org.split('_')[0])
+                    To.append(f"{dest.split('_')[0]}+{dest_inline}" if dest and dest_inline else dest.split('_')[0])
                     From_state.append(org_state)
-                    To.append(dest)
                     To_state.append(dest_state)
                     commodity.append("Misc4")
                     values.append(val)
