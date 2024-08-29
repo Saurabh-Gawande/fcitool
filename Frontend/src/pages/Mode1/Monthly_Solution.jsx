@@ -70,9 +70,7 @@ function Monthly_Solution() {
         .then((res) => res.json())
         .then((data) => setMonthlyDataCollection(data));
 
-      fetch(
-        `${portalUrl}/ToolOptimizerWebApi/StateRestrictionList`
-      )
+      fetch(`${portalUrl}/ToolOptimizerWebApi/StateRestrictionList`)
         .then((res) => res.json())
         .then((data) => setStateRestrictionList(data));
     } catch (error) {
@@ -211,41 +209,43 @@ function Monthly_Solution() {
         },
         body: JSON.stringify(payload),
       });
-      fetchReservationId_Revelant_result();
-      if (response.ok) {
+      // fetchReservationId_Revelant_result();
+      if (response.ok == 200) {
         alert("Solution Done!, Now you can download results");
         setSolutionSolved(true);
+        setIsLoading(false);
+        document.getElementById("toggle").checked = false;
+        document.getElementById("console_").innerHTML +=
+          "Solution has been done" +
+          "<br/> " +
+          "Click on download RH to RH Detailed plan" +
+          "<br/>";
+          
       } else {
         console.error("Failed to send inputs. Status code:", response.status);
       }
     } catch (error) {
       console.error("Error sending inputs:", error);
     } finally {
-      setIsLoading(false); // Reset loading state
+      // Reset loading state
+      console.log("null");
     }
-    document.getElementById("console_").innerHTML +=
-      "Solution has been done" +
-      "<br/> " +
-      "Click on download RH to RH Detailed plan" +
-      "<br/>";
-
-    document.getElementById("toggle").checked = false;
   };
 
-  const fetchReservationId_Revelant_result = () => {
-    fetch(ProjectIp + "/read_Relevant_Result", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const fetched_Relevant_Result = data;
-        set_Relevant_Result(fetched_Relevant_Result);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
+  // const fetchReservationId_Revelant_result = () => {
+  //   fetch(ProjectIp + "/read_Relevant_Result", {
+  //     method: "GET",
+  //     credentials: "include",
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       const fetched_Relevant_Result = data;
+  //       set_Relevant_Result(fetched_Relevant_Result);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // };
 
   const ExportPlan = () => {
     fetch(ProjectIp + "/MonthlyDataSend", {
@@ -271,27 +271,27 @@ function Monthly_Solution() {
       });
   };
 
-  const exportToExcel2 = async () => {
-    if (Relevant_result === null) {
-      window.alert("Fetching Result, Please Wait");
-      fetchReservationId_Revelant_result();
-    } else {
-      const workbook = XLSX.utils.book_new();
-      Object.entries(Relevant_result).forEach(([column, data]) => {
-        const parsedData = JSON.parse(data);
-        const worksheet = XLSX.utils.json_to_sheet(parsedData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, column);
-      });
-      const excelBuffer = XLSX.write(workbook, {
-        type: "array",
-        bookType: "xlsx",
-      });
-      const excelBlob = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      saveAs(excelBlob, "Monthly_Movement_results.xlsx");
-    }
-  };
+  // const exportToExcel2 = async () => {
+  //   if (Relevant_result === null) {
+  //     window.alert("Fetching Result, Please Wait");
+  //     fetchReservationId_Revelant_result();
+  //   } else {
+  //     const workbook = XLSX.utils.book_new();
+  //     Object.entries(Relevant_result).forEach(([column, data]) => {
+  //       const parsedData = JSON.parse(data);
+  //       const worksheet = XLSX.utils.json_to_sheet(parsedData);
+  //       XLSX.utils.book_append_sheet(workbook, worksheet, column);
+  //     });
+  //     const excelBuffer = XLSX.write(workbook, {
+  //       type: "array",
+  //       bookType: "xlsx",
+  //     });
+  //     const excelBlob = new Blob([excelBuffer], {
+  //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  //     });
+  //     saveAs(excelBlob, "Monthly_Movement_results.xlsx");
+  //   }
+  // };
 
   const getRowColor = (inward, outward) => {
     if (outward >= inward) {
@@ -600,14 +600,14 @@ function Monthly_Solution() {
                   <br />
                   {solutionSolved && (
                     <div>
-                      <button
+                      {/* <button
                         style={{ color: "black", marginLeft: "15px" }}
                         className="btn btn-success dropdown-toggle"
                         onClick={() => exportToExcel2()}
                       >
                         <i className="fa fa-bars"></i> Download Railhead To
                         Railhead Detailed Plan
-                      </button>
+                      </button> */}
 
                       <button
                         style={{ color: "black", marginLeft: "15px" }}
