@@ -237,10 +237,10 @@ function Daily_Planner() {
   useEffect(() => {
     const fetchData = async () => {
       const urls = [
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Wheat`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=Rice`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Wheat`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=Rice`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
       ];
 
       try {
