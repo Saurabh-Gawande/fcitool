@@ -943,7 +943,7 @@ def generate_monthly_solution():
 
 @app.route("/MonthlyDataSend", methods=['GET'])
 def export_plan():
-    url = "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMonthlyPlanner"
+    url = "https://fci.ncorps.in/api/ToolOptimizerWebApi/PostMonthlyPlanner"
     
     # Generate the monthly solution
     relevant_data = generate_monthly_solution()
@@ -977,7 +977,7 @@ def export_plan():
 
 @app.route("/MonthlyDataSendMode2", methods=['GET'])
 def MonthlyDataSendMode2():
-    url = "https://test.rakeplanner.callippus.co.uk/api/ToolOptimizerWebApi/PostMode2MonthlyPlanner"
+    url = "https://fci.ncorps.in/api/ToolOptimizerWebApi/PostMode2MonthlyPlanner"
     
     relevant_data = { 
         "WH_RH_Tag": [
