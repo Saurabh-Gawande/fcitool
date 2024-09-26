@@ -1069,6 +1069,53 @@ def Daily_Planner():
     dataDaily = {}
     if request.method == "POST": # post method
         try:
+            def fetch_cost_rate_matrix(matrix_type, rake_type, commodity):
+                portal_url = "https://test.rakeplanner.callippus.co.uk/api"
+                url = f'{portal_url}/ToolOptimizerWebApi/CostRateMatrixforTool'
+                params = {
+                    'matrixType': matrix_type,
+                    'rakeType': rake_type,
+                    'commodity': commodity
+                }
+
+                # Send a GET request to the API
+                response = requests.get(url, params=params)
+
+                # Check if the request was successful
+                if response.status_code == 200:
+                    # Assuming the response is in JSON format
+                    data = response.json()
+
+                    # Check if 'data' exists in the response
+                    if 'data' in data:
+                        TEFDdata = data['data']
+
+                        # Create DataFrames from 'codes' and 'columnData' if they exist
+                        if "codes" in TEFDdata and "columnData" in TEFDdata:
+                            df1 = pd.DataFrame(TEFDdata["codes"])
+                            df2 = pd.DataFrame(TEFDdata["columnData"])
+                            final_df = pd.concat([df1, df2], axis=1)
+                            final_df.set_index(0, inplace=True)
+                            return final_df
+                        else:
+                            print("Keys 'codes' or 'columnData' not found in the data.")
+                    else:
+                        print("'data' not found in the response.")
+                else:
+                    print(f"Failed to fetch data. Status code: {response.status_code}")
+
+            # Fetch data for different combinations of rakeType and commodity
+            wheat_42w = fetch_cost_rate_matrix('FreightRate', 'BCN', 'WHEAT')
+            rice_42w = fetch_cost_rate_matrix('FreightRate', 'BCN', 'RICE')
+            wheat_58w = fetch_cost_rate_matrix('FreightRate', 'BCNHL', 'WHEAT')
+            rice_58w = fetch_cost_rate_matrix('FreightRate', 'BCNHL', 'RICE')
+            distance_rh= fetch_cost_rate_matrix('FreightRate', 'BCN', 'WHEAT')
+            
+            print(wheat_42w.head())
+            print(rice_42w.head())
+            print(wheat_58w.head())
+            print(rice_58w.head())
+
             # for blocking 42w , 42/58w
             blocked_org_rhcode = [] # source Railhead 
             blocked_dest_rhcode = [] # destination Railhead
@@ -1382,19 +1429,19 @@ def Daily_Planner():
                 conf_sourceRailHeadName1.append(confirmed_data2[i]["sourceRailHeadName"])
                 conf_destinationRailHeadName1.append(confirmed_data2[i]["destinationRailHeadName"])
 
-            matrices_data = pd.ExcelFile("Input//Non-TEFD.xlsx", engine='openpyxl')
-            matrices_data1 = pd.ExcelFile("Input//Cost_matrix.xlsx", engine='openpyxl')
-            matrix = pd.ExcelFile("Input//Cost_matrix1.xlsx", engine='openpyxl')
+            # matrices_data = pd.ExcelFile("Input//Non-TEFD.xlsx", engine='openpyxl')
+            # matrices_data1 = pd.ExcelFile("Input//Cost_matrix.xlsx", engine='openpyxl')
+            # matrix = pd.ExcelFile("Input//Cost_matrix1.xlsx", engine='openpyxl')
             
-            wheat_42w = pd.read_excel(matrix, sheet_name="Sheet1", index_col=0)
-            rice_42w = pd.read_excel(matrix, sheet_name="Sheet2", index_col=0)
-            wheat_58w = pd.read_excel(matrix, sheet_name="Sheet3", index_col=0)
-            rice_58w = pd.read_excel(matrix, sheet_name="Sheet4", index_col=0)
+            # wheat_42w = pd.read_excel(matrix, sheet_name="Sheet1", index_col=0)
+            # rice_42w = pd.read_excel(matrix, sheet_name="Sheet2", index_col=0)
+            # wheat_58w = pd.read_excel(matrix, sheet_name="Sheet3", index_col=0)
+            # rice_58w = pd.read_excel(matrix, sheet_name="Sheet4", index_col=0)
 
-            rail_cost = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
+            # rail_cost = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
            
             # distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
-            distance_rh = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
+            # distance_rh = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
 
             prob = LpProblem("FCI_daily_model_allocation", LpMinimize)
             
