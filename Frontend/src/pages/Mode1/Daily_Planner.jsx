@@ -11,7 +11,7 @@ function Daily_Planner() {
   const ProjectIp = config.serverUrl;
   const portalUrl = config.portalUrl;
 
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [surplus, setSurplus] = useState([]);
   const [surplusInline, setSurplusInline] = useState([]);
   const [deficit, setDeficit] = useState([]);
@@ -216,44 +216,44 @@ function Daily_Planner() {
   //   }
   // }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const urls = [
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
-      ];
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const urls = [
+  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
+  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
+  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
+  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
+  //     ];
 
-      try {
-        const responses = await Promise.all(
-          urls.map((url) => fetch(url).then((response) => response.json()))
-        );
-        const data = responses.map((response) => response);
+  //     try {
+  //       const responses = await Promise.all(
+  //         urls.map((url) => fetch(url).then((response) => response.json()))
+  //       );
+  //       const data = responses.map((response) => response);
 
-        const response = await fetch(`${ProjectIp}/cost_matrix`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ data }),
-        });
+  //       const response = await fetch(`${ProjectIp}/cost_matrix`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ data }),
+  //       });
 
-        const result = await response.json();
+  //       const result = await response.json();
 
-        if (result.status === 1) {
-          console.log(result.message);
-        } else {
-          console.log(result.error);
-        }
-      } catch (err) {
-        console.log("Error fetching or sending data");
-      } finally {
-        setLoading(false); // Set loading to false after the fetch is complete
-      }
-    };
-    fetchData();
-  }, []);
+  //       if (result.status === 1) {
+  //         console.log(result.message);
+  //       } else {
+  //         console.log(result.error);
+  //       }
+  //     } catch (err) {
+  //       console.log("Error fetching or sending data");
+  //     } finally {
+  //       setLoading(false); // Set loading to false after the fetch is complete
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const handleSurplusStateChange = async (e) => {
     const selectedValue = e.target.value;
@@ -2756,11 +2756,11 @@ function Daily_Planner() {
 
   return (
     <div className="page-container" style={{ backgroundColor: "#E7A63D" }}>
-      {loading && (
+      {/* {loading && (
         <div className="spinner-overlay">
           <div className="spinner"></div>
         </div>
-      )}
+      )} */}
       <Sidenav />
       <div
         className="page-content"
