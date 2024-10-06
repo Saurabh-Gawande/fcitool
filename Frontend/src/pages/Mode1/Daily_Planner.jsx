@@ -2599,7 +2599,7 @@ function Daily_Planner() {
 
   const fetchData = (event) => {
     event.preventDefault();
-    fetch(`${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region=Telangana`)
+    fetch(`${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool`)
       .then((response) => {
         if (response.status === 200) {
           return response.json();
