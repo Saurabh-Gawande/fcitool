@@ -1066,6 +1066,7 @@ all_commodity_data = {} #for collecting data related to daily_planner
 status ={}
 @app.route("/Daily_Planner",methods = ["POST","GET"]) # route for daily planner 
 def Daily_Planner():
+    print("step 1")
     dataDaily = {}
     if request.method == "POST": # post method
         try:
@@ -1121,7 +1122,7 @@ def Daily_Planner():
             blocked_dest_rhcode = [] # destination Railhead
             blocked_org_state = [] # source state
             blocked_dest_state = [] # destination state
-            print("saurabh")
+            print("step 2 Data matrix Dataframe complete")
             
             # for blocking 58w (same as above)
             blocked_org_rhcode1 = []
@@ -1365,6 +1366,8 @@ def Daily_Planner():
             misc4_origin_inline1 = fetched_data["misc4_InlineOrigin1"]
             misc4_dest_inline1 = fetched_data["misc4_InlineDestination1"]
 
+            print("step 3 Variable decleration")
+
             # seprating out data for route blocking for 42w , 42/58w
             for i in range(len(blocked_data)):
                 blocked_org_rhcode.append(blocked_data[i]["origin_railhead"]) # storing origin railhead in variable declared above 
@@ -1442,7 +1445,7 @@ def Daily_Planner():
            
             # distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
             # distance_rh = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
-
+            print("step 4")
             prob = LpProblem("FCI_daily_model_allocation", LpMinimize)
             
             # created dictionary and storing key/value pairs of railhead/value 
@@ -1655,6 +1658,8 @@ def Daily_Planner():
             for misc4 in misc4_dest:
                 if misc4["Value"] > 0:
                     dest_misc4[misc4["origin_railhead"]] = misc4["Value"]
+            
+            print("step 5")
 
             source_wheat_inline = {}
             for i in range(len(wheat_origin_inline)):
@@ -2202,7 +2207,7 @@ def Daily_Planner():
             dest_misc4_inline1 = {}
             for i in range(len(misc4_dest_inline1)):
                 dest_misc4_inline1[misc4_dest_inline1[i]["origin_railhead"]] = misc4_dest_inline1[i]["destination_railhead"]
-
+            print("step 6")
             # variable declaration for 42w
             L1 = list(source_wheat_inline.keys())
             L2 = list(source_rra_inline.keys())
@@ -3874,7 +3879,7 @@ def Daily_Planner():
             
             for i in list_dest_misc41:
                 dest_misc41[i] = 1
-
+            print("step 7 LP variable decleration")
             # LpVariables for 42w 
             x_ij_wheat = LpVariable.dicts("x_wheat", [(i, j) for i in source_wheat.keys() for j in dest_wheat.keys()],lowBound = 0, cat="Integer")
             x_ij_rra = LpVariable.dicts("x_rra", [(i, j) for i in source_rra.keys() for j in dest_rra.keys()],lowBound = 0, cat="Integer")
@@ -3920,7 +3925,7 @@ def Daily_Planner():
             x_ij_frk_rra1 = LpVariable.dicts("x_frk_rra1",[(i,j) for i in source_frk_rra1.keys() for j in dest_frk_rra1.keys()],lowBound = 0,cat="Integer")
             x_ij_misc31 = LpVariable.dicts("x_misc31",[(i,j) for i in source_misc31.keys() for j in dest_misc31.keys()],lowBound = 0,cat="Integer")
             x_ij_misc41 = LpVariable.dicts("x_misc41",[(i,j) for i in source_misc41.keys() for j in dest_misc41.keys()],lowBound = 0,cat="Integer")
-            
+            print("step 8 LP solve")
             prob += (
                 lpSum(x_ij_wheat[(i, j)] * wheat_42w.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
                 lpSum(x_ij_rra[(i, j)] * rice_42w.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
@@ -4217,7 +4222,7 @@ def Daily_Planner():
 
             for i in dest_misc41.keys():
                 prob += lpSum(x_ij_misc41[(j, i)] for j in source_misc41.keys()) >= dest_misc41[i] 
-            
+            print("step 9")
             # for route blocking 42w indents 
             for i in range(len(blocked_org_rhcode)):
                 commodity = blocked_data[i]["Commodity"]
@@ -4319,7 +4324,7 @@ def Daily_Planner():
             print("Minimum Cost of Transportation = Rs.", prob.objective.value(), "Lakh")
             print("Total Number of Variables:", len(prob.variables()))
             print("Total Number of Constraints:", len(prob.constraints))
-           
+            print("step 10 LP solved")
             # dataframe for 42 wagon
             df_wheat = pd.DataFrame()
             From = []
@@ -12838,7 +12843,7 @@ def Daily_Planner():
             dataDaily["FRK+RRA"] = df_frk_rra
             dataDaily["Misc3"] = df_misc3
             dataDaily["Misc4"] = df_misc4
-            
+            print("step 11")
             with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
                 df_wheat.to_excel(writer, sheet_name="wheat", index=False)
                 df_rra.to_excel(writer, sheet_name="rra", index=False)
