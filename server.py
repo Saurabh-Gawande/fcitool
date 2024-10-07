@@ -9,6 +9,8 @@ from flask_cors import CORS
 import xlsxwriter
 import numpy as np
 import threading
+lock = threading.Lock()
+import time
 
 # created flask app 
 app = Flask(__name__)
@@ -756,11 +758,11 @@ all_commodity_data = {} #for collecting data related to daily_planner
 status ={}
 @app.route("/Daily_Planner",methods = ["POST","GET"]) # route for daily planner 
 def Daily_Planner():
+    time.sleep(10)
     print("step 1")
     dataDaily = {}
     if request.method == "POST": # post method
         try:
-
             # for blocking 42w , 42/58w
             blocked_org_rhcode = [] # source Railhead 
             blocked_dest_rhcode = [] # destination Railhead
@@ -12520,9 +12522,10 @@ def Daily_Planner():
     else:
         return ("error")
 
-@app.route("/daily_planner_data",methods = ["GET"])
+@app.route("/daily_planner_data", methods=["GET"])
 def daily_planner_data():
-    return jsonify(all_commodity_data)
+    with lock:  # Acquire lock before accessing shared data
+        return jsonify(all_commodity_data)
 
 # @app.route("/Alternate_Railhead_Solve",methods = ["POST","GET"])
 # def Alternate_Railhead_Solve():
