@@ -11,7 +11,8 @@ function Daily_Planner() {
   const ProjectIp = config.serverUrl;
   const portalUrl = config.portalUrl;
 
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
   const [surplus, setSurplus] = useState([]);
   const [surplusInline, setSurplusInline] = useState([]);
   const [deficit, setDeficit] = useState([]);
@@ -59,7 +60,6 @@ function Daily_Planner() {
   const [subOption1_fixed, setSubOption1_fixed] = useState("");
   const [subOption2_fixed, setSubOption2_fixed] = useState("");
   const [commodity_fixed, setCommodity_fixed] = useState("");
-  const [TEFD, set_TEFD] = useState(null);
   const [TEFDdata, set_TEFDdata] = useState();
   const [solutionSolved, setSolutionSolved] = useState(false);
   const [Total_result, set_Total_Result] = useState();
@@ -216,44 +216,60 @@ function Daily_Planner() {
   //   }
   // }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const urls = [
-  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
-  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
-  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
-  //       `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
-  //     ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const urls = [
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
+      ];
 
-  //     try {
-  //       const responses = await Promise.all(
-  //         urls.map((url) => fetch(url).then((response) => response.json()))
-  //       );
-  //       const data = responses.map((response) => response);
+      try {
+        // Fetch all URLs in parallel
+        const responses = await Promise.all(
+          urls.map((url) => fetch(url).then((response) => response.json()))
+        );
 
-  //       const response = await fetch(`${ProjectIp}/cost_matrix`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ data }),
-  //       });
+        // Combine all responses into one object
+        const allData = {
+          wheat_42w: responses[0],
+          rice_42w: responses[1],
+          wheat_58w: responses[2],
+          rice_58w: responses[3],
+        };
 
-  //       const result = await response.json();
+        setData(allData);
+        await sendDataToBackend(allData);
+        // Store fetched data in state
+        setLoading(false); // Set loading state to false
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
 
-  //       if (result.status === 1) {
-  //         console.log(result.message);
-  //       } else {
-  //         console.log(result.error);
-  //       }
-  //     } catch (err) {
-  //       console.log("Error fetching or sending data");
-  //     } finally {
-  //       setLoading(false); // Set loading to false after the fetch is complete
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
+
+  const sendDataToBackend = async (allData) => {
+    try {
+      console.log(allData);
+      const response = await fetch(`${ProjectIp}/process-data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(allData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send data to backend");
+      }
+    } catch (error) {
+      console.error("Error sending data to backend:", error);
+    }
+  };
 
   const handleSurplusStateChange = async (e) => {
     const selectedValue = e.target.value;
@@ -482,29 +498,6 @@ function Daily_Planner() {
       setDeficitInline(updatedDeficitInline);
     }
   };
-
-  // const handleFileUpload = () => {
-  //   if (selectedFile) {
-  //     const reader = new FileReader();
-
-  //     reader.onload = async (event) => {
-  //       const arrayBuffer = event.target.result;
-  //       const data = new Uint8Array(arrayBuffer);
-  //       const workbook = XLSX.read(data, { type: "array" });
-  //       const surplusSheetIndices = [0, 2, 4, 6, 8, 10];
-  //       const deficitSheetIndices = [1, 3, 5, 7, 9, 11];
-  //       const surplusData = processSheetData(workbook, surplusSheetIndices);
-  //       setSurplus(surplusData);
-  //       const deficitData = processSheetData(workbook, deficitSheetIndices);
-  //       setDeficit(deficitData);
-  //     };
-
-  //     reader.readAsArrayBuffer(selectedFile);
-  //   } else {
-  //     setModalValue("Please select a file before uploading.");
-  //     setShowModal(true);
-  //   }
-  // };
 
   const fixed_data1 = fixed_data.filter(
     (item) => item.sourceRakeType === "42W/58W" || item.sourceRakeType === "42W"
@@ -2599,7 +2592,9 @@ function Daily_Planner() {
 
   const fetchData = (event) => {
     event.preventDefault();
-    fetch(`${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool`)
+    fetch(
+      `${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region`
+    )
       .then((response) => {
         if (response.status === 200) {
           return response.json();
@@ -2756,11 +2751,11 @@ function Daily_Planner() {
 
   return (
     <div className="page-container" style={{ backgroundColor: "#E7A63D" }}>
-      {/* {loading && (
+      {loading && (
         <div className="spinner-overlay">
           <div className="spinner"></div>
         </div>
-      )} */}
+      )}
       <Sidenav />
       <div
         className="page-content"

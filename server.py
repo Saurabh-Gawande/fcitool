@@ -175,339 +175,6 @@ def Rail_cost_matrix():
 
 #     return(json.dumps(json_object, indent = 1))
     
-        
-# @app.route("/read_Relevant_Result",methods = ["GET"])
-# def read_Relevant_Result():
-#     if request.method == "GET":        
-#         try: 
-#             df1 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Wheat URS")
-#             df2 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Wheat FAQ")    
-#             df3 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice RRA")    
-#             df4 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice FRKRRA")    
-#             df5 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice FRKBR")    
-#             df6 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Rice RRC")    
-#             df7 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Bajra")    
-#             df8 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Ragi")    
-#             df9 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Jowar")    
-#             df10 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Millets Maize")    
-#             df11 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Misc 1")    
-#             df12 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="Misc 2")    
-#             df13 = pd.read_excel('Output\\Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
-#             if 'Unnamed: 0' in df13.columns:
-#                 df13.drop(columns=['Unnamed: 0'], inplace=True)  
-
-#             json_data1 = df1.to_json(orient='records', indent=1)
-#             json_data2 = df2.to_json(orient='records', indent=1)
-#             json_data3 = df3.to_json(orient='records', indent=1)
-#             json_data4 = df4.to_json(orient='records', indent=1)
-#             json_data5 = df5.to_json(orient='records', indent=1)
-#             json_data6 = df6.to_json(orient='records', indent=1)
-#             json_data7 = df7.to_json(orient='records', indent=1)
-#             json_data8 = df8.to_json(orient='records', indent=1)
-#             json_data9 = df9.to_json(orient='records', indent=1)
-#             json_data10 = df10.to_json(orient='records', indent=1)
-#             json_data11 = df11.to_json(orient='records', indent=1)
-#             json_data12 = df12.to_json(orient='records', indent=1)
-#             json_data13 = df13.to_json(orient='records', indent=1)
-           
-#             json_data = {"Wheat_urs": json_data1, "Wheat_faq": json_data2, "RRA": json_data3, "frk_rra": json_data4 , "frk_br": json_data5 ,
-#                          "RRC": json_data6, "Bajra": json_data7, "Ragi": json_data8, "Jowar": json_data9, "Maize": json_data10, "Misc1": json_data11,
-#                          "Misc2": json_data12, "RH_RH_tag": json_data13  }
-#         except Exception as e:
-#             print(f"Error occurred: {e}")  # Log the error for debugging purposes
-#             json_data = {
-#                 "Status": 0,
-#                 "Error": str(e)  # Include the error message for debugging
-#             }
-
-#         json_object = json.dumps(json_data)
-#         return json_object
-#     else:
-#         return ("error")
-    
-    
-# @app.route("/read_Daily_Planner_S2",methods = ["POST","GET"])
-# def read_Daily_Planner_S2():
-#     if request.method == "POST":        
-#         try: 
-#             df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra") 
-#             df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
-#             json_data1 = df1.to_json(orient='records', indent=1)
-#             json_data2 = df2.to_json(orient='records', indent=1)
-#             json_data = {"rra": json_data1, "wheat": json_data2}
-#         except:
-#             json_data = json.dumps({"Status": 0}, indent=1)
-
-#         json_object = json.dumps(json_data)
-#         return json_object
-#     else:
-#         return ("error")
-
-# for creating excel file for daily result (not in use anymore)
-# @app.route("/read_Daily_Planner_S1",methods = ["POST","GET"])
-# def read_Daily_Planner_S1():
-#     if request.method == "GET":        
-#         try: 
-#             df2 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat") 
-#             df1 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra")
-#             df3 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain") 
-#             df4 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra") 
-#             df5 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br") 
-#             df6 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk") 
-#             df7 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr")
-#             df8 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr")
-#             df9 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs")
-#             df10 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq")
-#             df11 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc")
-#             df12 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar")
-#             df13 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi")
-#             df14 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra")
-#             df15 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize")
-#             df16 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1")
-#             df17 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2")
-#             df18 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra")
-#             df19 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra")
-#             df20 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3")
-#             df21 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4")
-
-#             df22 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_58w")
-#             df23 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rra_58w")
-#             df24 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="coarse_grain_58w") 
-#             df25 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_rra_58w") 
-#             df26 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_br_58w") 
-#             df27 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk_58w") 
-#             df28 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frkcgr_58w")
-#             df29 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wcgr_58w")
-#             df30 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheaturs_58w")
-#             df31 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheatfaq_58w")
-#             df32 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="rrc_58w")
-#             df33 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="jowar_58w")
-#             df34 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="ragi_58w")
-#             df35 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="bajra_58w")
-#             df36 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="maize_58w")
-#             df37 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc1_58w")
-#             df38 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc2_58w")
-#             df39 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="wheat_rra_58w")
-#             df40 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="frk+rra_58w")
-#             df41 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc3_58w")
-#             df42 = pd.read_excel('Output\\List_DPT.xlsx', sheet_name="misc4_58w")
-
-#             json_data1 = df1.to_json(orient='records', indent=1)
-#             json_data2 = df2.to_json(orient='records', indent=1)
-#             json_data3 = df3.to_json(orient='records', indent=1)
-#             json_data4 = df4.to_json(orient='records', indent=1)
-#             json_data5 = df5.to_json(orient='records', indent=1)
-#             json_data6 = df6.to_json(orient='records', indent=1)
-#             json_data7 = df7.to_json(orient='records', indent=1)
-#             json_data8 = df8.to_json(orient='records', indent=1)
-#             json_data9 = df9.to_json(orient='records', indent=1)
-#             json_data10 = df10.to_json(orient='records', indent=1)
-#             json_data11 = df11.to_json(orient='records', indent=1)
-#             json_data12 = df12.to_json(orient='records', indent=1)
-#             json_data13 = df13.to_json(orient='records', indent=1)
-#             json_data14 = df14.to_json(orient='records', indent=1)
-#             json_data15 = df15.to_json(orient='records', indent=1)
-#             json_data16 = df16.to_json(orient='records', indent=1)
-#             json_data17 = df17.to_json(orient='records', indent=1)
-#             json_data18 = df18.to_json(orient='records', indent=1)
-#             json_data19 = df19.to_json(orient='records', indent=1)
-#             json_data20 = df20.to_json(orient='records', indent=1)
-#             json_data21 = df21.to_json(orient='records', indent=1)
-
-#             json_data22 = df22.to_json(orient='records', indent=1)
-#             json_data23 = df23.to_json(orient='records', indent=1)
-#             json_data24 = df24.to_json(orient='records', indent=1)
-#             json_data25 = df25.to_json(orient='records', indent=1)
-#             json_data26 = df26.to_json(orient='records', indent=1)
-#             json_data27 = df27.to_json(orient='records', indent=1)
-#             json_data28 = df28.to_json(orient='records', indent=1)
-#             json_data29 = df29.to_json(orient='records', indent=1)
-#             json_data30 = df30.to_json(orient='records', indent=1)
-#             json_data31 = df31.to_json(orient='records', indent=1)
-#             json_data32 = df32.to_json(orient='records', indent=1)
-#             json_data33 = df33.to_json(orient='records', indent=1)
-#             json_data34 = df34.to_json(orient='records', indent=1)
-#             json_data35 = df35.to_json(orient='records', indent=1)
-#             json_data36 = df36.to_json(orient='records', indent=1)
-#             json_data37 = df37.to_json(orient='records', indent=1)
-#             json_data38 = df38.to_json(orient='records', indent=1)
-#             json_data39 = df39.to_json(orient='records', indent=1)
-#             json_data40 = df40.to_json(orient='records', indent=1)
-#             json_data41 = df41.to_json(orient='records', indent=1)
-#             json_data42 = df42.to_json(orient='records', indent=1)
-
-#             json_data = {
-#              "rra": json_data1, "wheat": json_data2, "coarse_grain": json_data3, "frk_rra":json_data4 , "frk_br": json_data5 , "wheat_frk": json_data6,
-#              "frkcgr":json_data7 , "wcgr": json_data8, "wheat_urs": json_data9 , "wheat_faq": json_data10, "rrc": json_data11, "jowar": json_data12, 
-#              "ragi": json_data13, "bajra": json_data14, "maize": json_data15, "misc1": json_data16, "misc2": json_data17, "wheat_rra": json_data18,
-#              "frkPlusRRA": json_data19, "misc3": json_data20, "misc4": json_data21 , "wheat_58w": json_data22 , "rra_58w": json_data23, 
-#              "coarse_grain_58w": json_data24, "frk_rra_58w": json_data25, "frk_br_58w": json_data26, "wheat_frk_58w": json_data27, "frkcgr_58w": json_data28, 
-#              "wcgr_58w": json_data29, "wheat_urs_58w": json_data30, "wheat_faq_58w": json_data31, "rrc_58w": json_data32, "jowar_58w": json_data33,
-#              "ragi_58w": json_data34, "bajra_58w": json_data35, "maize_58w": json_data36, "misc1_58w": json_data37, "misc2_58w": json_data38, "wheat_rra_58w": json_data39,
-#              "frkPlusRRa_58w": json_data40, "misc3_58w": json_data41, "misc4_58": json_data42
-#              }
-             
-#         except:
-#             json_data = json.dumps({"Status": 0}, indent=1)
-
-#         json_object = json.dumps(json_data)
-#         return json_object
-#     else:
-#         return ("error")
-    
-# @app.route("/read_Monthly_Template_M1",methods = ["POST","GET"])
-# def read_Monthly_Template_M1():
-#     if request.method == "POST":        
-#         try: 
-#             df1 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_wheat") 
-#             df2 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_wheat")
-#             df3 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Surplus_rice")
-#             df4 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Deficit_rice")
-#             df5 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_supply")
-#             df6 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="States_allocation")
-#             df7 = pd.read_excel('Input\\Monthly_Template_M1.xlsx', sheet_name="Rail_cost_chart")
-#             json_data1 = df1.to_json(orient='records', indent=1)
-#             json_data2 = df2.to_json(orient='records', indent=1)
-#             json_data3 = df3.to_json(orient='records', indent=1)
-#             json_data4 = df4.to_json(orient='records', indent=1)
-#             json_data5 = df5.to_json(orient='records', indent=1)
-#             json_data6 = df6.to_json(orient='records', indent=1)
-#             json_data7 = df7.to_json(orient='records', indent=1)
-#             json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
-#         except:
-#             json_data = json.dumps({"Status": 0}, indent=1)
-
-#         json_object = json.dumps(json_data)
-#         return json_object
-#     else:
-#         return ("error")
-    
-# @app.route("/read_Daily_Template_S1",methods = ["POST","GET"])
-# def read_Daily_Template_S1():
-#     if request.method == "POST":        
-#         try: 
-#             df1 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_wheat") 
-#             df2 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_wheat")
-#             df3 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Surplus_rice")
-#             df4 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Deficit_rice")
-#             df5 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_supply")
-#             df6 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="States_allocation")
-#             df7 = pd.read_excel('Input\\Daily_Template_Scene1.xlsx', sheet_name="Rail_cost_chart")
-#             json_data1 = df1.to_json(orient='records', indent=1)
-#             json_data2 = df2.to_json(orient='records', indent=1)
-#             json_data3 = df3.to_json(orient='records', indent=1)
-#             json_data4 = df4.to_json(orient='records', indent=1)
-#             json_data5 = df5.to_json(orient='records', indent=1)
-#             json_data6 = df6.to_json(orient='records', indent=1)
-#             json_data7 = df7.to_json(orient='records', indent=1)
-#             json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
-#         except:
-#             json_data = json.dumps({"Status": 0}, indent=1)
-
-#         json_object = json.dumps(json_data)
-#         return json_object
-#     else:
-#         return ("error")
-    
-# @app.route("/read_Daily_Template_S2",methods = ["POST","GET"])
-# def read_Daily_Template_S2():
-#     if request.method == "POST":        
-#         try: 
-#             df1 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_wheat") 
-#             df2 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_wheat")
-#             df3 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Surplus_rice")
-#             df4 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Deficit_rice")
-#             df5 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_supply")
-#             df6 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="States_allocation")
-#             df7 = pd.read_excel('Input\\Daily_Template_Scene2.xlsx', sheet_name="Rail_cost_chart")
-#             json_data1 = df1.to_json(orient='records', indent=1)
-#             json_data2 = df2.to_json(orient='records', indent=1)
-#             json_data3 = df3.to_json(orient='records', indent=1)
-#             json_data4 = df4.to_json(orient='records', indent=1)
-#             json_data5 = df5.to_json(orient='records', indent=1)
-#             json_data6 = df6.to_json(orient='records', indent=1)
-#             json_data7 = df7.to_json(orient='records', indent=1)
-#             json_data = {"Surplus_wheat": json_data1, "Deficit_wheat": json_data2, "Surplus_rice": json_data3, "Deficit_rice": json_data4, "States_supply": json_data5, "States_allocation": json_data6, "Rail_cost_chart": json_data7}
-#         except:
-#             json_data = json.dumps({"Status": 0}, indent=1)
-
-#         json_object = json.dumps(json_data)
-#         return json_object
-#     else:
-#         return ("error")
-    
-# @app.route("/Download_Template_to_add", methods=["POST", "GET"])
-# def Download_Template_to_add():
-#     if request.method == "POST":
-#         try:
-#             df1 = pd.read_excel('Input\\Non-TEFD.xlsx', sheet_name="Railhead_cost_matrix_1rake", index_col=0) 
-#             df2 = pd.read_excel('Frontend\\public\\data\\Updated_railhead_list.xlsx', sheet_name="RH_Sheet") 
-
-#             prev_col = list(df1.columns)
-#             present_col = list(df2["RH_code"])
-
-#             prev_st = set(prev_col)
-
-#             add_rh = []
-#             for rh in present_col:
-#                 if rh not in prev_st:
-#                     add_rh.append(rh)
-
-#             # Create a dictionary with "Railhead" as the first column
-#             data = {"": add_rh}
-
-#             # Add other columns
-#             for col in present_col:
-#                 data[col] = [""] * len(add_rh)
-
-#             Excel_data = pd.DataFrame(data)
-
-#             json_data1 = Excel_data.to_json(orient='records', indent=1)
-
-#             json_data = {
-#                 "Railhead_cost_matrix_1rake": json_data1,
-#                 "Railhead_dist_matrix": json_data1,
-#                 "Cost_matrix_Non_TEFD": json_data1,
-#                 "Cost_matrix_TEFD": json_data1,
-#                 "Cost_matrix_Non_TEFD+TC": json_data1,
-#                 "Cost_matrix_TEFD+TC": json_data1
-#             }
-#         except Exception as e:
-#             json_data = {"Status": 0, "Error": str(e)}
-#         json_object = json.dumps(json_data, indent=1)
-#         return json_object
-#     else:
-#         return "error"
-
-
-# @app.route("/Alternate_Railhead_readPickle",methods = ["POST","GET"])
-# def Alternate_Railhead_readPickle():
-#     try:
-#         dbfile = open('Output\\Alternate_Railhead.pkl', 'rb')     
-#         db = pickle.load(dbfile)
-#         dbfile.close()
-#         blank_data = []
-#         with open('Output\\Alternate_Railhead.pkl', 'wb') as f:
-#             pickle.dump(blank_data, f)
-#     except:
-#         db = {}
-#         db["status"] = 0
-#     return jsonify(db)
-
-
-# @app.route('/getDaily1ExcelData')
-# def get_daily_scen1_excel_data():
-#     Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen1.xlsx'
-#     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
-#     return send_file(excel_path, as_attachment=True)
-
-# @app.route('/getDaily2ExcelData')
-# def get_daily_scen2_excel_data():
-#     Monthly_Template_M1 = 'Input\\Temp_balanced_DPT_scen2.xlsx'
-#     excel_path = os.path.join(os.path.dirname(__file__), Monthly_Template_M1)
-#     return send_file(excel_path, as_attachment=True)
-
-
 
 dataMonthly_rail = {}
 @app.route("/Monthly_Solution",methods = ["POST","GET"])
@@ -525,14 +192,6 @@ def Monthly_Solution():
             # print (stateRestrictionList["data"])
             # print(fixed_src, dest_src, commo)
 
-            # if type == "Uploaded":
-            #     print("upload")
-                # data=pd.ExcelFile("Input//Input_template_Monthly_Planner.xlsx")
-                # supply = pd.read_excel(data,sheet_name="Supply",index_col=1)
-                # demand = pd.read_excel(data,sheet_name="Demand",index_col=1)
-                # print(supply, "supply")
-                # print(demand, "damand")
-            # else: 
             print('Imported')
             data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx")
             data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx")
@@ -919,17 +578,6 @@ task_status = {}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 def generate_monthly_solution():
     try:
         df = pd.read_excel('Output//Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
@@ -1062,6 +710,58 @@ def MonthlyDataSendMode2():
         return jsonify({"error": "An error occurred during file upload.", "details": str(e)}), 500
 
 
+wheat_42w = None
+rice_42w = None
+wheat_58w = None
+rice_58w = None
+
+@app.route('/process-data', methods=['POST'])
+def process_data():
+    global wheat_42w, rice_42w, wheat_58w, rice_58w  # Use global variables for DataFrames
+
+    data = request.json  
+    print("Received data keys:", list(data.keys()))  # Print only the top-level keys
+
+    # Function to create DataFrame from incoming data
+    def create_dataframe(TEFDdata):
+        if TEFDdata and "data" in TEFDdata:
+            data_content = TEFDdata["data"]
+            if "codes" in data_content and "columnData" in data_content:
+                df_codes = pd.DataFrame(data_content["codes"], columns=["Code"])  # Convert codes to a DataFrame
+                df_column_data = pd.DataFrame(data_content["columnData"])  # Convert columnData to a DataFrame
+                final_df = pd.concat([df_codes, df_column_data], axis=1)  # Concatenate both DataFrames
+                final_df.set_index("Code", inplace=True)
+                return final_df
+            else:
+                print("Missing 'codes' or 'columnData' in TEFDdata")
+        else:
+            print("Invalid TEFDdata structure")
+        return None
+
+    # Store DataFrames globally instead of raw data
+    wheat_42w = create_dataframe(data.get('wheat_42w'))
+    rice_42w = create_dataframe(data.get('rice_42w'))
+    wheat_58w = create_dataframe(data.get('wheat_58w'))
+    rice_58w = create_dataframe(data.get('rice_58w'))
+
+    # Print DataFrames for verification
+    dataframes = {
+        "Wheat 42W": wheat_42w,
+        "Rice 42W": rice_42w,
+        "Wheat 58W": wheat_58w,
+        "Rice 58W": rice_58w,
+    }
+
+    for label, df in dataframes.items():
+        if df is not None:
+            print(f"{label} DataFrame:")
+            print(df.head())
+        else:
+            print(f"Could not create DataFrame for {label}")
+
+    return jsonify({'message': 'DataFrames processed and stored globally.'}), 200
+
+
 all_commodity_data = {} #for collecting data related to daily_planner
 status ={}
 @app.route("/Daily_Planner",methods = ["POST","GET"]) # route for daily planner 
@@ -1070,52 +770,6 @@ def Daily_Planner():
     dataDaily = {}
     if request.method == "POST": # post method
         try:
-            def fetch_cost_rate_matrix(matrix_type, rake_type, commodity):
-                portal_url = "https://fci.ncorps.in/api"
-                url = f'{portal_url}/ToolOptimizerWebApi/CostRateMatrixforTool'
-                params = {
-                    'matrixType': matrix_type,
-                    'rakeType': rake_type,
-                    'commodity': commodity
-                }
-
-                # Send a GET request to the API
-                response = requests.get(url, params=params)
-
-                # Check if the request was successful
-                if response.status_code == 200:
-                    # Assuming the response is in JSON format
-                    data = response.json()
-
-                    # Check if 'data' exists in the response
-                    if 'data' in data:
-                        TEFDdata = data['data']
-
-                        # Create DataFrames from 'codes' and 'columnData' if they exist
-                        if "codes" in TEFDdata and "columnData" in TEFDdata:
-                            df1 = pd.DataFrame(TEFDdata["codes"])
-                            df2 = pd.DataFrame(TEFDdata["columnData"])
-                            final_df = pd.concat([df1, df2], axis=1)
-                            final_df.set_index(0, inplace=True)
-                            return final_df
-                        else:
-                            print("Keys 'codes' or 'columnData' not found in the data.")
-                    else:
-                        print("'data' not found in the response.")
-                else:
-                    print(f"Failed to fetch data. Status code: {response.status_code}")
-
-            # Fetch data for different combinations of rakeType and commodity
-            wheat_42w = fetch_cost_rate_matrix('FreightRate', 'BCN', 'WHEAT')
-            rice_42w = fetch_cost_rate_matrix('FreightRate', 'BCN', 'RICE')
-            wheat_58w = fetch_cost_rate_matrix('FreightRate', 'BCNHL', 'WHEAT')
-            rice_58w = fetch_cost_rate_matrix('FreightRate', 'BCNHL', 'RICE')
-            distance_rh= fetch_cost_rate_matrix('FreightRate', 'BCN', 'WHEAT')
-            
-            print(wheat_42w.head())
-            print(rice_42w.head())
-            print(wheat_58w.head())
-            print(rice_58w.head())
 
             # for blocking 42w , 42/58w
             blocked_org_rhcode = [] # source Railhead 
@@ -1432,19 +1086,7 @@ def Daily_Planner():
                 conf_sourceRailHeadName1.append(confirmed_data2[i]["sourceRailHeadName"])
                 conf_destinationRailHeadName1.append(confirmed_data2[i]["destinationRailHeadName"])
 
-            # matrices_data = pd.ExcelFile("Input//Non-TEFD.xlsx", engine='openpyxl')
-            # matrices_data1 = pd.ExcelFile("Input//Cost_matrix.xlsx", engine='openpyxl')
-            # matrix = pd.ExcelFile("Input//Cost_matrix1.xlsx", engine='openpyxl')
-            
-            # wheat_42w = pd.read_excel(matrix, sheet_name="Sheet1", index_col=0)
-            # rice_42w = pd.read_excel(matrix, sheet_name="Sheet2", index_col=0)
-            # wheat_58w = pd.read_excel(matrix, sheet_name="Sheet3", index_col=0)
-            # rice_58w = pd.read_excel(matrix, sheet_name="Sheet4", index_col=0)
-
-            # rail_cost = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
            
-            # distance_rh = pd.read_excel(matrices_data, sheet_name="Railhead_dist_matrix", index_col=0)
-            # distance_rh = pd.read_excel(matrices_data1, sheet_name="Railhead_cost_matrix", index_col=0)
             print("step 4")
             prob = LpProblem("FCI_daily_model_allocation", LpMinimize)
             
@@ -12844,49 +12486,6 @@ def Daily_Planner():
             dataDaily["Misc3"] = df_misc3
             dataDaily["Misc4"] = df_misc4
             print("step 11")
-            with pd.ExcelWriter("Output//List_DPT.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                df_wheat.to_excel(writer, sheet_name="wheat", index=False)
-                df_rra.to_excel(writer, sheet_name="rra", index=False)
-                df_CoarseGrain.to_excel(writer, sheet_name="coarse_grain", index=False)
-                df_frkrra.to_excel(writer, sheet_name="frk_rra", index=False)
-                df_frkbr.to_excel(writer, sheet_name="frk_br", index=False)
-                df_frk.to_excel(writer, sheet_name="frk", index=False)
-                df_frkcgr.to_excel(writer, sheet_name="frkcgr", index=False)
-                df_wcgr.to_excel(writer, sheet_name="wcgr", index=False)
-                df_rrc.to_excel(writer, sheet_name="rrc", index=False)
-                df_wheaturs.to_excel(writer, sheet_name="wheaturs", index=False)
-                df_wheatfaq.to_excel(writer, sheet_name="wheatfaq", index=False)
-                df_ragi.to_excel(writer, sheet_name="ragi", index=False)
-                df_jowar.to_excel(writer, sheet_name="jowar", index=False)
-                df_bajra.to_excel(writer, sheet_name="bajra", index=False)
-                df_maize.to_excel(writer, sheet_name="maize", index=False)
-                df_misc1.to_excel(writer, sheet_name="misc1", index=False)
-                df_misc2.to_excel(writer, sheet_name="misc2", index=False)
-                df_wheatrra.to_excel(writer, sheet_name="wheat_rra", index=False)
-                df_frk_rra.to_excel(writer, sheet_name="frk+rra", index=False)
-                df_misc3.to_excel(writer, sheet_name="misc3", index=False)
-                df_misc4.to_excel(writer, sheet_name="misc4", index=False)
-                df_wheat1.to_excel(writer, sheet_name="wheat_58w", index=False)
-                df_rra1.to_excel(writer, sheet_name="rra_58w", index=False)
-                df_CoarseGrain1.to_excel(writer, sheet_name="coarse_grain_58w", index=False)
-                df_frkrra1.to_excel(writer, sheet_name="frk_rra_58w", index=False)
-                df_frkbr1.to_excel(writer, sheet_name="frk_br_58w", index=False)
-                df_frk1.to_excel(writer, sheet_name="frk_58w", index=False)
-                df_frkcgr1.to_excel(writer, sheet_name="frkcgr_58w", index=False)
-                df_wcgr1.to_excel(writer, sheet_name="wcgr_58w", index=False)
-                df_rrc1.to_excel(writer, sheet_name="rrc_58w", index=False)
-                df_wheaturs1.to_excel(writer, sheet_name="wheaturs_58w", index=False)
-                df_wheatfaq1.to_excel(writer, sheet_name="wheatfaq_58w", index=False)
-                df_ragi1.to_excel(writer, sheet_name="ragi_58w", index=False)
-                df_jowar1.to_excel(writer, sheet_name="jowar_58w", index=False)
-                df_bajra1.to_excel(writer, sheet_name="bajra_58w", index=False)
-                df_maize1.to_excel(writer, sheet_name="maize_58w", index=False)
-                df_misc11.to_excel(writer, sheet_name="misc1_58w", index=False)
-                df_misc21.to_excel(writer, sheet_name="misc2_58w", index=False)
-                df_wheatrra1.to_excel(writer, sheet_name="wheat_rra_58w", index=False)
-                df_frk_rra1.to_excel(writer, sheet_name="frk+rra_58w", index=False)
-                df_misc31.to_excel(writer, sheet_name="misc3_58w", index=False)
-                df_misc41.to_excel(writer, sheet_name="misc4_58w", index=False)
 
             dataDaily["status"] = 1
 
