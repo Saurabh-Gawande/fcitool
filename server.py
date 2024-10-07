@@ -1071,7 +1071,7 @@ def Daily_Planner():
     if request.method == "POST": # post method
         try:
             def fetch_cost_rate_matrix(matrix_type, rake_type, commodity):
-                portal_url = "https://test.rakeplanner.callippus.co.uk/api"
+                portal_url = "https://fci.ncorps.in/api"
                 url = f'{portal_url}/ToolOptimizerWebApi/CostRateMatrixforTool'
                 params = {
                     'matrixType': matrix_type,
