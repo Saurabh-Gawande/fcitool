@@ -2592,9 +2592,7 @@ function Daily_Planner() {
 
   const fetchData = (event) => {
     event.preventDefault();
-    fetch(
-      `${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool?region`
-    )
+    fetch(`${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool`)
       .then((response) => {
         if (response.status === 200) {
           return response.json();
@@ -2795,6 +2793,7 @@ function Daily_Planner() {
               <a href="/home">Home</a>
             </li>
             <li className="active">Daily plan</li>
+            <li className="active">v7-10</li>
           </ul>
 
           {showModal ? (

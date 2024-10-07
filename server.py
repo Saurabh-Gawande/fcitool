@@ -30,16 +30,6 @@ def save_to_excel(dfs, file_path):
             sheet_name = f"Sheet{i+1}"
             df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-@app.route('/cost_matrix', methods=['POST'])
-def cost_matrix1():
-    try:
-        fetched_data = request.get_json()
-        data = fetched_data['data']
-        processed_data = process_data(data)
-        save_to_excel(processed_data, "Input//Cost_matrix1.xlsx")
-        return jsonify({'status': 1, 'message': 'Data saved to Cost_matrix.xlsx'})
-    except Exception as e:
-        return jsonify({'status': 0, 'error': str(e)})
 
 # created excel file for rail monthly invard deamand
 @app.route("/Import_Monthly_File_Invard",methods = ["POST"])
