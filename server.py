@@ -768,6 +768,7 @@ def Daily_Planner():
             blocked_dest_rhcode = [] # destination Railhead
             blocked_org_state = [] # source state
             blocked_dest_state = [] # destination state
+            distance_rh = wheat_42w.copy()
             print("step 2 Data matrix Dataframe complete")
             
             # for blocking 58w (same as above)
