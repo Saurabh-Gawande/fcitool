@@ -97,75 +97,30 @@ def upload_Mode2_Outward():
 
     return(json.dumps(json_object, indent = 1))
 
-#creating cost matrix 
-@app.route("/rail_cost_matraix", methods=["POST"])
-def Rail_cost_matrix():
-    data = {}
-    try:
-        fetched_data = request.get_json() 
-        TEFDdata = fetched_data['TEFDdata'] #fetch the json
-        df = pd.DataFrame(TEFDdata["data"]["codes"]) 
-        df1 = pd.DataFrame(TEFDdata["data"]["columnData"])
-        rail_cost = pd.concat([df, df1], axis=1)  # concat two dataframe 
-        with pd.ExcelWriter("Input//Cost_matrix.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-            rail_cost.to_excel(writer, sheet_name="Railhead_cost_matrix", index=False) # excel file created
-        data['status'] = 1 # status code on success
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        data['status'] = 0  # status code on failur
-
-    json_data = json.dumps(data)
-    json_object = json.loads(json_data)
-
-    return json.dumps(json_object, indent=1)
-
-# not in use for now 
-# @app.route("/upload_Monthly_File",methods = ["POST"])
-# def upload_Monthly_File_M02():
+# #creating cost matrix 
+# @app.route("/rail_cost_matraix", methods=["POST"])
+# def Rail_cost_matrix():
 #     data = {}
 #     try:
-#         file = request.files['uploadFile']
-#         file.save("Input//Input_template_Monthly_Planner.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
-    
+#         fetched_data = request.get_json() 
+#         TEFDdata = fetched_data['TEFDdata'] #fetch the json
+#         df = pd.DataFrame(TEFDdata["data"]["codes"]) 
+#         df1 = pd.DataFrame(TEFDdata["data"]["columnData"])
+#         rail_cost = pd.concat([df, df1], axis=1)  # concat two dataframe 
+#         with pd.ExcelWriter("Input//Cost_matrix.xlsx", mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+#             rail_cost.to_excel(writer, sheet_name="Railhead_cost_matrix", index=False) # excel file created
+#         data['status'] = 1 # status code on success
+#     except Exception as e:
+#         print(f"Error: {str(e)}")
+#         data['status'] = 0  # status code on failur
+
 #     json_data = json.dumps(data)
 #     json_object = json.loads(json_data)
 
-#     return(json.dumps(json_object, indent = 1))
+#     return json.dumps(json_object, indent=1)
 
-#not in use 
-# @app.route("/uploadDailyFile_S2",methods = ["POST"])
-# def uploadDailyFile_S2():
-#     data = {}
-#     try:
-#         file = request.files['uploadFile']
-#         file.save("Input//Temp_balanced_DPT_scen2.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
-    
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
 
-#     return(json.dumps(json_object, indent = 1))
 
-#not in use
-# @app.route("/uploadDailyFile_S1",methods = ["POST"])
-# def uploadDailyFile_S1():
-#     data = {}
-#     try:
-#         file = request.files['uploadFile']
-#         file.save("Input//Temp_balanced_DPT_scen1.xlsx")
-#         data['status'] = 1
-#     except:
-#         data['status'] = 0
-    
-#     json_data = json.dumps(data)
-#     json_object = json.loads(json_data)
-
-#     return(json.dumps(json_object, indent = 1))
     
 
 dataMonthly_rail = {}
@@ -184,7 +139,7 @@ def Monthly_Solution():
             # print (stateRestrictionList["data"])
             # print(fixed_src, dest_src, commo)
 
-            print('Imported')
+            print('Imported now')
             data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx")
             data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx")
             supply = pd.read_excel(data2, sheet_name="MonthlyData",index_col=1)
@@ -198,7 +153,7 @@ def Monthly_Solution():
 
             commodity = ["w(urs)","w(faq)","r(rra)","r(frkrra)","r(frkbr)","r(rrc)","m(bajra)","m(ragi)","m(jowar)","m(maize)","misc1","misc2"]
             cmd_match = {"w(urs)":"Wheat URS","w(faq)":"Wheat FAQ","r(rra)":"Rice RRA","r(frkrra)":"Rice FRKRRA","r(frkbr)":"Rice FRKBR","r(rrc)":"Rice RRC","m(bajra)":"Millets Bajra","m(ragi)":"Millets Ragi","m(jowar)":"Millets Jowar","m(maize)":"Millets Maize","misc1":"Misc 1","misc2":"Misc 2"}
-            
+            print("step1")
             for k in commodity:
                 supply[cmd_match[k]].sum()
                 print(supply[cmd_match[k]].sum(),k)
@@ -206,15 +161,18 @@ def Monthly_Solution():
             for k in commodity:
                 demand[cmd_match[k]].sum()
                 print(demand[cmd_match[k]].sum(), k)
-           
+            
             for k in commodity:
                 if demand[cmd_match[k]].sum() <= supply[cmd_match[k]].sum():
                     print(cmd_match[k],":","TRUE")
                 else:
                     print(cmd_match[k],":","FALSE")
-            
+            print("step 2 lp varible declaration")
+            print(rail_cost.loc["BSPN_KRLI"]["TKFS_TUA"])
             x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],lowBound = 0,cat="Integer")
-            
+            print("lp sum")
+
+
             prob+=lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity)
             # print(lpSum(x_ijk[(i,j,k)]*rail_cost.loc[i][j] for i in supply.index for j in demand.index for k in commodity))
             
@@ -224,14 +182,14 @@ def Monthly_Solution():
             #             if supply["State"][i] in fixed_src and demand["State"][j] in dest_src:
             #                 prob += x_ijk[(i, j, k)] == 0
                             # print(x_ijk[(i,j,k)]==0)
-
+            print("step 3 variable done")
             for i in supply.index:
                 for k in commodity:
                     prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i]
                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=supply[cmd_match[k]][i])
                     # prob+=lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i]
                     # print(lpSum(x_ijk[(i,j,k)] for j in demand.index)<=2*supply[cmd_match[k]][i])
-
+            print("condition step 4")
             for i in demand.index:
                 for k in commodity:
                     # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)>=demand[cmd_match[k]][i]
@@ -239,7 +197,7 @@ def Monthly_Solution():
                     # print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==demand[cmd_match[k]][i])
                     # prob+=lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i]
                     # print(lpSum(x_ijk[(j,i,k)] for j in supply.index)==2*demand[cmd_match[k]][i])
-            
+            print("step 4")
             prob.writeLP("FCI_monthly_allocation.lp")
             prob.solve()
             # prob.solve(CPLEX())
@@ -330,9 +288,9 @@ def Monthly_Solution():
 #                 data1 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Invard.xlsx", engine='openpyxl')
 #                 data2 = pd.ExcelFile("Input//Input_template_Monthly_Planner_Outward.xlsx", engine='openpyxl')
 #                 supply = pd.read_excel(data2, sheet_name="MonthlyData", index_col=1)
-#                 print(supply, "supply")
+#                 print(supply.index, "supply")
 #                 demand = pd.read_excel(data1, sheet_name="MonthlyData", index_col=1)
-#                 print(demand, "demand")
+#                 print(demand.index, "demand")
 #                 matrices_data = pd.ExcelFile("Input//Non-TEFD.xlsx", engine='openpyxl')
 #                 rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
 #                 print(rail_cost)
@@ -430,9 +388,10 @@ def Monthly_Solution():
 #         thread = threading.Thread(target=process_monthly_solution, args=(data,))
 #         thread.start()
 #         return jsonify({"message": "Processing started"}), 202
+
 #------------------------------------------- stop -------------------------------------------------------------------------------------
 
-task_status = {}
+# task_status = {}
 
 # @app.route("/Monthly_Solution", methods=["POST"])
 # def Monthly_Solution():
@@ -3370,9 +3329,9 @@ def Daily_Planner():
                 List_B = []
                 for j in dest_wheatrra1.keys() or dest_wheatrra_inline1.keys():
                     List_A.append(i)
-                    List_A.append(source_wheatrra_inline[i])
+                    List_A.append(source_wheatrra_inline1[i])
                     List_B.append(distance_rh[i][j])
-                    List_B.append(distance_rh[source_wheatrra_inline[i]][j])
+                    List_B.append(distance_rh[source_wheatrra_inline1[i]][j])
 
                 for i in range(len(List_A)):
                     Value[List_B[i]] = List_A[i]
@@ -12528,65 +12487,6 @@ def daily_planner_data():
     with lock:  # Acquire lock before accessing shared data
         return jsonify(all_commodity_data)
 
-# @app.route("/Alternate_Railhead_Solve",methods = ["POST","GET"])
-# def Alternate_Railhead_Solve():
-#     data = request.get_json()
-#     rh_source = data['rh_source']
-#     rh_dest = data['rh_dest']
-#     # zone = data['zone']
-#     # n = data['n']
-#     Alternate_Railhead_source = rh_source.upper()
-#     Alternate_Railhead_Destination = rh_dest.upper()
-#     # Alternate_Railhead_zone = zone
-#     # Alternate_Railhead_increment = 0.8
-#     data1 = {}
-#     if request.method == "POST":
-#         try:
-#             file = pd.ExcelFile("Input\\Temp_balanced_DPT_scen1.xlsx")
-#             matrices_data = pd.ExcelFile("Input\\Non-TEFD.xlsx")
-#             surplus_wheat = pd.read_excel(file, sheet_name="Surplus_wheat", index_col=0)
-#             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
-#             alt_rh_state = surplus_wheat.loc[Alternate_Railhead_Destination]["State"]
-
-#             lst1 = []
-
-#             for index, row in surplus_wheat.iterrows():
-#                 if row["State"] == alt_rh_state:
-#                     lst1.append(index)
-
-#             lst2 = []
-
-#             for j in lst1:
-#                 lst2.append(rail_cost.loc[Alternate_Railhead_source, j])
-
-#             keys = lst1
-#             values = lst2
-
-#             dict_altrh = dict(zip(keys, values))
-
-#             threshold = rail_cost.loc[Alternate_Railhead_source, Alternate_Railhead_Destination]
-#             filt_dict_altrh = {k: v for k, v in dict_altrh.items() if k != Alternate_Railhead_Destination and v >= threshold}
-#             sort_dict_altrh = dict(sorted(filt_dict_altrh.items(), key=lambda item: item[1]))
-#             top_3_elements = list(sort_dict_altrh.items())[:3]
-#             result_altrh = []
-
-#             for i in range(len(top_3_elements)):
-#                 result_altrh.append(top_3_elements[i][0])
-
-#             with open('Output\\Alternate_Railhead.pkl', 'wb') as f:
-#                 pickle.dump(result_altrh, f)
-                        
-#             data1["status"] = 1
-                  
-#         except Exception as e:
-#             print(e)
-#             data1["status"] = 0
-#         json_data = json.dumps(data1)
-#         json_object = json.loads(json_data)
-
-#         return(json.dumps(json_object, indent = 1))
-#     else:
-#         return ("error")
 
 dataframes = {}
 @app.route("/road_plan", methods = ["POST"])
