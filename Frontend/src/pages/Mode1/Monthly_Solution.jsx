@@ -210,7 +210,7 @@ function Monthly_Solution() {
         body: JSON.stringify(payload),
       });
       // fetchReservationId_Revelant_result();
-      if (response.ok == 200) {
+      if (response.ok) {
         alert("Solution Done!, Now you can download results");
         setSolutionSolved(true);
         setIsLoading(false);
@@ -220,15 +220,16 @@ function Monthly_Solution() {
           "<br/> " +
           "Click on download RH to RH Detailed plan" +
           "<br/>";
-          
       } else {
         console.error("Failed to send inputs. Status code:", response.status);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Error sending inputs:", error);
     } finally {
       // Reset loading state
       console.log("null");
+      setIsLoading(false);
     }
   };
 
@@ -600,15 +601,6 @@ function Monthly_Solution() {
                   <br />
                   {solutionSolved && (
                     <div>
-                      {/* <button
-                        style={{ color: "black", marginLeft: "15px" }}
-                        className="btn btn-success dropdown-toggle"
-                        onClick={() => exportToExcel2()}
-                      >
-                        <i className="fa fa-bars"></i> Download Railhead To
-                        Railhead Detailed Plan
-                      </button> */}
-
                       <button
                         style={{ color: "black", marginLeft: "15px" }}
                         className="btn btn-success dropdown-toggle"
@@ -624,98 +616,6 @@ function Monthly_Solution() {
               </div>
             </div>
             <br />
-            {/* {showMessage && (
-                          <div
-                            style={{
-                              marginTop: 15,
-                              marginLeft: 20,
-                              width: "62vw",
-                            }}
-                          >
-                            {Wheat_urs !== null && Wheat_urs.length > 0 ? (
-                              <div>
-                                <div>Wheat_urs</div>
-                                <table>
-                                  <thead>
-                                    <tr style={{ margin: "auto" }}>
-                                      <th
-                                        style={{
-                                          padding: "10px",
-                                          width: "200px",
-                                        }}
-                                      >
-                                        Sr. No
-                                      </th>
-                                      <th
-                                        style={{
-                                          padding: "10px",
-                                          width: "200px",
-                                        }}
-                                      >
-                                        Src RH
-                                      </th>
-                                      <th
-                                        style={{
-                                          padding: "10px",
-                                          width: "200px",
-                                        }}
-                                      >
-                                        Src state
-                                      </th>
-                                      <th
-                                        style={{
-                                          padding: "10px",
-                                          width: "200px",
-                                        }}
-                                      >
-                                        Dest RH
-                                      </th>
-                                      <th
-                                        style={{
-                                          padding: "10px",
-                                          width: "200px",
-                                        }}
-                                      >
-                                        Dest state
-                                      </th>
-                                      <th
-                                        style={{
-                                          padding: "10px",
-                                          width: "200px",
-                                        }}
-                                      >
-                                        commodity
-                                      </th>
-                                      <th
-                                        style={{
-                                          padding: "10px",
-                                          width: "350px",
-                                        }}
-                                      >
-                                        Rakes
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {Wheat_urs.map((item, index) => (
-                                      <tr key={item["Unnamed: 0"]}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.From_state}</td>
-                                        <td>{item.Bihar}</td>
-                                        <td>{item.DestinationRailHead}</td>
-                                        <td>{item.DestinationState}</td>
-                                        <td>{item.Commodity}</td>
-                                        <td>{item.Rakes}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            ) : (
-                              <div />
-                            )}
-                          </div>
-                        )} */}
             <br />
           </div>
         </div>

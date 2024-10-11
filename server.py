@@ -168,7 +168,7 @@ def Monthly_Solution():
                 else:
                     print(cmd_match[k],":","FALSE")
             print("step 2 lp varible declaration")
-            print(rail_cost.loc["BSPN_KRLI"]["TKFS_TUA"])
+            
             x_ijk = LpVariable.dicts("x",[(i,j,k) for i in supply.index for j in demand.index for k in commodity],lowBound = 0,cat="Integer")
             print("lp sum")
 
