@@ -349,6 +349,7 @@ function Monthly_Solution() {
               <a href="/home">Home</a>
             </li>
             <li className="active">Monthly plan</li>
+            <li className="active">v12.10</li>
           </ul>
 
           <div className="page-content-wrap">
