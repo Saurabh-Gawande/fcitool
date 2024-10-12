@@ -202,7 +202,7 @@ function Monthly_Solution() {
     };
 
     try {
-      const response = await fetch(ProjectIp + "/Monthly_Solution", {
+      const response = await fetch(ProjectIp + "/Monthly_Movement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

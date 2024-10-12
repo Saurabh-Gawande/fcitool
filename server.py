@@ -124,7 +124,7 @@ def upload_Mode2_Outward():
     
 
 dataMonthly_rail = {}
-@app.route("/Monthly_Solution",methods = ["POST","GET"])
+@app.route("/Monthly_Movement",methods = ["POST","GET"])
 def Monthly_Solution():
     if request.method == "POST":
         try:
