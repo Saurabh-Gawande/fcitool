@@ -531,7 +531,7 @@ def Monthly_Solution():
 
 def generate_monthly_solution():
     try:
-        df = pd.read_excel('Output//Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
+        df = pd.read_excel('Output/Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
         # Remove the 'Unnamed: 0' column if it exists
         if 'Unnamed: 0' in df.columns:
             df = df.drop('Unnamed: 0', axis=1)
@@ -3524,9 +3524,9 @@ def Daily_Planner():
                 lpSum(x_ij_wheat[(i, j)] * wheat_42w.loc[i][j] for i in source_wheat.keys() for j in dest_wheat.keys()) +
                 lpSum(x_ij_rra[(i, j)] * rice_42w.loc[i][j] for i in source_rra.keys() for j in dest_rra.keys()) +
                 lpSum(x_ij_coarseGrain[(i, j)] * rice_42w.loc[i][j] for i in source_coarseGrain.keys() for j in dest_coarseGrain.keys()) +
-                lpSum(x_ij_frkrra[(i, j)] * wheat_42w.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
-                lpSum(x_ij_frk_br[(i, j)] * wheat_42w.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
-                lpSum(x_ij_frk[(i, j)] * wheat_42w.loc[i][j] for i in source_frk.keys() for j in dest_frk.keys()) +
+                lpSum(x_ij_frkrra[(i, j)] * rice_42w.loc[i][j] for i in source_frkrra.keys() for j in dest_frkrra.keys()) +
+                lpSum(x_ij_frk_br[(i, j)] * rice_42w.loc[i][j] for i in source_frkbr.keys() for j in dest_frkbr.keys()) +
+                lpSum(x_ij_frk[(i, j)] * rice_42w.loc[i][j] for i in source_frk.keys() for j in dest_frk.keys()) +
                 lpSum(x_ij_frkcgr[(i, j)] * wheat_42w.loc[i][j] for i in source_frkcgr.keys() for j in dest_frkcgr.keys()) +
                 lpSum(x_ij_wcgr[(i, j)] * wheat_42w.loc[i][j] for i in source_wcgr.keys() for j in dest_wcgr.keys()) +
                 lpSum(x_ij_rrc[(i, j)] * wheat_42w.loc[i][j] for i in source_rrc.keys() for j in dest_rrc.keys()) +
@@ -3539,7 +3539,7 @@ def Daily_Planner():
                 lpSum(x_ij_wheaturs[(i, j)] * wheat_42w.loc[i][j] for i in source_wheaturs.keys() for j in dest_wheaturs.keys()) +
                 lpSum(x_ij_wheatfaq[(i, j)] * wheat_42w.loc[i][j] for i in source_wheatfaq.keys() for j in dest_wheatfaq.keys()) +
                 lpSum(x_ij_wheatrra[(i, j)] * wheat_42w.loc[i][j] for i in source_wheatrra.keys() for j in dest_wheatrra.keys()) +
-                lpSum(x_ij_frk_rra[(i, j)] * wheat_42w.loc[i][j] for i in source_frk_rra.keys() for j in dest_frk_rra.keys()) +
+                lpSum(x_ij_frk_rra[(i, j)] * rice_42w.loc[i][j] for i in source_frk_rra.keys() for j in dest_frk_rra.keys()) +
                 lpSum(x_ij_misc3[(i, j)] * wheat_42w.loc[i][j] for i in source_misc3.keys() for j in dest_misc3.keys()) +
                 lpSum(x_ij_misc4[(i, j)] * wheat_42w.loc[i][j] for i in source_misc4.keys() for j in dest_misc4.keys()) +
                 lpSum(x_ij_wheat1[(i, j)] * wheat_58w.loc[i][j] for i in source_wheat1.keys() for j in dest_wheat1.keys()) +
