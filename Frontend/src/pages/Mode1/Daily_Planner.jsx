@@ -2186,7 +2186,6 @@ function Daily_Planner() {
         body: JSON.stringify(payload),
       });
       fetchReservationId_Total_result();
-      // fetchReservationId_Revelant_result();
       if (response.ok) {
         setSolutionSolved(true);
       } else {
@@ -2263,23 +2262,6 @@ function Daily_Planner() {
 
     return result;
   }
-
-  const fetchReservationId_Revelant_result = () => {
-    var form = new FormData();
-    fetch(ProjectIp + "/read_Daily_Planner_S1", {
-      method: "POST",
-      credentials: "include",
-      body: form,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const fetched_Relevant_Result = data;
-        set_Relevant_Result(fetched_Relevant_Result);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
 
   const exportToPDF = () => {
     if (Total_result == null) {
@@ -2748,7 +2730,10 @@ function Daily_Planner() {
   };
 
   return (
-    <div className="page-container" style={{ backgroundColor: "#E7A63D" }}>
+    <div
+      className="page-container"
+      style={{ backgroundColor: "#E7A63D", height: "100vh" }}
+    >
       {loading && (
         <div className="spinner-overlay">
           <div className="spinner"></div>
@@ -2760,6 +2745,8 @@ function Daily_Planner() {
         style={{
           display: "flex",
           backgroundImage: "url('static/img/bg8.jpg')",
+          height: "100vh",
+          widows: "20px",
         }}
       >
         <div>
@@ -2842,7 +2829,7 @@ function Daily_Planner() {
           ) : null}
           <div className="page-content-wrap">
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-12" style={{ width: "70vw" }}>
                 <br />
                 {/* <div style={{ marginLeft: "35%" }}>
                   <input type="file" onChange={handleFileChange_} />
@@ -2923,7 +2910,7 @@ function Daily_Planner() {
                       </strong>
                     </p>
                     <div>
-                      <div
+                      {/* <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -3040,7 +3027,7 @@ function Daily_Planner() {
                             value={surplusValue}
                           />
                         </div>
-                        {/* <button
+                        <button
                           onClick={AddSurplus}
                           disabled={
                             surplusState === undefined ||
@@ -3058,8 +3045,8 @@ function Daily_Planner() {
                           }}
                         >
                           Add
-                        </button> */}
-                      </div>
+                        </button>
+                      </div> */}
                       <br />
                       {surplus.length !== 0 && (
                         <table style={{ width: "65vw" }}>
@@ -3068,12 +3055,12 @@ function Daily_Planner() {
                               <th>Sno</th>
                               <th>Region</th>
                               <th>Division</th>
-                              {/* <th>virtual Code</th> */}
+                              <th>virtual Code</th>
                               <th>Railhead</th>
                               <th>Commodity</th>
                               <th>Rake preference</th>
                               <th>Rakes</th>
-                              {/* <th>Delete</th> */}
+                              <th>Delete</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -3082,7 +3069,7 @@ function Daily_Planner() {
                                 <td>{index + 1}</td>
                                 <td>{row.origin_state}</td>
                                 <td>{row.sourceDivision}</td>
-                                {/* <td>{row.virtualCode}</td> */}
+                                <td>{row.virtualCode}</td>
                                 <td>{row.virtualCode}</td>
                                 <td>{row.Commodity}</td>
                                 <td>{row.rake}</td>
@@ -3121,7 +3108,7 @@ function Daily_Planner() {
                           For Destination:
                         </strong>
                       </p>
-                      <div
+                      {/* <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -3240,7 +3227,7 @@ function Daily_Planner() {
                             value={deficitValue}
                           />
                         </div>
-                        {/* <button
+                        <button
                           onClick={AddDeficit}
                           style={{
                             backgroundColor: "orange",
@@ -3258,8 +3245,8 @@ function Daily_Planner() {
                           }
                         >
                           Add
-                        </button> */}
-                      </div>
+                        </button>
+                      </div> */}
                       <br />
                       {deficit.length !== 0 && (
                         <table style={{ width: "65vw" }}>
@@ -3318,7 +3305,7 @@ function Daily_Planner() {
                           For Inline Origin:
                         </strong>
                       </p>
-                      <div
+                      {/* <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -3469,7 +3456,7 @@ function Daily_Planner() {
                             <option value="Misc4">Misc4</option>
                           </select>
                         </div>
-                        {/* <button
+                        <button
                           onClick={AddSurplusInline}
                           style={{
                             backgroundColor: "orange",
@@ -3491,8 +3478,8 @@ function Daily_Planner() {
                           }
                         >
                           Add
-                        </button> */}
-                      </div>
+                        </button>
+                      </div> */}
                       {surplusInline.length > 0 && (
                         <table style={{ width: "65vw", marginTop: 20 }}>
                           <thead>
@@ -3560,7 +3547,7 @@ function Daily_Planner() {
                           For Inline Destination:
                         </strong>
                       </p>
-                      <div
+                      {/* <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -3712,7 +3699,7 @@ function Daily_Planner() {
                             <option value="Misc4">Misc4</option>
                           </select>
                         </div>
-                        {/* <button
+                        <button
                           onClick={AddDeficitInline}
                           style={{
                             backgroundColor: "orange",
@@ -3734,8 +3721,8 @@ function Daily_Planner() {
                           }
                         >
                           Add
-                        </button> */}
-                      </div>
+                        </button>
+                      </div> */}
                       {deficitInline.length > 0 && (
                         <table style={{ width: "65vw", marginTop: 20 }}>
                           <thead>
@@ -3805,7 +3792,7 @@ function Daily_Planner() {
                       </strong>
                     </p>
                     <br />
-                    <div
+                    {/* <div
                       style={{
                         display: "flex",
                         width: "65vw",
@@ -3937,15 +3924,15 @@ function Daily_Planner() {
                           <option value="Misc4">Misc4</option>
                         </select>
                       </div>
-                    </div>
-                    <div
+                    </div> */}
+                    {/* <div
                       style={{
                         display: "flex",
                         marginLeft: "20px",
                         marginTop: "10px",
                       }}
                     >
-                      {/* <div>
+                      <div>
                         <button
                           style={{
                             textAlign: "center",
@@ -3958,8 +3945,8 @@ function Daily_Planner() {
                         >
                           Add
                         </button>
-                      </div> */}
-                    </div>
+                      </div>
+                    </div> */}
                     <br />
                     {fixed_data.length !== 0 && (
                       <div>
@@ -4059,7 +4046,7 @@ function Daily_Planner() {
                       </strong>
                     </p>
 
-                    <div
+                    {/* <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
@@ -4167,7 +4154,7 @@ function Daily_Planner() {
                           value={surplusValue}
                         />
                       </div>
-                      {/* <button
+                      <button
                           onClick={AddSurplus}
                           disabled={
                             surplusState === undefined ||
@@ -4185,8 +4172,8 @@ function Daily_Planner() {
                           }}
                         >
                           Add
-                        </button> */}
-                    </div>
+                        </button>
+                    </div> */}
                     <br />
                     {blocked_data.length !== 0 && (
                       <div>
