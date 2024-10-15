@@ -2730,7 +2730,10 @@ function Daily_Planner() {
   };
 
   return (
-    <div className="page-container" style={{ backgroundColor: "#E7A63D" }}>
+    <div
+      className="page-container"
+      style={{ backgroundColor: "#E7A63D", height: "100vh" }}
+    >
       {loading && (
         <div className="spinner-overlay">
           <div className="spinner"></div>
@@ -2742,7 +2745,6 @@ function Daily_Planner() {
         style={{
           display: "flex",
           backgroundImage: "url('static/img/bg8.jpg')",
-          height: "100vh",
           widows: "20px",
         }}
       >
