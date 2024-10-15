@@ -2732,7 +2732,7 @@ function Daily_Planner() {
   return (
     <div
       className="page-container"
-      style={{ backgroundColor: "#E7A63D", height: "100vh" }}
+      style={{ backgroundColor: "#E7A63D", height: "100vh", overflowY: "auto" }}
     >
       {loading && (
         <div className="spinner-overlay">
