@@ -3060,7 +3060,7 @@ function Daily_Planner() {
                               <th>Commodity</th>
                               <th>Rake preference</th>
                               <th>Rakes</th>
-                              <th>Delete</th>
+                              {/* <th>Delete</th> */}
                             </tr>
                           </thead>
                           <tbody>
