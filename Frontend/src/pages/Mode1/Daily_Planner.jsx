@@ -2592,7 +2592,7 @@ function Daily_Planner() {
           setModalValue(
             "The add funtionality will not work when data is imported from portal"
           );
-          setShowModal(true);
+          // setShowModal(true);
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
               virtualCode: item.sourceRailHead,
@@ -2730,10 +2730,7 @@ function Daily_Planner() {
   };
 
   return (
-    <div
-      className="page-container"
-      style={{ backgroundColor: "#E7A63D", height: "100vh" }}
-    >
+    <div className="page-container" style={{ backgroundColor: "#E7A63D" }}>
       {loading && (
         <div className="spinner-overlay">
           <div className="spinner"></div>
