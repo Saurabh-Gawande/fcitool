@@ -41,7 +41,7 @@ function Sidenav() {
           <li>
             <a href="/Movement_Planner">
               <span className="fa fa-desktop"></span>{" "}
-              <span className="xn-text">Daily Planner</span>
+              <span className="xn-text">Movement Planner</span>
             </a>
           </li>
         )}

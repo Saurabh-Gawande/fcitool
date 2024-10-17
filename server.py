@@ -3919,6 +3919,8 @@ def Daily_Planner():
             print("Total Number of Variables:", len(prob.variables()))
             print("Total Number of Constraints:", len(prob.constraints))
             print("step 10 LP solved")
+
+            
             # dataframe for 42 wagon
             df_wheat = pd.DataFrame()
             From = []

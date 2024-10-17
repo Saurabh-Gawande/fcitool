@@ -219,10 +219,10 @@ function Daily_Planner() {
   useEffect(() => {
     const fetchData = async () => {
       const urls = [
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
-        `${portalUrl}/ToolOptimizerWebApi/CostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
       ];
 
       try {
@@ -2574,11 +2574,13 @@ function Daily_Planner() {
 
   const fetchData = (event) => {
     event.preventDefault();
+    setLoading(true);
     fetch(`${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool`)
       .then((response) => {
         if (response.status === 200) {
           return response.json();
         } else {
+          setLoading(false);
           alert(`Failed to fetch data. Status code: ${response.status}`);
           return null;
         }
@@ -2589,9 +2591,6 @@ function Daily_Planner() {
             ...prev,
             "Successfully imported data from portal",
           ]);
-          setModalValue(
-            "The add funtionality will not work when data is imported from portal"
-          );
           // setShowModal(true);
           if (data.sourceResponse) {
             const updatedSurplus = data.sourceResponse.map((item) => ({
@@ -2722,10 +2721,8 @@ function Daily_Planner() {
           }
 
           setDisableAfterImport(true);
+          setLoading(false);
         }
-      })
-      .catch((error) => {
-        alert(`Error: ${error.message}`);
       });
   };
 
@@ -2897,17 +2894,19 @@ function Daily_Planner() {
                       </select>
                     </label> */}
                     <br />
-                    <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
-                      <strong
-                        style={{
-                          color: "#9d0921",
-                          fontSize: "20px",
-                          marginLeft: "15px",
-                        }}
-                      >
-                        For Origin:
-                      </strong>
-                    </p>
+                    {surplus.length !== 0 && (
+                      <p style={{ margin: 2, padding: 0, marginTop: 15 }}>
+                        <strong
+                          style={{
+                            color: "#9d0921",
+                            fontSize: "20px",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          For Origin:
+                        </strong>
+                      </p>
+                    )}
                     <div>
                       {/* <div
                         style={{
@@ -3096,17 +3095,19 @@ function Daily_Planner() {
                           </tbody>
                         </table>
                       )}
-                      <p style={{ margin: 2, padding: 0, marginTop: 20 }}>
-                        <strong
-                          style={{
-                            color: "#9d0921",
-                            fontSize: "20px",
-                            marginLeft: "15px",
-                          }}
-                        >
-                          For Destination:
-                        </strong>
-                      </p>
+                      {deficit.length !== 0 && (
+                        <p style={{ margin: 2, padding: 0, marginTop: 20 }}>
+                          <strong
+                            style={{
+                              color: "#9d0921",
+                              fontSize: "20px",
+                              marginLeft: "15px",
+                            }}
+                          >
+                            For Destination:
+                          </strong>
+                        </p>
+                      )}
                       {/* <div
                         style={{
                           display: "flex",
@@ -3293,17 +3294,19 @@ function Daily_Planner() {
                           </tbody>
                         </table>
                       )}
-                      <p style={{ margin: 2, padding: 0, marginTop: 12 }}>
-                        <strong
-                          style={{
-                            color: "#9d0921",
-                            fontSize: "20px",
-                            marginLeft: "15px",
-                          }}
-                        >
-                          For Inline Origin:
-                        </strong>
-                      </p>
+                      {surplusInline.length !== 0 && (
+                        <p style={{ margin: 2, padding: 0, marginTop: 12 }}>
+                          <strong
+                            style={{
+                              color: "#9d0921",
+                              fontSize: "20px",
+                              marginLeft: "15px",
+                            }}
+                          >
+                            For Inline Origin:
+                          </strong>
+                        </p>
+                      )}
                       {/* <div
                         style={{
                           display: "flex",
@@ -3535,17 +3538,19 @@ function Daily_Planner() {
                         </table>
                       )}
 
-                      <p style={{ margin: 2, padding: 0, marginTop: 30 }}>
-                        <strong
-                          style={{
-                            color: "#9d0921",
-                            fontSize: "20px",
-                            marginLeft: "15px",
-                          }}
-                        >
-                          For Inline Destination:
-                        </strong>
-                      </p>
+                      {deficitInline.length !== 0 && (
+                        <p style={{ margin: 2, padding: 0, marginTop: 30 }}>
+                          <strong
+                            style={{
+                              color: "#9d0921",
+                              fontSize: "20px",
+                              marginLeft: "15px",
+                            }}
+                          >
+                            For Inline Destination:
+                          </strong>
+                        </p>
+                      )}
                       {/* <div
                         style={{
                           display: "flex",
@@ -3779,17 +3784,19 @@ function Daily_Planner() {
                       )}
                     </div>
                     <br />
-                    <p style={{ margin: 0, padding: 0 }}>
-                      <strong
-                        style={{
-                          color: "#9d0921",
-                          fontSize: "20px",
-                          marginLeft: "15px",
-                        }}
-                      >
-                        For Route Fixing:
-                      </strong>
-                    </p>
+                    {fixed_data.length !== 0 && (
+                      <p style={{ margin: 0, padding: 0 }}>
+                        <strong
+                          style={{
+                            color: "#9d0921",
+                            fontSize: "20px",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          For Route Fixing:
+                        </strong>
+                      </p>
+                    )}
                     <br />
                     {/* <div
                       style={{
@@ -4033,17 +4040,19 @@ function Daily_Planner() {
                       </div>
                     )}
 
-                    <p style={{ margin: 2, padding: 0, marginTop: 10 }}>
-                      <strong
-                        style={{
-                          color: "#9d0921",
-                          fontSize: "20px",
-                          marginLeft: "15px",
-                        }}
-                      >
-                        For Route Blocking:
-                      </strong>
-                    </p>
+                    {blocked_data.length !== 0 && (
+                      <p style={{ margin: 2, padding: 0, marginTop: 10 }}>
+                        <strong
+                          style={{
+                            color: "#9d0921",
+                            fontSize: "20px",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          For Route Blocking:
+                        </strong>
+                      </p>
+                    )}
 
                     {/* <div
                       style={{
@@ -4247,36 +4256,43 @@ function Daily_Planner() {
                     <br />
                   </form>
 
-                  <div style={{ fontSize: "20px", fontWeight: "700" }}>
-                    <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
-                    Optimal Plan
-                  </div>
-                  <div
-                    className="wrap__toggle"
-                    style={{
-                      textAlign: "center",
-                      borderStyle: "solid",
-                      borderColor: "#ebab44b0",
-                    }}
-                  >
-                    <div className="wrap__toggle--bluetooth">
-                      <span style={{ textAlign: "center", fontWeight: "bold" }}>
-                        Generate Optimized Plan
-                      </span>
-                    </div>
-                    <div className="wrap__toggle--toggler">
-                      <label htmlFor="toggle">
-                        <input
-                          type="checkbox"
-                          className="checkBox"
-                          id="toggle"
-                          onChange={handleSolve}
-                          disabled={!disableAfterImport}
-                        />
-                        <span></span>
-                      </label>
-                    </div>
-                  </div>
+                  {disableAfterImport && (
+                    <>
+                      <div style={{ fontSize: "20px", fontWeight: "700" }}>
+                        <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
+                        Optimal Plan
+                      </div>
+                      <div
+                        className="wrap__toggle"
+                        style={{
+                          textAlign: "center",
+                          borderStyle: "solid",
+                          borderColor: "#ebab44b0",
+                        }}
+                      >
+                        <div className="wrap__toggle--bluetooth">
+                          <span
+                            style={{ textAlign: "center", fontWeight: "bold" }}
+                          >
+                            Generate Optimized Plan
+                          </span>
+                        </div>
+                        <div className="wrap__toggle--toggler">
+                          <label htmlFor="toggle">
+                            <input
+                              type="checkbox"
+                              className="checkBox"
+                              id="toggle"
+                              onChange={handleSolve}
+                              disabled={!disableAfterImport}
+                            />
+                            <span></span>
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
                   <br />
                   <br />
                   {solutionSolved && (
