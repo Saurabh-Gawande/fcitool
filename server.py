@@ -7404,7 +7404,7 @@ def Daily_Planner():
             df_rrc["DestinationIndentId"] =destinationIndentId
             df_rrc["SourceRailHeadName"] = SourceRailHeadName
             df_rrc["DestinationRailHeadName"] = DestinationRailHeadName
-            print(df_rrc)
+            
             for i in dest_rrc_inline.keys():
                 for j in range(len(df_rrc["DestinationRailHead"])):
                     if (i.split("_")[0] == df_rrc.iloc[j]["DestinationRailHead"] or dest_rrc_inline[i].split("_")[0] == df_rrc.iloc[j]["DestinationRailHead"]):
@@ -7483,6 +7483,7 @@ def Daily_Planner():
                         destinationRH.append(rrc["virtualCode"])
                         destinationMergingId.append(rrc["destinationMergingId"])
                         destinationIndentId.append(rrc["destinationIndentIds"])
+                        DestinationRailHeadName.append(rrc["destinationRailHeadName"])
                         found_state = True
                         break
                 if not found_state:
@@ -7527,10 +7528,11 @@ def Daily_Planner():
                         destinationRH.append(wheat["virtualCode"])
                         destinationMergingId.append(wheat["destinationMergingId"])
                         destinationIndentId.append(wheat["destinationIndentIds"])
+                        DestinationRailHeadName.append(wheat["destinationRailHeadName"])
                         break
                 if not found_division:
                     To_inlineDivision.append("")
-            
+
             for i in range(len(confirmed_org_rhcode1)):
                 org = str(confirmed_org_rhcode1[i])
                 org_state = str(confirmed_org_state1[i])
