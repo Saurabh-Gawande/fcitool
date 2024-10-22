@@ -39,7 +39,7 @@ def upload_Monthly_File_M01():
     data = {}
     try:
         file = request.files['uploadFile1'] # import file
-        file.save("Input\\Input_template_Monthly_Planner_Invard.xlsx") #save file with this name in input folder
+        file.save("Input_template_Monthly_Planner_Invard.xlsx") #save file with this name in input folder
         data['status'] = 1 # on success get the code 1
     except:
         data['status'] = 0 # on failur get the code 0
@@ -55,7 +55,7 @@ def upload_Monthly_File_Outward():
     data = {}
     try:
         file = request.files['uploadFile2']
-        file.save("Input\\Input_template_Monthly_Planner_Outward.xlsx")
+        file.save("Input_template_Monthly_Planner_Outward.xlsx")
         data['status'] = 1
     except:
         data['status'] = 0
@@ -140,14 +140,17 @@ def Monthly_Solution():
             # print(fixed_src, dest_src, commo)
 
             print('Imported now')
-            data1 = pd.ExcelFile("Input/Input_template_Monthly_Planner_Invard.xlsx", engine='openpyxl')
-            data2 = pd.ExcelFile("Input/Input_template_Monthly_Planner_Outward.xlsx", engine='openpyxl')
-            supply = pd.read_excel(data2, sheet_name="MonthlyData",index_col=1)
+            data1 = pd.ExcelFile("Input_template_Monthly_Planner_Invard.xlsx", engine='openpyxl')
+            data2 = pd.ExcelFile("Input_template_Monthly_Planner_Outward.xlsx", engine='openpyxl')
+            supply1 = pd.read_excel(data2, sheet_name="MonthlyData",index_col=1)
+            demand1 = pd.read_excel(data1, sheet_name="MonthlyData",index_col=1)
+            columns_to_check = ['Wheat URS', 'Wheat FAQ', 'Rice RRA', 'Rice FRKBR', 'Rice FRKRRA', 'Rice RRC', 'Millets Bajra', 'Millets Jowar', 'Millets Maize', 'Millets Ragi', 'Misc 1', 'Misc 2']
+            supply = supply1[(supply1[columns_to_check]>0).any(axis=1)]
             print(supply, "supply")
-            demand = pd.read_excel(data1, sheet_name="MonthlyData",index_col=1)
+            demand = demand1[(demand1[columns_to_check]>0).any(axis=1)]
             print(demand, "demand")
             # state_supply = pd.read_excel(data,sheet_name="State_supply",index_col=0)
-            matrices_data = pd.ExcelFile("Input/Non-TEFD.xlsx" , engine='openpyxl')
+            matrices_data = pd.ExcelFile("Input/Non-TEFD.xlsx", engine='openpyxl')
             rail_cost = pd.read_excel(matrices_data, sheet_name="Railhead_cost_matrix", index_col=0)
             prob=LpProblem("FCI_monthly_allocation_rail",LpMinimize)
 
@@ -249,7 +252,7 @@ def Monthly_Solution():
                 df_k[k]=Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum")
                 print(Dict_df[k].pivot_table(index="From_state",columns="To_state",values="Values",aggfunc="sum"))
             
-            excel_file_name="Output/Output_monthly_planner.xlsx"
+            excel_file_name="Output_monthly_planner.xlsx"
 
             with pd.ExcelWriter(excel_file_name, engine="openpyxl") as writer:
                 for k in commodity:
@@ -531,7 +534,7 @@ def Monthly_Solution():
 
 def generate_monthly_solution():
     try:
-        df = pd.read_excel('Output/Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
+        df = pd.read_excel('Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
         # Remove the 'Unnamed: 0' column if it exists
         if 'Unnamed: 0' in df.columns:
             df = df.drop('Unnamed: 0', axis=1)
