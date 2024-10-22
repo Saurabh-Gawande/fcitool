@@ -534,8 +534,10 @@ def Monthly_Solution():
 
 def generate_monthly_solution():
     try:
-        df = pd.read_excel('Output_monthly_planner.xlsx', sheet_name="RH_RH_tag", index_col=None)
-        # Remove the 'Unnamed: 0' column if it exists
+        excel_file_name="Output_monthly_planner.xlsx"
+        data1 = pd.ExcelFile("Output_monthly_planner.xlsx", engine='openpyxl')
+        df = pd.read_excel(data1, sheet_name="RH_RH_tag", index_col=None)
+
         if 'Unnamed: 0' in df.columns:
             df = df.drop('Unnamed: 0', axis=1)
         return df.to_dict(orient='records')
@@ -549,7 +551,7 @@ def export_plan():
     
     # Generate the monthly solution
     relevant_data = generate_monthly_solution()
-
+    print(relevant_data)
     # Check if relevant_data is not empty
     if not relevant_data:
         print("No data to send.")
