@@ -3053,7 +3053,7 @@ function Daily_Planner() {
                               <th>Sno</th>
                               <th>Region</th>
                               <th>Division</th>
-                              <th>virtual Code</th>
+                              {/* <th>virtual Code</th> */}
                               <th>Railhead</th>
                               <th>Commodity</th>
                               <th>Rake preference</th>
@@ -3068,7 +3068,7 @@ function Daily_Planner() {
                                 <td>{row.origin_state}</td>
                                 <td>{row.sourceDivision}</td>
                                 <td>{row.virtualCode}</td>
-                                <td>{row.virtualCode}</td>
+                                {/* <td>{row.virtualCode}</td> */}
                                 <td>{row.Commodity}</td>
                                 <td>{row.rake}</td>
                                 <td>{row.Value}</td>
