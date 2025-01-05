@@ -301,7 +301,7 @@ function Daily_Planner() {
               <a href="/home">Home</a>
             </li>
             <li className="active">Daily plan</li>
-            <li className="active">v15-10</li>
+            <li className="active">v1.6.25</li>
           </ul>
 
           {/* {showModal ? (
