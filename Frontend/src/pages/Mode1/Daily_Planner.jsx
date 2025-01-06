@@ -236,7 +236,7 @@ function Daily_Planner() {
 
   const handleSolve = async () => {
     try {
-      const response = await fetch(ProjectIp + "/Daily_Planner1", {
+      const response = await fetch(ProjectIp + "/Daily_Planner", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
