@@ -148,50 +148,62 @@ function Daily_Planner() {
   };
 
   const ExpotPlan = async () => {
-    const workbook = XLSX.utils.book_new();
-    Object.entries(result).forEach(([column, data]) => {
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      XLSX.utils.book_append_sheet(workbook, worksheet, column);
-    });
-    const excelBuffer = XLSX.write(workbook, {
-      type: "array",
-      bookType: "xlsx",
-    });
-    const excelBlob = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-    setExcelFileData(excelBlob);
-  };
-
-  useEffect(() => {
-    if (excelfiledata) {
-      const formData = new FormData();
-      const fileName = "Daily_Movement_results_Scenario.xlsx";
-      formData.append("file", excelfiledata, fileName);
-
-      fetch(
-        `${portalUrl}/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      )
-        .then((response) => {
-          if (response.ok) {
-            window.alert("File uploaded successfully!");
-            setProgress((prev) => [
-              ...prev,
-              "Successfully exported the plan to portal",
-            ]);
-          } else {
-            window.alert("File upload failed. Please try again.");
-          }
-        })
-        .catch((error) => {
-          console.error("An error occurred during file upload:", error);
-        });
+    try {
+      const response = await fetch(`${portalUrl}/ToolOptimizerWebApi/PostDailyPlanner`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(result),
+      });
+  
+      // Check if the response is okay
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      // Parse the response JSON
+      const data = await response.json();
+      console.log("Data received:", data);
+  
+      // Perform actions based on the response
+      return data;
+    } catch (error) {
+      console.error("An error occurred:", error.message);
+      // Handle the error (e.g., show a notification or retry)
+      return null;
     }
-  }, [excelfiledata]);
+  };
+  
+  // useEffect(() => {
+  //   if (excelfiledata) {
+  //     const formData = new FormData();
+  //     const fileName = "Daily_Movement_results_Scenario.xlsx";
+  //     formData.append("file", excelfiledata, fileName);
+
+  //     fetch(
+  //       `${portalUrl}/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile`,
+  //       {
+  //         method: "POST",
+  //         body: formData,
+  //       }
+  //     )
+  //       .then((response) => {
+  //         if (response.ok) {
+  //           window.alert("File uploaded successfully!");
+  //           setProgress((prev) => [
+  //             ...prev,
+  //             "Successfully exported the plan to portal",
+  //           ]);
+  //         } else {
+  //           window.alert("File upload failed. Please try again.");
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("An error occurred during file upload:", error);
+  //       });
+  //   }
+  // }, [excelfiledata]);
 
   useEffect(() => {
     const fetchData = async () => {
