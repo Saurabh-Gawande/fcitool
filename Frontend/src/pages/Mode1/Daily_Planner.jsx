@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
-import config from "../../config";
-import "./Daily_Planner.css";
 import Sidenav from "./sidenav";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import config from "../../config";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import "./Daily_Planner.css";
 
 function Daily_Planner() {
   const ProjectIp = config.serverUrl;
@@ -18,12 +22,176 @@ function Daily_Planner() {
   const [disableAfterImport, setDisableAfterImport] = useState(false);
   const [nextDayData, setNextDayData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(null);
+  const [result, setResult] = useState([]);
+  const [excelfiledata, setExcelFileData] = useState(null);
+  const [showResult, setShowResult] = useState(false);
 
-  function exportToExcel() {}
-  function viewGrid() {}
-  function exportToPDF() {}
-  function uploadFile() {}
+  const exportToExcel = () => {
+    if (!result || result.length === 0) {
+      window.alert("Fetching Result, Please Wait");
+      return;
+    }
+
+    const currentDateUTC = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const currentDateIST = new Date(currentDateUTC.getTime() + istOffset);
+    const dateAndTime = currentDateIST
+      .toISOString()
+      .replace(/[:.]/g, "-")
+      .split(".")[0];
+    const filenameWithDateTime = `Daily_Movement_Scenario1_${dateAndTime}.xlsx`;
+
+    const workbook = XLSX.utils.book_new();
+
+    // Map the result array to extract required fields for Excel
+    const filteredData = result.map((item) => ({
+      SourceRailHead: item.SourceRailHead,
+      SourceState: item.SourceState,
+      DestinationRailHead: item.DestinationRailHead,
+      DestinationState: item.DestinationState,
+      Commodity: item.Commodity,
+      Rakes: item.Rakes,
+    }));
+
+    // Define the columns to include in the Excel sheet
+    const selectedColumns = [
+      "SourceRailHead",
+      "SourceState",
+      "DestinationRailHead",
+      "DestinationState",
+      "Commodity",
+      "Rakes",
+    ];
+
+    // Create the worksheet from the filtered data
+    const worksheet = XLSX.utils.json_to_sheet(filteredData, {
+      header: selectedColumns,
+    });
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "RH_RH_tags");
+
+    // Convert the workbook to Excel buffer
+    const excelBuffer = XLSX.write(workbook, {
+      type: "array",
+      bookType: "xlsx",
+    });
+
+    // Convert Excel buffer to Blob
+    const excelBlob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    // Save the Blob as an Excel file
+    saveAs(excelBlob, filenameWithDateTime);
+
+    // Update progress
+    setProgress((prev) => [
+      ...prev,
+      "Downloaded Railhead detail Plan in Excel format",
+    ]);
+  };
+
+  const exportToPDF = () => {
+    if (!result || result.length === 0) {
+      window.alert("No data to create PDF");
+      return;
+    }
+
+    const pdfDoc = new jsPDF("p", "mm", "a4");
+    const currentDateUTC = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const currentDateIST = new Date(currentDateUTC.getTime() + istOffset);
+
+    const year = currentDateIST.getFullYear();
+    const month = String(currentDateIST.getMonth() + 1).padStart(2, "0");
+    const date = String(currentDateIST.getDate()).padStart(2, "0");
+    const hours = String(currentDateIST.getHours()).padStart(2, "0");
+    const minutes = String(currentDateIST.getMinutes()).padStart(2, "0");
+    const seconds = String(currentDateIST.getSeconds()).padStart(2, "0");
+
+    const timestamp = `${year}/${month}/${date} |  Time: ${hours}:${minutes}:${seconds}`;
+
+    pdfDoc.setFontSize(10);
+    pdfDoc.text(`Date: ${timestamp}`, 15, 10);
+
+    const headers = [
+      "Commodity",
+      "SourceState",
+      "SourceRailHead",
+      "DestinationState",
+      "DestinationRailHead",
+      "Rakes",
+    ];
+
+    const rows = result.map((item) => [
+      item.Commodity,
+      item.SourceState,
+      item.SourceRailHead,
+      item.DestinationState,
+      item.DestinationRailHead,
+      item.Rakes,
+    ]);
+
+    pdfDoc.autoTable({
+      head: [headers],
+      body: rows,
+      startY: 20, // Start position of the table
+      theme: "striped",
+    });
+
+    pdfDoc.save(`Railhead_data_${timestamp}.pdf`);
+    setProgress((prev) => [
+      ...prev,
+      "Downloaded Railhead detail Plan in Pdf format",
+    ]);
+  };
+
+  const ExpotPlan = async () => {
+    const workbook = XLSX.utils.book_new();
+    Object.entries(result).forEach(([column, data]) => {
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(workbook, worksheet, column);
+    });
+    const excelBuffer = XLSX.write(workbook, {
+      type: "array",
+      bookType: "xlsx",
+    });
+    const excelBlob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    setExcelFileData(excelBlob);
+  };
+
+  useEffect(() => {
+    if (excelfiledata) {
+      const formData = new FormData();
+      const fileName = "Daily_Movement_results_Scenario.xlsx";
+      formData.append("file", excelfiledata, fileName);
+
+      fetch(
+        `${portalUrl}/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+        .then((response) => {
+          if (response.ok) {
+            window.alert("File uploaded successfully!");
+            setProgress((prev) => [
+              ...prev,
+              "Successfully exported the plan to portal",
+            ]);
+          } else {
+            window.alert("File upload failed. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("An error occurred during file upload:", error);
+        });
+    }
+  }, [excelfiledata]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +216,6 @@ function Daily_Planner() {
           rice_58w: responses[3],
         };
 
-        setData(allData);
         await sendDataToBackend(allData);
         // Store fetched data in state
         setLoading(false); // Set loading state to false
@@ -244,11 +411,19 @@ function Daily_Planner() {
         body: JSON.stringify(nextDayData),
       });
       if (response.ok) {
+        const data = await response.json(); // Wait for the JSON to resolve
+        console.log(data.result);
+        setResult(data.result);
         setSolutionSolved(true);
+        setIsLoading(false);
+        document.getElementById("toggle").checked = false;
       } else {
         console.error("Failed to send inputs. Status code:", response.status);
+        document.getElementById("toggle").checked = false;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -749,7 +924,9 @@ function Daily_Planner() {
                         <button
                           style={{ color: "black", marginLeft: "15px" }}
                           className="btn btn-success dropdown-toggle"
-                          onClick={viewGrid}
+                          onClick={() => {
+                            setShowResult(true);
+                          }}
                         >
                           <i className="fa fa-bars"></i>
                           View Railhead Detailed Plan
@@ -766,12 +943,122 @@ function Daily_Planner() {
                         <button
                           style={{ color: "black", marginLeft: "15px" }}
                           className="btn btn-success dropdown-toggle"
-                          onClick={uploadFile}
+                          onClick={ExpotPlan}
                           disabled={!disableAfterImport}
                         >
                           <i className="fa fa-bars"></i>
                           Export Plan
                         </button>
+                        {showResult && (
+                          <div
+                            style={{
+                              marginTop: 15,
+                              marginLeft: 20,
+                              width: "62vw",
+                            }}
+                          >
+                            {result !== null && result.length > 0 ? (
+                              <div>
+                                <div id="result">Result</div>
+                                <table>
+                                  <thead>
+                                    <tr style={{ margin: "auto" }}>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "200px",
+                                        }}
+                                      >
+                                        Sr. No
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Src RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Src RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Src state
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Dest RH
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Dest RH Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Dest State
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        commodity
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: "10px",
+                                          width: "205px",
+                                        }}
+                                      >
+                                        Rakes
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {result.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.SourceRailHead}</td>
+                                        <td>{item.SourceRailHeadName}</td>
+                                        <td>{item.SourceState}</td>
+                                        <td>{item.DestinationRailHead}</td>
+                                        <td>{item.DestinationRailHeadName}</td>
+                                        <td>{item.DestinationState}</td>
+                                        <td>{item.Commodity}</td>
+                                        <td>{item.Rakes}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}

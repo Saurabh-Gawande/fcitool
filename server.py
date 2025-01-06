@@ -89,12 +89,11 @@ def process_data():
 def Daily_Planner():
     if request.method == "POST":  # post method
         try:
-            print("saurabh")
+            print("step 1")
             Input = request.get_json()  # Correct method to get JSON payload
             print("Input =", Input)
             commodities_set = set()
             commodities_58w_set = set()
-            print("saurabh2")
             # Collect all unique commodities from the input
             for source in Input["sourceResponse"]:
                 if source["rake"] == "58W":
@@ -437,7 +436,6 @@ def Daily_Planner():
             print("Total Number of Constraints:",len(prob_58.constraints))
             print("===================================== Done 58W =====================================")
 
-
             # Dictionary to store source-destination mappings
             src_dest_mapping = {}
 
@@ -487,7 +485,8 @@ def Daily_Planner():
                     "inline_source_division": source.get("inlineSourceDivision", ""),
                     "inline_source_virtual_code": source.get("inlinevirtualcode", ""),
                     "source_indent_ids": source.get("sourceIndentIds"),
-                    "source_merging_id": source.get("sourceMergingId")
+                    "source_merging_id": source.get("sourceMergingId"),
+                    "source_railhead_name": source.get("sourceRailHeadName")
                 }
                 for source in Input["sourceResponse"] + Input["inlineSourceResponse"]
                 for railhead in [source["virtualCode"], source.get("inlinevirtualcode", "")]
@@ -503,7 +502,8 @@ def Daily_Planner():
                     "inline_destination_division": destination.get("inlineDestinationDivision", ""),
                     "inline_destination_virtual_code": destination.get("inlinevirtualcode", ""),
                     "destination_indent_ids": destination.get("destinationIndentIds"),
-                    "destination_merging_id": destination.get("destinationMergingId")
+                    "destination_merging_id": destination.get("destinationMergingId"),
+                    "destination_railhead_name": destination.get("destinationRailHeadName")
                 }
                 for destination in Input["destinationResponse"] + Input["inlineDestinationResponse"]
                 for railhead in [destination["virtualCode"], destination.get("inlinevirtualcode", "")]
@@ -542,45 +542,48 @@ def Daily_Planner():
                     # Append the row data
                     rows.append({
                         "Commodity": commodity,
-                        "Source": src_info.get("source_railhead", ""),
-                        "Source_State": src_info.get("source_state", ""),
-                        "Source_Division": src_info.get("source_division", ""),
+                        "SourceRailHead": src_info.get("source_railhead", ""),
+                        "SourceRailHeadName": src_info.get("source_railhead_name", ""),
+                        "SourceState": src_info.get("source_state", ""),
+                        "SourceDivision": src_info.get("source_division", ""),
                         # "Source_Virtual_Code": source,
-                        "Inline_Source_Railhead": src_info.get("inline_source_railhead", ""),
-                        "Inline_Source_Division": src_info.get("inline_source_division", ""),
-                        "Source_Indent_IDs": src_info.get("source_indent_ids", ""),
-                        "Source_Merging_ID": src_info.get("source_merging_id", ""),
-                        "Destination": dest_info.get("destination_railhead", ""),
-                        "Destination_State": dest_info.get("destination_state", ""),
-                        "Destination_Division": dest_info.get("destination_division", ""),
+                        "InlineSourceRailhead": src_info.get("inline_source_railhead", ""),
+                        "InlineSourceDivision": src_info.get("inline_source_division", ""),
+                        "SourceIndentId": src_info.get("source_indent_ids", ""),
+                        "SourceMergingId": src_info.get("source_merging_id", ""),
+                        "DestinationRailHead": dest_info.get("destination_railhead", ""),
+                        "DestinationRailHeadName": dest_info.get("destination_railhead_name", ""),
+                        "DestinationState": dest_info.get("destination_state", ""),
+                        "DestinationDivision": dest_info.get("destination_division", ""),
                         # "Destination_Virtual_code": destination,
-                        "Inline_Destination_Railhead": inline_destination_railhead,
-                        "Inline_Destination_Division": inline_destination_division,
-                        "Destination_Indent_IDs": dest_info.get("destination_indent_ids", ""),
-                        "Destination_Merging_ID": dest_info.get("destination_merging_id", ""),
+                        "InlineDestinationRailhead": inline_destination_railhead,
+                        "InlineDestinationDivision": inline_destination_division,
+                        "DestinationIndentId": dest_info.get("destination_indent_ids", ""),
+                        "DestinationMergingId": dest_info.get("destination_merging_id", ""),
                         "Rake": src_info.get("rake", ""),
-                        "Quantity": quantity
+                        "Rakes": quantity
                     })
 
             for route in Input["routeFixing"]:
                 rows.append({
                     "Commodity": route.get("sourceCommodity", ""),
-                    "Source": route.get("sourceRailHead", ""),
-                    "Source_State": route.get("sourceState", ""),
-                    "Source_Division": route.get("sourceDivision", ""),
-                    "Inline_Source_Railhead": route.get("sourceInlineRailHead", ""),
-                    "Inline_Source_Division": route.get("sourceDivision", ""),
-                    "Source_Indent_IDs": route.get("sourceIndentIds", ""),
-                    "Source_Merging_ID": route.get("sourceMergingId", ""),
-                    "Destination": route.get("destinationRailHead", ""),
-                    "Destination_State": route.get("destinationState", ""),
-                    "Destination_Division": route.get("destinationDivision", ""),
-                    "Inline_Destination_Railhead": route.get("destinationInlineRailHead", ""),
-                    "Inline_Destination_Division": route.get("destinationDivision", ""),
-                    "Destination_Indent_IDs": route.get("destinationIndentIds", ""),
-                    "Destination_Merging_ID": route.get("destinationMergingId", ""),
+                    "SourceRailHead": route.get("sourceRailHead", ""),
+                    "SourceRailHeadName": src_info.get("source_railhead_name", ""),
+                    "SourceState": route.get("sourceState", ""),
+                    "SourceDivision": route.get("sourceDivision", ""),
+                    "InlineSourceRailhead": route.get("sourceInlineRailHead", ""),
+                    "InlineSourceDivision": route.get("sourceDivision", ""),
+                    "SourceIndentId": route.get("sourceIndentIds", ""),
+                    "SourceMergingId": route.get("sourceMergingId", ""),
+                    "DestinationRailHead": route.get("destinationRailHead", ""),
+                    "DestinationState": route.get("destinationState", ""),
+                    "DestinationDivision": route.get("destinationDivision", ""),
+                    "InlineDestinationRailhead": route.get("destinationInlineRailHead", ""),
+                    "InlineDestinationDivision": route.get("destinationDivision", ""),
+                    "DestinationIndentId": route.get("destinationIndentIds", ""),
+                    "DestinationMergingId": route.get("destinationMergingId", ""),
                     "Rake": route.get("rake", ""),
-                    "Quantity": route.get("sourceValue", "")
+                    "Rakes": route.get("sourceValue", "")
                 })
             # Convert rows to a DataFrame
             df = pd.DataFrame(rows)
@@ -589,11 +592,11 @@ def Daily_Planner():
 
             # Loop through each row and split based on the Quantity
             for _, row in df.iterrows():
-                quantity = int(row["Quantity"])  # Ensure Quantity is an integer
+                quantity = int(row["Rakes"])  # Ensure Quantity is an integer
                 # Add multiple rows based on the quantity
                 for _ in range(quantity):
                     new_row = row.copy()  # Create a copy of the row
-                    new_row["Quantity"] = 1  # Reset Quantity to 1
+                    new_row["Rakes"] = 1  # Reset Quantity to 1
                     expanded_rows.append(new_row)
 
             # Convert the expanded rows back into a DataFrame

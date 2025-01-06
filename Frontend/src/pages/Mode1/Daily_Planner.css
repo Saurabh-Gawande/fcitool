@@ -963,3 +963,9 @@ body {
     margin-bottom: 20px;
   }
 }
+
+#result{
+ margin-top: 5px;
+ font-size: medium;
+ font-weight: 500;
+}
