@@ -484,7 +484,7 @@ def Daily_Planner():
                     "inline_source_railhead": source.get("sourceInlineRailHead", ""),
                     "inline_source_division": source.get("inlineSourceDivision", ""),
                     "inline_source_virtual_code": source.get("inlinevirtualcode", ""),
-                    "source_indent_ids": source.get("sourceIndentIds"),
+                    "source_indent_ids": source.get("sourceIndentIds")[0],
                     "source_merging_id": source.get("sourceMergingId"),
                     "source_railhead_name": source.get("sourceRailHeadName")
                 }
@@ -501,7 +501,7 @@ def Daily_Planner():
                     "inline_destination_railhead": destination.get("destinationInlineRailHead", ""),
                     "inline_destination_division": destination.get("inlineDestinationDivision", ""),
                     "inline_destination_virtual_code": destination.get("inlinevirtualcode", ""),
-                    "destination_indent_ids": destination.get("destinationIndentIds"),
+                    "destination_indent_ids": destination.get("destinationIndentIds")[0],
                     "destination_merging_id": destination.get("destinationMergingId"),
                     "destination_railhead_name": destination.get("destinationRailHeadName")
                 }
