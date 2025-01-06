@@ -486,7 +486,8 @@ def Daily_Planner():
                     "inline_source_virtual_code": source.get("inlinevirtualcode", ""),
                     "source_indent_ids": source.get("sourceIndentIds")[0],
                     "source_merging_id": source.get("sourceMergingId"),
-                    "source_railhead_name": source.get("sourceRailHeadName")
+                    "source_railhead_name": source.get("sourceRailHeadName"),
+                    "source_id" : source.get("sourceId")
                 }
                 for source in Input["sourceResponse"] + Input["inlineSourceResponse"]
                 for railhead in [source["virtualCode"], source.get("inlinevirtualcode", "")]
@@ -503,7 +504,8 @@ def Daily_Planner():
                     "inline_destination_virtual_code": destination.get("inlinevirtualcode", ""),
                     "destination_indent_ids": destination.get("destinationIndentIds")[0],
                     "destination_merging_id": destination.get("destinationMergingId"),
-                    "destination_railhead_name": destination.get("destinationRailHeadName")
+                    "destination_railhead_name": destination.get("destinationRailHeadName"),
+                    "destination_id" : destination.get("destinationId")
                 }
                 for destination in Input["destinationResponse"] + Input["inlineDestinationResponse"]
                 for railhead in [destination["virtualCode"], destination.get("inlinevirtualcode", "")]
@@ -551,6 +553,7 @@ def Daily_Planner():
                         "InlineSourceDivision": src_info.get("inline_source_division", ""),
                         "SourceIndentId": src_info.get("source_indent_ids", ""),
                         "SourceMergingId": src_info.get("source_merging_id", ""),
+                        "SourceId" : src_info.get("source_id"),
                         "DestinationRailHead": dest_info.get("destination_railhead", ""),
                         "DestinationRailHeadName": dest_info.get("destination_railhead_name", ""),
                         "DestinationState": dest_info.get("destination_state", ""),
@@ -560,7 +563,9 @@ def Daily_Planner():
                         "InlineDestinationDivision": inline_destination_division,
                         "DestinationIndentId": dest_info.get("destination_indent_ids", ""),
                         "DestinationMergingId": dest_info.get("destination_merging_id", ""),
-                        "Rake": src_info.get("rake", ""),
+                        "DestinationId" : dest_info.get("destination_id"),
+                        "SourceRakeType": src_info.get("rake", "").rstrip("W"),
+                        "DestinationRakeType": src_info.get("rake", "").rstrip("W"),
                         "Rakes": quantity
                     })
 
@@ -575,6 +580,7 @@ def Daily_Planner():
                     "InlineSourceDivision": route.get("sourceDivision", ""),
                     "SourceIndentId": route.get("sourceIndentIds", ""),
                     "SourceMergingId": route.get("sourceMergingId", ""),
+                    "SourceId" : route.get("sourceId"),
                     "DestinationRailHead": route.get("destinationRailHead", ""),
                     "DestinationState": route.get("destinationState", ""),
                     "DestinationDivision": route.get("destinationDivision", ""),
@@ -582,7 +588,9 @@ def Daily_Planner():
                     "InlineDestinationDivision": route.get("destinationDivision", ""),
                     "DestinationIndentId": route.get("destinationIndentIds", ""),
                     "DestinationMergingId": route.get("destinationMergingId", ""),
-                    "Rake": route.get("rake", ""),
+                    "DestinationId" : route.get("destinationId"),
+                    "SourceRakeType": route.get("rake", "").rstrip("W"),
+                    "DestinationRakeType": route.get("rake", "").rstrip("W"),
                     "Rakes": route.get("sourceValue", "")
                 })
             # Convert rows to a DataFrame
