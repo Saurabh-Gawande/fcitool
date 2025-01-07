@@ -194,7 +194,6 @@ function Daily_Planner() {
     return counts;
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       const urls = [
@@ -399,7 +398,7 @@ function Daily_Planner() {
 
           setDisableAfterImport(true);
           setLoading(false);
-          setCounts(getCounts(data))
+          setCounts(getCounts(data));
         }
       });
   };
@@ -483,7 +482,7 @@ function Daily_Planner() {
               <a href="/home">Home</a>
             </li>
             <li className="active">Daily plan</li>
-            <li className="active">v1.6.25</li>
+            <li className="active">v7.1.25</li>
           </ul>
 
           <div className="page-content-wrap">
