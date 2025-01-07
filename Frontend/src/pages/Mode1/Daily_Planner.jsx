@@ -23,8 +23,8 @@ function Daily_Planner() {
   const [nextDayData, setNextDayData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
-  const [excelfiledata, setExcelFileData] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [counts, setCounts] = useState({});
 
   const exportToExcel = () => {
     if (!result || result.length === 0) {
@@ -77,15 +77,12 @@ function Daily_Planner() {
       bookType: "xlsx",
     });
 
-    // Convert Excel buffer to Blob
     const excelBlob = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
 
-    // Save the Blob as an Excel file
     saveAs(excelBlob, filenameWithDateTime);
 
-    // Update progress
     setProgress((prev) => [
       ...prev,
       "Downloaded Railhead detail Plan in Excel format",
@@ -149,61 +146,54 @@ function Daily_Planner() {
 
   const ExpotPlan = async () => {
     try {
-      const response = await fetch(`${portalUrl}/ToolOptimizerWebApi/PostDailyPlanner`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(result),
-      });
-  
+      const response = await fetch(
+        `${portalUrl}/ToolOptimizerWebApi/PostDailyPlanner`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(result),
+        }
+      );
+
       // Check if the response is okay
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
+      } else {
+        alert("Data successfully exported to the portal");
+        setProgress((prev) => [
+          ...prev,
+          "Data successfully exported to the portal",
+        ]);
       }
-  
-      // Parse the response JSON
-      const data = await response.json();
-      console.log("Data received:", data);
-  
-      // Perform actions based on the response
-      return data;
     } catch (error) {
       console.error("An error occurred:", error.message);
-      // Handle the error (e.g., show a notification or retry)
       return null;
     }
   };
-  
-  // useEffect(() => {
-  //   if (excelfiledata) {
-  //     const formData = new FormData();
-  //     const fileName = "Daily_Movement_results_Scenario.xlsx";
-  //     formData.append("file", excelfiledata, fileName);
 
-  //     fetch(
-  //       `${portalUrl}/DailyPlannerDataUploadWebApi/uploadDailyPlannerExcelFile`,
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     )
-  //       .then((response) => {
-  //         if (response.ok) {
-  //           window.alert("File uploaded successfully!");
-  //           setProgress((prev) => [
-  //             ...prev,
-  //             "Successfully exported the plan to portal",
-  //           ]);
-  //         } else {
-  //           window.alert("File upload failed. Please try again.");
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("An error occurred during file upload:", error);
-  //       });
-  //   }
-  // }, [excelfiledata]);
+  const getCounts = (data) => {
+    const counts = {};
+
+    const processResponse = (response, type) => {
+      response.forEach((item) => {
+        const key = `${item.rake} ${item.commodity}`;
+        if (!counts[key]) {
+          counts[key] = { S: 0, D: 0 };
+        }
+        counts[key][type] += item.value;
+      });
+    };
+
+    processResponse(data.sourceResponse, "S");
+    processResponse(data.destinationResponse, "D");
+    processResponse(data.inlineSourceResponse, "S");
+    processResponse(data.inlineDestinationResponse, "D");
+
+    return counts;
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -259,7 +249,7 @@ function Daily_Planner() {
     }
   };
 
-  const fetchData = (event) => {
+  const ImportData = (event) => {
     event.preventDefault();
     setLoading(true);
     fetch(`${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool`)
@@ -409,12 +399,14 @@ function Daily_Planner() {
 
           setDisableAfterImport(true);
           setLoading(false);
+          setCounts(getCounts(data))
         }
       });
   };
 
   const handleSolve = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(ProjectIp + "/Daily_Planner", {
         method: "POST",
         headers: {
@@ -422,18 +414,21 @@ function Daily_Planner() {
         },
         body: JSON.stringify(nextDayData),
       });
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json(); // Wait for the JSON to resolve
-        console.log(data.result);
         setResult(data.result);
         setSolutionSolved(true);
         setIsLoading(false);
         document.getElementById("toggle").checked = false;
+        setProgress((prev) => [...prev, data.message]);
       } else {
-        console.error("Failed to send inputs. Status code:", response.status);
+        setIsLoading(false);
         document.getElementById("toggle").checked = false;
+        setProgress((prev) => [...prev, data.message]);
       }
     } catch (error) {
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
       console.error("Error:", error);
     }
   };
@@ -491,50 +486,6 @@ function Daily_Planner() {
             <li className="active">v1.6.25</li>
           </ul>
 
-          {/* {showModal ? (
-            <div className="modal-overlay" onClick={handleCloseModal}>
-              <div className="modal-content">
-                <span className="close-btn" onClick={closeModal}>
-                  &times;
-                </span>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  <h2>Alert</h2>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      padding: "5px",
-                    }}
-                  >
-                    {modalValue}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "end",
-                    padding: "5px 2px",
-                  }}
-                >
-                  <button
-                    onClick={closeModal}
-                    type="button"
-                    className="btn btn-danger"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null} */}
           <div className="page-content-wrap">
             <div className="row">
               <div className="col-md-12" style={{ width: "70vw" }}>
@@ -555,7 +506,7 @@ function Daily_Planner() {
                       alignItems: "center",
                     }}
                     className="btn btn-danger dropdown-toggle"
-                    onClick={fetchData}
+                    onClick={ImportData}
                   >
                     <i className="fa fa-bars"></i>
                     Import data
@@ -1114,7 +1065,17 @@ function Daily_Planner() {
                 gap: 8,
               }}
             >
-              {/* <div style={{ fontWeight: "bold" }}>{status}</div> */}
+              <div>
+                <div>Commodity Counts</div>
+                <ul>
+                  {Object.keys(counts).map((key) => (
+                    <li key={key}>
+                      {key} (S/D) : {counts[key].S} / {counts[key].D}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
               {progress.map((progress) => (
                 <div>{progress}</div>
               ))}

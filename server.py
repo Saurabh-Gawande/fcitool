@@ -89,9 +89,9 @@ def process_data():
 def Daily_Planner():
     if request.method == "POST":  # post method
         try:
+            time.sleep(5)
             print("step 1")
             Input = request.get_json()  # Correct method to get JSON payload
-            print("Input =", Input)
             commodities_set = set()
             commodities_58w_set = set()
             # Collect all unique commodities from the input
@@ -122,7 +122,6 @@ def Daily_Planner():
             # Combine sets without exclusion logic
             commodities = sorted(commodities_set)  # Only 42W commodities
             commodities_58w = sorted(commodities_58w_set)  # Only 58W commodities
-
 
             # Initialize dictionaries for all commodities (excluding 58W)
             srcdata = {commodity: {} for commodity in commodities}
@@ -408,7 +407,7 @@ def Daily_Planner():
                     print(f"{var.name} for source: {i} -> destination: {j}")
 
             prob_58 = LpProblem("Transportation_Problem", LpMinimize)
-            prob_58 += lpSum(dec_var_58[commodity][(i, j)] * wheat_42w.loc[i,j] for commodity in commodities_58w for i, j in dec_var_58[commodity].keys()), "Total_Cost"
+            prob_58 += lpSum(dec_var_58[commodity][(i, j)] * wheat_58w.loc[i,j] for commodity in commodities_58w for i, j in dec_var_58[commodity].keys()), "Total_Cost"
 
             for commodity in commodities_58w:
                 for source, supply in srcdata_58[commodity].items():
@@ -612,14 +611,11 @@ def Daily_Planner():
 
             # Display the final DataFrame
             print(expanded_df)
-
-            # Optionally, save the DataFrame to an Excel file
-            expanded_df.to_excel("Source_Destination_Mapping.xlsx", index=False)
             
-            return jsonify({"status": 1,"result":expanded_df.to_dict(orient='records'), "message": "Data received successfully"})
+            return jsonify({"status": 1,"result":expanded_df.to_dict(orient='records'), "message": "Successfully generated daily plan"})
         except Exception as e:
                 print(str(e))
-                return jsonify({"status": 0, "message": str(e)})
+                return jsonify({"status": 0, "message": "Internal Server error", "error": str(e)})
 
    
 if __name__ == '__main__':
