@@ -405,213 +405,30 @@ function Daily_Planner() {
 
   const handleSolve = async () => {
     try {
-      // Import data from the portal
-      const response = await fetch(
-        `${portalUrl}/ToolOptimizerWebApi/DailyPlannerNextDayforTool`
-      );
-
-      if (response.status === 200) {
-        const next_day_data = await response.json();
-        setProgress((prev) => [
-          ...prev,
-          "Successfully imported data from portal",
-        ]);
-        setNextDayData(next_day_data);
-
-        if (next_day_data.sourceResponse) {
-          const updatedSurplus = next_day_data.sourceResponse.map((item) => ({
-            virtualCode: item.sourceRailHead,
-            origin_railhead: item.virtualCode,
-            origin_state: item.sourceState,
-            Value: item.value,
-            Commodity: item.commodity,
-            sourceDivision: item.sourceDivision,
-            sourceId: item.sourceId,
-            rake: item.rake,
-            sourceMergingId: item.sourceMergingId,
-            sourceIndentIds: item.sourceIndentIds,
-            sourceRailHeadName: item.sourceRailHeadName,
-          }));
-          setSurplus(updatedSurplus);
-        }
-
-        if (next_day_data.destinationResponse) {
-          const updatedDeficit = next_day_data.destinationResponse.map(
-            (item) => ({
-              virtualCode: item.destinationRailHead,
-              origin_railhead: item.virtualCode,
-              origin_state: item.destinationState,
-              Value: item.value,
-              Commodity: item.commodity,
-              destinationDivision: item.destinationDivision,
-              destinationId: item.destinationId,
-              rake: item.rake,
-              destinationMergingId: item.destinationMergingId,
-              destinationIndentIds: item.destinationIndentIds,
-              destinationRailHeadName: item.destinationRailHeadName,
-            })
-          );
-          setDeficit(updatedDeficit);
-        }
-
-        if (next_day_data.inlineSourceResponse) {
-          const updatedSurplusInline = next_day_data.inlineSourceResponse.map(
-            (item) => ({
-              virtualCode: item.sourceRailHead,
-              inlineVirtualCode: item.sourceInlineRailHead,
-              origin_railhead: item.virtualCode,
-              origin_state: item.sourceState,
-              destination_railhead: item.inlinevirtualcode,
-              destination_state: item.sourceState,
-              Value: 1,
-              Commodity: item.commodity,
-              sourceDivision: item.sourceDivision,
-              inlineSourceDivision: item.inlineSourceDivision,
-              sourceId: item.sourceId,
-              rake: item.rake,
-              sourceMergingId: item.sourceMergingId,
-              sourceIndentIds: item.sourceIndentIds,
-              sourceRailHeadName: item.sourceRailHeadName,
-              sourceInlineRailHeadName: item.sourceInlineRailHeadName,
-            })
-          );
-          setSurplusInline(updatedSurplusInline);
-        }
-
-        if (next_day_data.inlineDestinationResponse) {
-          const updatedDeficitInline =
-            next_day_data.inlineDestinationResponse.map((item) => ({
-              virtualCode: item.destinationRailHead,
-              inlineVirtualCode: item.destinationInlineRailHead,
-              origin_railhead: item.virtualCode,
-              origin_state: item.destinationState,
-              destination_railhead: item.inlinevirtualcode,
-              destination_state: item.destinationState,
-              Value: 1,
-              Commodity: item.commodity,
-              destinationDivision: item.destinationDivision,
-              inlineDestinationDivision: item.inlineDestinationDivision,
-              destinationId: item.destinationId,
-              rake: item.rake,
-              destinationMergingId: item.destinationMergingId,
-              destinationIndentIds: item.destinationIndentIds,
-              destinationRailHeadName: item.destinationRailHeadName,
-              destinationInlineRailHeadName: item.destinationInlineRailHeadName,
-            }));
-          setDeficitInline(updatedDeficitInline);
-        }
-
-        if (next_day_data.routeFixing) {
-          const updatedRouteFixing = next_day_data.routeFixing.map((item) => ({
-            sourceVirtualCode: item.sourceRailHead,
-            destinationVirtualCode: item.destinationRailHead,
-            origin_railhead: item.sourcevirtualcode,
-            origin_state: item.sourceState,
-            destination_railhead: item.destinationvirtualcode,
-            destination_state: item.destinationState,
-            Commodity: item.sourceCommodity,
-            value: item.sourceValue,
-            sourceRakeType: item.sourceRakeType,
-            destinationRakeType: item.destinationRakeType,
-            sourceDivision: item.sourceDivision,
-            destinationDivision: item.destinationDivision,
-            sourceId: item.sourceId,
-            destinationId: item.destinationId,
-            destinationMergingId: item.destinationMergingId,
-            sourceMergingId: item.sourceMergingId,
-            sourceIndentIds: item.sourceIndentIds,
-            destinationIndentIds: item.destinationIndentIds,
-            destinationRailHeadName: item.destinationRailHeadName,
-            sourceRailHeadName: item.sourceRailHeadName,
-            sourceInlineRailHead: item.sourceInlineRailHead,
-            destinationInlineRailHead: item.destinationInlineRailHead,
-            destinationInlineRailHeadName: item.destinationInlineRailHeadName,
-            sourceInlineRailHeadName: item.sourceInlineRailHeadName,
-          }));
-          setFixeddata(updatedRouteFixing);
-        }
-
-        if (next_day_data.routeBlocking) {
-          const updatedRouteBlocking = next_day_data.routeBlocking.map(
-            (item) => ({
-              sourceVirtualCode: item.sourceRailHead,
-              destinationVirtualCode: item.destinationRailHead,
-              origin_railhead: item.sourcevirtualcode,
-              origin_state: item.sourceState,
-              destination_railhead: item.destinationvirtualcode,
-              destination_state: item.destinationState,
-              Commodity: item.sourceCommodity,
-              value: item.sourceValue,
-              rake: item.rake,
-            })
-          );
-          setBlockeddata(updatedRouteBlocking);
-        }
-
-        setDisableAfterImport(true);
-        setCounts(getCounts(next_day_data));
-
-        try {
-          const response = await fetch(ProjectIp + "/Daily_Planner", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(next_day_data),
-          });
-
-          const result_data = await response.json();
-          if (result_data.status === 1) {
-            setResult(result_data.result);
-            setSolutionSolved(true);
-            setIsLoading(false);
-            document.getElementById("toggle").checked = false;
-            setProgress((prev) => [...prev, result_data.message]);
-
-            // Export the data to the portal
-            try {
-              const response = await fetch(
-                `${portalUrl}/ToolOptimizerWebApi/PostDailyPlanner`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(result_data.result),
-                }
-              );
-
-              // Check if the response is okay
-              if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-              } else {
-                alert("Data successfully exported to the portal");
-                setProgress((prev) => [
-                  ...prev,
-                  "Data successfully exported to the portal",
-                ]);
-              }
-            } catch (error) {
-              console.error("An error occurred:", error.message);
-              return null;
-            }
-          } else {
-            setIsLoading(false);
-            document.getElementById("toggle").checked = false;
-            setProgress((prev) => [...prev, result_data.message]);
-          }
-        } catch (error) {
-          setIsLoading(false);
-          document.getElementById("toggle").checked = false;
-          console.error("Error:", error);
-        }
+      setIsLoading(true);
+      const response = await fetch(ProjectIp + "/Daily_Planner", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nextDayData),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setResult(data.result);
+        setSolutionSolved(true);
+        setIsLoading(false);
+        document.getElementById("toggle").checked = false;
+        setProgress((prev) => [...prev, data.message]);
       } else {
-        throw new Error(
-          `Failed to fetch data. Status code: ${response.status}`
-        );
+        setIsLoading(false);
+        document.getElementById("toggle").checked = false;
+        setProgress((prev) => [...prev, data.message]);
       }
     } catch (error) {
-      alert(error.message);
+      setIsLoading(false);
+      document.getElementById("toggle").checked = false;
+      console.error("Error:", error);
     }
   };
 
@@ -660,6 +477,14 @@ function Daily_Planner() {
             </li>
           </ul>
 
+          <ul className="breadcrumb">
+            <li>
+              <a href="/home">Home</a>
+            </li>
+            <li className="active">Daily plan</li>
+            <li className="active">v7.1.25</li>
+          </ul>
+
           <div className="page-content-wrap">
             <div className="row">
               <div className="col-md-12" style={{ width: "70vw" }}>
@@ -671,7 +496,21 @@ function Daily_Planner() {
                     justifyContent: "end",
                     width: "80%",
                   }}
-                ></div>
+                >
+                  <button
+                    style={{
+                      color: "white",
+                      display: "flex",
+                      flexFlow: 1,
+                      alignItems: "center",
+                    }}
+                    className="btn btn-danger dropdown-toggle"
+                    onClick={ImportData}
+                  >
+                    <i className="fa fa-bars"></i>
+                    Import data
+                  </button>
+                </div>
                 <div style={{ marginLeft: "15px" }}>
                   <div style={{ fontSize: "20px", fontWeight: "700" }}>
                     <i className="fa fa-info-circle" aria-hidden="true"></i>{" "}
@@ -993,7 +832,7 @@ function Daily_Planner() {
                     <br />
                   </form>
 
-                  {true && (
+                  {disableAfterImport && (
                     <>
                       <div style={{ fontSize: "20px", fontWeight: "700" }}>
                         <i className="fa fa-list-alt" aria-hidden="true"></i>{" "}
@@ -1021,7 +860,7 @@ function Daily_Planner() {
                               className="checkBox"
                               id="toggle"
                               onChange={handleSolve}
-                              // disabled={!disableAfterImport}
+                              disabled={!disableAfterImport}
                             />
                             <span></span>
                           </label>
@@ -1063,7 +902,16 @@ function Daily_Planner() {
                           <i className="fa fa-bars"></i>
                           Download PDF
                         </button>
-                        {true && (
+                        <button
+                          style={{ color: "black", marginLeft: "15px" }}
+                          className="btn btn-success dropdown-toggle"
+                          onClick={ExpotPlan}
+                          disabled={!disableAfterImport}
+                        >
+                          <i className="fa fa-bars"></i>
+                          Export Plan
+                        </button>
+                        {showResult && (
                           <div
                             style={{
                               marginTop: 15,
@@ -1193,7 +1041,7 @@ function Daily_Planner() {
             alignItems: "center",
           }}
         >
-          <span style={{ color: "black", fontSize: "32px" }}>Summary</span>
+          <span style={{ color: "black", fontSize: "32px" }}>Progress Bar</span>
 
           <div
             style={{
@@ -1221,8 +1069,7 @@ function Daily_Planner() {
                 <ul>
                   {Object.keys(counts).map((key) => (
                     <li key={key}>
-                      {/* {key} (S/D) : {counts[key].S} / {counts[key].D} */}
-                      {key}: {counts[key].S}
+                      {key} (S/D) : {counts[key].S} / {counts[key].D}
                     </li>
                   ))}
                 </ul>
