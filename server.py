@@ -446,7 +446,7 @@ def Daily_Planner():
                     value_in_thousands = var.value()
                     if value_in_thousands > 0:  # Check if the decision variable is non-zero
                         # Scale the value to fit between 1 and 10
-                        scaled_value = max(1, min(10, value_in_thousands / 1000))
+                        scaled_value = min(1, min(10, value_in_thousands / 1000))
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
@@ -464,7 +464,7 @@ def Daily_Planner():
                     value_in_thousands = var.value()
                     if value_in_thousands > 0:  # Check if the decision variable is non-zero
                         # Scale the value to fit between 1 and 10
-                        scaled_value = max(1, min(10, value_in_thousands / 1000))
+                        scaled_value = min(1, min(10, value_in_thousands / 1000))
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
