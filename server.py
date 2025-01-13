@@ -450,7 +450,7 @@ def Daily_Planner():
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
-                            "Quantity": scaled_value
+                            "Quantity": var.value()
                         })
 
             # Print dec_var_58 for debugging
@@ -468,7 +468,7 @@ def Daily_Planner():
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
-                            "Quantity": scaled_value
+                            "Quantity": var.value()
                         })
 
             # Print the final mapping
