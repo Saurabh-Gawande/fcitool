@@ -443,11 +443,14 @@ def Daily_Planner():
                 if commodity not in src_dest_mapping:
                     src_dest_mapping[commodity] = []
                 for (source, destination), var in variables.items():
-                    if int(var.value()) > 0:  # Check if the decision variable is non-zero
+                    value_in_thousands = var.value()
+                    if value_in_thousands > 0:  # Check if the decision variable is non-zero
+                        # Scale the value to fit between 1 and 10
+                        scaled_value = max(1, min(10, value_in_thousands / 1000))
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
-                            "Quantity": var.value()
+                            "Quantity": scaled_value
                         })
 
             # Print dec_var_58 for debugging
@@ -458,11 +461,14 @@ def Daily_Planner():
                 if commodity not in src_dest_mapping:
                     src_dest_mapping[commodity] = []
                 for (source, destination), var in variables.items():
-                    if int(var.value()) > 0:  # Check if the decision variable is non-zero
+                    value_in_thousands = var.value()
+                    if value_in_thousands > 0:  # Check if the decision variable is non-zero
+                        # Scale the value to fit between 1 and 10
+                        scaled_value = max(1, min(10, value_in_thousands / 1000))
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
-                            "Quantity": var.value()
+                            "Quantity": scaled_value
                         })
 
             # Print the final mapping
