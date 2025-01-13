@@ -240,7 +240,7 @@ tr:nth-child(even) {
 }
 
 body {
-  background-color: #ace;
+  /* background-color: #ace; */
 }
 
 .icon {
@@ -409,7 +409,7 @@ body {
 }
 
 .arrow div {
-  background-color: currentColor;
+  /* background-color: currentColor; */
 }
 
 .arrow-stem {
@@ -964,8 +964,50 @@ body {
   }
 }
 
-#result{
- margin-top: 5px;
- font-size: medium;
- font-weight: 500;
+#result {
+  margin-top: 5px;
+  font-size: medium;
+  font-weight: 500;
+}
+
+.grid-container {
+  margin-top: 70px;
+  display: grid;
+  grid-template-columns: 250px 1fr; /* Sidebar takes 250px and dashboard takes the remaining space */
+  gap: 20px;
+  height: 90vh; /* Set height to 90% of the viewport height */
+}
+
+.sidebar {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border: 1px solid #ddd;
+  height: 100%; /* Make the sidebar fill the grid's height */
+  background-color: #2f353a;
+  color: white;
+}
+
+.dashboard {
+  margin-top: 30px;
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  height: 100%; /* Make the dashboard fill the grid's height */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr; /* Stack the sidebar and dashboard in a single column */
+    gap: 10px; /* Reduce gap for smaller screens */
+    height: auto; /* Let the height adjust automatically */
+  }
+
+  .sidebar {
+    width: 100%; /* Make the sidebar take up the full width on smaller screens */
+  }
+
+  .dashboard {
+    width: 95%; /* Make the dashboard take up the full width on smaller screens */
+  }
 }

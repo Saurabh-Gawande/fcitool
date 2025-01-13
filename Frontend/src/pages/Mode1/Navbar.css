@@ -1,0 +1,49 @@
+/* Reset body margin and padding */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar styling */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px 20px;
+  z-index: 1000;
+  justify-content: center;
+}
+
+.navbar-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navbar-list li {
+  margin-right: 20px;
+  font-weight: bold;
+  font-size: large;
+}
+
+.navbar-list a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar-list a:hover {
+  color: gray;
+}
+
+/* Add some page content to test scrolling */
+.content {
+  margin-top: 70px; /* Adjust for navbar height */
+  padding: 20px;
+}
