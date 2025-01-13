@@ -443,7 +443,7 @@ def Daily_Planner():
                 if commodity not in src_dest_mapping:
                     src_dest_mapping[commodity] = []
                 for (source, destination), var in variables.items():
-                    if var.value() > 0:  # Check if the decision variable is non-zero
+                    if int(var.value()) > 0:  # Check if the decision variable is non-zero
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
@@ -458,7 +458,7 @@ def Daily_Planner():
                 if commodity not in src_dest_mapping:
                     src_dest_mapping[commodity] = []
                 for (source, destination), var in variables.items():
-                    if var.value() > 0:  # Check if the decision variable is non-zero
+                    if int(var.value()) > 0:  # Check if the decision variable is non-zero
                         src_dest_mapping[commodity].append({
                             "Source": source,
                             "Destination": destination,
