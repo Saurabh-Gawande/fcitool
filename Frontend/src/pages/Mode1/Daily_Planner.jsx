@@ -722,9 +722,9 @@ function Daily_Planner() {
               </div>
             </div>
 
-            {true && (
+            {solutionSolved && (
               <div>
-                <div>
+                <div style={{ marginTop: 20 }}>
                   <button
                     style={{ marginLeft: "15px", borderRadius: "5px" }}
                     className="btn btn-success"

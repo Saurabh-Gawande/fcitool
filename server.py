@@ -439,37 +439,36 @@ def Daily_Planner():
             src_dest_mapping = {}
 
             # Iterate over commodities in dec_var
-            for commodity, variables in dec_var.items():
+            for commodity in srcdata:
+                # Ensure the key exists in the dictionary
                 if commodity not in src_dest_mapping:
                     src_dest_mapping[commodity] = []
-                for (source, destination), var in variables.items():
-                    value_in_thousands = var.value()
-                    if value_in_thousands > 0:  # Check if the decision variable is non-zero
-                        # Scale the value to fit between 1 and 10
-                        scaled_value = min(1, min(10, value_in_thousands / 1000))
-                        src_dest_mapping[commodity].append({
-                            "Source": source,
-                            "Destination": destination,
-                            "Quantity": var.value()
-                        })
+                # Iterate over sources and destinations
+                for source in srcdata[commodity]:
+                    for destination in destdata[commodity]:
+                        if dec_var[commodity][(source, destination)].value() > 0:
+                            # Avoid duplication
+                            if not any(entry['Source'] == source and entry['Destination'] == destination for entry in src_dest_mapping[commodity]):
+                                src_dest_mapping[commodity].append({
+                                    "Source": source,
+                                    "Destination": destination,
+                                    "Quantity": dec_var[commodity][(source, destination)].value()
+                                })
 
-            # Print dec_var_58 for debugging
-            print("dec variable 58", dec_var_58.items())
-
-            # Iterate over commodities in dec_var_58
-            for commodity, variables in dec_var_58.items():
+            # Iterate through each commodity in srcdata_58
+            for commodity in srcdata_58:
                 if commodity not in src_dest_mapping:
                     src_dest_mapping[commodity] = []
-                for (source, destination), var in variables.items():
-                    value_in_thousands = var.value()
-                    if value_in_thousands > 0:  # Check if the decision variable is non-zero
-                        # Scale the value to fit between 1 and 10
-                        scaled_value = min(1, min(10, value_in_thousands / 1000))
-                        src_dest_mapping[commodity].append({
-                            "Source": source,
-                            "Destination": destination,
-                            "Quantity": var.value()
-                        })
+                for source in srcdata_58[commodity]:
+                    for destination in destdata_58[commodity]:
+                        if dec_var_58[commodity][(source, destination)].value() > 0:
+                            # Avoid duplication
+                            if not any(entry['Source'] == source and entry['Destination'] == destination for entry in src_dest_mapping[commodity]):
+                                src_dest_mapping[commodity].append({
+                                    "Source": source,
+                                    "Destination": destination,
+                                    "Quantity": dec_var_58[commodity][(source, destination)].value()
+                                })
 
             # Print the final mapping
             print("src_dest_mapping", src_dest_mapping)
