@@ -3,9 +3,9 @@ import "./Navbar.css";
 
 function Sidenav() {
   return (
-    <nav className="navbar" >
+    <nav className="navbar">
       <ul className="navbar-list">
-        <li>Daily Plan Optimizer</li>
+        <li>Plan Optimizer</li>
       </ul>
     </nav>
   );
