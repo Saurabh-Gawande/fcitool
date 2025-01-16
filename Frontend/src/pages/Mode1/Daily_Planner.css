@@ -241,6 +241,7 @@ tr:nth-child(even) {
 
 body {
   /* background-color: #ace; */
+  fontfamily: ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 }
 
 .icon {
@@ -992,7 +993,8 @@ body {
   background-color: #ffffff;
   padding: 20px;
   border: 1px solid #ddd;
-  height: 100%; /* Make the dashboard fill the grid's height */
+  height: 97%; /* Make the dashboard fill the grid's height */
+  width: 99%;
 }
 
 /* Responsive adjustments for smaller screens */
