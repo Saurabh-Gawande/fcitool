@@ -353,7 +353,7 @@ def Daily_Planner():
                 dec_var[commodity] = LpVariable.dicts(
                     f"x_{commodity}",
                     [(i, j) for i in srcdata[commodity].keys() for j in destdata[commodity].keys()],
-                    cat="Integer"
+                    cat="Integer", lowBound = 0
                 )
 
             # Print the decision variables for verification
