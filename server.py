@@ -11,6 +11,7 @@ import numpy as np
 import threading
 lock = threading.Lock()
 import time
+import copy
 
 # created flask app 
 app = Flask(__name__)
@@ -92,6 +93,19 @@ def Daily_Planner():
             time.sleep(5)
             print("step 1")
             Input = request.get_json()  # Correct method to get JSON payload
+
+            def filter_by_rake(data, rake):
+                filtered_data = copy.deepcopy(data)
+                filtered_data["sourceResponse"] = [item for item in data["sourceResponse"] if item["rake"] == rake]
+                filtered_data["destinationResponse"] = [item for item in data["destinationResponse"] if item["rake"] == rake]
+                filtered_data["inlineSourceResponse"] = filtered_data["sourceResponse"]
+                filtered_data["inlineDestinationResponse"] = filtered_data["destinationResponse"]
+                return filtered_data
+
+            # Create dictionaries for 42W and 58W
+            Input_42W = filter_by_rake(Input, "42W")
+            Input_58W = filter_by_rake(Input, "58W")
+            
             commodities_set = set()
             commodities_58w_set = set()
             # Collect all unique commodities from the input
@@ -436,50 +450,51 @@ def Daily_Planner():
             print("===================================== Done 58W =====================================")
 
             # Dictionary to store source-destination mappings
-            src_dest_mapping = {}
+            src_dest_mapping_42 = {}
+            src_dest_mapping_58 = {}
 
             # Iterate over commodities in dec_var
             for commodity in srcdata:
-                # Ensure the key exists in the dictionary
-                if commodity not in src_dest_mapping:
-                    src_dest_mapping[commodity] = []
-                # Iterate over sources and destinations
+                if commodity not in src_dest_mapping_42:
+                    src_dest_mapping_42[commodity] = []
                 for source in srcdata[commodity]:
                     for destination in destdata[commodity]:
+                        print(source,destination, commodity,dec_var[commodity][(source, destination)].value())
                         if dec_var[commodity][(source, destination)].value() > 0:
                             # Avoid duplication
-                            if not any(entry['Source'] == source and entry['Destination'] == destination for entry in src_dest_mapping[commodity]):
-                                src_dest_mapping[commodity].append({
+                            if not any(entry['Source'] == source and entry['Destination'] == destination for entry in src_dest_mapping_42[commodity]):
+                                src_dest_mapping_42[commodity].append({
                                     "Source": source,
                                     "Destination": destination,
                                     "Quantity": dec_var[commodity][(source, destination)].value()
                                 })
 
-            # Iterate through each commodity in srcdata_58
             for commodity in srcdata_58:
-                if commodity not in src_dest_mapping:
-                    src_dest_mapping[commodity] = []
+                if commodity not in src_dest_mapping_58:
+                    src_dest_mapping_58[commodity] = []
                 for source in srcdata_58[commodity]:
                     for destination in destdata_58[commodity]:
+                        print(source,destination, commodity,dec_var_58[commodity][(source, destination)].value())
                         if dec_var_58[commodity][(source, destination)].value() > 0:
-                            # Avoid duplication
-                            if not any(entry['Source'] == source and entry['Destination'] == destination for entry in src_dest_mapping[commodity]):
-                                src_dest_mapping[commodity].append({
+                            if not any(entry['Source'] == source and entry['Destination'] == destination for entry in src_dest_mapping_58[commodity]):
+                                src_dest_mapping_58[commodity].append({
                                     "Source": source,
                                     "Destination": destination,
                                     "Quantity": dec_var_58[commodity][(source, destination)].value()
                                 })
 
             # Print the final mapping
-            print("src_dest_mapping", src_dest_mapping)
+            # print("src_dest_mapping", src_dest_mapping)
+            print("src_dest_mapping48", src_dest_mapping_42)
+            print("src_dest_mapping58", src_dest_mapping_58)
 
             # Print the mappings for each commodity
-            for commodity, mappings in src_dest_mapping.items():
-                print(f"Commodity: {commodity}")
-                for mapping in mappings:
-                    print(f"  Source: {mapping['Source']} -> Destination: {mapping['Destination']}, Quantity: {mapping['Quantity']}")
+            # for commodity, mappings in src_dest_mapping.items():
+            #     print(f"Commodity: {commodity}")
+            #     for mapping in mappings:
+            #         print(f"  Source: {mapping['Source']} -> Destination: {mapping['Destination']}, Quantity: {mapping['Quantity']}")
 
-            source_details = {
+            source_details_42 = {
                 railhead: {
                     "source_railhead": source["sourceRailHead"],
                     "source_state": source["sourceState"],
@@ -488,17 +503,16 @@ def Daily_Planner():
                     "inline_source_railhead": source.get("sourceInlineRailHead", ""),
                     "inline_source_division": source.get("inlineSourceDivision", ""),
                     "inline_source_virtual_code": source.get("inlinevirtualcode", ""),
-                    "source_indent_ids": source.get("sourceIndentIds")[0],
+                    "source_indent_ids": source.get("sourceIndentIds"),
                     "source_merging_id": source.get("sourceMergingId"),
                     "source_railhead_name": source.get("sourceRailHeadName"),
                     "source_id" : source.get("sourceId")
                 }
-                for source in Input["sourceResponse"] + Input["inlineSourceResponse"]
+                for source in Input_42W["sourceResponse"] + Input_42W["inlineSourceResponse"]
                 for railhead in [source["virtualCode"], source.get("inlinevirtualcode", "")]
             }
-
-            # Build destination_details similarly
-            destination_details = {
+            
+            destination_details_42 = {
                 railhead: {
                     "destination_railhead": destination["destinationRailHead"],
                     "destination_state": destination["destinationState"],
@@ -506,47 +520,141 @@ def Daily_Planner():
                     "inline_destination_railhead": destination.get("destinationInlineRailHead", ""),
                     "inline_destination_division": destination.get("inlineDestinationDivision", ""),
                     "inline_destination_virtual_code": destination.get("inlinevirtualcode", ""),
-                    "destination_indent_ids": destination.get("destinationIndentIds")[0],
+                    "destination_indent_ids": destination.get("destinationIndentIds"),
                     "destination_merging_id": destination.get("destinationMergingId"),
                     "destination_railhead_name": destination.get("destinationRailHeadName"),
                     "destination_id" : destination.get("destinationId")
                 }
-                for destination in Input["destinationResponse"] + Input["inlineDestinationResponse"]
+                for destination in Input_42W["destinationResponse"] + Input_42W["inlineDestinationResponse"]
                 for railhead in [destination["virtualCode"], destination.get("inlinevirtualcode", "")]
             }
 
-            global_inline_tracker = {
+            source_details_58 = {
+                railhead: {
+                    "source_railhead": source["sourceRailHead"],
+                    "source_state": source["sourceState"],
+                    "source_division": source["sourceDivision"],
+                    "rake": source["rake"],
+                    "inline_source_railhead": source.get("sourceInlineRailHead", ""),
+                    "inline_source_division": source.get("inlineSourceDivision", ""),
+                    "inline_source_virtual_code": source.get("inlinevirtualcode", ""),
+                    "source_indent_ids": source.get("sourceIndentIds"),
+                    "source_merging_id": source.get("sourceMergingId"),
+                    "source_railhead_name": source.get("sourceRailHeadName"),
+                    "source_id" : source.get("sourceId")
+                }
+                for source in Input_58W["sourceResponse"] + Input_58W["inlineSourceResponse"]
+                for railhead in [source["virtualCode"], source.get("inlinevirtualcode", "")]
+            }
+            
+            destination_details_58 = {
+                railhead: {
+                    "destination_railhead": destination["destinationRailHead"],
+                    "destination_state": destination["destinationState"],
+                    "destination_division": destination["destinationDivision"],
+                    "inline_destination_railhead": destination.get("destinationInlineRailHead", ""),
+                    "inline_destination_division": destination.get("inlineDestinationDivision", ""),
+                    "inline_destination_virtual_code": destination.get("inlinevirtualcode", ""),
+                    "destination_indent_ids": destination.get("destinationIndentIds"),
+                    "destination_merging_id": destination.get("destinationMergingId"),
+                    "destination_railhead_name": destination.get("destinationRailHeadName"),
+                    "destination_id" : destination.get("destinationId")
+                }
+                for destination in Input_58W["destinationResponse"] + Input_58W["inlineDestinationResponse"]
+                for railhead in [destination["virtualCode"], destination.get("inlinevirtualcode", "")]
+            }
+
+            global_inline_tracker_42 = {
+                "Inline_Destination_Railhead": set(),
+                "Inline_Destination_Division": set()
+            }
+            global_inline_tracker_58 = {
                 "Inline_Destination_Railhead": set(),
                 "Inline_Destination_Division": set()
             }
 
-            rows = []
-            for commodity, mappings in src_dest_mapping.items():
+            rows_42 = []
+            for commodity, mappings in src_dest_mapping_42.items():
                 for mapping in mappings:
                     source = mapping["Source"]
                     destination = mapping["Destination"]
                     quantity = mapping["Quantity"]
 
                     # Fetch details from lookup dictionaries
-                    src_info = source_details.get(source, {})
-                    dest_info = destination_details.get(destination, {})
+                    src_info = source_details_42.get(source, {})
+                    dest_info = destination_details_42.get(destination, {})
+                    print("src_info",src_info)
 
                     # Inline Destination Railhead Logic
                     inline_destination_railhead = dest_info.get("inline_destination_railhead", "")
-                    if inline_destination_railhead in global_inline_tracker["Inline_Destination_Railhead"]:
+                    if inline_destination_railhead in global_inline_tracker_42["Inline_Destination_Railhead"]:
                         inline_destination_railhead = ""  # Set to blank if already used
                     else:
-                        global_inline_tracker["Inline_Destination_Railhead"].add(inline_destination_railhead)
+                        global_inline_tracker_42["Inline_Destination_Railhead"].add(inline_destination_railhead)
 
                     # Inline Destination Division Logic
                     inline_destination_division = dest_info.get("inline_destination_division", "")
-                    if inline_destination_division in global_inline_tracker["Inline_Destination_Division"]:
+                    if inline_destination_division in global_inline_tracker_42["Inline_Destination_Division"]:
                         inline_destination_division = ""  # Set to blank if already used
                     else:
-                        global_inline_tracker["Inline_Destination_Division"].add(inline_destination_division)
+                        global_inline_tracker_42["Inline_Destination_Division"].add(inline_destination_division)
 
                     # Append the row data
-                    rows.append({
+                    rows_42.append({
+                        "Commodity": commodity,
+                        "SourceRailHead": src_info.get("source_railhead", ""),
+                        "SourceRailHeadName": src_info.get("source_railhead_name", ""),
+                        "SourceState": src_info.get("source_state", ""),
+                        "SourceDivision": src_info.get("source_division", ""),
+                        # "Source_Virtual_Code": source,
+                        "InlineSourceRailhead": src_info.get("inline_source_railhead", ""),
+                        "InlineSourceDivision": src_info.get("inline_source_division", ""),
+                        "SourceIndentId": src_info.get("source_indent_ids", ""),
+                        "SourceMergingId": src_info.get("source_merging_id", ""),
+                        "SourceId" : src_info.get("source_id"),
+                        "DestinationRailHead": dest_info.get("destination_railhead", ""),
+                        "DestinationRailHeadName": dest_info.get("destination_railhead_name", ""),
+                        "DestinationState": dest_info.get("destination_state", ""),
+                        "DestinationDivision": dest_info.get("destination_division", ""),
+                        # "Destination_Virtual_code": destination,
+                        "InlineDestinationRailhead": inline_destination_railhead,
+                        "InlineDestinationDivision": inline_destination_division,
+                        "DestinationIndentId": dest_info.get("destination_indent_ids", ""),
+                        "DestinationMergingId": dest_info.get("destination_merging_id", ""),
+                        "DestinationId" : dest_info.get("destination_id"),
+                        "SourceRakeType": src_info.get("rake", "").rstrip("W"),
+                        "DestinationRakeType": src_info.get("rake", "").rstrip("W"),
+                        "Rakes": quantity
+                    })
+
+            rows_58 = []
+            for commodity, mappings in src_dest_mapping_58.items():
+                for mapping in mappings:
+                    source = mapping["Source"]
+                    destination = mapping["Destination"]
+                    quantity = mapping["Quantity"]
+
+                    # Fetch details from lookup dictionaries
+                    src_info = source_details_58.get(source, {})
+                    dest_info = destination_details_58.get(destination, {})
+                    print("src_info",src_info)
+
+                    # Inline Destination Railhead Logic
+                    inline_destination_railhead = dest_info.get("inline_destination_railhead", "")
+                    if inline_destination_railhead in global_inline_tracker_58["Inline_Destination_Railhead"]:
+                        inline_destination_railhead = ""  # Set to blank if already used
+                    else:
+                        global_inline_tracker_58["Inline_Destination_Railhead"].add(inline_destination_railhead)
+
+                    # Inline Destination Division Logic
+                    inline_destination_division = dest_info.get("inline_destination_division", "")
+                    if inline_destination_division in global_inline_tracker_42["Inline_Destination_Division"]:
+                        inline_destination_division = ""  # Set to blank if already used
+                    else:
+                        global_inline_tracker_58["Inline_Destination_Division"].add(inline_destination_division)
+
+                    # Append the row data
+                    rows_58.append({
                         "Commodity": commodity,
                         "SourceRailHead": src_info.get("source_railhead", ""),
                         "SourceRailHeadName": src_info.get("source_railhead_name", ""),
@@ -574,10 +682,10 @@ def Daily_Planner():
                     })
 
             for route in Input["routeFixing"]:
-                rows.append({
+                rows_42.append({
                     "Commodity": route.get("sourceCommodity", ""),
                     "SourceRailHead": route.get("sourceRailHead", ""),
-                    "SourceRailHeadName": src_info.get("source_railhead_name", ""),
+                    "SourceRailHeadName": route.get("source_railhead_name", ""),
                     "SourceState": route.get("sourceState", ""),
                     "SourceDivision": route.get("sourceDivision", ""),
                     "InlineSourceRailhead": route.get("sourceInlineRailHead", ""),
@@ -598,24 +706,38 @@ def Daily_Planner():
                     "Rakes": route.get("sourceValue", "")
                 })
             # Convert rows to a DataFrame
-            df = pd.DataFrame(rows)
+            df1 = pd.DataFrame(rows_42)
+            df2 = pd.DataFrame(rows_58)
+            df = pd.concat([df1, df2], ignore_index=True)
 
             expanded_rows = []
 
-            # Loop through each row and split based on the Quantity
             for _, row in df.iterrows():
-                quantity = int(row["Rakes"])  # Ensure Quantity is an integer
-                # Add multiple rows based on the quantity
+                quantity = int(row["Rakes"])  # Number of Rakes
+                source_ids = iter(row["SourceIndentId"])  # Iterator for SourceIndentId
+                destination_ids = iter(row["DestinationIndentId"])  # Iterator for DestinationIndentId
+
                 for _ in range(quantity):
-                    new_row = row.copy()  # Create a copy of the row
-                    new_row["Rakes"] = 1  # Reset Quantity to 1
+                    new_row = row.copy()  # Copy the row
+                    new_row["Rakes"] = 1  # Set Rakes to 1
+
+                    # Assign SourceIndentId
+                    try:
+                        new_row["SourceIndentId"] = next(source_ids)
+                    except StopIteration:
+                        new_row["SourceIndentId"] = None
+
+                    # Assign DestinationIndentId
+                    try:
+                        new_row["DestinationIndentId"] = next(destination_ids)
+                    except StopIteration:
+                        new_row["DestinationIndentId"] = None
+
+                    # Append the new row to the list
                     expanded_rows.append(new_row)
 
-            # Convert the expanded rows back into a DataFrame
+            # Create the expanded DataFrame
             expanded_df = pd.DataFrame(expanded_rows)
-
-            # Display the final DataFrame
-            print(expanded_df)
             
             return jsonify({"status": 1,"result":expanded_df.to_dict(orient='records'), "message": "Successfully generated daily plan"})
         except Exception as e:
