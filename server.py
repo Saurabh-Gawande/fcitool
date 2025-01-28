@@ -94,17 +94,29 @@ def Daily_Planner():
             print("step 1")
             Input = request.get_json()  # Correct method to get JSON payload
 
-            def filter_by_rake(data, rake):
-                filtered_data = copy.deepcopy(data)
-                filtered_data["sourceResponse"] = [item for item in data["sourceResponse"] if item["rake"] == rake]
-                filtered_data["destinationResponse"] = [item for item in data["destinationResponse"] if item["rake"] == rake]
-                filtered_data["inlineSourceResponse"] = filtered_data["sourceResponse"]
-                filtered_data["inlineDestinationResponse"] = filtered_data["destinationResponse"]
+            def filter_rake(data, rake_type):
+                filtered_data = {
+                    "sourceResponse": [
+                        entry for entry in data.get("sourceResponse", []) if entry.get("rake") == rake_type
+                    ],
+                    "destinationResponse": [
+                        entry for entry in data.get("destinationResponse", []) if entry.get("rake") == rake_type
+                    ],
+                    "inlineSourceResponse": [
+                        entry for entry in data.get("inlineSourceResponse", []) if entry.get("rake") == rake_type
+                    ],
+                    "inlineDestinationResponse": [
+                        entry for entry in data.get("inlineDestinationResponse", []) if entry.get("rake") == rake_type
+                    ],
+                    "routeFixing": data.get("routeFixing", []),
+                    "routeBlocking": data.get("routeBlocking", []),
+                    "result": data.get("result", "Success"),
+                }
                 return filtered_data
 
             # Create dictionaries for 42W and 58W
-            Input_42W = filter_by_rake(Input, "42W")
-            Input_58W = filter_by_rake(Input, "58W")
+            Input_42W = filter_rake(Input, "42W")
+            Input_58W = filter_rake(Input, "58W")
             
             commodities_set = set()
             commodities_58w_set = set()
@@ -583,7 +595,6 @@ def Daily_Planner():
                     # Fetch details from lookup dictionaries
                     src_info = source_details_42.get(source, {})
                     dest_info = destination_details_42.get(destination, {})
-                    print("src_info",src_info)
 
                     # Inline Destination Railhead Logic
                     inline_destination_railhead = dest_info.get("inline_destination_railhead", "")
@@ -648,7 +659,7 @@ def Daily_Planner():
 
                     # Inline Destination Division Logic
                     inline_destination_division = dest_info.get("inline_destination_division", "")
-                    if inline_destination_division in global_inline_tracker_42["Inline_Destination_Division"]:
+                    if inline_destination_division in global_inline_tracker_58["Inline_Destination_Division"]:  # make change here
                         inline_destination_division = ""  # Set to blank if already used
                     else:
                         global_inline_tracker_58["Inline_Destination_Division"].add(inline_destination_division)
@@ -738,7 +749,7 @@ def Daily_Planner():
 
             # Create the expanded DataFrame
             expanded_df = pd.DataFrame(expanded_rows)
-            
+            print(expanded_df)
             return jsonify({"status": 1,"result":expanded_df.to_dict(orient='records'), "message": "Successfully generated daily plan"})
         except Exception as e:
                 print(str(e))
