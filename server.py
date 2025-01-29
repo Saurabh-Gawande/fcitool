@@ -696,7 +696,7 @@ def Daily_Planner():
                 rows_42.append({
                     "Commodity": route.get("sourceCommodity", ""),
                     "SourceRailHead": route.get("sourceRailHead", ""),
-                    "SourceRailHeadName": route.get("source_railhead_name", ""),
+                    "SourceRailHeadName": route.get("sourceRailHeadName", ""),
                     "SourceState": route.get("sourceState", ""),
                     "SourceDivision": route.get("sourceDivision", ""),
                     "InlineSourceRailhead": route.get("sourceInlineRailHead", ""),
@@ -705,6 +705,7 @@ def Daily_Planner():
                     "SourceMergingId": route.get("sourceMergingId", ""),
                     "SourceId" : route.get("sourceId"),
                     "DestinationRailHead": route.get("destinationRailHead", ""),
+                    "DestinationRailHeadName": route.get("destinationRailHeadName", ""),
                     "DestinationState": route.get("destinationState", ""),
                     "DestinationDivision": route.get("destinationDivision", ""),
                     "InlineDestinationRailhead": route.get("destinationInlineRailHead", ""),
