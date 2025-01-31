@@ -8,7 +8,7 @@ function Sidenav({ State }) {
       style={{
         display: "grid",
         gridTemplateColumns: "auto 350px 1fr",
-        gap: 40,
+        gap: 80,
       }}
     >
       <img
@@ -29,7 +29,7 @@ function Sidenav({ State }) {
         style={{
           display: "grid",
           justifyContent: "center",
-          marginLeft: -280,
+          marginLeft: -500,
           fontFamily:
             ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         }}
