@@ -26,6 +26,7 @@ function Daily_Planner() {
   const [result, setResult] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [counts, setCounts] = useState({});
+  const [State, setState] = useState("");
 
   const exportToExcel = () => {
     if (!result || result.length === 0) {
@@ -441,6 +442,10 @@ function Daily_Planner() {
         ]);
         setNextDayData(next_day_data);
 
+        next_day_data.sourceResponse.length > 0
+          ? setState(next_day_data.sourceResponse[0].sourceState)
+          : setState("");
+
         if (next_day_data.sourceResponse) {
           const updatedSurplus = next_day_data.sourceResponse.map((item) => ({
             virtualCode: item.sourceRailHead,
@@ -646,7 +651,7 @@ function Daily_Planner() {
         </div>
       )}
       <div>
-        <Sidenav />
+        <Sidenav State={State} />
         <div class="grid-container">
           <div class="sidebar">
             <div

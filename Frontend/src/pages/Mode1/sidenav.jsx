@@ -1,23 +1,35 @@
 import React from "react";
 import "./Navbar.css";
 
-function Sidenav() {
+function Sidenav({ State }) {
   return (
     <nav
       className="navbar"
-      style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 10 }}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "auto 350px 1fr",
+        gap: 40,
+      }}
     >
       <img
         src="static/img/logo.png"
         alt="logo"
         style={{ width: 160, height: 43, marginLeft: 20 }}
       />
+      <div>
+        {State !== "" &&
+          `Welcome, Region - ${
+            ["Uttarakhand", "Punjab", "Haryana"].includes(State)
+              ? "ExNorth"
+              : State
+          }!`}
+      </div>
       <ul
         className="navbar-list"
         style={{
           display: "grid",
           justifyContent: "center",
-          gap: 10,
+          marginLeft: -280,
           fontFamily:
             ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         }}
