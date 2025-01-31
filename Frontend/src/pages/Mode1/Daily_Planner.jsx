@@ -187,10 +187,32 @@ function Daily_Planner() {
       });
     };
 
+    const processRouteFixing = (response) => {
+      response.forEach((item) => {
+        const sourceKey = `${item.sourceRakeType} ${item.sourceCommodity}`;
+        if (item.sourceValue > 0) {
+          if (!counts[sourceKey]) {
+            counts[sourceKey] = { S: 0, D: 0 };
+          }
+          counts[sourceKey].S += item.sourceValue;
+        }
+
+        // Process destination part
+        const destKey = `${item.destinationRakeType} ${item.destinationCommodity}`;
+        if (item.destinationValue > 0) {
+          if (!counts[destKey]) {
+            counts[destKey] = { S: 0, D: 0 };
+          }
+          counts[destKey].D += item.destinationValue;
+        }
+      });
+    };
+
     processResponse(data.sourceResponse, "S");
     processResponse(data.destinationResponse, "D");
     processResponse(data.inlineSourceResponse, "S");
     processResponse(data.inlineDestinationResponse, "D");
+    processRouteFixing(data.routeFixing);
 
     return counts;
   };
