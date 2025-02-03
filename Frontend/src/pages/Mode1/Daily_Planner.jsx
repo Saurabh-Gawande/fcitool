@@ -652,8 +652,8 @@ function Daily_Planner() {
       )}
       <div>
         <Sidenav State={State} />
-        <div class="grid-container">
-          <div class="sidebar">
+        <div className="grid-container">
+          <div className="sidebar">
             <div
               style={{
                 display: "flex",
@@ -721,7 +721,7 @@ function Daily_Planner() {
               ) : null}
             </div>
           </div>
-          <div class="dashboard">
+          <div className="dashboard">
             <div
               className="wrap__toggle"
               style={{
@@ -787,203 +787,199 @@ function Daily_Planner() {
                     Export Plan
                   </button>
 
-                  {true && (
-                    <div
-                      style={{
-                        marginTop: 15,
-                        marginLeft: 20,
-                        width: "62vw",
-                      }}
-                    >
-                      {result !== null && result.length > 0 ? (
-                        <div>
-                          <div
-                            id="result"
-                            style={{
-                              border: "1px black solid",
-                              backgroundColor: "#2a3f54",
-                              color: "white",
-                              borderRadius: "5px 5px 0px 0px",
-                              padding: "10px",
-                            }}
-                          >
-                            Result
-                          </div>
-                          {/* Responsive wrapper */}
-                          <div
-                            style={{
-                              overflowX: "auto",
-                              // border: "1px solid #ddd",
-                            }}
-                          >
-                            <table
-                              style={{
-                                width: "100%",
-                                borderCollapse: "collapse",
-                              }}
-                            >
-                              <thead style={{ backgroundColor: "#dedede" }}>
-                                <tr>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Sr. No
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Src RH
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Src RH Name
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Src State
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Dest RH
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Dest RH Name
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Dest State
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Commodity
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: "10px",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    Rakes
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {result.map((item, index) => (
-                                  <tr key={index}>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {index + 1}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.SourceRailHead}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.SourceRailHeadName}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.SourceState}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.DestinationRailHead}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.DestinationRailHeadName}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.DestinationState}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.Commodity}
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "10px",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.Rakes}
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
+                  <div
+                    style={{
+                      marginTop: 15,
+                      marginLeft: 20,
+                      width: "62vw",
+                    }}
+                  >
+                    {result !== null && result.length > 0 ? (
+                      <div>
+                        <div
+                          id="result"
+                          style={{
+                            border: "1px black solid",
+                            backgroundColor: "#2a3f54",
+                            color: "white",
+                            borderRadius: "5px 5px 0px 0px",
+                            padding: "10px",
+                          }}
+                        >
+                          Result - {new Date().toLocaleString()}
                         </div>
-                      ) : (
-                        <div />
-                      )}
-                    </div>
-                  )}
+                        <div
+                          style={{
+                            overflowX: "auto",
+                          }}
+                        >
+                          <table
+                            style={{
+                              width: "100%",
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            <thead style={{ backgroundColor: "#dedede" }}>
+                              <tr>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Sr. No
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Src RH
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Src RH Name
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Src State
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Dest RH
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Dest RH Name
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Dest State
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Commodity
+                                </th>
+                                <th
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  Rakes
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {result.map((item, index) => (
+                                <tr key={index}>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {index + 1}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.SourceRailHead}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.SourceRailHeadName}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.SourceState}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.DestinationRailHead}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.DestinationRailHeadName}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.DestinationState}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.Commodity}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: "10px",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {item.Rakes}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    ) : (
+                      <div />
+                    )}
+                  </div>
                 </div>
               </div>
             )}
