@@ -218,13 +218,15 @@ function Daily_Planner() {
     return counts;
   };
 
+  // new endpoint SelectedRhCodesFreightPrices
+  // old endpoint SelectedCostRateMatrixforTool
   useEffect(() => {
     const fetchData = async () => {
       const urls = [
-        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
-        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
-        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
-        `${portalUrl}/ToolOptimizerWebApi/SelectedCostRateMatrixforTool?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedRhCodesFreightPrices?matrixType=FreightRate&rakeType=BCN&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedRhCodesFreightPrices?matrixType=FreightRate&rakeType=BCN&commodity=RICE`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedRhCodesFreightPrices?matrixType=FreightRate&rakeType=BCNHL&commodity=WHEAT`,
+        `${portalUrl}/ToolOptimizerWebApi/SelectedRhCodesFreightPrices?matrixType=FreightRate&rakeType=BCNHL&commodity=RICE`,
       ];
 
       try {
