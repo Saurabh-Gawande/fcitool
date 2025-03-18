@@ -773,13 +773,13 @@ function Daily_Planner() {
                           View Railhead Detailed Plan
                         </button> */}
 
-                  <button
+                  {/* <button
                     style={{ marginLeft: "15px", borderRadius: "5px" }}
                     className="btn btn-success"
                     onClick={exportToPDF}
                   >
                     Download PDF
-                  </button>
+                  </button> */}
 
                   <button
                     style={{ marginLeft: "15px", borderRadius: "5px" }}
