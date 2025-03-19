@@ -754,13 +754,13 @@ function Daily_Planner() {
             {solutionSolved && (
               <div>
                 <div style={{ marginTop: 20 }}>
-                  <button
+                  {/* <button
                     style={{ marginLeft: "15px", borderRadius: "5px" }}
                     className="btn btn-success"
                     onClick={() => exportToExcel()}
                   >
                     Download Railhead-Railhead Detailed Plan
-                  </button>
+                  </button> */}
 
                   {/* <button
                           style={{ color: "black", marginLeft: "15px" }}
