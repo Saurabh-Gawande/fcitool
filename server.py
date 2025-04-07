@@ -12,6 +12,7 @@ import threading
 lock = threading.Lock()
 import time
 import copy
+from collections import defaultdict
 
 # created flask app 
 app = Flask(__name__)
@@ -241,7 +242,66 @@ def Daily_Planner():
             # WpR=pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
             # cost_matrices = {"Wheat":W,"Rice":R,"Wheat+FRK":WpR, "FRK RRA":W, "RRA+FRKBR":W}
             distance = wheat_42w.copy()
-
+            cost_matrices = defaultdict(lambda:wheat_42w,{
+                "Wheat(FAQ)": wheat_42w,
+                "Wheat(URS)": wheat_42w,
+                "Wheat(Imported)": wheat_42w,
+                "Jowar": wheat_42w,
+                "Bajra": wheat_42w,
+                "Maize": wheat_42w,
+                "BRC(Non-FRK)URS_Broken": rice_42w,
+                "RRC(Non-FRK)": rice_42w,
+                "RRC(FRK)": rice_42w,
+                "RRA(Non-FRK)Broken": rice_42w,
+                "RRA(Non-FRK)URS": rice_42w,
+                "RRA(Non-FRK)": rice_42w,
+                "RRA(FRK)URS": rice_42w,
+                "RRA(FRK)": rice_42w,
+                "RC(Non-FRK)URS": rice_42w,
+                "RC(Non-FRK)URS_Broken": rice_42w,
+                "BRC(Non-FRK)URS": rice_42w,
+                "BRC(Non-FRK)Broken": rice_42w,
+                "BRC(Non-FRK)": rice_42w,
+                "BRC(FRK)URS": rice_42w,
+                "BRC(FRK)": rice_42w,
+                "BRA(Non-FRK)URS": rice_42w,
+                "BRA(Non-FRK)Broken": rice_42w,
+                "BRA(Non-FRK)": rice_42w,
+                "BRA(FRK)URS": rice_42w,
+                "BRA(FRK)": rice_42w,
+                "BRA(Non-FRK)URS_Broken": rice_42w,
+                "BRA(Non-FRK)Broken_URS": rice_42w,
+            })
+            cost_matrices_58 = defaultdict(lambda:wheat_58w,{
+                "Wheat(FAQ)": wheat_58w,
+                "Wheat(URS)": wheat_58w,
+                "Wheat(Imported)": wheat_58w,
+                "Jowar": wheat_58w,
+                "Bajra": wheat_58w,
+                "Maize": wheat_58w,
+                "BRC(Non-FRK)URS_Broken": rice_58w,
+                "RRC(Non-FRK)": rice_58w,
+                "RRC(FRK)": rice_58w,
+                "RRA(Non-FRK)Broken": rice_58w,
+                "RRA(Non-FRK)URS": rice_58w,
+                "RRA(Non-FRK)": rice_58w,
+                "RRA(FRK)URS": rice_58w,
+                "RRA(FRK)": rice_58w,
+                "RC(Non-FRK)URS": rice_58w,
+                "RC(Non-FRK)URS_Broken": rice_58w,
+                "BRC(Non-FRK)URS": rice_58w,
+                "BRC(Non-FRK)Broken": rice_58w,
+                "BRC(Non-FRK)": rice_58w,
+                "BRC(FRK)URS": rice_58w,
+                "BRC(FRK)": rice_58w,
+                "BRA(Non-FRK)URS": rice_58w,
+                "BRA(Non-FRK)Broken": rice_58w,
+                "BRA(Non-FRK)": rice_58w,
+                "BRA(FRK)URS": rice_58w,
+                "BRA(FRK)": rice_58w,
+                "BRA(Non-FRK)URS_Broken": rice_58w,
+                "BRA(Non-FRK)Broken_URS": rice_58w,
+            })
             # Processing commodity for destination data
             for commodity, tpdata in tpdestdata.items():
                 print(f"Processing commodity source destination: {commodity}")
@@ -389,7 +449,7 @@ def Daily_Planner():
                     print(f"{var.name} for source: {i} -> destination: {j}")
 
             prob = LpProblem("Transportation_Problem", LpMinimize)
-            prob += lpSum(dec_var[commodity][(i, j)] * wheat_42w.loc[i,j] for commodity in commodities for i, j in dec_var[commodity].keys()), "Total_Cost"
+            prob += lpSum(dec_var[commodity][(i, j)] * cost_matrices[commodity].loc[i,j] for commodity in commodities for i, j in dec_var[commodity].keys()), "Total_Cost"
 
             print("dec_var",dec_var)
             print("prob",prob)
@@ -433,7 +493,7 @@ def Daily_Planner():
                     print(f"{var.name} for source: {i} -> destination: {j}")
 
             prob_58 = LpProblem("Transportation_Problem", LpMinimize)
-            prob_58 += lpSum(dec_var_58[commodity][(i, j)] * wheat_58w.loc[i,j] for commodity in commodities_58w for i, j in dec_var_58[commodity].keys()), "Total_Cost"
+            prob_58 += lpSum(dec_var_58[commodity][(i, j)] * cost_matrices_58[commodity].loc[i,j] for commodity in commodities_58w for i, j in dec_var_58[commodity].keys()), "Total_Cost"
 
             for commodity in commodities_58w:
                 for source, supply in srcdata_58[commodity].items():
