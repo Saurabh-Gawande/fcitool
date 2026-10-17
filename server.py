@@ -40,6 +40,36 @@ rice_42w = None
 wheat_58w = None
 rice_58w = None
 
+class DynamicCostMatrix(dict):
+    """
+    Dynamically maps a commodity to its corresponding cost matrix:
+    - If commodity contains 'rice' (case-insensitive) or matches common rice codes -> rice matrix
+    - If commodity contains 'wheat' (case-insensitive) -> wheat matrix
+    - Otherwise -> default to wheat matrix
+    """
+    def __init__(self, wheat_matrix, rice_matrix, commodities=None):
+        super().__init__()
+        self.wheat_matrix = wheat_matrix
+        self.rice_matrix = rice_matrix
+        if commodities:
+            for comm in commodities:
+                self[comm] = self._resolve(comm)
+
+    def _resolve(self, commodity):
+        comm = str(commodity).lower()
+        if "rice" in comm or any(comm.startswith(p) for p in ("bra", "brc", "rc", "rra", "rrc")):
+            return self.rice_matrix
+        elif "wheat" in comm:
+            return self.wheat_matrix
+        else:
+            return self.wheat_matrix
+
+    def __missing__(self, key):
+        val = self._resolve(key)
+        self[key] = val
+        return val
+
+
 @app.route('/process-data', methods=['POST'])
 def process_data():
     global wheat_42w, rice_42w, wheat_58w, rice_58w  # Use global variables for DataFrames
@@ -242,66 +272,8 @@ def Daily_Planner():
             # WpR=pd.read_excel(data,sheet_name="Railhead_cost_matrix",index_col=0)
             # cost_matrices = {"Wheat":W,"Rice":R,"Wheat+FRK":WpR, "FRK RRA":W, "RRA+FRKBR":W}
             distance = wheat_42w.copy()
-            cost_matrices = defaultdict(lambda:wheat_42w,{
-                "Wheat(FAQ)": wheat_42w,
-                "Wheat(URS)": wheat_42w,
-                "Wheat(Imported)": wheat_42w,
-                "Jowar": wheat_42w,
-                "Bajra": wheat_42w,
-                "Maize": wheat_42w,
-                "BRC(Non-FRK)URS_Broken": rice_42w,
-                "RRC(Non-FRK)": rice_42w,
-                "RRC(FRK)": rice_42w,
-                "RRA(Non-FRK)Broken": rice_42w,
-                "RRA(Non-FRK)URS": rice_42w,
-                "RRA(Non-FRK)": rice_42w,
-                "RRA(FRK)URS": rice_42w,
-                "RRA(FRK)": rice_42w,
-                "RC(Non-FRK)URS": rice_42w,
-                "RC(Non-FRK)URS_Broken": rice_42w,
-                "BRC(Non-FRK)URS": rice_42w,
-                "BRC(Non-FRK)Broken": rice_42w,
-                "BRC(Non-FRK)": rice_42w,
-                "BRC(FRK)URS": rice_42w,
-                "BRC(FRK)": rice_42w,
-                "BRA(Non-FRK)URS": rice_42w,
-                "BRA(Non-FRK)Broken": rice_42w,
-                "BRA(Non-FRK)": rice_42w,
-                "BRA(FRK)URS": rice_42w,
-                "BRA(FRK)": rice_42w,
-                "BRA(Non-FRK)URS_Broken": rice_42w,
-                "BRA(Non-FRK)Broken_URS": rice_42w,
-            })
-            cost_matrices_58 = defaultdict(lambda:wheat_58w,{
-                "Wheat(FAQ)": wheat_58w,
-                "Wheat(URS)": wheat_58w,
-                "Wheat(Imported)": wheat_58w,
-                "Jowar": wheat_58w,
-                "Bajra": wheat_58w,
-                "Maize": wheat_58w,
-                "BRC(Non-FRK)URS_Broken": rice_58w,
-                "RRC(Non-FRK)": rice_58w,
-                "RRC(FRK)": rice_58w,
-                "RRA(Non-FRK)Broken": rice_58w,
-                "RRA(Non-FRK)URS": rice_58w,
-                "RRA(Non-FRK)": rice_58w,
-                "RRA(FRK)URS": rice_58w,
-                "RRA(FRK)": rice_58w,
-                "RC(Non-FRK)URS": rice_58w,
-                "RC(Non-FRK)URS_Broken": rice_58w,
-                "BRC(Non-FRK)URS": rice_58w,
-                "BRC(Non-FRK)Broken": rice_58w,
-                "BRC(Non-FRK)": rice_58w,
-                "BRC(FRK)URS": rice_58w,
-                "BRC(FRK)": rice_58w,
-                "BRA(Non-FRK)URS": rice_58w,
-                "BRA(Non-FRK)Broken": rice_58w,
-                "BRA(Non-FRK)": rice_58w,
-                "BRA(FRK)URS": rice_58w,
-                "BRA(FRK)": rice_58w,
-                "BRA(Non-FRK)URS_Broken": rice_58w,
-                "BRA(Non-FRK)Broken_URS": rice_58w,
-            })
+            cost_matrices = DynamicCostMatrix(wheat_42w, rice_42w, commodities)
+            cost_matrices_58 = DynamicCostMatrix(wheat_58w, rice_58w, commodities_58w)
             # Processing commodity for destination data
             for commodity, tpdata in tpdestdata.items():
                 print(f"Processing commodity source destination: {commodity}")
